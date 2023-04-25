@@ -2,7 +2,7 @@ syntax = 'proto3';
 
 package order.v1alpha0;
 
-option go_package = "materials-resources.com/msv/prophet/proto/order/v1alpha0";
+option go_package = "github.com/materials-resources/ProphetService/proto/order/v1alpha0";
 
 service OrderService {
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);

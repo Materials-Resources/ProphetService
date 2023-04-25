@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package product.v1alpha0;
 
-option go_package = "materials-resources.com/msv/prophet/proto/product/v1alpha0";
+option go_package = "github.com/materials-resources/ProphetService/proto/product/v1alpha0";
 
 service ProductService{
 

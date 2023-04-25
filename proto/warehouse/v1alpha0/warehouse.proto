@@ -2,7 +2,7 @@ syntax = 'proto3';
 
 package warehouse.v1alpha0;
 
-option go_package = "materials-resources.com/msv/prophet/proto/warehouse/v1alpha0";
+option go_package = "github.com/materials-resources/ProphetService/proto/warehouse/v1alpha0";
 
 service WarehouseService {
   rpc GetAllocatedOrdersForReceiptItem(GetAllocatedOrdersForReceiptItemRequest) returns (GetAllocatedOrdersForReceiptItemResponse);
