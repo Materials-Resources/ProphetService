@@ -1,4 +1,4 @@
-module materials-resources.com/msv/prophet
+module github.com/materials-resources/ProphetService
 
 go 1.19
 
