@@ -3,8 +3,8 @@ package grpc_service
 import (
 	"context"
 	"fmt"
-	"materials-resources.com/msv/prophet/pkg/database"
-	rpc "materials-resources.com/msv/prophet/proto/warehouse/v1alpha0"
+	"github.com/materials-resources/ProphetService/pkg/database"
+	rpc "github.com/materials-resources/ProphetService/proto/warehouse/v1alpha0"
 	"strconv"
 )
 

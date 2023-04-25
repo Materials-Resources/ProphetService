@@ -1,6 +1,6 @@
 package main
 
-import "materials-resources.com/msv/prophet/cmd"
+import "github.com/materials-resources/ProphetService/cmd"
 
 func main() {
 	cmd.Execute()

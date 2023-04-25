@@ -2,10 +2,10 @@ package grpc_service
 
 import (
 	"context"
+	pb "github.com/materials-resources/ProphetService/proto/order/v1alpha0"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/test/bufconn"
 	"log"
-	pb "materials-resources.com/msv/prophet/proto/order/v1alpha0"
 	"net"
 	"testing"
 )

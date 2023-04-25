@@ -2,8 +2,8 @@ package grpc_service
 
 import (
 	"context"
-	"materials-resources.com/msv/prophet/pkg/database"
-	rpc "materials-resources.com/msv/prophet/proto/product/v1alpha0"
+	"github.com/materials-resources/ProphetService/pkg/database"
+	rpc "github.com/materials-resources/ProphetService/proto/product/v1alpha0"
 )
 
 type ProductServer struct {

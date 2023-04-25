@@ -2,15 +2,15 @@ package server
 
 import (
 	"fmt"
+	"github.com/materials-resources/ProphetService/pkg/database"
+	"github.com/materials-resources/ProphetService/pkg/grpc_service"
+	rpc_order "github.com/materials-resources/ProphetService/proto/order/v1alpha0"
+	product "github.com/materials-resources/ProphetService/proto/product/v1alpha0"
+	rpc_warehouse "github.com/materials-resources/ProphetService/proto/warehouse/v1alpha0"
 	"github.com/uptrace/bun"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
-	"materials-resources.com/msv/prophet/pkg/database"
-	"materials-resources.com/msv/prophet/pkg/grpc_service"
-	rpc_order "materials-resources.com/msv/prophet/proto/order/v1alpha0"
-	product "materials-resources.com/msv/prophet/proto/product/v1alpha0"
-	rpc_warehouse "materials-resources.com/msv/prophet/proto/warehouse/v1alpha0"
 	"net"
 )
 

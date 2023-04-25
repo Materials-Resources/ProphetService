@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/materials-resources/ProphetService/pkg/server"
 	"github.com/spf13/cobra"
-	"materials-resources.com/msv/prophet/pkg/server"
 )
 
 var serveCmd = &cobra.Command{
