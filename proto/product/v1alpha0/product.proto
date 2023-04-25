@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package product.v1alpha0;
+
+option go_package = "materials-resources.com/msv/prophet/proto/product/v1alpha0";
+
+service ProductService{
+
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+
+  rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse);
+  rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse);
+  // Creates a new Product Group
+  rpc CreateProductGroup(CreateProductGroupRequest) returns(CreateProductGroupResponse);
+
+}
+
+message GetProductRequest{
+  int32 inv_mast_uid = 1; //uid of product that we want to get
+}
+message GetProductResponse{
+  int32 inv_mast_uid = 1;
+  string item_id = 2;  //products item ID usually formatted as MRS-XXX00-123456
+  string item_desc = 3; // short description of product such as a name of the item
+  string extended_desc = 4; //extended description of product
+  string product_group_id = 5; //Product group it belongs to
+  double price = 6; //Default Price of item
+  double qty_available = 7;
+}
+
+message CreateProductRequest {
+  string id = 1;
+  string description = 2;
+  string extended_description = 3;
+  float  list_price = 4;
+  string product_group_id = 8;
+  string upc = 9;
+  string supplier_id = 10;
+  string supplier_part_no = 11;
+  float  cost = 12;
+}
+
+message CreateProductResponse {
+
+}
+
+message GetProductBySupplierPartIdRequest {
+  double supplier_id = 1;
+  string supplier_part_id = 2;
+}
+
+message GetProductBySupplierPartIdResponse {
+  int32 inv_mast_id = 1;
+}
+
+message GetProductGroupsRequest {
+
+}
+
+message GetProductGroupsResponse {
+  repeated ProductGroup product_groups = 1;
+}
+
+message ProductGroup {
+  string id = 1;
+  string description = 2;
+}
+
+message CreateProductGroupRequest {
+  string id = 1; //Unique identifier of Product Group
+  string description = 2; // Description of group
+  string asset_account = 3; // Default Asset Account
+  string revenue_account = 4; // Default Revenue Account
+  string cos_account = 5; // Default COS Account
+}
+
+message CreateProductGroupResponse {
+
+}

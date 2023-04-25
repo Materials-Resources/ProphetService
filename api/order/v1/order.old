@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package order.v1;
+
+service OrderService{
+
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  rpc GetOrderItems(GetOrderItemsRequest) returns (GetOrderItemsResponse);
+
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc PutOrderItem(PutOrderItemRequest) returns (PutOrderItemResponse);
+
+  rpc GetPickTicket(GetPickTicketRequest) returns (GetPickTicketResponse);
+}
+
+
+
+
+
+
+message GetOrderItemsRequest {}
+message GetOrderItemsResponse {}
+
+
+message Order {
+  string order_no = 1;
+  string delivery_instructions = 2;
+  string ship2_name = 3;
+  string ship2_add1 = 4;
+  string ship2_add2 = 5;
+  string ship2_city = 6;
+  string ship2_state = 7;
+  string ship2_zip = 8;
+  string ship2_country = 9;
+
+}
+
+message CreateOrderRequest {
+  double customer_id = 1;
+  double shipping_address_id = 2;
+  string po_no = 3;
+
+ }
+
+message CreateOrderResponse {
+  string order_no = 1;
+}
+
+message PutOrderItemRequest {}
+message PutOrderItemResponse {}

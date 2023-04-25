@@ -1,0 +1,45 @@
+syntax = 'proto3';
+
+package order.v1alpha0;
+
+option go_package = "materials-resources.com/msv/prophet/proto/order/v1alpha0";
+
+service OrderService {
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  rpc GetOrderItem(GetOrderItemRequest) returns (GetOrderItemResponse);
+}
+
+message GetOrderRequest{
+  string id = 1;
+}
+
+message GetOrderResponse{
+  message ShippingAddress {
+    string name = 3;
+    string line_one = 4;
+    string line_two = 5;
+    string city = 6;
+    string state = 7;
+    string postal_code = 8;
+    string country = 9;
+  }
+
+  string delivery_instructions = 2;
+  ShippingAddress shipping_address = 3;
+  string po_no = 10;
+  string contact_id = 11;
+  string taker = 12;
+}
+
+message GetOrderItemRequest {
+  string order_id = 1;
+  repeated int32 product_id = 2;
+}
+
+message GetOrderItemResponse {
+  message Item {
+      int32 product_id = 1;
+      string customer_product_id = 2;
+  }
+  repeated Item item = 1;
+}

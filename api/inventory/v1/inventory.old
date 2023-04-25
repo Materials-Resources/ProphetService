@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+
+service InventoryService{
+
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc GetProductsByGroup(GetProductsByGroupRequest) returns (GetProductsByGroupResponse);
+  rpc GetProductGroups(GetProductGroupsRequest) returns (GetProductGroupsResponse);
+
+
+
+  rpc UpdateProductBySupplier(UpdateProductBySupplierRequest) returns (UpdateProductBySupplierResponse);
+
+}
+message GetProductRequest{
+  int32 inv_mast_uid = 1; //uid of product that we want to get
+}
+message GetProductResponse{
+  int32 inv_mast_uid = 1;
+  string item_id = 2;  //products item ID usually formatted as MRS-XXX00-123456
+  string item_desc = 3; // short description of product such as a name of the item
+  string extended_desc = 4; //extended description of product
+  string product_group_id = 5; //Product group it belongs to
+  double price = 6; //Default Price of item
+  double qty_available = 7;
+}
+
+
+message GetProductsByGroupRequest {
+  enum direction{
+    PREVIOUS = 0;
+    NEXT = 1;
+  }
+  repeated string product_group = 1;
+  int32 inv_mast_uid = 2;
+  direction page_direction= 3;
+  bool deleted = 4;
+}
+message GetProductsByGroupResponse {
+  message Cursor {
+    int32 next_inv_mast_uid = 1;
+    int32 prev_inv_mast_uid = 2;
+  }
+  message product {
+    int32 inv_mast_uid = 1;
+    string item_id = 2;  //products item ID usually formatted as MRS-XXX00-123456
+    string item_desc = 3; // short description of product such as a name of the item
+    string extended_desc = 4; //extended description of product
+    string product_group_id = 5;
+    float  price1 = 6; // Sale Price of item
+  }
+  Cursor cursor = 1;
+  repeated product products = 2; // List of product responses
+}
+message GetProductGroupsRequest{
+
+}
+message GetProductGroupsResponse{
+  message ProductGroup {
+    string product_group_id = 1;
+    string product_group_desc = 2;
+  }
+  repeated ProductGroup product_group = 1;
+}
+message GetProductDetailedResponse{
+  message InvLoc {
+    string product_group_id = 1;
+    float qty_on_hand = 2;
+  }
+  string item_id = 1;  //products item ID usually formatted as MRS-XXX00-123456
+  string item_desc = 2; // short description of product such as a name of the item
+  string extended_desc = 3; //extended description of product
+  double price1 = 4;
+  double price2 = 5;
+  double price3 = 6;
+  repeated InvLoc inv_loc = 7;
+}
+message PutProductRequest{
+  message supplierDetails {
+    string supplier_id = 1;
+    int32 supplier_price = 2;
+    bool primary = 3;
+  }
+  string description = 1;
+  string extended_description = 2;
+  double price1 = 3;
+  double price2 = 4;
+  double price3 = 5;
+  string product_group = 6;
+  string sales_group = 7;
+  string purchase_group = 8;
+  string tax_group = 9;
+  string replenishment_min = 10;
+  string replenishment_max = 11;
+  repeated supplierDetails supplier_details = 12;
+}
+message PutProductResponse{
+  string item_id = 1; // Returns itemId of new product
+}
+
+message UpdateProductBySupplierRequest {
+  message Product {
+    string supplier_part_no = 1;
+    string name = 2;
+    string description = 3;
+    string product_group = 4;
+    string upc_code = 5;
+    string check_digit = 6;
+    float list_price = 7;
+    float cost = 8;
+  }
+  float supplier_id = 1;
+  Product product = 2;
+}
+
+message UpdateProductBySupplierResponse {
+
+}
