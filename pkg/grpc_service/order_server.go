@@ -22,14 +22,14 @@ func (s *OrderServer) GetOrder(ctx context.Context, req *rpc.GetOrderRequest) (*
 		ShippingAddress: &rpc.GetOrderResponse_ShippingAddress{
 			Name:       hRes.ShipToName,
 			LineOne:    hRes.ShipToAdd1,
-			LineTwo:    hRes.ShipToAdd1,
+			LineTwo:    hRes.ShipToAdd2,
 			City:       hRes.ShipToCity,
 			State:      hRes.ShipToState,
 			PostalCode: hRes.ShipToZip,
 			Country:    hRes.ShipToCountry,
 		},
-		PoNo:      hRes.PoNo,
-		ContactId: hRes.ContactId,
+		PurchaseOrderId: hRes.PoNo,
+		ContactId:       hRes.ContactId,
 	}, nil
 }
 
@@ -43,6 +43,10 @@ func (s *OrderServer) GetOrderItem(ctx context.Context, req *rpc.GetOrderItemReq
 	for _, item := range *hRes {
 		rpcRes.Item = append(rpcRes.Item, &rpc.GetOrderItemResponse_Item{
 			ProductId:         item.InvMastUid,
+			QuantityOrdered:   item.QtyOrdered,
+			UnitPrice:         item.UnitPrice,
+			UnitMeasurement:   item.UnitOfMeasurement,
+			TotalPrice:        item.ExtendedPrice,
 			CustomerProductId: item.CustomerPartId,
 		})
 	}

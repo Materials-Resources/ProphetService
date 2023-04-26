@@ -12,16 +12,16 @@ type ProductServer struct {
 }
 
 func (s *ProductServer) GetProduct(ctx context.Context, req *rpc.GetProductRequest) (*rpc.GetProductResponse, error) {
-	hRes, err := s.ProductHandler.SelectProduct(ctx, req.GetInvMastUid())
+	hRes, err := s.ProductHandler.SelectProduct(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}
 
 	return &rpc.GetProductResponse{
-		InvMastUid:     hRes.InvMastUid,
-		ItemId:         hRes.ItemId,
-		ItemDesc:       hRes.ItemDesc,
-		ExtendedDesc:   hRes.ExtendedDesc,
+		Id:             hRes.InvMastUid,
+		ProductSn:      hRes.ItemId,
+		Name:           hRes.ItemDesc,
+		Description:    hRes.ExtendedDesc,
 		ProductGroupId: hRes.DefaultProductGroup,
 		Price:          hRes.Price1,
 	}, nil

@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"github.com/uptrace/bun"
 	"time"
 )
@@ -46,14 +45,15 @@ type Order struct {
 type OrderLine struct {
 	bun.BaseModel `bun:"table:oe_line"`
 
-	CustomerPartId string          `bun:"customer_part_number"`
-	OrderNo        string          `bun:"order_no,pk"`
-	LineNo         float32         `bun:"line_no,pk"`
-	DeleteFlag     string          `bun:"delete_flag"`
-	InvMastUid     int32           `bun:"inv_mast_uid"`
-	RequiredDate   sql.NullTime    `bun:"required_date"`
-	ExpediteDate   sql.NullTime    `bun:"expedite_date"`
-	QtyOrdered     float64         `bun:"qty_ordered"`
-	ExtendedPrice  sql.NullFloat64 `bun:"extended_price"`
-	UnitOfMeasure  sql.NullString  `bun:"unit_of_measure"`
+	CustomerPartId    string    `bun:"customer_part_number"`
+	OrderNo           string    `bun:"order_no,pk"`
+	LineNo            float32   `bun:"line_no,pk"`
+	DeleteFlag        string    `bun:"delete_flag"`
+	InvMastUid        int32     `bun:"inv_mast_uid"`
+	RequiredDate      time.Time `bun:"required_date,nullzero"`
+	ExpediteDate      time.Time `bun:"expedite_date,nullzero"`
+	QtyOrdered        float32   `bun:"qty_ordered"`
+	UnitPrice         float32   `bun:"unit_price,nullzero"`
+	ExtendedPrice     float32   `bun:"extended_price,nullzero"`
+	UnitOfMeasurement string    `bun:"unit_of_measure,nullzero"`
 }

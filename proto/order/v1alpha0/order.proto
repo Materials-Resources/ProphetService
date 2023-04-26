@@ -26,7 +26,7 @@ message GetOrderResponse{
 
   string delivery_instructions = 2;
   ShippingAddress shipping_address = 3;
-  string po_no = 10;
+  string purchase_order_id = 10;
   string contact_id = 11;
   string taker = 12;
 }
@@ -39,7 +39,13 @@ message GetOrderItemRequest {
 message GetOrderItemResponse {
   message Item {
       int32 product_id = 1;
-      string customer_product_id = 2;
+      float quantity_ordered = 2;
+      float unit_price = 3;
+      string unit_measurement = 4;
+      float total_price = 5;
+
+      string customer_product_id = 10;
+
   }
   repeated Item item = 1;
 }

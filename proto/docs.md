@@ -91,6 +91,10 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | product_id | [int32](#int32) |  |  |
+| quantity_ordered | [float](#float) |  |  |
+| unit_price | [float](#float) |  |  |
+| unit_measurement | [string](#string) |  |  |
+| total_price | [float](#float) |  |  |
 | customer_product_id | [string](#string) |  |  |
 
 
@@ -123,7 +127,7 @@
 | ----- | ---- | ----- | ----------- |
 | delivery_instructions | [string](#string) |  |  |
 | shipping_address | [GetOrderResponse.ShippingAddress](#order-v1alpha0-GetOrderResponse-ShippingAddress) |  |  |
-| po_no | [string](#string) |  |  |
+| purchase_order_id | [string](#string) |  |  |
 | contact_id | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 
@@ -306,7 +310,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| inv_mast_uid | [int32](#int32) |  | uid of product that we want to get |
+| id | [int32](#int32) |  | uid of product that we want to get |
 
 
 
@@ -321,10 +325,10 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| inv_mast_uid | [int32](#int32) |  |  |
-| item_id | [string](#string) |  | products item ID usually formatted as MRS-XXX00-123456 |
-| item_desc | [string](#string) |  | short description of product such as a name of the item |
-| extended_desc | [string](#string) |  | extended description of product |
+| id | [int32](#int32) |  |  |
+| product_sn | [string](#string) |  | products item ID usually formatted as MRS-XXX00-123456 |
+| name | [string](#string) |  | short description of product such as a name of the item |
+| description | [string](#string) |  | extended description of product |
 | product_group_id | [string](#string) |  | Product group it belongs to |
 | price | [double](#double) |  | Default Price of item |
 | qty_available | [double](#double) |  |  |
