@@ -11,8 +11,10 @@ service ProductService{
 
   rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse);
   rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse);
+  rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse);
   // Creates a new Product Group
   rpc CreateProductGroup(CreateProductGroupRequest) returns(CreateProductGroupResponse);
+
 
 }
 
@@ -59,12 +61,24 @@ message GetProductGroupsRequest {
 }
 
 message GetProductGroupsResponse {
+  message ProductGroup {
+    string id = 1;
+    string name = 2;
+  }
   repeated ProductGroup product_groups = 1;
+}
+
+message GetGroupProductsRequest {
+  string id = 1; // Product Group ID
+}
+
+message GetGroupProductsResponse {
+  repeated int32 product_id = 1; // List of products
 }
 
 message ProductGroup {
   string id = 1;
-  string description = 2;
+  string name = 2;
 }
 
 message CreateProductGroupRequest {

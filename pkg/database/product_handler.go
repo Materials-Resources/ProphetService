@@ -34,6 +34,17 @@ func (h *ProductHandler) SelectProductGroups(ctx context.Context) (*[]ProductGro
 func (h *ProductHandler) SelectProductGroup(ctx context.Context) {
 }
 
+func (h *ProductHandler) SelectProductsInProductGroup(ctx context.Context, id string) (*[]ProductMaster, error) {
+	var products []ProductMaster
+
+	err := h.db.NewSelect().Model(&products).Where("default_product_group = ?", id).Scan(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("could not query for products in product group %s: %v", id, err)
+	}
+
+	return &products, nil
+}
+
 type InsertProductGroupInput struct {
 	ProductGroupId   string
 	ProductGroupDesc string

@@ -27,6 +27,22 @@ func (s *ProductServer) GetProduct(ctx context.Context, req *rpc.GetProductReque
 	}, nil
 }
 
+func (s *ProductServer) GetGroupProducts(ctx context.Context, req *rpc.GetGroupProductsRequest) (*rpc.GetGroupProductsResponse, error) {
+	grpcRes := new(rpc.GetGroupProductsResponse)
+
+	qr, err := s.ProductHandler.SelectProductsInProductGroup(ctx, req.GetId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, r := range *qr {
+		grpcRes.ProductId = append(grpcRes.ProductId, r.InvMastUid)
+	}
+
+	return grpcRes, nil
+
+}
 func (s *ProductServer) GetProductGroups(ctx context.Context, req *rpc.GetProductGroupsRequest) (*rpc.GetProductGroupsResponse, error) {
 	grpcResponse := new(rpc.GetProductGroupsResponse)
 
@@ -36,9 +52,9 @@ func (s *ProductServer) GetProductGroups(ctx context.Context, req *rpc.GetProduc
 	}
 
 	for _, r := range *qr {
-		grpcResponse.ProductGroups = append(grpcResponse.ProductGroups, &rpc.ProductGroup{
-			Id:          r.ProductGroupId,
-			Description: r.ProductGroupDesc,
+		grpcResponse.ProductGroups = append(grpcResponse.ProductGroups, &rpc.GetProductGroupsResponse_ProductGroup{
+			Id:   r.ProductGroupId,
+			Name: r.ProductGroupDesc,
 		})
 
 	}

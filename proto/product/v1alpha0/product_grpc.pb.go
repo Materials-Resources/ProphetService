@@ -23,6 +23,7 @@ const (
 	ProductService_CreateProduct_FullMethodName              = "/product.v1alpha0.ProductService/CreateProduct"
 	ProductService_GetProductBySupplierPartId_FullMethodName = "/product.v1alpha0.ProductService/GetProductBySupplierPartId"
 	ProductService_GetProductGroups_FullMethodName           = "/product.v1alpha0.ProductService/GetProductGroups"
+	ProductService_GetGroupProducts_FullMethodName           = "/product.v1alpha0.ProductService/GetGroupProducts"
 	ProductService_CreateProductGroup_FullMethodName         = "/product.v1alpha0.ProductService/CreateProductGroup"
 )
 
@@ -34,6 +35,7 @@ type ProductServiceClient interface {
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*CreateProductResponse, error)
 	GetProductBySupplierPartId(ctx context.Context, in *GetProductBySupplierPartIdRequest, opts ...grpc.CallOption) (*GetProductBySupplierPartIdResponse, error)
 	GetProductGroups(ctx context.Context, in *GetProductGroupsRequest, opts ...grpc.CallOption) (*GetProductGroupsResponse, error)
+	GetGroupProducts(ctx context.Context, in *GetGroupProductsRequest, opts ...grpc.CallOption) (*GetGroupProductsResponse, error)
 	// Creates a new Product Group
 	CreateProductGroup(ctx context.Context, in *CreateProductGroupRequest, opts ...grpc.CallOption) (*CreateProductGroupResponse, error)
 }
@@ -82,6 +84,15 @@ func (c *productServiceClient) GetProductGroups(ctx context.Context, in *GetProd
 	return out, nil
 }
 
+func (c *productServiceClient) GetGroupProducts(ctx context.Context, in *GetGroupProductsRequest, opts ...grpc.CallOption) (*GetGroupProductsResponse, error) {
+	out := new(GetGroupProductsResponse)
+	err := c.cc.Invoke(ctx, ProductService_GetGroupProducts_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productServiceClient) CreateProductGroup(ctx context.Context, in *CreateProductGroupRequest, opts ...grpc.CallOption) (*CreateProductGroupResponse, error) {
 	out := new(CreateProductGroupResponse)
 	err := c.cc.Invoke(ctx, ProductService_CreateProductGroup_FullMethodName, in, out, opts...)
@@ -99,6 +110,7 @@ type ProductServiceServer interface {
 	CreateProduct(context.Context, *CreateProductRequest) (*CreateProductResponse, error)
 	GetProductBySupplierPartId(context.Context, *GetProductBySupplierPartIdRequest) (*GetProductBySupplierPartIdResponse, error)
 	GetProductGroups(context.Context, *GetProductGroupsRequest) (*GetProductGroupsResponse, error)
+	GetGroupProducts(context.Context, *GetGroupProductsRequest) (*GetGroupProductsResponse, error)
 	// Creates a new Product Group
 	CreateProductGroup(context.Context, *CreateProductGroupRequest) (*CreateProductGroupResponse, error)
 }
@@ -118,6 +130,9 @@ func (UnimplementedProductServiceServer) GetProductBySupplierPartId(context.Cont
 }
 func (UnimplementedProductServiceServer) GetProductGroups(context.Context, *GetProductGroupsRequest) (*GetProductGroupsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProductGroups not implemented")
+}
+func (UnimplementedProductServiceServer) GetGroupProducts(context.Context, *GetGroupProductsRequest) (*GetGroupProductsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroupProducts not implemented")
 }
 func (UnimplementedProductServiceServer) CreateProductGroup(context.Context, *CreateProductGroupRequest) (*CreateProductGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProductGroup not implemented")
@@ -206,6 +221,24 @@ func _ProductService_GetProductGroups_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_GetGroupProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupProductsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).GetGroupProducts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_GetGroupProducts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).GetGroupProducts(ctx, req.(*GetGroupProductsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductService_CreateProductGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateProductGroupRequest)
 	if err := dec(in); err != nil {
@@ -246,6 +279,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProductGroups",
 			Handler:    _ProductService_GetProductGroups_Handler,
+		},
+		{
+			MethodName: "GetGroupProducts",
+			Handler:    _ProductService_GetGroupProducts_Handler,
 		},
 		{
 			MethodName: "CreateProductGroup",

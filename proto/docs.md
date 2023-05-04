@@ -18,10 +18,13 @@
     - [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse)
     - [CreateProductRequest](#product-v1alpha0-CreateProductRequest)
     - [CreateProductResponse](#product-v1alpha0-CreateProductResponse)
+    - [GetGroupProductsRequest](#product-v1alpha0-GetGroupProductsRequest)
+    - [GetGroupProductsResponse](#product-v1alpha0-GetGroupProductsResponse)
     - [GetProductBySupplierPartIdRequest](#product-v1alpha0-GetProductBySupplierPartIdRequest)
     - [GetProductBySupplierPartIdResponse](#product-v1alpha0-GetProductBySupplierPartIdResponse)
     - [GetProductGroupsRequest](#product-v1alpha0-GetProductGroupsRequest)
     - [GetProductGroupsResponse](#product-v1alpha0-GetProductGroupsResponse)
+    - [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup)
     - [GetProductRequest](#product-v1alpha0-GetProductRequest)
     - [GetProductResponse](#product-v1alpha0-GetProductResponse)
     - [ProductGroup](#product-v1alpha0-ProductGroup)
@@ -246,6 +249,36 @@
 
 
 
+<a name="product-v1alpha0-GetGroupProductsRequest"></a>
+
+### GetGroupProductsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  | Product Group ID |
+
+
+
+
+
+
+<a name="product-v1alpha0-GetGroupProductsResponse"></a>
+
+### GetGroupProductsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_id | [int32](#int32) | repeated | List of products |
+
+
+
+
+
+
 <a name="product-v1alpha0-GetProductBySupplierPartIdRequest"></a>
 
 ### GetProductBySupplierPartIdRequest
@@ -295,7 +328,23 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_groups | [ProductGroup](#product-v1alpha0-ProductGroup) | repeated |  |
+| product_groups | [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup) | repeated |  |
+
+
+
+
+
+
+<a name="product-v1alpha0-GetProductGroupsResponse-ProductGroup"></a>
+
+### GetProductGroupsResponse.ProductGroup
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| name | [string](#string) |  |  |
 
 
 
@@ -347,7 +396,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
-| description | [string](#string) |  |  |
+| name | [string](#string) |  |  |
 
 
 
@@ -371,6 +420,7 @@
 | CreateProduct | [CreateProductRequest](#product-v1alpha0-CreateProductRequest) | [CreateProductResponse](#product-v1alpha0-CreateProductResponse) |  |
 | GetProductBySupplierPartId | [GetProductBySupplierPartIdRequest](#product-v1alpha0-GetProductBySupplierPartIdRequest) | [GetProductBySupplierPartIdResponse](#product-v1alpha0-GetProductBySupplierPartIdResponse) |  |
 | GetProductGroups | [GetProductGroupsRequest](#product-v1alpha0-GetProductGroupsRequest) | [GetProductGroupsResponse](#product-v1alpha0-GetProductGroupsResponse) |  |
+| GetGroupProducts | [GetGroupProductsRequest](#product-v1alpha0-GetGroupProductsRequest) | [GetGroupProductsResponse](#product-v1alpha0-GetGroupProductsResponse) |  |
 | CreateProductGroup | [CreateProductGroupRequest](#product-v1alpha0-CreateProductGroupRequest) | [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse) | Creates a new Product Group |
 
  

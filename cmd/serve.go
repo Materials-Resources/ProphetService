@@ -3,12 +3,16 @@ package cmd
 import (
 	"github.com/materials-resources/ProphetService/pkg/server"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 var serveCmd = &cobra.Command{
 	Use: "serve",
 	Run: func(cmd *cobra.Command, args []string) {
-		server.Serve()
+		err := server.Serve()
+		if err != nil {
+			log.Fatalf("Could not start server: %v", err)
+		}
 	},
 }
 
