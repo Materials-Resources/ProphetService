@@ -1,4 +1,4 @@
-FROM golang:1.20.4-bullseye as build
+FROM golang:1.20.4-alpine as build
 
 WORKDIR /usr/src/app/build
 
@@ -9,11 +9,12 @@ RUN go mod download && go mod verify
 
 COPY . .
 
-RUN go build -v -o /usr/local/bin/app .
+RUN go build -v -o /usr/local/bin/prophet .
 
 
 FROM alpine as production
 EXPOSE 50058
-COPY --from=build /usr/local/bin/app /usr/local/bin/app
+COPY --from=build /usr/local/bin/prophet /usr/local/bin/prophet
 
-CMD ["app"]
+ENTRYPOINT ["prophet"]
+CMD ["serve"]
