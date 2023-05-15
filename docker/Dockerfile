@@ -1,14 +1,15 @@
-FROM golang:1.19.5-alpine as build
+FROM golang:1.20.4-bullseye as build
 
 WORKDIR /usr/src/app/build
 
-COPY go.mod go.mod ./
+COPY go.mod ./
+COPY go.sum ./
 
 RUN go mod download && go mod verify
 
 COPY . .
 
-RUN go build -v -o /usr/local/bin/app ./server/...
+RUN go build -v -o /usr/local/bin/app .
 
 
 FROM alpine as production
