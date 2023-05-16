@@ -12,19 +12,24 @@ type ProductServer struct {
 }
 
 func (s *ProductServer) GetProduct(ctx context.Context, req *rpc.GetProductRequest) (*rpc.GetProductResponse, error) {
-	hRes, err := s.ProductHandler.SelectProduct(ctx, req.GetId())
+	grpcRes := new(rpc.GetProductResponse)
+	hRes, err := s.ProductHandler.SelectProduct(ctx, req.GetIds())
 	if err != nil {
 		return nil, err
 	}
 
-	return &rpc.GetProductResponse{
-		Id:             hRes.InvMastUid,
-		ProductSn:      hRes.ItemId,
-		Name:           hRes.ItemDesc,
-		Description:    hRes.ExtendedDesc,
-		ProductGroupId: hRes.DefaultProductGroup,
-		Price:          hRes.Price1,
-	}, nil
+	for _, product := range *hRes {
+		grpcRes.Products = append(grpcRes.Products, &rpc.GetProductResponse_Product{
+			Id:             product.InvMastUid,
+			ProductSn:      product.ItemId,
+			Name:           product.ItemDesc,
+			Description:    product.ExtendedDesc,
+			ProductGroupId: product.DefaultProductGroup,
+			Price:          product.Price1,
+		})
+	}
+
+	return grpcRes, nil
 }
 
 func (s *ProductServer) GetGroupProducts(ctx context.Context, req *rpc.GetGroupProductsRequest) (*rpc.GetGroupProductsResponse, error) {
