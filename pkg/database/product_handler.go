@@ -50,14 +50,14 @@ type InsertProductGroupInput struct {
 	ProductGroupDesc string
 }
 
-func (h *ProductHandler) SelectProduct(ctx context.Context, id int32) (*ProductMaster, error) {
-	model := new(ProductMaster)
+func (h *ProductHandler) SelectProduct(ctx context.Context, id []int32) (*[]ProductMaster, error) {
+	var model []ProductMaster
 
-	if err := h.db.NewSelect().Model(model).Where("inv_mast_uid = ?", id).Scan(ctx); err != nil {
+	if err := h.db.NewSelect().Model(&model).Where("product_master.inv_mast_uid in (?)", bun.In(id)).Scan(ctx); err != nil {
 		return nil, fmt.Errorf("could not select product: %v", err)
 	}
 
-	return model, nil
+	return &model, nil
 }
 
 func (h *ProductHandler) InsertProductGroup(ctx context.Context, input InsertProductGroupInput) error {

@@ -27,6 +27,7 @@
     - [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup)
     - [GetProductRequest](#product-v1alpha0-GetProductRequest)
     - [GetProductResponse](#product-v1alpha0-GetProductResponse)
+    - [GetProductResponse.Product](#product-v1alpha0-GetProductResponse-Product)
     - [ProductGroup](#product-v1alpha0-ProductGroup)
   
     - [ProductService](#product-v1alpha0-ProductService)
@@ -359,7 +360,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  | uid of product that we want to get |
+| ids | [int32](#int32) | repeated | list of ProductId&#39;s to fetch |
 
 
 
@@ -369,6 +370,21 @@
 <a name="product-v1alpha0-GetProductResponse"></a>
 
 ### GetProductResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| products | [GetProductResponse.Product](#product-v1alpha0-GetProductResponse-Product) | repeated |  |
+
+
+
+
+
+
+<a name="product-v1alpha0-GetProductResponse-Product"></a>
+
+### GetProductResponse.Product
 
 
 
