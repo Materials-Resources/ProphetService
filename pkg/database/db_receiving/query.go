@@ -49,9 +49,7 @@ func (h *Handler) GetReceipt(request *pb.GetReceiptRequest) (*pb.GetReceiptRespo
 			Sn:          receiptItem.SN,
 			Name:        receiptItem.Name,
 			QtyReceived: receiptItem.QuantityReceived,
-		}
-		if receiptItem.PrimaryBin != nil {
-			item.PrimaryBin = *receiptItem.PrimaryBin
+			PrimaryBin:  receiptItem.PrimaryBin.String,
 		}
 
 		for _, allocatedOrder := range allocatedOrders {
