@@ -1,0 +1,28 @@
+syntax = 'proto3';
+
+package shipping.v1alpha0;
+
+option go_package = "github.com/materials-resources/s_prophet/proto/warehouse/v1alpha0";
+
+service ShippingService {
+  rpc GetPickTicket(GetPickTicketRequest) returns (GetPickTicketResponse);
+}
+
+message GetPickTicketRequest{
+  int32 id = 1;
+}
+
+message GetPickTicketResponse{
+  string ship_name = 1;
+  string ship_line_one = 2;
+  string ship_line_two = 3;
+  string ship_city = 4;
+  string ship_state = 5;
+  string ship_postal_code = 6;
+  string ship_country = 7;
+  string order_id = 8;
+  string order_po = 9;
+  string delivery_instructions = 10;
+  string contact_name = 11;
+  int32 pick_ticket_id = 12;
+}
