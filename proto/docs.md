@@ -3,7 +3,15 @@
 
 ## Table of Contents
 
-- [order/v1alpha0/order.proto](#order_v1alpha0_order-proto)
+- [proto/inventory/v1alpha0/inventory.proto](#proto_inventory_v1alpha0_inventory-proto)
+    - [AddSupplierRequest](#inventory-v1alpha0-AddSupplierRequest)
+    - [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse)
+    - [DeleteSupplierRequest](#inventory-v1alpha0-DeleteSupplierRequest)
+    - [DeleteSupplierResponse](#inventory-v1alpha0-DeleteSupplierResponse)
+  
+    - [InventoryService](#inventory-v1alpha0-InventoryService)
+  
+- [proto/order/v1alpha0/order.proto](#proto_order_v1alpha0_order-proto)
     - [GetOrderItemRequest](#order-v1alpha0-GetOrderItemRequest)
     - [GetOrderItemResponse](#order-v1alpha0-GetOrderItemResponse)
     - [GetOrderItemResponse.Item](#order-v1alpha0-GetOrderItemResponse-Item)
@@ -13,7 +21,7 @@
   
     - [OrderService](#order-v1alpha0-OrderService)
   
-- [product/v1alpha0/product.proto](#product_v1alpha0_product-proto)
+- [proto/product/v1alpha0/product.proto](#proto_product_v1alpha0_product-proto)
     - [CreateProductGroupRequest](#product-v1alpha0-CreateProductGroupRequest)
     - [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse)
     - [CreateProductRequest](#product-v1alpha0-CreateProductRequest)
@@ -28,11 +36,12 @@
     - [GetProductRequest](#product-v1alpha0-GetProductRequest)
     - [GetProductResponse](#product-v1alpha0-GetProductResponse)
     - [GetProductResponse.Product](#product-v1alpha0-GetProductResponse-Product)
+    - [Product](#product-v1alpha0-Product)
     - [ProductGroup](#product-v1alpha0-ProductGroup)
   
     - [ProductService](#product-v1alpha0-ProductService)
   
-- [warehouse/v1alpha0/warehouse.proto](#warehouse_v1alpha0_warehouse-proto)
+- [proto/warehouse/v1alpha0/warehouse.proto](#proto_warehouse_v1alpha0_warehouse-proto)
     - [GetAllocatedOrdersForReceiptItemRequest](#warehouse-v1alpha0-GetAllocatedOrdersForReceiptItemRequest)
     - [GetAllocatedOrdersForReceiptItemResponse](#warehouse-v1alpha0-GetAllocatedOrdersForReceiptItemResponse)
     - [GetAllocatedOrdersForReceiptItemResponse.AllocatedOrder](#warehouse-v1alpha0-GetAllocatedOrdersForReceiptItemResponse-AllocatedOrder)
@@ -48,10 +57,88 @@
 
 
 
-<a name="order_v1alpha0_order-proto"></a>
+<a name="proto_inventory_v1alpha0_inventory-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## order/v1alpha0/order.proto
+## proto/inventory/v1alpha0/inventory.proto
+
+
+
+<a name="inventory-v1alpha0-AddSupplierRequest"></a>
+
+### AddSupplierRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| serial_id | [int32](#int32) |  |  |
+| supplier_id | [int32](#int32) |  |  |
+| division_id | [int32](#int32) |  |  |
+| lead_time | [int32](#int32) |  |  |
+| list_price | [float](#float) |  |  |
+| cost | [float](#float) |  |  |
+| supplier_part_no | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="inventory-v1alpha0-AddSupplierResponse"></a>
+
+### AddSupplierResponse
+
+
+
+
+
+
+
+<a name="inventory-v1alpha0-DeleteSupplierRequest"></a>
+
+### DeleteSupplierRequest
+
+
+
+
+
+
+
+<a name="inventory-v1alpha0-DeleteSupplierResponse"></a>
+
+### DeleteSupplierResponse
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="inventory-v1alpha0-InventoryService"></a>
+
+### InventoryService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| AddSupplier | [AddSupplierRequest](#inventory-v1alpha0-AddSupplierRequest) | [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse) |  |
+| DeleteSupplier | [DeleteSupplierRequest](#inventory-v1alpha0-DeleteSupplierRequest) | [DeleteSupplierResponse](#inventory-v1alpha0-DeleteSupplierResponse) |  |
+
+ 
+
+
+
+<a name="proto_order_v1alpha0_order-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## proto/order/v1alpha0/order.proto
 
 
 
@@ -181,10 +268,10 @@
 
 
 
-<a name="product_v1alpha0_product-proto"></a>
+<a name="proto_product_v1alpha0_product-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## product/v1alpha0/product.proto
+## proto/product/v1alpha0/product.proto
 
 
 
@@ -403,6 +490,16 @@
 
 
 
+<a name="product-v1alpha0-Product"></a>
+
+### Product
+
+
+
+
+
+
+
 <a name="product-v1alpha0-ProductGroup"></a>
 
 ### ProductGroup
@@ -443,10 +540,10 @@
 
 
 
-<a name="warehouse_v1alpha0_warehouse-proto"></a>
+<a name="proto_warehouse_v1alpha0_warehouse-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## warehouse/v1alpha0/warehouse.proto
+## proto/warehouse/v1alpha0/warehouse.proto
 
 
 

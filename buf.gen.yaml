@@ -11,4 +11,4 @@ plugins:
 
   - plugin: buf.build/community/pseudomuto-doc
     out: proto
-    opt: markdown,docs.md
+    opt: markdown,docs.mdg

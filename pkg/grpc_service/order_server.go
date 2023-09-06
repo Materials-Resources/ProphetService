@@ -2,8 +2,8 @@ package grpc_service
 
 import (
 	"context"
-	"github.com/materials-resources/ProphetService/pkg/database"
-	rpc "github.com/materials-resources/ProphetService/proto/order/v1alpha0"
+	"github.com/materials-resources/s_prophet/pkg/database"
+	rpc "github.com/materials-resources/s_prophet/proto/order/v1alpha0"
 )
 
 type OrderServer struct {
