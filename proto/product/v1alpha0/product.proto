@@ -17,6 +17,9 @@ service ProductService{
 
 
 }
+message Product {
+
+}
 
 message GetProductRequest{
   repeated int32 ids = 1; //list of ProductId's to fetch
@@ -77,6 +80,7 @@ message GetGroupProductsRequest {
 }
 
 message GetGroupProductsResponse {
+
   repeated int32 product_id = 1; // List of products
 }
 

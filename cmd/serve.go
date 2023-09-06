@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/materials-resources/ProphetService/pkg/server"
+	"github.com/materials-resources/s_prophet/pkg/server"
 	"github.com/spf13/cobra"
 	"log"
 )

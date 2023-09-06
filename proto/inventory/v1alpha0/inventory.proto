@@ -1,0 +1,31 @@
+syntax = 'proto3';
+
+package inventory.v1alpha0;
+
+option go_package = "github.com/materials-resources/s_prophet/proto/inventory/v1alpha0";
+
+service InventoryService {
+  rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
+  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+}
+
+message AddSupplierRequest {
+  int32 serial_id = 1;
+  int32 supplier_id = 2;
+  int32 division_id = 3;
+  int32 lead_time = 4;
+  float list_price = 5;
+  float cost = 6;
+
+  string supplier_part_no = 7;
+
+
+}
+
+message AddSupplierResponse {
+
+}
+
+message DeleteSupplierRequest {}
+
+message DeleteSupplierResponse {}

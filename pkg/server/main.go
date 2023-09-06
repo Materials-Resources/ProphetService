@@ -2,14 +2,17 @@ package server
 
 import (
 	"fmt"
-	"github.com/materials-resources/ProphetService/pkg/database"
-	"github.com/materials-resources/ProphetService/pkg/grpc_service"
-	rpc_order "github.com/materials-resources/ProphetService/proto/order/v1alpha0"
-	product "github.com/materials-resources/ProphetService/proto/product/v1alpha0"
-	rpc_warehouse "github.com/materials-resources/ProphetService/proto/warehouse/v1alpha0"
+	"github.com/materials-resources/s_prophet/pkg/database"
+	"github.com/materials-resources/s_prophet/pkg/database/db_receiving"
+	"github.com/materials-resources/s_prophet/pkg/grpc_service"
+	rpc_order "github.com/materials-resources/s_prophet/proto/order/v1alpha0"
+	product "github.com/materials-resources/s_prophet/proto/product/v1alpha0"
+	rpc_receiving "github.com/materials-resources/s_prophet/proto/receiving/v1alpha0"
+	rpc_warehouse "github.com/materials-resources/s_prophet/proto/warehouse/v1alpha0"
 	"github.com/uptrace/bun"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"gorm.io/gorm"
 	"log"
 	"net"
 )
@@ -26,7 +29,9 @@ func Serve() error {
 
 	db := connectBun()
 
-	registerGRPCServices(server, db)
+	gdb := connectSQL()
+
+	registerGRPCServices(server, db, gdb)
 
 	reflection.Register(server)
 
@@ -38,10 +43,11 @@ func Serve() error {
 	return nil
 }
 
-func registerGRPCServices(server *grpc.Server, db *bun.DB) {
+func registerGRPCServices(server *grpc.Server, db *bun.DB, gdb *gorm.DB) {
 	product.RegisterProductServiceServer(server, &grpc_service.ProductServer{ProductHandler: database.NewProductHandler(db)})
 	rpc_warehouse.RegisterWarehouseServiceServer(server, &grpc_service.WarehouseServer{WarehouseHandler: database.NewWarehouseHandler(db)})
 	rpc_order.RegisterOrderServiceServer(server, &grpc_service.OrderServer{OrderHandler: database.NewOrderHandler(db)})
+	rpc_receiving.RegisterReceivingServiceServer(server, &grpc_service.ReceivingServer{DBHandler: db_receiving.NewReceivingHandler(gdb)})
 
 	//accountV1.RegisterAccountServiceServer(server, &serviceAccount.Server{DB: db})
 	//inventoryV1.RegisterInventoryServiceServer(server, &serviceInventory.Server{DB: db})
