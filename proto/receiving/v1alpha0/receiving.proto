@@ -17,12 +17,12 @@ message GetReceiptResponse {
     message Order {
       string id = 1; //Order ID
       string name = 2; //Order Name
-      float qty = 3; //Quantity Allocated
+      double qty = 3; //Quantity Allocated
     }
     int32 id = 1;
     string sn = 2;
     string name = 3;
-    float qty_received = 4;
+    double qty_received = 4;
     string primary_bin = 5;
     repeated Order allocated_orders = 6;
   }

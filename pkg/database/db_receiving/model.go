@@ -11,13 +11,13 @@ type resultGetReceiptItem struct {
 	SN               string         `gorm:"column:item_id"`
 	Name             string         `gorm:"column:item_desc"`
 	PrimaryBin       sql.NullString `gorm:"primary_bin"`
-	QuantityReceived float32        `gorm:"column:qty_received"`
+	QuantityReceived float64        `gorm:"column:qty_received"`
 	QuantityUOM      string         `gorm:"column:unit_of_measure"`
 }
 
 type resultGetReceiptItemAllocatedOrder struct {
 	OrderId   int32   `gorm:"column:document_no"`
 	OrderName string  `gorm:"column:ship2_name"`
-	Qty       float32 `gorm:"column:qty_allocated"`
+	Qty       float64 `gorm:"column:qty_allocated"`
 	ProductId int32   `gorm:"column:inv_mast_uid"`
 }

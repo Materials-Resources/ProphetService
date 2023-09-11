@@ -594,7 +594,7 @@
 | id | [int32](#int32) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
-| qty_received | [float](#float) |  |  |
+| qty_received | [double](#double) |  |  |
 | primary_bin | [string](#string) |  |  |
 | allocated_orders | [GetReceiptResponse.Item.Order](#receiving-v1alpha0-GetReceiptResponse-Item-Order) | repeated |  |
 
@@ -613,7 +613,7 @@
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  | Order ID |
 | name | [string](#string) |  | Order Name |
-| qty | [float](#float) |  | Quantity Allocated |
+| qty | [double](#double) |  | Quantity Allocated |
 
 
 
