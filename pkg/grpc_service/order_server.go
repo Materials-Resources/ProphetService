@@ -3,33 +3,44 @@ package grpc_service
 import (
 	"context"
 	"github.com/materials-resources/s_prophet/pkg/database"
+	"github.com/materials-resources/s_prophet/pkg/database/models"
 	rpc "github.com/materials-resources/s_prophet/proto/order/v1alpha0"
+	"gorm.io/gorm"
 )
 
 type OrderServer struct {
 	rpc.UnimplementedOrderServiceServer
 	OrderHandler *database.OrderHandler
+	db           *gorm.DB
+}
+
+func NewOrderServer(db *gorm.DB, orderHandler *database.OrderHandler) *OrderServer {
+	return &OrderServer{
+		UnimplementedOrderServiceServer: rpc.UnimplementedOrderServiceServer{},
+		OrderHandler:                    orderHandler,
+		db:                              db,
+	}
 }
 
 func (s *OrderServer) GetOrder(ctx context.Context, req *rpc.GetOrderRequest) (*rpc.GetOrderResponse, error) {
-	hRes, err := s.OrderHandler.SelectOrder(ctx, req.GetId())
+	var order models.OeHDR
+	err := s.db.Model(&models.OeHDR{}).Preload("OeLineItems").First(&order, req.GetId()).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return &rpc.GetOrderResponse{
-		DeliveryInstructions: hRes.DeliveryInstructions,
+		DeliveryInstructions: order.DeliveryInstructions,
 		ShippingAddress: &rpc.GetOrderResponse_ShippingAddress{
-			Name:       hRes.ShipToName,
-			LineOne:    hRes.ShipToAdd1,
-			LineTwo:    hRes.ShipToAdd2,
-			City:       hRes.ShipToCity,
-			State:      hRes.ShipToState,
-			PostalCode: hRes.ShipToZip,
-			Country:    hRes.ShipToCountry,
+			Name:       order.Ship2Name.String,
+			LineOne:    order.Ship2Add1.String,
+			LineTwo:    order.Ship2Add1.String,
+			City:       order.Ship2City.String,
+			State:      order.Ship2State.String,
+			PostalCode: order.Ship2Zip.String,
+			Country:    order.Ship2Country.String,
 		},
-		PurchaseOrderId: hRes.PoNo,
-		ContactId:       hRes.ContactId,
+		ContactId: order.ContactId.String,
 	}, nil
 }
 

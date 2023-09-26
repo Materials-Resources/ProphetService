@@ -46,7 +46,7 @@ func Serve() error {
 
 func registerGRPCServices(server *grpc.Server, db *bun.DB, gdb *gorm.DB) {
 	product.RegisterProductServiceServer(server, &grpc_service.ProductServer{ProductHandler: database.NewProductHandler(db)})
-	rpc_order.RegisterOrderServiceServer(server, &grpc_service.OrderServer{OrderHandler: database.NewOrderHandler(db)})
+	rpc_order.RegisterOrderServiceServer(server, grpc_service.NewOrderServer(gdb, database.NewOrderHandler(db)))
 	rpc_receiving.RegisterReceivingServiceServer(server, &grpc_service.ReceivingServer{DBHandler: db_receiving.NewReceivingHandler(gdb)})
 	rpc_shipping.RegisterShippingServiceServer(server, &grpc_service.ShippingServer{DBHandler: db_shipping.NewShippingHandler(gdb)})
 

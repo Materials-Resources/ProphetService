@@ -17,6 +17,7 @@
     - [GetOrderItemResponse.Item](#order-v1alpha0-GetOrderItemResponse-Item)
     - [GetOrderRequest](#order-v1alpha0-GetOrderRequest)
     - [GetOrderResponse](#order-v1alpha0-GetOrderResponse)
+    - [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem)
     - [GetOrderResponse.ShippingAddress](#order-v1alpha0-GetOrderResponse-ShippingAddress)
   
     - [OrderService](#order-v1alpha0-OrderService)
@@ -223,9 +224,31 @@
 | ----- | ---- | ----- | ----------- |
 | delivery_instructions | [string](#string) |  |  |
 | shipping_address | [GetOrderResponse.ShippingAddress](#order-v1alpha0-GetOrderResponse-ShippingAddress) |  |  |
+| order_items | [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem) | repeated |  |
 | purchase_order_id | [string](#string) |  |  |
 | contact_id | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1alpha0-GetOrderResponse-OrderItem"></a>
+
+### GetOrderResponse.OrderItem
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| sn | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| qty | [int64](#int64) |  |  |
+| unit | [string](#string) |  |  |
+| unit_price | [int64](#int64) |  |  |
+| total_price | [int64](#int64) |  |  |
 
 
 
@@ -266,7 +289,7 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) |  |
+| GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) | rpc GetOrders(G) returns () |
 | GetOrderItem | [GetOrderItemRequest](#order-v1alpha0-GetOrderItemRequest) | [GetOrderItemResponse](#order-v1alpha0-GetOrderItemResponse) |  |
 
  

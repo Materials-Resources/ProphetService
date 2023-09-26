@@ -5,15 +5,40 @@ package order.v1alpha0;
 option go_package = "github.com/materials-resources/s_prophet/proto/order/v1alpha0";
 
 service OrderService {
+//  rpc GetOrders(G) returns ()
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
   rpc GetOrderItem(GetOrderItemRequest) returns (GetOrderItemResponse);
 }
+
+
+//message GetOrdersRequest {
+//
+//}
+//
+//message GetOrdersResponse {
+//  message Order {
+//    string id = 1;
+//    string name = 2;
+//    int64 date_created = 3;
+//    bool completed = 4;
+//  }
+//  repeated Order orders = 1;
+//}
 
 message GetOrderRequest{
   string id = 1;
 }
 
 message GetOrderResponse{
+  message OrderItem {
+    string id = 1;
+    string sn = 2;
+    string name = 3;
+    int64 qty = 4;
+    string unit = 5;
+    int64 unit_price = 6;
+    int64 total_price = 7;
+  }
   message ShippingAddress {
     string name = 3;
     string line_one = 4;
@@ -26,6 +51,7 @@ message GetOrderResponse{
 
   string delivery_instructions = 2;
   ShippingAddress shipping_address = 3;
+  repeated OrderItem order_items = 4;
   string purchase_order_id = 10;
   string contact_id = 11;
   string taker = 12;
