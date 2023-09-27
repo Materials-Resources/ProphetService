@@ -1,12 +1,12 @@
-package models
+package model
 
 import "database/sql"
 
-func (OeHDR) TableName() string {
+func (OeHdr) TableName() string {
 	return "oe_hdr"
 }
 
-type OeHDR struct {
+type OeHdr struct {
 	OrderNo              string         `gorm:"column:order_no;primaryKey;size:8;"`
 	Ship2Name            sql.NullString `gorm:"column:ship2_name;size:50"`
 	Ship2Add1            sql.NullString `gorm:"column:ship2_add1;size:50"`
@@ -16,7 +16,9 @@ type OeHDR struct {
 	Ship2Zip             sql.NullString `gorm:"column:ship2_zip;size:10"`
 	Ship2Country         sql.NullString `gorm:"column:ship2_country;size:50"`
 	ContactId            sql.NullString `gorm:"column:contact_id;size:16"`
-	DeliveryInstructions string         `gorm:"column:delivery_instructions;size:255"`
+	DeliveryInstructions sql.NullString `gorm:"column:delivery_instructions;type:varchar(255)"`
+	PoNo                 sql.NullString `gorm:"column:po_no;type:varchar(50)"`
 
 	OeLineItems []OeLine `gorm:"foreignKey:OrderNo;references:OrderNo"`
+	Contact     Contact  `gorm:"foreignKey:ContactId;references:Id"`
 }

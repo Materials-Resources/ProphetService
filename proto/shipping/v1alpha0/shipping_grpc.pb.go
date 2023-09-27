@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: shipping/v1alpha0/shipping.proto
 
-package v1alpha0
+package warehouse_v1alpha0
 
 import (
 	context "context"

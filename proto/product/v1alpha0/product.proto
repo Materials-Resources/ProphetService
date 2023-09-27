@@ -2,18 +2,18 @@ syntax = "proto3";
 
 package product.v1alpha0;
 
-option go_package = "github.com/materials-resources/ProphetService/proto/product/v1alpha0";
+option go_package = "github.com/materials-resources/s_prophet/internal/core/model/product_v1alpha0";
 
 service ProductService{
 
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
-  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
-
-  rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse);
-  rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse);
-  rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse);
-  // Creates a new Product Group
-  rpc CreateProductGroup(CreateProductGroupRequest) returns(CreateProductGroupResponse);
+//  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+//
+//  rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse);
+//  rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse);
+//  rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse);
+//  // Creates a new Product Group
+//  rpc CreateProductGroup(CreateProductGroupRequest) returns(CreateProductGroupResponse);
 
 
 }
@@ -22,19 +22,17 @@ message Product {
 }
 
 message GetProductRequest{
-  repeated int32 ids = 1; //list of ProductId's to fetch
+  string id = 1;
 }
 message GetProductResponse{
-  message Product {
-    int32 id = 1;
-    string product_sn = 2;  //products item ID usually formatted as MRS-XXX00-123456
-    string name = 3; // short description of product such as a name of the item
-    string description = 4; //extended description of product
-    string product_group_id = 5; //Product group it belongs to
-    double price = 6; //Default Price of item
-    double qty_available = 7;
-  }
-  repeated Product products = 1;
+  string id = 1; //
+  string sn = 2;  //products item ID usually formatted as MRS-XXX00-123456
+  string name = 3; // short description of product such as a name of the item
+  string description = 4; //extended description of product
+  string product_group_id = 5; //Product group it belongs to
+  int64 price = 6; //Default Price of item
+  int64 units_available = 7;
+  string unit_label = 8;
 
 }
 

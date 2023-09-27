@@ -2,7 +2,7 @@ syntax = 'proto3';
 
 package inventory.v1alpha0;
 
-option go_package = "github.com/materials-resources/s_prophet/proto/inventory/v1alpha0";
+option go_package = "github.com/materials-resources/s_prophet/internal/core/model/inventory_v1alpha0";
 
 service InventoryService {
   rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);

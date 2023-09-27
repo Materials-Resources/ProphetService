@@ -2,28 +2,12 @@ syntax = 'proto3';
 
 package order.v1alpha0;
 
-option go_package = "github.com/materials-resources/s_prophet/proto/order/v1alpha0";
+option go_package = "github.com/materials-resources/s_prophet/internal/core/model/order_v1alpha0";
 
 service OrderService {
-//  rpc GetOrders(G) returns ()
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
-  rpc GetOrderItem(GetOrderItemRequest) returns (GetOrderItemResponse);
 }
 
-
-//message GetOrdersRequest {
-//
-//}
-//
-//message GetOrdersResponse {
-//  message Order {
-//    string id = 1;
-//    string name = 2;
-//    int64 date_created = 3;
-//    bool completed = 4;
-//  }
-//  repeated Order orders = 1;
-//}
 
 message GetOrderRequest{
   string id = 1;
@@ -34,12 +18,12 @@ message GetOrderResponse{
     string id = 1;
     string sn = 2;
     string name = 3;
-    int64 qty = 4;
-    string unit = 5;
-    int64 unit_price = 6;
+    int64 unit_purchased = 4;
+    string unit_label = 5;
+    int64 cost_per_unit = 6;
     int64 total_price = 7;
   }
-  message ShippingAddress {
+  message ShippingDetails {
     string name = 3;
     string line_one = 4;
     string line_two = 5;
@@ -47,31 +31,12 @@ message GetOrderResponse{
     string state = 7;
     string postal_code = 8;
     string country = 9;
+    string delivery_instructions = 10;
   }
-
-  string delivery_instructions = 2;
-  ShippingAddress shipping_address = 3;
+  string id = 1;
+  ShippingDetails shipping_details = 3;
   repeated OrderItem order_items = 4;
-  string purchase_order_id = 10;
+  string purchase_order = 10;
   string contact_id = 11;
   string taker = 12;
-}
-
-message GetOrderItemRequest {
-  string order_id = 1;
-  repeated int32 product_id = 2;
-}
-
-message GetOrderItemResponse {
-  message Item {
-      int32 product_id = 1;
-      float quantity_ordered = 2;
-      float unit_price = 3;
-      string unit_measurement = 4;
-      float total_price = 5;
-
-      string customer_product_id = 10;
-
-  }
-  repeated Item item = 1;
 }

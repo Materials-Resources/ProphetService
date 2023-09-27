@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: supplier/v1alpha0/supplier.proto
 
-package v1alpha0
+package supplier_v1alpha0
 
 import (
 	grpc "google.golang.org/grpc"

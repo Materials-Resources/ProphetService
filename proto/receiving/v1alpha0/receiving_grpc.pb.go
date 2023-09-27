@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: receiving/v1alpha0/receiving.proto
 
-package v1alpha0
+package receiving_v1alpha0
 
 import (
 	context "context"

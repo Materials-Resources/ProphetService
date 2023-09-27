@@ -1,53 +1,43 @@
 package server
 
 import (
-	"fmt"
-	"github.com/materials-resources/s_prophet/pkg/database"
-	"github.com/materials-resources/s_prophet/pkg/database/db_receiving"
-	"github.com/materials-resources/s_prophet/pkg/database/db_shipping"
-	"github.com/materials-resources/s_prophet/pkg/grpc_service"
-	rpc_order "github.com/materials-resources/s_prophet/proto/order/v1alpha0"
-	product "github.com/materials-resources/s_prophet/proto/product/v1alpha0"
-	rpc_receiving "github.com/materials-resources/s_prophet/proto/receiving/v1alpha0"
-	rpc_shipping "github.com/materials-resources/s_prophet/proto/shipping/v1alpha0"
-	"github.com/uptrace/bun"
+	"github.com/materials-resources/s_prophet/pkg/internal/core/server"
+	"github.com/materials-resources/s_prophet/pkg/internal/core/service/order"
+	"github.com/materials-resources/s_prophet/pkg/internal/core/service/product"
+	"github.com/materials-resources/s_prophet/pkg/internal/core/service/shipping"
+	"github.com/materials-resources/s_prophet/pkg/internal/infra/repository"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"gorm.io/gorm"
-	"log"
-	"net"
 )
 
-func Serve() error {
+func Serve() {
+	s := grpc.NewServer()
 
-	listenOn := "0.0.0.0:50058"
-	listener, err := net.Listen("tcp", listenOn)
-	if err != nil {
-		return fmt.Errorf("failed to start grpc_service on %s: %w", listenOn, err)
-	}
+	db, _ := repository.NewDB()
 
-	server := grpc.NewServer()
+	//Define repositories
+	orderRepo := repository.NewOrderRepository(db)
+	productRepo := repository.NewProductRepository(db)
+	shippingRepo := repository.NewShippingRepository(db)
 
-	db := connectBun()
+	//Register the grpc servers
+	order.NewOrderServer(
+		s,
+		orderRepo,
+	)
+	product.NewProductServer(
+		s,
+		productRepo,
+	)
+	shipping.NewShippingServer(
+		s,
+		shippingRepo,
+	)
 
-	gdb := connectSQL()
+	//Enable GRPC Reflection for clients
+	reflection.Register(s)
 
-	registerGRPCServices(server, db, gdb)
+	grpcServer := server.NewGrpcServer(s)
 
-	reflection.Register(server)
-
-	log.Println("Listening on", listenOn)
-
-	if err := server.Serve(listener); err != nil {
-		return fmt.Errorf("failed to serve gRPC server: %w", err)
-	}
-	return nil
-}
-
-func registerGRPCServices(server *grpc.Server, db *bun.DB, gdb *gorm.DB) {
-	product.RegisterProductServiceServer(server, &grpc_service.ProductServer{ProductHandler: database.NewProductHandler(db)})
-	rpc_order.RegisterOrderServiceServer(server, grpc_service.NewOrderServer(gdb, database.NewOrderHandler(db)))
-	rpc_receiving.RegisterReceivingServiceServer(server, &grpc_service.ReceivingServer{DBHandler: db_receiving.NewReceivingHandler(gdb)})
-	rpc_shipping.RegisterShippingServiceServer(server, &grpc_service.ShippingServer{DBHandler: db_shipping.NewShippingHandler(gdb)})
-
+	grpcServer.Start()
 }
