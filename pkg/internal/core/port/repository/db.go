@@ -1,12 +1,11 @@
 package repository
 
 import (
+	"database/sql"
 	"io"
-
-	"gorm.io/gorm"
 )
 
 type Database interface {
 	io.Closer
-	GetDB() *gorm.DB
+	GetDB() *sql.DB
 }

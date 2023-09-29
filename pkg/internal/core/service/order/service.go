@@ -24,7 +24,10 @@ func NewOrderServer(server *grpc.Server, orderRepository repository.OrderReposit
 }
 
 func (s *service) GetOrder(ctx context.Context, req *rpc.GetOrderRequest) (*rpc.GetOrderResponse, error) {
-	order, err := s.orderRepository.Read(req.GetId())
+	order, err := s.orderRepository.Read(
+		ctx,
+		req.GetId(),
+	)
 	if err != nil {
 		return nil, common.GetRpcError(err)
 	}

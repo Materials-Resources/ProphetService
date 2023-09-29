@@ -1,26 +1,24 @@
 package repository
 
 import (
+	"database/sql"
 	"errors"
 	"log"
 	"os"
 
+	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/port/repository"
-	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 )
 
 type database struct {
-	*gorm.DB
+	*sql.DB
 }
 
 func NewDB() (repository.Database, error) {
-	db, err := gorm.Open(
-		sqlserver.Open(os.Getenv("DSN")),
-		&gorm.Config{
-			SkipDefaultTransaction: true,
-			PrepareStmt:            true,
-		},
+	db, err := sql.Open(
+		"sqlserver",
+		os.Getenv("DSN"),
 	)
 	if err != nil {
 		log.Fatal("failed to connect to database")
@@ -31,14 +29,12 @@ func NewDB() (repository.Database, error) {
 	}, nil
 }
 
-func (da database) Close() error {
-	dbInstance, _ := da.DB.DB()
-
-	return dbInstance.Close()
+func (d database) Close() error {
+	return d.DB.Close()
 }
 
-func (da database) GetDB() *gorm.DB {
-	return da.DB
+func (d database) GetDB() *sql.DB {
+	return d.DB
 }
 
 func gormToRepositoryError(err error) error {

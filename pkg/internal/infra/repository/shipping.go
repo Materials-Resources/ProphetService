@@ -1,35 +1,54 @@
 package repository
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
 	"github.com/materials-resources/s_prophet/pkg/internal/core/domain"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/port/repository"
 	"github.com/materials-resources/s_prophet/pkg/internal/infra/repository/model"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mssqldialect"
 )
 
 type shippingRepository struct {
-	db repository.Database
+	db  repository.Database
+	bun *bun.DB
 }
 
-func (s shippingRepository) GetPickTicket(id string) (*domain.PickTicket, error) {
-	var oePickTicket model.OePickTicket
-	err := s.db.GetDB().Model(&model.OePickTicket{}).Preload("OeHdr").Preload("OeHdr.Contact").First(
-		&oePickTicket,
+func (r shippingRepository) GetPickTicket(ctx context.Context, id string) (*domain.PickTicket, error) {
+	oePickTicket := new(model.OePickTicket)
+	pickTicketId, err := strconv.ParseFloat(
 		id,
-	).Error
+		32,
+	)
+	if err != nil {
+		return nil, err
+	}
+	err = r.bun.NewSelect().Model(oePickTicket).Relation("OeHdr").Relation("OeHdr.Contact").Where(
+		"pick_ticket_no = ?",
+		pickTicketId,
+	).Scan(ctx)
+	fmt.Println(oePickTicket.OeHdr)
 	if err != nil {
 		return nil, err
 	}
 
-	pickTicket := oePickTicketToDomain(&oePickTicket)
+	pickTicket := oePickTicketToDomain(oePickTicket)
 	return &pickTicket, nil
 
 }
 
 func NewShippingRepository(db repository.Database) repository.ShippingRepository {
-	return &shippingRepository{db: db}
+	bundb := bun.NewDB(
+		db.GetDB(),
+		mssqldialect.New(),
+	)
+	return &shippingRepository{
+		db:  db,
+		bun: bundb,
+	}
 }
 
 func oePickTicketToDomain(oePickTicket *model.OePickTicket) domain.PickTicket {

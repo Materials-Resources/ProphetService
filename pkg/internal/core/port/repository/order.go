@@ -1,13 +1,15 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/materials-resources/s_prophet/pkg/internal/core/domain"
 )
 
 type OrderRepository interface {
-	Create() error                         //Creates a new order
-	Read(id string) (*domain.Order, error) //Reads an existing order
-	Update() error                         //Updates an existing order
-	Delete() error                         //Deletes an existing order
-	AddItem() error                        //Adds an item to an existing order
+	Create(ctx context.Context) error                           //Creates a new order
+	Read(ctx context.Context, id string) (*domain.Order, error) //Reads an existing order
+	Update(ctx context.Context) error                           //Updates an existing order
+	Delete(ctx context.Context) error                           //Deletes an existing order
+	AddItem(ctx context.Context) error                          //Adds an item to an existing order
 }

@@ -1,54 +1,65 @@
 package repository
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/materials-resources/s_prophet/pkg/internal/core/domain"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/port/repository"
 	"github.com/materials-resources/s_prophet/pkg/internal/infra/repository/model"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mssqldialect"
 )
 
 type productRepository struct {
-	db repository.Database
+	bun *bun.DB
+	db  repository.Database
 }
 
-func (p productRepository) Read(id string) (*domain.Product, error) {
-	var invMast model.InvMast
+func (p productRepository) Read(ctx context.Context, id string) (*domain.Product, error) {
+	invMast := new(model.InvMast)
 
 	pk, err := strconv.Atoi(id)
 	if err != nil {
 		return nil, err
 	}
-	err = p.db.GetDB().Model(&model.InvMast{}).First(
-		&invMast,
+	err = p.bun.NewSelect().Model(invMast).Where(
+		"inv_mast_uid = ?",
 		pk,
-	).Error
+	).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
-	product := invMastToDomain(&invMast)
+	product := invMastToDomain(invMast)
 
 	return &product, nil
 
 }
 
-func (p productRepository) Create() {
+func (p productRepository) Create(ctx context.Context) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p productRepository) Update() {
+func (p productRepository) Update(ctx context.Context) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p productRepository) Delete() {
+func (p productRepository) Delete(ctx context.Context) {
 	//TODO implement me
 	panic("implement me")
 }
 
 func NewProductRepository(db repository.Database) repository.ProductRepository {
-	return &productRepository{db: db}
+	bundb := bun.NewDB(
+		db.GetDB(),
+		mssqldialect.New(),
+	)
+	return &productRepository{
+		db:  db,
+		bun: bundb,
+	}
 }
 
 func invMastToDomain(invMast *model.InvMast) domain.Product {

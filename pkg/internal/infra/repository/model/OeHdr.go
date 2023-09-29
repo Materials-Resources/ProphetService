@@ -1,24 +1,25 @@
 package model
 
-import "database/sql"
+import (
+	"database/sql"
 
-func (OeHdr) TableName() string {
-	return "oe_hdr"
-}
+	"github.com/uptrace/bun"
+)
 
 type OeHdr struct {
-	OrderNo              string         `gorm:"column:order_no;primaryKey;size:8;"`
-	Ship2Name            sql.NullString `gorm:"column:ship2_name;size:50"`
-	Ship2Add1            sql.NullString `gorm:"column:ship2_add1;size:50"`
-	Ship2Add2            sql.NullString `gorm:"column:ship2_add2;size:50"`
-	Ship2City            sql.NullString `gorm:"column:ship2_city;size:50"`
-	Ship2State           sql.NullString `gorm:"column:ship2_state;size:50"`
-	Ship2Zip             sql.NullString `gorm:"column:ship2_zip;size:10"`
-	Ship2Country         sql.NullString `gorm:"column:ship2_country;size:50"`
-	ContactId            sql.NullString `gorm:"column:contact_id;size:16"`
-	DeliveryInstructions sql.NullString `gorm:"column:delivery_instructions;type:varchar(255)"`
-	PoNo                 sql.NullString `gorm:"column:po_no;type:varchar(50)"`
+	bun.BaseModel        `bun:"table:oe_hdr"`
+	OrderNo              string         `bun:"order_no,type:varchar(8),pk"`
+	Ship2Name            sql.NullString `bun:"ship2_name,type:varchar(50)"`
+	Ship2Add1            sql.NullString `bun:"ship2_add1,type:varchar(50)"`
+	Ship2Add2            sql.NullString `bun:"ship2_add2,type:varchar(50)"`
+	Ship2City            sql.NullString `bun:"ship2_city,type:varchar(50)"`
+	Ship2State           sql.NullString `bun:"ship2_state,type:varchar(50)"`
+	Ship2Zip             sql.NullString `bun:"ship2_zip,type:varchar(10)"`
+	Ship2Country         sql.NullString `bun:"ship2_country,type:varchar(50)"`
+	ContactId            sql.NullString `bun:"contact_id,type:varchar(16)"`
+	DeliveryInstructions sql.NullString `bun:"delivery_instructions,type:varchar(255)"`
+	PoNo                 sql.NullString `bun:"po_no,type:varchar(50)"`
 
-	OeLineItems []OeLine `gorm:"foreignKey:OrderNo;references:OrderNo"`
-	Contact     Contact  `gorm:"foreignKey:ContactId;references:Id"`
+	OeLineItems []OeLine `bun:"rel:has-many,join:order_no=order_no"`
+	Contact     Contact  `bun:"rel:has-one,join:contact_id=id"`
 }

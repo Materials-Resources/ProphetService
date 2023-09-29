@@ -21,7 +21,10 @@ func NewProductServer(server *grpc.Server, productRepository repository.ProductR
 	)
 }
 func (s *service) GetProduct(ctx context.Context, req *rpc.GetProductRequest) (*rpc.GetProductResponse, error) {
-	if product, err := s.productRepository.Read(req.GetId()); err != nil {
+	if product, err := s.productRepository.Read(
+		ctx,
+		req.GetId(),
+	); err != nil {
 		return nil, err
 	} else {
 		response := domainToProductResponse(product)

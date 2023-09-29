@@ -1,55 +1,66 @@
 package repository
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/materials-resources/s_prophet/pkg/internal/core/domain"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/port/repository"
 	"github.com/materials-resources/s_prophet/pkg/internal/infra/repository/model"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mssqldialect"
 )
 
 type orderRepository struct {
-	db repository.Database
+	bun *bun.DB
+	db  repository.Database
 }
 
-func (o orderRepository) Create() error {
+func (o orderRepository) Create(ctx context.Context) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (o orderRepository) Read(id string) (*domain.Order, error) {
-	var oeHdr model.OeHdr
+func (o orderRepository) Read(ctx context.Context, id string) (*domain.Order, error) {
+	oeHdr := new(model.OeHdr)
 
-	err := o.db.GetDB().Model(&model.OeHdr{}).Preload("OeLineItems").Preload("OeLineItems.InvMast").First(
-		&oeHdr,
+	err := o.bun.NewSelect().Model(oeHdr).Relation("OeLineItems").Relation("OeLineItems.InvMast").Where(
+		"order_no = ?",
 		id,
-	).Error
+	).Scan(ctx)
 	if err != nil {
 		return nil, gormToRepositoryError(err)
 	}
 
-	order := oeHdrToDomain(&oeHdr)
+	order := oeHdrToDomain(oeHdr)
 
 	return &order, nil
 }
 
-func (o orderRepository) Update() error {
+func (o orderRepository) Update(ctx context.Context) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (o orderRepository) Delete() error {
+func (o orderRepository) Delete(ctx context.Context) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (o orderRepository) AddItem() error {
+func (o orderRepository) AddItem(ctx context.Context) error {
 	//TODO implement me
 	panic("implement me")
 }
 
 func NewOrderRepository(db repository.Database) repository.OrderRepository {
-	return &orderRepository{db: db}
+	bundb := bun.NewDB(
+		db.GetDB(),
+		mssqldialect.New(),
+	)
+	return &orderRepository{
+		db:  db,
+		bun: bundb,
+	}
 }
 
 func oeHdrToDomain(oeHdr *model.OeHdr) domain.Order {

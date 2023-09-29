@@ -16,7 +16,10 @@ type service struct {
 func (s service) GetPickTicket(ctx context.Context, request *rpc.GetPickTicketRequest) (
 	*rpc.GetPickTicketResponse, error,
 ) {
-	if pickTicket, err := s.shippingRepository.GetPickTicket(request.GetId()); err != nil {
+	if pickTicket, err := s.shippingRepository.GetPickTicket(
+		ctx,
+		request.GetId(),
+	); err != nil {
 		return nil, err
 	} else {
 		return domainToPickTicketResponse(pickTicket), err

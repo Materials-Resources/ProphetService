@@ -12,13 +12,10 @@
     - [InventoryService](#inventory-v1alpha0-InventoryService)
   
 - [order/v1alpha0/order.proto](#order_v1alpha0_order-proto)
-    - [GetOrderItemRequest](#order-v1alpha0-GetOrderItemRequest)
-    - [GetOrderItemResponse](#order-v1alpha0-GetOrderItemResponse)
-    - [GetOrderItemResponse.Item](#order-v1alpha0-GetOrderItemResponse-Item)
     - [GetOrderRequest](#order-v1alpha0-GetOrderRequest)
     - [GetOrderResponse](#order-v1alpha0-GetOrderResponse)
     - [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem)
-    - [GetOrderResponse.ShippingAddress](#order-v1alpha0-GetOrderResponse-ShippingAddress)
+    - [GetOrderResponse.ShippingDetails](#order-v1alpha0-GetOrderResponse-ShippingDetails)
   
     - [OrderService](#order-v1alpha0-OrderService)
   
@@ -36,7 +33,6 @@
     - [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup)
     - [GetProductRequest](#product-v1alpha0-GetProductRequest)
     - [GetProductResponse](#product-v1alpha0-GetProductResponse)
-    - [GetProductResponse.Product](#product-v1alpha0-GetProductResponse-Product)
     - [Product](#product-v1alpha0-Product)
     - [ProductGroup](#product-v1alpha0-ProductGroup)
   
@@ -53,6 +49,7 @@
 - [shipping/v1alpha0/shipping.proto](#shipping_v1alpha0_shipping-proto)
     - [GetPickTicketRequest](#shipping-v1alpha0-GetPickTicketRequest)
     - [GetPickTicketResponse](#shipping-v1alpha0-GetPickTicketResponse)
+    - [GetPickTicketResponse.ShippingDetails](#shipping-v1alpha0-GetPickTicketResponse-ShippingDetails)
   
     - [ShippingService](#shipping-v1alpha0-ShippingService)
   
@@ -148,57 +145,6 @@
 
 
 
-<a name="order-v1alpha0-GetOrderItemRequest"></a>
-
-### GetOrderItemRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| order_id | [string](#string) |  |  |
-| product_id | [int32](#int32) | repeated |  |
-
-
-
-
-
-
-<a name="order-v1alpha0-GetOrderItemResponse"></a>
-
-### GetOrderItemResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| item | [GetOrderItemResponse.Item](#order-v1alpha0-GetOrderItemResponse-Item) | repeated |  |
-
-
-
-
-
-
-<a name="order-v1alpha0-GetOrderItemResponse-Item"></a>
-
-### GetOrderItemResponse.Item
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| product_id | [int32](#int32) |  |  |
-| quantity_ordered | [float](#float) |  |  |
-| unit_price | [float](#float) |  |  |
-| unit_measurement | [string](#string) |  |  |
-| total_price | [float](#float) |  |  |
-| customer_product_id | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="order-v1alpha0-GetOrderRequest"></a>
 
 ### GetOrderRequest
@@ -222,10 +168,10 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| delivery_instructions | [string](#string) |  |  |
-| shipping_address | [GetOrderResponse.ShippingAddress](#order-v1alpha0-GetOrderResponse-ShippingAddress) |  |  |
+| id | [string](#string) |  |  |
+| shipping_details | [GetOrderResponse.ShippingDetails](#order-v1alpha0-GetOrderResponse-ShippingDetails) |  |  |
 | order_items | [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem) | repeated |  |
-| purchase_order_id | [string](#string) |  |  |
+| purchase_order | [string](#string) |  |  |
 | contact_id | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 
@@ -245,9 +191,9 @@
 | id | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
-| qty | [int64](#int64) |  |  |
-| unit | [string](#string) |  |  |
-| unit_price | [int64](#int64) |  |  |
+| unit_purchased | [int64](#int64) |  |  |
+| unit_label | [string](#string) |  |  |
+| cost_per_unit | [int64](#int64) |  |  |
 | total_price | [int64](#int64) |  |  |
 
 
@@ -255,9 +201,9 @@
 
 
 
-<a name="order-v1alpha0-GetOrderResponse-ShippingAddress"></a>
+<a name="order-v1alpha0-GetOrderResponse-ShippingDetails"></a>
 
-### GetOrderResponse.ShippingAddress
+### GetOrderResponse.ShippingDetails
 
 
 
@@ -270,6 +216,7 @@
 | state | [string](#string) |  |  |
 | postal_code | [string](#string) |  |  |
 | country | [string](#string) |  |  |
+| delivery_instructions | [string](#string) |  |  |
 
 
 
@@ -289,8 +236,7 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) | rpc GetOrders(G) returns () |
-| GetOrderItem | [GetOrderItemRequest](#order-v1alpha0-GetOrderItemRequest) | [GetOrderItemResponse](#order-v1alpha0-GetOrderItemResponse) |  |
+| GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) |  |
 
  
 
@@ -475,7 +421,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ids | [int32](#int32) | repeated | list of ProductId&#39;s to fetch |
+| id | [string](#string) |  |  |
 
 
 
@@ -490,28 +436,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| products | [GetProductResponse.Product](#product-v1alpha0-GetProductResponse-Product) | repeated |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductResponse-Product"></a>
-
-### GetProductResponse.Product
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
-| product_sn | [string](#string) |  | products item ID usually formatted as MRS-XXX00-123456 |
+| id | [string](#string) |  |  |
+| sn | [string](#string) |  | products item ID usually formatted as MRS-XXX00-123456 |
 | name | [string](#string) |  | short description of product such as a name of the item |
 | description | [string](#string) |  | extended description of product |
 | product_group_id | [string](#string) |  | Product group it belongs to |
-| price | [double](#double) |  | Default Price of item |
-| qty_available | [double](#double) |  |  |
+| price | [int64](#int64) |  | Default Price of item |
+| units_available | [int64](#int64) |  |  |
+| unit_label | [string](#string) |  |  |
 
 
 
@@ -557,12 +489,9 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetProduct | [GetProductRequest](#product-v1alpha0-GetProductRequest) | [GetProductResponse](#product-v1alpha0-GetProductResponse) |  |
-| CreateProduct | [CreateProductRequest](#product-v1alpha0-CreateProductRequest) | [CreateProductResponse](#product-v1alpha0-CreateProductResponse) |  |
-| GetProductBySupplierPartId | [GetProductBySupplierPartIdRequest](#product-v1alpha0-GetProductBySupplierPartIdRequest) | [GetProductBySupplierPartIdResponse](#product-v1alpha0-GetProductBySupplierPartIdResponse) |  |
-| GetProductGroups | [GetProductGroupsRequest](#product-v1alpha0-GetProductGroupsRequest) | [GetProductGroupsResponse](#product-v1alpha0-GetProductGroupsResponse) |  |
-| GetGroupProducts | [GetGroupProductsRequest](#product-v1alpha0-GetGroupProductsRequest) | [GetGroupProductsResponse](#product-v1alpha0-GetGroupProductsResponse) |  |
-| CreateProductGroup | [CreateProductGroupRequest](#product-v1alpha0-CreateProductGroupRequest) | [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse) | Creates a new Product Group |
+| GetProduct | [GetProductRequest](#product-v1alpha0-GetProductRequest) | [GetProductResponse](#product-v1alpha0-GetProductResponse) | rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+
+ rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse); rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse); rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse); // Creates a new Product Group rpc CreateProductGroup(CreateProductGroupRequest) returns(CreateProductGroupResponse); |
 
  
 
@@ -677,7 +606,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
+| id | [string](#string) |  |  |
 
 
 
@@ -692,18 +621,33 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ship_name | [string](#string) |  |  |
-| ship_line_one | [string](#string) |  |  |
-| ship_line_two | [string](#string) |  |  |
-| ship_city | [string](#string) |  |  |
-| ship_state | [string](#string) |  |  |
-| ship_postal_code | [string](#string) |  |  |
-| ship_country | [string](#string) |  |  |
+| pick_ticket_id | [string](#string) |  |  |
+| shipping_details | [GetPickTicketResponse.ShippingDetails](#shipping-v1alpha0-GetPickTicketResponse-ShippingDetails) |  |  |
 | order_id | [string](#string) |  |  |
-| order_po | [string](#string) |  |  |
+| order_purchase_order | [string](#string) |  |  |
+| order_contact_name | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="shipping-v1alpha0-GetPickTicketResponse-ShippingDetails"></a>
+
+### GetPickTicketResponse.ShippingDetails
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| line_one | [string](#string) |  |  |
+| line_two | [string](#string) |  |  |
+| city | [string](#string) |  |  |
+| state | [string](#string) |  |  |
+| postal_code | [string](#string) |  |  |
+| country | [string](#string) |  |  |
 | delivery_instructions | [string](#string) |  |  |
-| contact_name | [string](#string) |  |  |
-| pick_ticket_id | [int32](#int32) |  |  |
 
 
 

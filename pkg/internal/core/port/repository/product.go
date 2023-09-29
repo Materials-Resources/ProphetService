@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/materials-resources/s_prophet/pkg/internal/core/domain"
 )
 
 type ProductRepository interface {
-	Create()
-	Read(id string) (*domain.Product, error) // Returns product details given a identifier
-	Update()
-	Delete()
+	Create(ctx context.Context)
+	Read(ctx context.Context, id string) (*domain.Product, error) // Returns product details given a identifier
+	Update(ctx context.Context)
+	Delete(ctx context.Context)
 }

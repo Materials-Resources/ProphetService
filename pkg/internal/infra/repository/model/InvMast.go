@@ -2,16 +2,15 @@ package model
 
 import (
 	"database/sql"
+
+	"github.com/uptrace/bun"
 )
 
-func (InvMast) TableName() string {
-	return "inv_mast"
-}
-
 type InvMast struct {
-	InvMastUid   int32           `gorm:"column:inv_mast_uid;type:int;primaryKey"`
-	ItemId       string          `gorm:"column:item_id;type:varchar(40);unique"`
-	ItemDesc     string          `gorm:"column:item_desc;type:varchar(40)"`
-	ExtendedDesc sql.NullString  `gorm:"column:extended_desc;type:varchar(255)"`
-	Price1       sql.NullFloat64 `gorm:"column:price1;type:decimal(19, 9)"`
+	bun.BaseModel `bun:"table:inv_mast"`
+	InvMastUid    int32           `bun:"inv_mast_uid,type:int,pk"`
+	ItemId        string          `bun:"item_id,type:varchar(40),unique"`
+	ItemDesc      string          `bun:"item_desc,type:varchar(40)"`
+	ExtendedDesc  sql.NullString  `bun:"extended_desc,type:varchar(255)"`
+	Price1        sql.NullFloat64 `bun:"price1,type:decimal(19, 9)"`
 }

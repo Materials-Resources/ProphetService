@@ -4,6 +4,7 @@ import (
 	"github.com/materials-resources/s_prophet/pkg/internal/core/server"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/service/order"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/service/product"
+	"github.com/materials-resources/s_prophet/pkg/internal/core/service/receiving"
 	"github.com/materials-resources/s_prophet/pkg/internal/core/service/shipping"
 	"github.com/materials-resources/s_prophet/pkg/internal/infra/repository"
 	"google.golang.org/grpc"
@@ -19,6 +20,7 @@ func Serve() {
 	orderRepo := repository.NewOrderRepository(db)
 	productRepo := repository.NewProductRepository(db)
 	shippingRepo := repository.NewShippingRepository(db)
+	receivingRepo := repository.NewReceivingRepository(db)
 
 	//Register the grpc servers
 	order.NewOrderServer(
@@ -32,6 +34,11 @@ func Serve() {
 	shipping.NewShippingServer(
 		s,
 		shippingRepo,
+	)
+
+	receiving.NewReceivingServer(
+		s,
+		receivingRepo,
 	)
 
 	//Enable GRPC Reflection for clients
