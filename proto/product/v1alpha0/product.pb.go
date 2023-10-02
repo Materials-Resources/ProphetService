@@ -110,14 +110,14 @@ type GetProductResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                 //
-	Sn             string `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn,omitempty"`                                                 //products item ID usually formatted as MRS-XXX00-123456
-	Name           string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                                             // short description of product such as a name of the item
-	Description    string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                               //extended description of product
-	ProductGroupId string `protobuf:"bytes,5,opt,name=product_group_id,json=productGroupId,proto3" json:"product_group_id,omitempty"` //Product group it belongs to
-	Price          int64  `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`                                          //Default Price of item
-	UnitsAvailable int64  `protobuf:"varint,7,opt,name=units_available,json=unitsAvailable,proto3" json:"units_available,omitempty"`
-	UnitLabel      string `protobuf:"bytes,8,opt,name=unit_label,json=unitLabel,proto3" json:"unit_label,omitempty"`
+	Id             string  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                 //
+	Sn             string  `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn,omitempty"`                                                 //products item ID usually formatted as MRS-XXX00-123456
+	Name           string  `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                                             // short description of product such as a name of the item
+	Description    string  `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                               //extended description of product
+	ProductGroupId string  `protobuf:"bytes,5,opt,name=product_group_id,json=productGroupId,proto3" json:"product_group_id,omitempty"` //Product group it belongs to
+	Price          int64   `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`                                          //Default Price of item
+	UnitsAvailable float64 `protobuf:"fixed64,7,opt,name=units_available,json=unitsAvailable,proto3" json:"units_available,omitempty"`
+	UnitLabel      string  `protobuf:"bytes,8,opt,name=unit_label,json=unitLabel,proto3" json:"unit_label,omitempty"`
 }
 
 func (x *GetProductResponse) Reset() {
@@ -194,7 +194,7 @@ func (x *GetProductResponse) GetPrice() int64 {
 	return 0
 }
 
-func (x *GetProductResponse) GetUnitsAvailable() int64 {
+func (x *GetProductResponse) GetUnitsAvailable() float64 {
 	if x != nil {
 		return x.UnitsAvailable
 	}
@@ -886,7 +886,7 @@ var file_product_v1alpha0_product_proto_rawDesc = []byte{
 	0x63, 0x74, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69,
 	0x63, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x12,
 	0x27, 0x0a, 0x0f, 0x75, 0x6e, 0x69, 0x74, 0x73, 0x5f, 0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62,
-	0x6c, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0e, 0x75, 0x6e, 0x69, 0x74, 0x73, 0x41,
+	0x6c, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x01, 0x52, 0x0e, 0x75, 0x6e, 0x69, 0x74, 0x73, 0x41,
 	0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x75, 0x6e, 0x69, 0x74,
 	0x5f, 0x6c, 0x61, 0x62, 0x65, 0x6c, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x75, 0x6e,
 	0x69, 0x74, 0x4c, 0x61, 0x62, 0x65, 0x6c, 0x22, 0xb5, 0x02, 0x0a, 0x14, 0x43, 0x72, 0x65, 0x61,

@@ -41,8 +41,8 @@
 - [receiving/v1alpha0/receiving.proto](#receiving_v1alpha0_receiving-proto)
     - [GetReceiptRequest](#receiving-v1alpha0-GetReceiptRequest)
     - [GetReceiptResponse](#receiving-v1alpha0-GetReceiptResponse)
-    - [GetReceiptResponse.Item](#receiving-v1alpha0-GetReceiptResponse-Item)
-    - [GetReceiptResponse.Item.Order](#receiving-v1alpha0-GetReceiptResponse-Item-Order)
+    - [GetReceiptResponse.Product](#receiving-v1alpha0-GetReceiptResponse-Product)
+    - [GetReceiptResponse.Product.Order](#receiving-v1alpha0-GetReceiptResponse-Product-Order)
   
     - [ReceivingService](#receiving-v1alpha0-ReceivingService)
   
@@ -191,7 +191,7 @@
 | id | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
-| unit_purchased | [int64](#int64) |  |  |
+| unit_purchased | [double](#double) |  |  |
 | unit_label | [string](#string) |  |  |
 | cost_per_unit | [int64](#int64) |  |  |
 | total_price | [int64](#int64) |  |  |
@@ -442,7 +442,7 @@
 | description | [string](#string) |  | extended description of product |
 | product_group_id | [string](#string) |  | Product group it belongs to |
 | price | [int64](#int64) |  | Default Price of item |
-| units_available | [int64](#int64) |  |  |
+| units_available | [double](#double) |  |  |
 | unit_label | [string](#string) |  |  |
 
 
@@ -512,7 +512,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
+| id | [string](#string) |  |  |
 
 
 
@@ -527,37 +527,38 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
-| items | [GetReceiptResponse.Item](#receiving-v1alpha0-GetReceiptResponse-Item) | repeated |  |
+| id | [string](#string) |  |  |
+| products | [GetReceiptResponse.Product](#receiving-v1alpha0-GetReceiptResponse-Product) | repeated |  |
 
 
 
 
 
 
-<a name="receiving-v1alpha0-GetReceiptResponse-Item"></a>
+<a name="receiving-v1alpha0-GetReceiptResponse-Product"></a>
 
-### GetReceiptResponse.Item
+### GetReceiptResponse.Product
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
+| id | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
-| qty_received | [double](#double) |  |  |
+| units_received | [double](#double) |  |  |
+| unit_label | [string](#string) |  |  |
 | primary_bin | [string](#string) |  |  |
-| allocated_orders | [GetReceiptResponse.Item.Order](#receiving-v1alpha0-GetReceiptResponse-Item-Order) | repeated |  |
+| allocated_orders | [GetReceiptResponse.Product.Order](#receiving-v1alpha0-GetReceiptResponse-Product-Order) | repeated |  |
 
 
 
 
 
 
-<a name="receiving-v1alpha0-GetReceiptResponse-Item-Order"></a>
+<a name="receiving-v1alpha0-GetReceiptResponse-Product-Order"></a>
 
-### GetReceiptResponse.Item.Order
+### GetReceiptResponse.Product.Order
 
 
 
@@ -565,7 +566,8 @@
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  | Order ID |
 | name | [string](#string) |  | Order Name |
-| qty | [double](#double) |  | Quantity Allocated |
+| units_allocated | [double](#double) |  | Quantity Allocated |
+| unit_label | [string](#string) |  |  |
 
 
 

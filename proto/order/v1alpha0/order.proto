@@ -18,7 +18,7 @@ message GetOrderResponse{
     string id = 1;
     string sn = 2;
     string name = 3;
-    int64 unit_purchased = 4;
+    double unit_purchased = 4;
     string unit_label = 5;
     int64 cost_per_unit = 6;
     int64 total_price = 7;

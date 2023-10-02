@@ -9,23 +9,25 @@ service ReceivingService {
 }
 
 message GetReceiptRequest {
-  int32 id = 1;
+  string id = 1;
 }
 
 message GetReceiptResponse {
-  message Item {
+  message Product {
     message Order {
       string id = 1; //Order ID
       string name = 2; //Order Name
-      double qty = 3; //Quantity Allocated
+      double units_allocated = 3; //Quantity Allocated
+      string unit_label = 4;
     }
-    int32 id = 1;
+    string id = 1;
     string sn = 2;
     string name = 3;
-    double qty_received = 4;
-    string primary_bin = 5;
-    repeated Order allocated_orders = 6;
+    double units_received = 4;
+    string unit_label = 5;
+    string primary_bin = 6;
+    repeated Order allocated_orders = 7;
   }
-  int32 id = 1;
-  repeated Item items = 2;
+  string id = 1;
+  repeated Product products = 2;
 }

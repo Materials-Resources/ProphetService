@@ -31,7 +31,7 @@ message GetProductResponse{
   string description = 4; //extended description of product
   string product_group_id = 5; //Product group it belongs to
   int64 price = 6; //Default Price of item
-  int64 units_available = 7;
+  double units_available = 7;
   string unit_label = 8;
 
 }
