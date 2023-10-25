@@ -9,7 +9,7 @@ require (
 	github.com/uptrace/bun/dialect/mssqldialect v1.1.16
 	github.com/uptrace/bun/extra/bundebug v1.1.16
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230525234030-28d5490b6b19
-	google.golang.org/grpc v1.57.0
+	google.golang.org/grpc v1.57.1
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/gorm v1.25.4
