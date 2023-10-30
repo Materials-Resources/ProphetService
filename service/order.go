@@ -1,4 +1,4 @@
-package controller
+package service
 
 import (
 	"context"
@@ -15,7 +15,7 @@ type orderService struct {
 	//db           *gorm.DB
 }
 
-func NewOrderService(server *grpc.Server, orderRepository repository.OrderRepository) {
+func NewOrderServer(server *grpc.Server, orderRepository repository.OrderRepository) {
 	orderServer := &orderService{orderRepository: orderRepository}
 	rpc.RegisterOrderServiceServer(
 		server,

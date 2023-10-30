@@ -9,6 +9,7 @@ import (
 	"github.com/materials-resources/s_prophet/model"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
+	"github.com/uptrace/bun/extra/bundebug"
 )
 
 type orderRepository struct {
@@ -29,7 +30,7 @@ func (o orderRepository) Read(ctx context.Context, id string) (*domain.Order, er
 		id,
 	).Scan(ctx)
 	if err != nil {
-		return nil, gormToRepositoryError(err)
+		return nil, err
 	}
 
 	order := oeHdrToDomain(oeHdr)
@@ -57,6 +58,7 @@ func NewOrderRepository(db repository.Database) repository.OrderRepository {
 		db.GetDB(),
 		mssqldialect.New(),
 	)
+	bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	return &orderRepository{
 		db:  db,
 		bun: bundb,

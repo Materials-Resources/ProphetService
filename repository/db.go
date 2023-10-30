@@ -2,23 +2,31 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
+	"fmt"
 	"log"
-	"os"
 
 	_ "github.com/denisenkom/go-mssqldb"
+	"github.com/materials-resources/s_prophet/config"
 	"github.com/materials-resources/s_prophet/core/port/repository"
-	"gorm.io/gorm"
 )
 
 type database struct {
 	*sql.DB
 }
 
-func NewDB() (repository.Database, error) {
+func NewDB(c *config.Config) (repository.Database, error) {
+
+	dsn := fmt.Sprintf(
+		"sqlserver://%s:%s@%s:%d?database=%s",
+		c.Database.Username,
+		c.Database.Password,
+		c.Database.Host,
+		c.Database.Port,
+		c.Database.DB,
+	)
 	db, err := sql.Open(
 		"sqlserver",
-		os.Getenv("DSN"),
+		dsn,
 	)
 	if err != nil {
 		log.Fatal("failed to connect to database")
@@ -35,14 +43,4 @@ func (d database) Close() error {
 
 func (d database) GetDB() *sql.DB {
 	return d.DB
-}
-
-func gormToRepositoryError(err error) error {
-	if errors.Is(
-		err,
-		gorm.ErrRecordNotFound,
-	) {
-		return repository.NotFound
-	}
-	return err
 }

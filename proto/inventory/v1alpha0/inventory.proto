@@ -18,13 +18,9 @@ message AddSupplierRequest {
   float cost = 6;
 
   string supplier_part_no = 7;
-
-
 }
 
-message AddSupplierResponse {
-
-}
+message AddSupplierResponse {}
 
 message DeleteSupplierRequest {}
 

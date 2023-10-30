@@ -26,8 +26,8 @@
     - [CreateProductResponse](#product-v1alpha0-CreateProductResponse)
     - [GetGroupProductsRequest](#product-v1alpha0-GetGroupProductsRequest)
     - [GetGroupProductsResponse](#product-v1alpha0-GetGroupProductsResponse)
-    - [GetProductBySupplierPartIdRequest](#product-v1alpha0-GetProductBySupplierPartIdRequest)
-    - [GetProductBySupplierPartIdResponse](#product-v1alpha0-GetProductBySupplierPartIdResponse)
+    - [GetProductBySupplierRequest](#product-v1alpha0-GetProductBySupplierRequest)
+    - [GetProductBySupplierResponse](#product-v1alpha0-GetProductBySupplierResponse)
     - [GetProductGroupsRequest](#product-v1alpha0-GetProductGroupsRequest)
     - [GetProductGroupsResponse](#product-v1alpha0-GetProductGroupsResponse)
     - [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup)
@@ -257,11 +257,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  | Unique identifier of Product Group |
-| description | [string](#string) |  | Description of group |
-| asset_account | [string](#string) |  | Default Asset Account |
-| revenue_account | [string](#string) |  | Default Revenue Account |
-| cos_account | [string](#string) |  | Default COS Account |
+| sn | [string](#string) |  | Unique identifier of Product Group |
+| name | [string](#string) |  | Description of group |
 
 
 
@@ -341,31 +338,31 @@
 
 
 
-<a name="product-v1alpha0-GetProductBySupplierPartIdRequest"></a>
+<a name="product-v1alpha0-GetProductBySupplierRequest"></a>
 
-### GetProductBySupplierPartIdRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| supplier_id | [double](#double) |  |  |
-| supplier_part_id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductBySupplierPartIdResponse"></a>
-
-### GetProductBySupplierPartIdResponse
+### GetProductBySupplierRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| inv_mast_id | [int32](#int32) |  |  |
+| supplier_id | [string](#string) |  |  |
+| supplier_part_no | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="product-v1alpha0-GetProductBySupplierResponse"></a>
+
+### GetProductBySupplierResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| sn | [string](#string) |  |  |
 
 
 
@@ -441,7 +438,7 @@
 | name | [string](#string) |  | short description of product such as a name of the item |
 | description | [string](#string) |  | extended description of product |
 | product_group_id | [string](#string) |  | Product group it belongs to |
-| price | [int64](#int64) |  | Default Price of item |
+| price | [double](#double) |  | Default Price of item |
 | units_available | [double](#double) |  |  |
 | unit_label | [string](#string) |  |  |
 
@@ -489,9 +486,10 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetProduct | [GetProductRequest](#product-v1alpha0-GetProductRequest) | [GetProductResponse](#product-v1alpha0-GetProductResponse) | rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
-
- rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse); rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse); rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse); // Creates a new Product Group rpc CreateProductGroup(CreateProductGroupRequest) returns(CreateProductGroupResponse); |
+| GetProduct | [GetProductRequest](#product-v1alpha0-GetProductRequest) | [GetProductResponse](#product-v1alpha0-GetProductResponse) |  |
+| GetProductBySupplier | [GetProductBySupplierRequest](#product-v1alpha0-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#product-v1alpha0-GetProductBySupplierResponse) |  |
+| CreateProduct | [CreateProductRequest](#product-v1alpha0-CreateProductRequest) | [CreateProductResponse](#product-v1alpha0-CreateProductResponse) |  |
+| CreateProductGroup | [CreateProductGroupRequest](#product-v1alpha0-CreateProductGroupRequest) | [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse) | rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse); rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse); rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse); Creates a new Product Group |
 
  
 

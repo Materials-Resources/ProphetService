@@ -8,12 +8,11 @@ service OrderService {
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
 }
 
-
-message GetOrderRequest{
+message GetOrderRequest {
   string id = 1;
 }
 
-message GetOrderResponse{
+message GetOrderResponse {
   message OrderItem {
     string id = 1;
     string sn = 2;

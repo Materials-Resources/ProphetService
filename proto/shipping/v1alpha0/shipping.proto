@@ -8,11 +8,11 @@ service ShippingService {
   rpc GetPickTicket(GetPickTicketRequest) returns (GetPickTicketResponse);
 }
 
-message GetPickTicketRequest{
+message GetPickTicketRequest {
   string id = 1;
 }
 
-message GetPickTicketResponse{
+message GetPickTicketResponse {
   message ShippingDetails {
     string name = 3;
     string line_one = 4;
