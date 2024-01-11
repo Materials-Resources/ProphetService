@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/materials-resources/s_prophet/config"
 	"github.com/materials-resources/s_prophet/core/port/repository"
+	_ "github.com/microsoft/go-mssqldb"
 )
 
 type database struct {

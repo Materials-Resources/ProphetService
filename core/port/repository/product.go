@@ -12,6 +12,7 @@ type ProductRepository interface {
 	ReadProduct(ctx context.Context, id string) (*domain.Product, error)
 	Update(ctx context.Context)
 	Delete(ctx context.Context)
+	List(ctx context.Context, filter domain.ProductFilter) ([]*domain.Product, error)
 
 	//ReadProductBySupplier Returns product serial number details given a supplier and its part number
 	ReadProductBySupplier(ctx context.Context, supplierId string, supplierPartNo string) (*string, error)

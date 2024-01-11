@@ -1,0 +1,13 @@
+database:
+  host: "sql.emrsinc.com"
+  port: 1433
+  username: "admin"
+  password: "G:othvic-Cause-1Barman"
+  db: "P21-Play"
+app:
+  defaults:
+    product_group:
+      company_id: "MRS"
+      asset_account_no: "121001"
+      revenue_account_no: "401001"
+      cos_account_no: "501001"

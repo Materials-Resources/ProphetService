@@ -14,6 +14,22 @@ type productService struct {
 	productRepository repository.ProductRepository
 }
 
+func (s *productService) ListProduct(ctx context.Context, request *pb.ListProductRequest) (*pb.ListProductResponse,
+	error,
+) {
+
+	res := &pb.ListProductResponse{}
+
+	//products, err := s.productRepository.List(ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//res.Products = domainToRPCProduct(products)
+
+	return res, nil
+}
+
 func NewProductServer(server *grpc.Server, productRepository repository.ProductRepository) {
 	productServer := &productService{productRepository: productRepository}
 	pb.RegisterProductServiceServer(
@@ -29,14 +45,14 @@ func (s *productService) CreateProduct(
 	return nil, nil
 }
 func (s *productService) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.GetProductResponse, error) {
-	if product, err := s.productRepository.ReadProduct(
+	if _, err := s.productRepository.ReadProduct(
 		ctx,
 		req.GetId(),
 	); err != nil {
 		return nil, err
 	} else {
-		response := domainToProductResponse(product)
-		return response, nil
+		//response := domainToProductResponse(product)
+		return nil, nil
 	}
 }
 
@@ -56,7 +72,8 @@ func (s *productService) GetProductBySupplier(
 }
 
 func (s *productService) CreateProductGroup(ctx context.Context, req *pb.CreateProductGroupRequest) (*pb.
-	CreateProductGroupResponse, error) {
+	CreateProductGroupResponse, error,
+) {
 	newProductGroup := domain.ProductGroup{
 		Name: req.GetName(),
 		SN:   req.GetSn(),
@@ -72,14 +89,9 @@ func (s *productService) CreateProductGroup(ctx context.Context, req *pb.CreateP
 
 }
 
-func domainToProductResponse(product *domain.Product) *pb.GetProductResponse {
-	getProductResponse := &pb.GetProductResponse{
-		Id:             product.ID,
-		Sn:             product.SN,
-		Name:           product.Name,
-		Description:    product.Description,
-		Price:          product.Price,
-		UnitsAvailable: product.UnitsAvailable,
+func domainToRPCProduct(d []*domain.Product) (rpc []*pb.Product) {
+	for _, p := range d {
+		rpc = append(rpc, &pb.Product{Id: p.ID, Name: p.Name, Description: p.Description})
 	}
-	return getProductResponse
+	return rpc
 }

@@ -1,0 +1,22 @@
+syntax = 'proto3';
+
+package customer.v1alpha0;
+
+option go_package = "github.com/materials-resources/s_prophet/internal/core/model/customer_v1alpha0";
+
+service CustomerService {
+  rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
+  //  rpc GetQuotes() returns ();
+  //  rpc GetInvoices() returns ();
+}
+
+message GetOrdersRequest {
+  string customer_id = 1;
+}
+message GetOrdersResponse {
+  message Order {
+    string id = 1;
+    string status = 2;
+  }
+  repeated Order orders = 1;
+}

@@ -2,14 +2,14 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
-	"github.com/materials-resources/s_prophet/core/domain"
 	"github.com/materials-resources/s_prophet/core/port/repository"
 	"github.com/materials-resources/s_prophet/model"
+	orderpPb "github.com/materials-resources/s_prophet/proto/order/v1alpha0"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
-	"github.com/uptrace/bun/extra/bundebug"
 )
 
 type orderRepository struct {
@@ -22,7 +22,7 @@ func (o orderRepository) Create(ctx context.Context) error {
 	panic("implement me")
 }
 
-func (o orderRepository) Read(ctx context.Context, id string) (*domain.Order, error) {
+func (o orderRepository) Read(ctx context.Context, id string) (*orderpPb.GetOrderResponse, error) {
 	oeHdr := new(model.OeHdr)
 
 	err := o.bun.NewSelect().Model(oeHdr).Relation("OeLineItems").Relation("OeLineItems.InvMast").Where(
@@ -33,9 +33,7 @@ func (o orderRepository) Read(ctx context.Context, id string) (*domain.Order, er
 		return nil, err
 	}
 
-	order := oeHdrToDomain(oeHdr)
-
-	return &order, nil
+	return toPbGetOrderResponse(oeHdr), nil
 }
 
 func (o orderRepository) Update(ctx context.Context) error {
@@ -58,39 +56,34 @@ func NewOrderRepository(db repository.Database) repository.OrderRepository {
 		db.GetDB(),
 		mssqldialect.New(),
 	)
-	bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+	//bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	return &orderRepository{
 		db:  db,
 		bun: bundb,
 	}
 }
 
-func oeHdrToDomain(oeHdr *model.OeHdr) domain.Order {
-	order := domain.Order{
-		ID: oeHdr.OrderNo,
-		ShippingAddress: domain.OrderShippingAddress{
-			Name:                 oeHdr.Ship2Name.String,
-			LineOne:              oeHdr.Ship2Add1.String,
-			LineTwo:              oeHdr.Ship2Add2.String,
-			City:                 oeHdr.Ship2City.String,
-			State:                oeHdr.Ship2State.String,
-			DeliveryInstructions: oeHdr.DeliveryInstructions.String,
-		},
+func toPbGetOrderResponse(mod *model.OeHdr) (pb *orderpPb.GetOrderResponse) {
+	fmt.Println(mod.QuoteType)
+	pb = &orderpPb.GetOrderResponse{
+		Id:            mod.OrderNo,
+		PurchaseOrder: mod.PoNo.String,
+		Status:        mod.ValidationStatus.String,
 	}
 
-	for _, oeLineItem := range oeHdr.OeLineItems {
-		order.OrderItems = append(
-			order.OrderItems,
-			domain.OrderItem{
-				ID:            strconv.Itoa(int(oeLineItem.InvMastUid)),
-				SN:            oeLineItem.InvMast.ItemId,
-				Name:          oeLineItem.InvMast.ItemDesc,
-				CostPerUnit:   int64(oeLineItem.UnitPrice.Float64 * 100),
-				UnitPurchased: oeLineItem.QtyOrdered.Float64,
-				UnitLabel:     oeLineItem.UnitOfMeasure.String,
+	for _, item := range mod.OeLineItems {
+		pb.OrderItems = append(
+			pb.OrderItems,
+			&orderpPb.OrderItem{
+				Id:            strconv.Itoa(int(item.InvMastUid)),
+				Sn:            item.InvMast.ItemId,
+				Name:          item.InvMast.ItemDesc,
+				UnitPurchased: item.QtyOrdered.Float64,
+				UnitLabel:     item.UnitOfMeasure.String,
+				CostPerUnit:   item.UnitPrice.Float64,
+				TotalPrice:    item.ExtendedPrice.Float64,
 			},
 		)
 	}
-
-	return order
+	return
 }

@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	ProductService_ListProduct_FullMethodName          = "/product.v1alpha0.ProductService/ListProduct"
 	ProductService_GetProduct_FullMethodName           = "/product.v1alpha0.ProductService/GetProduct"
 	ProductService_GetProductBySupplier_FullMethodName = "/product.v1alpha0.ProductService/GetProductBySupplier"
 	ProductService_CreateProduct_FullMethodName        = "/product.v1alpha0.ProductService/CreateProduct"
@@ -29,6 +30,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductServiceClient interface {
+	ListProduct(ctx context.Context, in *ListProductRequest, opts ...grpc.CallOption) (*ListProductResponse, error)
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error)
 	GetProductBySupplier(ctx context.Context, in *GetProductBySupplierRequest, opts ...grpc.CallOption) (*GetProductBySupplierResponse, error)
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*CreateProductResponse, error)
@@ -46,6 +48,15 @@ type productServiceClient struct {
 
 func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
 	return &productServiceClient{cc}
+}
+
+func (c *productServiceClient) ListProduct(ctx context.Context, in *ListProductRequest, opts ...grpc.CallOption) (*ListProductResponse, error) {
+	out := new(ListProductResponse)
+	err := c.cc.Invoke(ctx, ProductService_ListProduct_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *productServiceClient) GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error) {
@@ -88,6 +99,7 @@ func (c *productServiceClient) CreateProductGroup(ctx context.Context, in *Creat
 // All implementations should embed UnimplementedProductServiceServer
 // for forward compatibility
 type ProductServiceServer interface {
+	ListProduct(context.Context, *ListProductRequest) (*ListProductResponse, error)
 	GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error)
 	GetProductBySupplier(context.Context, *GetProductBySupplierRequest) (*GetProductBySupplierResponse, error)
 	CreateProduct(context.Context, *CreateProductRequest) (*CreateProductResponse, error)
@@ -103,6 +115,9 @@ type ProductServiceServer interface {
 type UnimplementedProductServiceServer struct {
 }
 
+func (UnimplementedProductServiceServer) ListProduct(context.Context, *ListProductRequest) (*ListProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProduct not implemented")
+}
 func (UnimplementedProductServiceServer) GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProduct not implemented")
 }
@@ -125,6 +140,24 @@ type UnsafeProductServiceServer interface {
 
 func RegisterProductServiceServer(s grpc.ServiceRegistrar, srv ProductServiceServer) {
 	s.RegisterService(&ProductService_ServiceDesc, srv)
+}
+
+func _ProductService_ListProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).ListProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_ListProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).ListProduct(ctx, req.(*ListProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProductService_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -206,6 +239,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "product.v1alpha0.ProductService",
 	HandlerType: (*ProductServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListProduct",
+			Handler:    _ProductService_ListProduct_Handler,
+		},
 		{
 			MethodName: "GetProduct",
 			Handler:    _ProductService_GetProduct_Handler,

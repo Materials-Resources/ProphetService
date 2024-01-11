@@ -10,7 +10,6 @@ import (
 	"github.com/materials-resources/s_prophet/model"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
-	"github.com/uptrace/bun/extra/bundebug"
 )
 
 type receivingRepository struct {
@@ -30,7 +29,7 @@ func (r receivingRepository) ReadReceipt(ctx context.Context, id string) (*domai
 		Relation("InventoryReceiptsLineItems.Ira.OeHdr").
 		Where(
 			"inventory_receipts_hdr.receipt_number = ?",
-			5000011,
+			id,
 		).Scan(ctx)
 	if err != nil {
 		fmt.Print(err)
@@ -44,7 +43,6 @@ func NewReceivingRepository(db repository.Database) repository.ReceivingReposito
 		db.GetDB(),
 		mssqldialect.New(),
 	)
-	bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	return &receivingRepository{
 		db:  db,

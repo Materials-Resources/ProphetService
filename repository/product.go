@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/materials-resources/s_prophet/core/domain"
 	"github.com/materials-resources/s_prophet/core/port/repository"
@@ -53,6 +55,24 @@ func (r productRepository) ReadProduct(ctx context.Context, id string) (*domain.
 
 }
 
+func (r productRepository) List(ctx context.Context, filter domain.ProductFilter) (dom []*domain.Product, err error) {
+	//var m []model.InvMast
+	//
+	//q := r.bun.NewSelect().Model(&m)
+	//
+	//err = applyProductFilter(q, filter).Scan(ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//for _, p := range m {
+	//	dom = append(dom, &domain.Product{ID: p.InvMastUid, Name: p.ItemDesc, Description: p.ExtendedDesc.String})
+	//}
+
+	return
+
+}
+
 func (r productRepository) Update(ctx context.Context) {
 	//TODO implement me
 	panic("implement me")
@@ -66,11 +86,19 @@ func (r productRepository) Delete(ctx context.Context) {
 func (r productRepository) CreateProductGroup(
 	ctx context.Context, domain *domain.ProductGroup,
 ) error {
-	productGroup := model.ProductGroup{
+	productGroup := &model.ProductGroup{
+		CompanyId:        "MRS",
 		ProductGroupId:   domain.SN,
 		ProductGroupDesc: domain.Name,
+		AssetAccountNo:   "121001",
+		DeleteFlag:       "N",
+		RevenueAccountNo: sql.NullString{String: "401001", Valid: true},
+		CosAccountNo:     sql.NullString{String: "501001", Valid: true},
+		DateCreated:      time.Now(),
+		DateLastModified: time.Now(),
+		LastMaintainedBy: "admin",
 	}
-	_, err := r.bun.NewInsert().Model(&productGroup).Exec(ctx)
+	_, err := r.bun.NewInsert().Model(productGroup).Exec(ctx)
 	if err != nil {
 		return err
 	}
@@ -124,9 +152,15 @@ func invMastToDomain(invMast *model.InvMast) domain.Product {
 		Name:           invMast.ItemDesc,
 		Description:    invMast.ExtendedDesc.String,
 		SN:             invMast.ItemId,
-		ID:             strconv.Itoa(int(invMast.InvMastUid)),
 		Price:          invMast.Price1.Float64,
 		UnitsAvailable: invMast.InvLoc.QtyOnHand.Float64,
 	}
 	return product
 }
+
+//func applyProductFilter(q *bun.SelectQuery, f domain.ProductFilter) *bun.SelectQuery {
+//	if f.Cursor.Select != 0 && f.Cursor.Size != 0 {
+//		q = q.Where("inv_mast_uid BETWEEN ? AND ?", f.Cursor.Start, f.Cursor.End)
+//	}
+//	return q
+//}

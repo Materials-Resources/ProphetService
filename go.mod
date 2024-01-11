@@ -3,7 +3,6 @@ module github.com/materials-resources/s_prophet
 go 1.21
 
 require (
-	github.com/denisenkom/go-mssqldb v0.12.3
 	github.com/spf13/cobra v1.7.0
 	github.com/uptrace/bun v1.1.16
 	github.com/uptrace/bun/dialect/mssqldialect v1.1.16
@@ -12,7 +11,7 @@ require (
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
-	gorm.io/gorm v1.25.4
+	github.com/microsoft/go-mssqldb v1.5.0
 )
 
 require (

@@ -3,6 +3,13 @@
 
 ## Table of Contents
 
+- [customer/v1alpha0/customer.proto](#customer_v1alpha0_customer-proto)
+    - [GetOrdersRequest](#customer-v1alpha0-GetOrdersRequest)
+    - [GetOrdersResponse](#customer-v1alpha0-GetOrdersResponse)
+    - [GetOrdersResponse.Order](#customer-v1alpha0-GetOrdersResponse-Order)
+  
+    - [CustomerService](#customer-v1alpha0-CustomerService)
+  
 - [inventory/v1alpha0/inventory.proto](#inventory_v1alpha0_inventory-proto)
     - [AddSupplierRequest](#inventory-v1alpha0-AddSupplierRequest)
     - [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse)
@@ -14,8 +21,10 @@
 - [order/v1alpha0/order.proto](#order_v1alpha0_order-proto)
     - [GetOrderRequest](#order-v1alpha0-GetOrderRequest)
     - [GetOrderResponse](#order-v1alpha0-GetOrderResponse)
-    - [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem)
-    - [GetOrderResponse.ShippingDetails](#order-v1alpha0-GetOrderResponse-ShippingDetails)
+    - [GetOrderResponse.Contact](#order-v1alpha0-GetOrderResponse-Contact)
+    - [GetOrderResponse.CustomerDetails](#order-v1alpha0-GetOrderResponse-CustomerDetails)
+    - [GetOrderResponse.ShipToDetails](#order-v1alpha0-GetOrderResponse-ShipToDetails)
+    - [OrderItem](#order-v1alpha0-OrderItem)
   
     - [OrderService](#order-v1alpha0-OrderService)
   
@@ -24,6 +33,7 @@
     - [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse)
     - [CreateProductRequest](#product-v1alpha0-CreateProductRequest)
     - [CreateProductResponse](#product-v1alpha0-CreateProductResponse)
+    - [Cursor](#product-v1alpha0-Cursor)
     - [GetGroupProductsRequest](#product-v1alpha0-GetGroupProductsRequest)
     - [GetGroupProductsResponse](#product-v1alpha0-GetGroupProductsResponse)
     - [GetProductBySupplierRequest](#product-v1alpha0-GetProductBySupplierRequest)
@@ -33,6 +43,8 @@
     - [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup)
     - [GetProductRequest](#product-v1alpha0-GetProductRequest)
     - [GetProductResponse](#product-v1alpha0-GetProductResponse)
+    - [ListProductRequest](#product-v1alpha0-ListProductRequest)
+    - [ListProductResponse](#product-v1alpha0-ListProductResponse)
     - [Product](#product-v1alpha0-Product)
     - [ProductGroup](#product-v1alpha0-ProductGroup)
   
@@ -57,6 +69,78 @@
     - [SupplierService](#supplier-v1alpha0-SupplierService)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="customer_v1alpha0_customer-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## customer/v1alpha0/customer.proto
+
+
+
+<a name="customer-v1alpha0-GetOrdersRequest"></a>
+
+### GetOrdersRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| customer_id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="customer-v1alpha0-GetOrdersResponse"></a>
+
+### GetOrdersResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| orders | [GetOrdersResponse.Order](#customer-v1alpha0-GetOrdersResponse-Order) | repeated |  |
+
+
+
+
+
+
+<a name="customer-v1alpha0-GetOrdersResponse-Order"></a>
+
+### GetOrdersResponse.Order
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| status | [string](#string) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="customer-v1alpha0-CustomerService"></a>
+
+### CustomerService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetOrders | [GetOrdersRequest](#customer-v1alpha0-GetOrdersRequest) | [GetOrdersResponse](#customer-v1alpha0-GetOrdersResponse) | rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
+
+ 
 
 
 
@@ -169,8 +253,9 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
-| shipping_details | [GetOrderResponse.ShippingDetails](#order-v1alpha0-GetOrderResponse-ShippingDetails) |  |  |
-| order_items | [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem) | repeated |  |
+| order_items | [OrderItem](#order-v1alpha0-OrderItem) | repeated |  |
+| ship_to_details | [GetOrderResponse.ShipToDetails](#order-v1alpha0-GetOrderResponse-ShipToDetails) |  |  |
+| status | [string](#string) |  |  |
 | purchase_order | [string](#string) |  |  |
 | contact_id | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
@@ -180,30 +265,37 @@
 
 
 
-<a name="order-v1alpha0-GetOrderResponse-OrderItem"></a>
+<a name="order-v1alpha0-GetOrderResponse-Contact"></a>
 
-### GetOrderResponse.OrderItem
+### GetOrderResponse.Contact
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
-| sn | [string](#string) |  |  |
-| name | [string](#string) |  |  |
-| unit_purchased | [double](#double) |  |  |
-| unit_label | [string](#string) |  |  |
-| cost_per_unit | [int64](#int64) |  |  |
-| total_price | [int64](#int64) |  |  |
+| name_first | [string](#string) |  |  |
+| name_mi | [string](#string) |  |  |
+| name_last | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="order-v1alpha0-GetOrderResponse-ShippingDetails"></a>
+<a name="order-v1alpha0-GetOrderResponse-CustomerDetails"></a>
 
-### GetOrderResponse.ShippingDetails
+### GetOrderResponse.CustomerDetails
+
+
+
+
+
+
+
+<a name="order-v1alpha0-GetOrderResponse-ShipToDetails"></a>
+
+### GetOrderResponse.ShipToDetails
 
 
 
@@ -217,6 +309,27 @@
 | postal_code | [string](#string) |  |  |
 | country | [string](#string) |  |  |
 | delivery_instructions | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1alpha0-OrderItem"></a>
+
+### OrderItem
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| sn | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| unit_purchased | [double](#double) |  |  |
+| unit_label | [string](#string) |  |  |
+| cost_per_unit | [double](#double) |  |  |
+| total_price | [double](#double) |  |  |
 
 
 
@@ -302,6 +415,22 @@
 
 ### CreateProductResponse
 
+
+
+
+
+
+
+<a name="product-v1alpha0-Cursor"></a>
+
+### Cursor
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| select | [int64](#int64) |  |  |
+| size | [int64](#int64) |  |  |
 
 
 
@@ -447,10 +576,47 @@
 
 
 
+<a name="product-v1alpha0-ListProductRequest"></a>
+
+### ListProductRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cursor | [Cursor](#product-v1alpha0-Cursor) |  |  |
+
+
+
+
+
+
+<a name="product-v1alpha0-ListProductResponse"></a>
+
+### ListProductResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| products | [Product](#product-v1alpha0-Product) | repeated |  |
+
+
+
+
+
+
 <a name="product-v1alpha0-Product"></a>
 
 ### Product
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [int32](#int32) |  |  |
+| name | [string](#string) |  |  |
+| description | [string](#string) |  |  |
 
 
 
@@ -486,6 +652,7 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| ListProduct | [ListProductRequest](#product-v1alpha0-ListProductRequest) | [ListProductResponse](#product-v1alpha0-ListProductResponse) |  |
 | GetProduct | [GetProductRequest](#product-v1alpha0-GetProductRequest) | [GetProductResponse](#product-v1alpha0-GetProductResponse) |  |
 | GetProductBySupplier | [GetProductBySupplierRequest](#product-v1alpha0-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#product-v1alpha0-GetProductBySupplierResponse) |  |
 | CreateProduct | [CreateProductRequest](#product-v1alpha0-CreateProductRequest) | [CreateProductResponse](#product-v1alpha0-CreateProductResponse) |  |
