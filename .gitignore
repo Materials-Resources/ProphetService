@@ -3,5 +3,6 @@
 #Generate files
 gen
 
-config.yml
+
 *.exe
+!/config.yml
