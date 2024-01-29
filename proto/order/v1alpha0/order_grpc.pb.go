@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OrderService_GetOrder_FullMethodName = "/order.v1alpha0.OrderService/GetOrder"
+	OrderService_GetOrder_FullMethodName          = "/order.v1alpha0.OrderService/GetOrder"
+	OrderService_GetPickTicketById_FullMethodName = "/order.v1alpha0.OrderService/GetPickTicketById"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderServiceClient interface {
 	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
+	GetPickTicketById(ctx context.Context, in *GetPickTicketByIdRequest, opts ...grpc.CallOption) (*GetPickTicketByIdResponse, error)
 }
 
 type orderServiceClient struct {
@@ -46,11 +48,21 @@ func (c *orderServiceClient) GetOrder(ctx context.Context, in *GetOrderRequest, 
 	return out, nil
 }
 
+func (c *orderServiceClient) GetPickTicketById(ctx context.Context, in *GetPickTicketByIdRequest, opts ...grpc.CallOption) (*GetPickTicketByIdResponse, error) {
+	out := new(GetPickTicketByIdResponse)
+	err := c.cc.Invoke(ctx, OrderService_GetPickTicketById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations should embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
 	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
+	GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error)
 }
 
 // UnimplementedOrderServiceServer should be embedded to have forward compatible implementations.
@@ -59,6 +71,9 @@ type UnimplementedOrderServiceServer struct {
 
 func (UnimplementedOrderServiceServer) GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPickTicketById not implemented")
 }
 
 // UnsafeOrderServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -90,6 +105,24 @@ func _OrderService_GetOrder_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_GetPickTicketById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPickTicketByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).GetPickTicketById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_GetPickTicketById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).GetPickTicketById(ctx, req.(*GetPickTicketByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +133,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrder",
 			Handler:    _OrderService_GetOrder_Handler,
+		},
+		{
+			MethodName: "GetPickTicketById",
+			Handler:    _OrderService_GetPickTicketById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

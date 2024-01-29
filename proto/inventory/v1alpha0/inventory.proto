@@ -5,8 +5,11 @@ package inventory.v1alpha0;
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/inventory_v1alpha0";
 
 service InventoryService {
-  rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
-  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+//  rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
+//  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+
+  // GetReceiptByID returns details for a inventory receipt given an identifier.
+  rpc GetReceiptByID(GetReceiptByIDRequest) returns (GetReceiptByIDResponse);
 }
 
 message AddSupplierRequest {
@@ -25,3 +28,38 @@ message AddSupplierResponse {}
 message DeleteSupplierRequest {}
 
 message DeleteSupplierResponse {}
+
+message GetReceiptByIDRequest {
+  string id = 1;
+}
+message GetReceiptByIDResponse {
+  message Item {
+    message Order {
+      //Unique ID of order
+      string id = 1;
+      //Customer Name
+      string customer_name = 2;
+      //Quantity of product allocated
+      double allocated_quantity = 3;
+      //Unit associated with allocated_quantity
+      string allocated_unit = 4;
+    }
+    //Unique ID of product
+    string product_id = 1;
+    //Serialized ID of product
+    string product_sn = 2;
+    //Name of product
+    string product_name = 3;
+    //Quantity of product received
+    double received_quantity = 4;
+    //Unit associated with received_quantity
+    string received_unit = 5;
+    //Orders that were allocated to
+    repeated Order allocated_orders = 6;
+  }
+  //Unique ID of receipt
+  string id = 1;
+  //Items that were received for this receipt
+  repeated Item items = 2;
+
+}

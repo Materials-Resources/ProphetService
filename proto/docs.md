@@ -3,6 +3,28 @@
 
 ## Table of Contents
 
+- [catalog/v1alpha0/catalog.proto](#catalog_v1alpha0_catalog-proto)
+    - [CreateGroupRequest](#catalog-v1alpha0-CreateGroupRequest)
+    - [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse)
+    - [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest)
+    - [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse)
+    - [Cursor](#catalog-v1alpha0-Cursor)
+    - [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest)
+    - [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse)
+    - [GetGroupRequest](#catalog-v1alpha0-GetGroupRequest)
+    - [GetGroupResponse](#catalog-v1alpha0-GetGroupResponse)
+    - [GetProductBySupplierRequest](#catalog-v1alpha0-GetProductBySupplierRequest)
+    - [GetProductBySupplierResponse](#catalog-v1alpha0-GetProductBySupplierResponse)
+    - [GetProductRequest](#catalog-v1alpha0-GetProductRequest)
+    - [GetProductResponse](#catalog-v1alpha0-GetProductResponse)
+    - [ListGroupRequest](#catalog-v1alpha0-ListGroupRequest)
+    - [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse)
+    - [Product](#catalog-v1alpha0-Product)
+    - [ProductFilter](#catalog-v1alpha0-ProductFilter)
+    - [ProductGroup](#catalog-v1alpha0-ProductGroup)
+  
+    - [CatalogService](#catalog-v1alpha0-CatalogService)
+  
 - [customer/v1alpha0/customer.proto](#customer_v1alpha0_customer-proto)
     - [GetOrdersRequest](#customer-v1alpha0-GetOrdersRequest)
     - [GetOrdersResponse](#customer-v1alpha0-GetOrdersResponse)
@@ -15,40 +37,24 @@
     - [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse)
     - [DeleteSupplierRequest](#inventory-v1alpha0-DeleteSupplierRequest)
     - [DeleteSupplierResponse](#inventory-v1alpha0-DeleteSupplierResponse)
+    - [GetReceiptByIDRequest](#inventory-v1alpha0-GetReceiptByIDRequest)
+    - [GetReceiptByIDResponse](#inventory-v1alpha0-GetReceiptByIDResponse)
+    - [GetReceiptByIDResponse.Item](#inventory-v1alpha0-GetReceiptByIDResponse-Item)
+    - [GetReceiptByIDResponse.Item.Order](#inventory-v1alpha0-GetReceiptByIDResponse-Item-Order)
   
     - [InventoryService](#inventory-v1alpha0-InventoryService)
   
 - [order/v1alpha0/order.proto](#order_v1alpha0_order-proto)
+    - [Address](#order-v1alpha0-Address)
+    - [Customer](#order-v1alpha0-Customer)
+    - [CustomerContact](#order-v1alpha0-CustomerContact)
     - [GetOrderRequest](#order-v1alpha0-GetOrderRequest)
     - [GetOrderResponse](#order-v1alpha0-GetOrderResponse)
-    - [GetOrderResponse.Contact](#order-v1alpha0-GetOrderResponse-Contact)
-    - [GetOrderResponse.CustomerDetails](#order-v1alpha0-GetOrderResponse-CustomerDetails)
-    - [GetOrderResponse.ShipToDetails](#order-v1alpha0-GetOrderResponse-ShipToDetails)
-    - [OrderItem](#order-v1alpha0-OrderItem)
+    - [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem)
+    - [GetPickTicketByIdRequest](#order-v1alpha0-GetPickTicketByIdRequest)
+    - [GetPickTicketByIdResponse](#order-v1alpha0-GetPickTicketByIdResponse)
   
     - [OrderService](#order-v1alpha0-OrderService)
-  
-- [product/v1alpha0/product.proto](#product_v1alpha0_product-proto)
-    - [CreateProductGroupRequest](#product-v1alpha0-CreateProductGroupRequest)
-    - [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse)
-    - [CreateProductRequest](#product-v1alpha0-CreateProductRequest)
-    - [CreateProductResponse](#product-v1alpha0-CreateProductResponse)
-    - [Cursor](#product-v1alpha0-Cursor)
-    - [GetGroupProductsRequest](#product-v1alpha0-GetGroupProductsRequest)
-    - [GetGroupProductsResponse](#product-v1alpha0-GetGroupProductsResponse)
-    - [GetProductBySupplierRequest](#product-v1alpha0-GetProductBySupplierRequest)
-    - [GetProductBySupplierResponse](#product-v1alpha0-GetProductBySupplierResponse)
-    - [GetProductGroupsRequest](#product-v1alpha0-GetProductGroupsRequest)
-    - [GetProductGroupsResponse](#product-v1alpha0-GetProductGroupsResponse)
-    - [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup)
-    - [GetProductRequest](#product-v1alpha0-GetProductRequest)
-    - [GetProductResponse](#product-v1alpha0-GetProductResponse)
-    - [ListProductRequest](#product-v1alpha0-ListProductRequest)
-    - [ListProductResponse](#product-v1alpha0-ListProductResponse)
-    - [Product](#product-v1alpha0-Product)
-    - [ProductGroup](#product-v1alpha0-ProductGroup)
-  
-    - [ProductService](#product-v1alpha0-ProductService)
   
 - [receiving/v1alpha0/receiving.proto](#receiving_v1alpha0_receiving-proto)
     - [GetReceiptRequest](#receiving-v1alpha0-GetReceiptRequest)
@@ -58,17 +64,307 @@
   
     - [ReceivingService](#receiving-v1alpha0-ReceivingService)
   
-- [shipping/v1alpha0/shipping.proto](#shipping_v1alpha0_shipping-proto)
-    - [GetPickTicketRequest](#shipping-v1alpha0-GetPickTicketRequest)
-    - [GetPickTicketResponse](#shipping-v1alpha0-GetPickTicketResponse)
-    - [GetPickTicketResponse.ShippingDetails](#shipping-v1alpha0-GetPickTicketResponse-ShippingDetails)
-  
-    - [ShippingService](#shipping-v1alpha0-ShippingService)
-  
 - [supplier/v1alpha0/supplier.proto](#supplier_v1alpha0_supplier-proto)
     - [SupplierService](#supplier-v1alpha0-SupplierService)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="catalog_v1alpha0_catalog-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## catalog/v1alpha0/catalog.proto
+
+
+
+<a name="catalog-v1alpha0-CreateGroupRequest"></a>
+
+### CreateGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  | string sn = 1; //Unique identifier of Product Group string name = 2; // Description of group |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-CreateGroupResponse"></a>
+
+### CreateGroupResponse
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-CreateProductRequest"></a>
+
+### CreateProductRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| description | [string](#string) |  |  |
+| extended_description | [string](#string) |  |  |
+| list_price | [float](#float) |  |  |
+| product_group_id | [string](#string) |  |  |
+| upc | [string](#string) |  |  |
+| supplier_id | [string](#string) |  |  |
+| supplier_part_no | [string](#string) |  |  |
+| cost | [float](#float) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-CreateProductResponse"></a>
+
+### CreateProductResponse
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-Cursor"></a>
+
+### Cursor
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| select | [int64](#int64) |  |  |
+| size | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-DeleteProductRequest"></a>
+
+### DeleteProductRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ids | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-DeleteProductResponse"></a>
+
+### DeleteProductResponse
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-GetGroupRequest"></a>
+
+### GetGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-GetGroupResponse"></a>
+
+### GetGroupResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  |  |
+| products | [Product](#catalog-v1alpha0-Product) | repeated |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-GetProductBySupplierRequest"></a>
+
+### GetProductBySupplierRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| supplier_id | [string](#string) |  |  |
+| supplier_part_no | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-GetProductBySupplierResponse"></a>
+
+### GetProductBySupplierResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| sn | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-GetProductRequest"></a>
+
+### GetProductRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-GetProductResponse"></a>
+
+### GetProductResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product | [Product](#catalog-v1alpha0-Product) |  | string id = 1; // string sn = 2; //products item ID usually formatted as MRS-XXX00-123456 string name = 3; // short description of product such as a name of the item string description = 4; //extended description of product string product_group_id = 5; //Product group it belongs to double price = 6; //Default Price of item double units_available = 7; string unit_label = 8; |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-ListGroupRequest"></a>
+
+### ListGroupRequest
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-ListGroupResponse"></a>
+
+### ListGroupResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_groups | [ProductGroup](#catalog-v1alpha0-ProductGroup) | repeated |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-Product"></a>
+
+### Product
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| sn | [string](#string) |  |  |
+| name | [string](#string) |  | string description = 3; string product_group_id = 4; double list_price = 5; |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-ProductFilter"></a>
+
+### ProductFilter
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_group_id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-ProductGroup"></a>
+
+### ProductGroup
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| sn | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="catalog-v1alpha0-CatalogService"></a>
+
+### CatalogService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) |  |
+| CreateProduct | [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest) | [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse) |  |
+| DeleteProduct | [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse) |  |
+| ListGroup | [ListGroupRequest](#catalog-v1alpha0-ListGroupRequest) | [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse) |  |
+| GetGroup | [GetGroupRequest](#catalog-v1alpha0-GetGroupRequest) | [GetGroupResponse](#catalog-v1alpha0-GetGroupResponse) |  |
+| CreateGroup | [CreateGroupRequest](#catalog-v1alpha0-CreateGroupRequest) | [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse) |  |
+| GetProductBySupplier | [GetProductBySupplierRequest](#catalog-v1alpha0-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#catalog-v1alpha0-GetProductBySupplierResponse) |  |
+
+ 
 
 
 
@@ -201,6 +497,75 @@
 
 
 
+
+<a name="inventory-v1alpha0-GetReceiptByIDRequest"></a>
+
+### GetReceiptByIDRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="inventory-v1alpha0-GetReceiptByIDResponse"></a>
+
+### GetReceiptByIDResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  | Unique ID of receipt |
+| items | [GetReceiptByIDResponse.Item](#inventory-v1alpha0-GetReceiptByIDResponse-Item) | repeated | Items that were received for this receipt |
+
+
+
+
+
+
+<a name="inventory-v1alpha0-GetReceiptByIDResponse-Item"></a>
+
+### GetReceiptByIDResponse.Item
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_id | [string](#string) |  | Unique ID of product |
+| product_sn | [string](#string) |  | Serialized ID of product |
+| product_name | [string](#string) |  | Name of product |
+| received_quantity | [double](#double) |  | Quantity of product received |
+| received_unit | [string](#string) |  | Unit associated with received_quantity |
+| allocated_orders | [GetReceiptByIDResponse.Item.Order](#inventory-v1alpha0-GetReceiptByIDResponse-Item-Order) | repeated | Orders that were allocated to |
+
+
+
+
+
+
+<a name="inventory-v1alpha0-GetReceiptByIDResponse-Item-Order"></a>
+
+### GetReceiptByIDResponse.Item.Order
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  | Unique ID of order |
+| customer_name | [string](#string) |  | Customer Name |
+| allocated_quantity | [double](#double) |  | Quantity of product allocated |
+| allocated_unit | [string](#string) |  | Unit associated with allocated_quantity |
+
+
+
+
+
  
 
  
@@ -211,12 +576,12 @@
 <a name="inventory-v1alpha0-InventoryService"></a>
 
 ### InventoryService
-
+rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
+ rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| AddSupplier | [AddSupplierRequest](#inventory-v1alpha0-AddSupplierRequest) | [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse) |  |
-| DeleteSupplier | [DeleteSupplierRequest](#inventory-v1alpha0-DeleteSupplierRequest) | [DeleteSupplierResponse](#inventory-v1alpha0-DeleteSupplierResponse) |  |
+| GetReceiptByID | [GetReceiptByIDRequest](#inventory-v1alpha0-GetReceiptByIDRequest) | [GetReceiptByIDResponse](#inventory-v1alpha0-GetReceiptByIDResponse) | GetReceiptByID returns details for a inventory receipt given an identifier. |
 
  
 
@@ -226,6 +591,64 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## order/v1alpha0/order.proto
+
+
+
+<a name="order-v1alpha0-Address"></a>
+
+### Address
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| line_one | [string](#string) |  |  |
+| line_two | [string](#string) |  |  |
+| city | [string](#string) |  |  |
+| state | [string](#string) |  |  |
+| postal_code | [string](#string) |  |  |
+| country | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1alpha0-Customer"></a>
+
+### Customer
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| phone_number | [string](#string) |  |  |
+| email | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1alpha0-CustomerContact"></a>
+
+### CustomerContact
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| phone_number | [string](#string) |  |  |
+| email | [string](#string) |  |  |
+| title | [string](#string) |  |  |
+
+
+
 
 
 
@@ -253,71 +676,23 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
-| order_items | [OrderItem](#order-v1alpha0-OrderItem) | repeated |  |
-| ship_to_details | [GetOrderResponse.ShipToDetails](#order-v1alpha0-GetOrderResponse-ShipToDetails) |  |  |
+| order_items | [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem) | repeated |  |
 | status | [string](#string) |  |  |
-| purchase_order | [string](#string) |  |  |
-| contact_id | [string](#string) |  |  |
-| taker | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="order-v1alpha0-GetOrderResponse-Contact"></a>
-
-### GetOrderResponse.Contact
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| name_first | [string](#string) |  |  |
-| name_mi | [string](#string) |  |  |
-| name_last | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="order-v1alpha0-GetOrderResponse-CustomerDetails"></a>
-
-### GetOrderResponse.CustomerDetails
-
-
-
-
-
-
-
-<a name="order-v1alpha0-GetOrderResponse-ShipToDetails"></a>
-
-### GetOrderResponse.ShipToDetails
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  |  |
-| line_one | [string](#string) |  |  |
-| line_two | [string](#string) |  |  |
-| city | [string](#string) |  |  |
-| state | [string](#string) |  |  |
-| postal_code | [string](#string) |  |  |
-| country | [string](#string) |  |  |
+| shipping_address | [Address](#order-v1alpha0-Address) |  |  |
+| customer | [Customer](#order-v1alpha0-Customer) |  |  |
+| customer_contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
 | delivery_instructions | [string](#string) |  |  |
+| taker | [string](#string) |  |  |
+| purchase_order | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="order-v1alpha0-OrderItem"></a>
+<a name="order-v1alpha0-GetOrderResponse-OrderItem"></a>
 
-### OrderItem
+### GetOrderResponse.OrderItem
 
 
 
@@ -326,10 +701,44 @@
 | id | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
-| unit_purchased | [double](#double) |  |  |
-| unit_label | [string](#string) |  |  |
+| quantity_ordered | [double](#double) |  |  |
+| quantity_unit | [string](#string) |  |  |
 | cost_per_unit | [double](#double) |  |  |
 | total_price | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="order-v1alpha0-GetPickTicketByIdRequest"></a>
+
+### GetPickTicketByIdRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1alpha0-GetPickTicketByIdResponse"></a>
+
+### GetPickTicketByIdResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| order_id | [string](#string) |  |  |
+| order_purchase_order | [string](#string) |  |  |
+| shipping_address | [Address](#order-v1alpha0-Address) |  |  |
+| order_customer_contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
 
 
 
@@ -350,313 +759,7 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) |  |
-
- 
-
-
-
-<a name="product_v1alpha0_product-proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## product/v1alpha0/product.proto
-
-
-
-<a name="product-v1alpha0-CreateProductGroupRequest"></a>
-
-### CreateProductGroupRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| sn | [string](#string) |  | Unique identifier of Product Group |
-| name | [string](#string) |  | Description of group |
-
-
-
-
-
-
-<a name="product-v1alpha0-CreateProductGroupResponse"></a>
-
-### CreateProductGroupResponse
-
-
-
-
-
-
-
-<a name="product-v1alpha0-CreateProductRequest"></a>
-
-### CreateProductRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| description | [string](#string) |  |  |
-| extended_description | [string](#string) |  |  |
-| list_price | [float](#float) |  |  |
-| product_group_id | [string](#string) |  |  |
-| upc | [string](#string) |  |  |
-| supplier_id | [string](#string) |  |  |
-| supplier_part_no | [string](#string) |  |  |
-| cost | [float](#float) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-CreateProductResponse"></a>
-
-### CreateProductResponse
-
-
-
-
-
-
-
-<a name="product-v1alpha0-Cursor"></a>
-
-### Cursor
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| select | [int64](#int64) |  |  |
-| size | [int64](#int64) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetGroupProductsRequest"></a>
-
-### GetGroupProductsRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  | Product Group ID |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetGroupProductsResponse"></a>
-
-### GetGroupProductsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| product_id | [int32](#int32) | repeated | List of products |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductBySupplierRequest"></a>
-
-### GetProductBySupplierRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| supplier_id | [string](#string) |  |  |
-| supplier_part_no | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductBySupplierResponse"></a>
-
-### GetProductBySupplierResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| sn | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductGroupsRequest"></a>
-
-### GetProductGroupsRequest
-
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductGroupsResponse"></a>
-
-### GetProductGroupsResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| product_groups | [GetProductGroupsResponse.ProductGroup](#product-v1alpha0-GetProductGroupsResponse-ProductGroup) | repeated |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductGroupsResponse-ProductGroup"></a>
-
-### GetProductGroupsResponse.ProductGroup
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| name | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductRequest"></a>
-
-### GetProductRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-GetProductResponse"></a>
-
-### GetProductResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| sn | [string](#string) |  | products item ID usually formatted as MRS-XXX00-123456 |
-| name | [string](#string) |  | short description of product such as a name of the item |
-| description | [string](#string) |  | extended description of product |
-| product_group_id | [string](#string) |  | Product group it belongs to |
-| price | [double](#double) |  | Default Price of item |
-| units_available | [double](#double) |  |  |
-| unit_label | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-ListProductRequest"></a>
-
-### ListProductRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| cursor | [Cursor](#product-v1alpha0-Cursor) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-ListProductResponse"></a>
-
-### ListProductResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| products | [Product](#product-v1alpha0-Product) | repeated |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-Product"></a>
-
-### Product
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
-| name | [string](#string) |  |  |
-| description | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="product-v1alpha0-ProductGroup"></a>
-
-### ProductGroup
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| name | [string](#string) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="product-v1alpha0-ProductService"></a>
-
-### ProductService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| ListProduct | [ListProductRequest](#product-v1alpha0-ListProductRequest) | [ListProductResponse](#product-v1alpha0-ListProductResponse) |  |
-| GetProduct | [GetProductRequest](#product-v1alpha0-GetProductRequest) | [GetProductResponse](#product-v1alpha0-GetProductResponse) |  |
-| GetProductBySupplier | [GetProductBySupplierRequest](#product-v1alpha0-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#product-v1alpha0-GetProductBySupplierResponse) |  |
-| CreateProduct | [CreateProductRequest](#product-v1alpha0-CreateProductRequest) | [CreateProductResponse](#product-v1alpha0-CreateProductResponse) |  |
-| CreateProductGroup | [CreateProductGroupRequest](#product-v1alpha0-CreateProductGroupRequest) | [CreateProductGroupResponse](#product-v1alpha0-CreateProductGroupResponse) | rpc GetProductBySupplierPartId(GetProductBySupplierPartIdRequest) returns(GetProductBySupplierPartIdResponse); rpc GetProductGroups(GetProductGroupsRequest) returns(GetProductGroupsResponse); rpc GetGroupProducts(GetGroupProductsRequest) returns (GetGroupProductsResponse); Creates a new Product Group |
+| GetPickTicketById | [GetPickTicketByIdRequest](#order-v1alpha0-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1alpha0-GetPickTicketByIdResponse) |  |
 
  
 
@@ -753,88 +856,6 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetReceipt | [GetReceiptRequest](#receiving-v1alpha0-GetReceiptRequest) | [GetReceiptResponse](#receiving-v1alpha0-GetReceiptResponse) |  |
-
- 
-
-
-
-<a name="shipping_v1alpha0_shipping-proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## shipping/v1alpha0/shipping.proto
-
-
-
-<a name="shipping-v1alpha0-GetPickTicketRequest"></a>
-
-### GetPickTicketRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="shipping-v1alpha0-GetPickTicketResponse"></a>
-
-### GetPickTicketResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| pick_ticket_id | [string](#string) |  |  |
-| shipping_details | [GetPickTicketResponse.ShippingDetails](#shipping-v1alpha0-GetPickTicketResponse-ShippingDetails) |  |  |
-| order_id | [string](#string) |  |  |
-| order_purchase_order | [string](#string) |  |  |
-| order_contact_name | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="shipping-v1alpha0-GetPickTicketResponse-ShippingDetails"></a>
-
-### GetPickTicketResponse.ShippingDetails
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  |  |
-| line_one | [string](#string) |  |  |
-| line_two | [string](#string) |  |  |
-| city | [string](#string) |  |  |
-| state | [string](#string) |  |  |
-| postal_code | [string](#string) |  |  |
-| country | [string](#string) |  |  |
-| delivery_instructions | [string](#string) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="shipping-v1alpha0-ShippingService"></a>
-
-### ShippingService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| GetPickTicket | [GetPickTicketRequest](#shipping-v1alpha0-GetPickTicketRequest) | [GetPickTicketResponse](#shipping-v1alpha0-GetPickTicketResponse) |  |
 
  
 

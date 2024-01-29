@@ -1,0 +1,109 @@
+syntax = 'proto3';
+
+package catalog.v1alpha0;
+
+option go_package = "github.com/materials-resources/s_prophet/internal/core/model/catalog_v1alpha0";
+
+message Cursor {
+  int64 select = 1;
+  int64 size = 2;
+}
+
+message Product {
+  string id = 1;
+  string sn = 2;
+  string name = 3;
+//  string description = 3;
+//  string product_group_id = 4;
+//  double list_price = 5;
+}
+message ProductGroup {
+  string id = 1;
+  string sn = 2;
+  string name = 3;
+}
+
+message ProductFilter {
+  string product_group_id = 1;
+}
+
+
+service CatalogService {
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+  rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
+
+  rpc ListGroup(ListGroupRequest) returns (ListGroupResponse);
+  rpc GetGroup(GetGroupRequest) returns (GetGroupResponse);
+  rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+
+  rpc GetProductBySupplier(GetProductBySupplierRequest) returns (GetProductBySupplierResponse);
+
+}
+
+
+message GetProductRequest {
+  string id = 1;
+}
+message GetProductResponse {
+  Product product = 1;
+  //  string id = 1; //
+  //  string sn = 2; //products item ID usually formatted as MRS-XXX00-123456
+  //  string name = 3; // short description of product such as a name of the item
+  //  string description = 4; //extended description of product
+  //  string product_group_id = 5; //Product group it belongs to
+  //  double price = 6; //Default Price of item
+  //  double units_available = 7;
+  //  string unit_label = 8;
+}
+
+message CreateProductRequest {
+  string id = 1;
+  string description = 2;
+  string extended_description = 3;
+  float list_price = 4;
+  string product_group_id = 8;
+  string upc = 9;
+  string supplier_id = 10;
+  string supplier_part_no = 11;
+  float cost = 12;
+}
+
+message CreateProductResponse {}
+
+
+
+message DeleteProductRequest {
+  repeated string ids = 1;
+}
+message DeleteProductResponse {}
+
+message ListGroupRequest {}
+message ListGroupResponse {
+  repeated ProductGroup product_groups = 1;
+}
+
+message GetGroupRequest {
+  string id = 1;
+}
+message GetGroupResponse {
+  ProductGroup product_group = 1;
+  repeated Product products = 2;
+}
+
+message CreateGroupRequest {
+  ProductGroup product_group =1;
+  //  string sn = 1; //Unique identifier of Product Group
+  //  string name = 2; // Description of group
+}
+message CreateGroupResponse {}
+
+
+message GetProductBySupplierRequest {
+  string supplier_id = 1;
+  string supplier_part_no = 2;
+}
+
+message GetProductBySupplierResponse {
+  string sn = 1;
+}

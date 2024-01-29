@@ -4,8 +4,34 @@ package order.v1alpha0;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/order_v1alpha0";
 
+message Address {
+  string name = 1;
+  string line_one = 2;
+  string line_two = 3;
+  string city = 4;
+  string state = 5;
+  string postal_code = 8;
+  string country = 9;
+}
+message Customer {
+  string id = 1;
+  string name = 2;
+  string phone_number = 3;
+  string email = 4;
+}
+
+message CustomerContact {
+  string id = 1;
+  string name = 3;
+  string phone_number = 4;
+  string email = 5;
+  string title = 6;
+}
+
 service OrderService {
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+
+  rpc GetPickTicketById(GetPickTicketByIdRequest) returns (GetPickTicketByIdResponse);
 }
 
 message GetOrderRequest {
@@ -13,41 +39,39 @@ message GetOrderRequest {
 }
 
 message GetOrderResponse {
-  message Contact {
+  message OrderItem {
     string id = 1;
-    string name_first = 2;
-    string name_mi = 3;
-    string name_last = 4;
-  }
-  message ShipToDetails {
+    string sn = 2;
     string name = 3;
-    string line_one = 4;
-    string line_two = 5;
-    string city = 6;
-    string state = 7;
-    string postal_code = 8;
-    string country = 9;
-    string delivery_instructions = 10;
+    double quantity_ordered = 4;
+    string quantity_unit = 5;
+    double cost_per_unit = 6;
+    double total_price = 7;
   }
 
-  message CustomerDetails {}
   string id = 1;
   repeated OrderItem order_items = 2;
+  string status = 3;
 
-  ShipToDetails ship_to_details = 3;
-  string status = 4;
+  Address shipping_address = 4;
+  Customer customer = 5;
+  CustomerContact customer_contact =  6;
 
-  string purchase_order = 10;
-  string contact_id = 11;
+  string delivery_instructions = 10;
   string taker = 12;
+  string purchase_order = 13;
 }
 
-message OrderItem {
+message GetPickTicketByIdRequest {
   string id = 1;
-  string sn = 2;
-  string name = 3;
-  double unit_purchased = 4;
-  string unit_label = 5;
-  double cost_per_unit = 6;
-  double total_price = 7;
 }
+message GetPickTicketByIdResponse {
+  string id = 1;
+  string order_id = 2;
+  string order_purchase_order = 3;
+  Address shipping_address = 4;
+  CustomerContact order_customer_contact = 5;
+}
+
+
+

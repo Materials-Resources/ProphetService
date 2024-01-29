@@ -1,11 +1,19 @@
 package cmd
 
 import (
-	"github.com/materials-resources/s_prophet/config"
+	"database/sql"
+	"fmt"
+	"net/url"
+
+	_ "github.com/denisenkom/go-mssqldb"
+	"github.com/materials-resources/s_prophet/app"
 	"github.com/materials-resources/s_prophet/core/server"
-	"github.com/materials-resources/s_prophet/repository"
-	"github.com/materials-resources/s_prophet/service"
+	"github.com/materials-resources/s_prophet/pkg/infrastructure/db/prophet_19_1_3668"
+	grpc2 "github.com/materials-resources/s_prophet/pkg/interface/grpc"
 	"github.com/spf13/cobra"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mssqldialect"
+	"github.com/uptrace/bun/extra/bundebug"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -15,35 +23,40 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cPath := rootCmd.PersistentFlags().Lookup("config").Value
 
-		config.NewConfig(cPath.String())
+		app.NewConfig(cPath.String())
 		s := grpc.NewServer()
 
-		db, _ := repository.NewDB(&config.Configuration)
+		query := url.Values{}
+		query.Add("database", app.Configuration.Database.DB)
+		u := &url.URL{Scheme: "sqlserver",
+			User:     url.UserPassword(app.Configuration.Database.Username, app.Configuration.Database.Password),
+			Host:     fmt.Sprintf("%s:%d", app.Configuration.Database.Host, app.Configuration.Database.Port),
+			RawQuery: query.Encode(),
+		}
 
-		//Define repositories
-		orderRepo := repository.NewOrderRepository(db)
-		productRepo := repository.NewProductRepository(db)
-		shippingRepo := repository.NewShippingRepository(db)
-		receivingRepo := repository.NewReceivingRepository(db)
+		db, err := sql.Open(
+			"sqlserver",
+			u.String(),
+		)
+		if err != nil {
 
-		//Register the grpc servers
-		service.NewOrderServer(
-			s,
-			orderRepo,
-		)
-		service.NewProductServer(
-			s,
-			productRepo,
-		)
-		service.NewShippingService(
-			s,
-			shippingRepo,
-		)
+			fmt.Println(err)
+			fmt.Println("could not connect to db")
+		}
 
-		service.NewReceivingService(
-			s,
-			receivingRepo,
+		bundb := bun.NewDB(
+			db,
+			mssqldialect.New(),
 		)
+		bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+
+		catalogRepo := prophet_19_1_3668.NewBunCatalogRepository(bundb)
+		orderRepo := prophet_19_1_3668.NewBunOrderRepository(bundb)
+		inventoryRepo := prophet_19_1_3668.NewBunInventoryRepository(bundb)
+
+		grpc2.NewCatalogService(s, catalogRepo)
+		grpc2.NewOrderService(s, orderRepo)
+		grpc2.NewInventoryService(s, inventoryRepo)
 
 		//Enable GRPC Reflection for clients
 		reflection.Register(s)
