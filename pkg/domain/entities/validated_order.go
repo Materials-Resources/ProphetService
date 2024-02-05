@@ -29,3 +29,22 @@ func NewValidatedOrderItem(orderItem *OrderItem) (*ValidatedOrderItem, error) {
 	}
 	return &ValidatedOrderItem{OrderItem: *orderItem, isValidated: true}, nil
 }
+
+type ValidatedOrderCustomerContact struct {
+	OrderCustomerContact
+	isValidated bool
+}
+
+func (v *ValidatedOrderCustomerContact) IsValid() bool { return v.isValidated }
+
+func NewValidatedOrderCustomerContact(orderCustomerContact *OrderCustomerContact) (*ValidatedOrderCustomerContact,
+	error,
+) {
+	if err := orderCustomerContact.validate(); err != nil {
+		return nil, err
+	}
+	return &ValidatedOrderCustomerContact{
+		OrderCustomerContact: *orderCustomerContact,
+		isValidated:          false,
+	}, nil
+}

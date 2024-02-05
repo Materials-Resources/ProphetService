@@ -13,9 +13,22 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
-	"github.com/uptrace/bun/extra/bundebug"
+	"github.com/uptrace/bun/extra/bunotel"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+)
+
+const (
+	service     = "prophet"
+	environment = "development"
+	id          = 1
 )
 
 var serveCmd = &cobra.Command{
@@ -24,7 +37,11 @@ var serveCmd = &cobra.Command{
 		cPath := rootCmd.PersistentFlags().Lookup("config").Value
 
 		app.NewConfig(cPath.String())
-		s := grpc.NewServer()
+		s := grpc.NewServer(grpc.StatsHandler(otelgrpc.NewServerHandler()))
+
+		tp, err := tracerProvider("http://localhost:14268/api/traces")
+
+		otel.SetTracerProvider(tp)
 
 		query := url.Values{}
 		query.Add("database", app.Configuration.Database.DB)
@@ -38,6 +55,7 @@ var serveCmd = &cobra.Command{
 			"sqlserver",
 			u.String(),
 		)
+
 		if err != nil {
 
 			fmt.Println(err)
@@ -48,7 +66,9 @@ var serveCmd = &cobra.Command{
 			db,
 			mssqldialect.New(),
 		)
-		bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+
+		bundb.AddQueryHook(bunotel.NewQueryHook(bunotel.WithDBName("mydb"))) //bundb.AddQueryHook(bundebug.
+		// NewQueryHook(bundebug.WithVerbose(true)))
 
 		catalogRepo := prophet_19_1_3668.NewBunCatalogRepository(bundb)
 		orderRepo := prophet_19_1_3668.NewBunOrderRepository(bundb)
@@ -69,4 +89,25 @@ var serveCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
+}
+
+func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
+	// Create the Jaeger exporter
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		return nil, err
+	}
+	tp := tracesdk.NewTracerProvider(
+		// Always be sure to batch in production.
+		tracesdk.WithBatcher(exp),
+		// Record information about this application in a Resource.
+		tracesdk.WithResource(resource.NewWithAttributes(
+			semconv.SchemaURL,
+			semconv.ServiceNameKey.String(service),
+			attribute.String("environment", environment),
+			attribute.Int64("ID", id),
+		),
+		),
+	)
+	return tp, nil
 }

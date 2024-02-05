@@ -20,6 +20,57 @@ type BunOrderRepository struct {
 	db *bun.DB
 }
 
+func (b BunOrderRepository) CreateOrder(order entities.ValidatedOrder) error {
+
+	ctx := context.Background()
+
+	// Get oe_hdr_uid from procedure
+
+	generateOeHdrUid := func() int32 {
+		q :=
+			`DECLARE @order_no int
+			EXEC @order_no = p21_get_counter 'oe_hdr', 1
+			SELECT @order_no`
+		id := new(int)
+		rows, err := b.db.QueryContext(ctx,
+			q,
+		)
+		if err != nil {
+			return 0
+		}
+		err = b.db.ScanRows(ctx, rows, id)
+		return int32(*id)
+	}
+
+	generateOrderNo := func() string {
+		//q :=
+		//	`DECLARE @order_no int
+		//	EXEC @order_no = p21_get_counter 'WO', 1
+		//	SELECT @order_no`
+		//rows, err := b.db.QueryContext(ctx,
+		//	q,
+		//)
+		//if err != nil {
+		//	return 0
+		//}
+
+		//err = b.db.ScanRows(ctx, rows, id)
+
+		return ""
+	}
+
+	fmt.Println(generateOeHdrUid(), generateOrderNo())
+
+	// Tables required to insert new order: oe_hdr_salesrep, oe_hdr_tax
+
+	return nil
+}
+
+func (b BunOrderRepository) AddItemToOrder(orderId string, items []entities.ValidatedOrderItem) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (b BunOrderRepository) FindOrderById(id string) (*entities.ValidatedOrder, error) {
 	ctx := context.Background()
 	dbOrder := new(model.OeHdr)

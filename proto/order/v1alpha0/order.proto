@@ -29,10 +29,14 @@ message CustomerContact {
 }
 
 service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
 
   rpc GetPickTicketById(GetPickTicketByIdRequest) returns (GetPickTicketByIdResponse);
 }
+
+message CreateOrderRequest{}
+message CreateOrderResponse{}
 
 message GetOrderRequest {
   string id = 1;

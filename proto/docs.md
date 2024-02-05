@@ -46,6 +46,8 @@
   
 - [order/v1alpha0/order.proto](#order_v1alpha0_order-proto)
     - [Address](#order-v1alpha0-Address)
+    - [CreateOrderRequest](#order-v1alpha0-CreateOrderRequest)
+    - [CreateOrderResponse](#order-v1alpha0-CreateOrderResponse)
     - [Customer](#order-v1alpha0-Customer)
     - [CustomerContact](#order-v1alpha0-CustomerContact)
     - [GetOrderRequest](#order-v1alpha0-GetOrderRequest)
@@ -160,7 +162,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ids | [string](#string) | repeated |  |
+| id | [string](#string) |  |  |
 
 
 
@@ -262,7 +264,16 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product | [Product](#catalog-v1alpha0-Product) |  | string id = 1; // string sn = 2; //products item ID usually formatted as MRS-XXX00-123456 string name = 3; // short description of product such as a name of the item string description = 4; //extended description of product string product_group_id = 5; //Product group it belongs to double price = 6; //Default Price of item double units_available = 7; string unit_label = 8; |
+| id | [string](#string) |  | Unique ID of product |
+| sn | [string](#string) |  | Serialized ID
+
+products item ID usually formatted as MRS-XXX00-123456 |
+| name | [string](#string) |  | Name of product |
+| description | [string](#string) |  | Description of product |
+| product_group_id | [string](#string) |  | Product group |
+| msrp_price | [double](#double) |  | MSRP price of product |
+| available_quantity | [double](#double) |  |  |
+| available_unit | [string](#string) |  |  |
 
 
 
@@ -615,6 +626,26 @@ rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
 
 
 
+<a name="order-v1alpha0-CreateOrderRequest"></a>
+
+### CreateOrderRequest
+
+
+
+
+
+
+
+<a name="order-v1alpha0-CreateOrderResponse"></a>
+
+### CreateOrderResponse
+
+
+
+
+
+
+
 <a name="order-v1alpha0-Customer"></a>
 
 ### Customer
@@ -758,6 +789,7 @@ rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| CreateOrder | [CreateOrderRequest](#order-v1alpha0-CreateOrderRequest) | [CreateOrderResponse](#order-v1alpha0-CreateOrderResponse) |  |
 | GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1alpha0-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1alpha0-GetPickTicketByIdResponse) |  |
 

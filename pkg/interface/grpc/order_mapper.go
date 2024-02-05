@@ -32,14 +32,11 @@ func ToPBGetOrderResponse(order *entities.Order) (*rpc.GetOrderResponse, error) 
 			City:       order.ShippingAddress.City,
 			State:      order.ShippingAddress.State,
 			PostalCode: order.ShippingAddress.PostalCode,
-			Country:    "",
 		},
 		CustomerContact: &rpc.CustomerContact{
 			Id:          order.CustomerContact.Id,
 			Name:        order.CustomerContact.Name,
 			PhoneNumber: order.CustomerContact.PhoneNumber,
-			Email:       order.CustomerContact.Email,
-			Title:       "",
 		},
 	}
 	for _, item := range order.Items {

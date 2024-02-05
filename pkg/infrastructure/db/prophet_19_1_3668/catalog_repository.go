@@ -53,13 +53,15 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*entities.Validat
 	var dbInvLoc []model.InvLoc
 	ctx := context.Background()
 
-	err := b.db.NewSelect().Model(&dbInvLoc).Relation("InvMast").Where("inv_loc.product_group_id = ?",
+	err := b.db.NewSelect().Model(&dbInvLoc).Column("inv_mast_uid").Relation("InvMast",
+		func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Column("item_id", "item_desc")
+		},
+	).Where("inv_loc.product_group_id = ?",
 		id,
 	).Scan(ctx)
-	fmt.Println(len(dbInvLoc))
 
 	if err != nil {
-		fmt.Println(err)
 		return nil, errors.New("could not find products for product group")
 	}
 	return FromDBListProduct(dbInvLoc)
@@ -70,9 +72,81 @@ func (b BunCatalogRepository) UpdateProduct() {
 	panic("implement me")
 }
 
-func (b BunCatalogRepository) DeleteProduct() {
-	//TODO implement me
-	panic("implement me")
+func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) error {
+
+	dbId, err := strconv.Atoi(id)
+	if err != nil {
+		return errors.New("could not parse id")
+	}
+
+	var inventorySupplierXLoc []model.InventorySupplierXLoc
+
+	invAdjLine := &model.InvAdjLine{}
+	invTran := &model.InvTran{}
+	itemUom := &model.ItemUom{}
+	averageInventoryValue := &model.AverageInventoryValue{}
+	itemCategoryXInvMast := &model.ItemCategoryXInvMast{}
+	invLocMsp := &model.InvLocMsp{}
+	inventorySupplier := &model.InventorySupplier{}
+	invLocStockStatus := &model.InvLocStockStatus{}
+	invBin := &model.InvBin{}
+	invLoc := &model.InvLoc{}
+	invMast := &model.InvMast{}
+
+	if !b.canDeleteProduct(ctx, dbId) {
+		return errors.New("product cannot be deleted")
+	}
+
+	err = b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+		if err := tx.NewSelect().Model(&inventorySupplierXLoc).Column("inventory_supplier_x_loc_uid").Relation(
+			"InventorySupplier",
+			func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.ExcludeColumn("*").Where("inv_mast_uid = ?", dbId)
+			},
+		).Scan(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invAdjLine).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invTran).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(itemUom).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(&inventorySupplierXLoc).WherePK().Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(averageInventoryValue).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(itemCategoryXInvMast).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invLocMsp).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(inventorySupplier).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invLocStockStatus).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invBin).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invLoc).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model(invMast).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		return nil
+	},
+	)
+
+	return err
 }
 
 func (b BunCatalogRepository) CreateGroup() {
@@ -91,8 +165,7 @@ func (b BunCatalogRepository) CreateGroup() {
 	panic("implement me")
 }
 
-func (b BunCatalogRepository) FindGroupByID(id string) (*entities.ValidatedProductGroup, error) {
-	ctx := context.Background()
+func (b BunCatalogRepository) FindGroupByID(ctx context.Context, id string) (*entities.ValidatedProductGroup, error) {
 	dbProductGroup := new(model.ProductGroup)
 
 	dbID, err := strconv.Atoi(id)
@@ -100,7 +173,7 @@ func (b BunCatalogRepository) FindGroupByID(id string) (*entities.ValidatedProdu
 		return nil, errors.New("ID provided was not a integer")
 	}
 
-	err = b.db.NewSelect().Model(dbProductGroup).Where("product_group.product_group_uid = ?",
+	err = b.db.NewSelect().Model(dbProductGroup).Column("product_group_id", "product_group_desc", "product_group_uid").Where("product_group.product_group_uid = ?",
 		dbID,
 	).Scan(ctx)
 	if err != nil {
@@ -118,4 +191,31 @@ func (b BunCatalogRepository) UpdateGroup() {
 func (b BunCatalogRepository) DeleteGroup() {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (b BunCatalogRepository) canDeleteProduct(ctx context.Context, id int) bool {
+
+	q :=
+		`select im.inv_mast_uid, purchase_history.purchase_count, sales_history.sales_count
+FROM inv_mast im
+LEFT JOIN (SELECT inventory_receipts_line.inv_mast_uid, count(inventory_receipts_line.inv_mast_uid) as purchase_count FROM inventory_receipts_line
+           group by inventory_receipts_line.inv_mast_uid) purchase_history on purchase_history.inv_mast_uid = im.inv_mast_uid
+LEFT JOIN (SELECT oe_line.inv_mast_uid, count(oe_line.inv_mast_uid) as sales_count FROM oe_line
+           group by oe_line.inv_mast_uid) sales_history on sales_history.inv_mast_uid = im.inv_mast_uid
+WHERE im.inv_mast_uid = ?`
+
+	type productWithHistory struct {
+		InvMastUid    int32
+		PurchaseCount int32
+		SalesCount    int32
+	}
+
+	p := new(productWithHistory)
+	b.db.NewRaw(q, id).Scan(ctx, &p.InvMastUid, &p.PurchaseCount, &p.SalesCount)
+
+	if p.SalesCount == 0 && p.PurchaseCount == 0 {
+		return true
+	}
+
+	return false
 }
