@@ -67,8 +67,7 @@ var serveCmd = &cobra.Command{
 			mssqldialect.New(),
 		)
 
-		bundb.AddQueryHook(bunotel.NewQueryHook(bunotel.WithDBName("mydb"))) //bundb.AddQueryHook(bundebug.
-		// NewQueryHook(bundebug.WithVerbose(true)))
+		bundb.AddQueryHook(bunotel.NewQueryHook(bunotel.WithDBName(app.Configuration.Database.DB)))
 
 		catalogRepo := prophet_19_1_3668.NewBunCatalogRepository(bundb)
 		orderRepo := prophet_19_1_3668.NewBunOrderRepository(bundb)

@@ -187,6 +187,9 @@ type InvMast struct {
 	RentalItemFlag                sql.NullString  `bun:"rental_item_flag,type:char,default:('N')"`
 	RentalItemUid                 sql.NullInt32   `bun:"rental_item_uid,type:int,nullzero"`
 	DfltDimensionScale            sql.NullString  `bun:"dflt_dimension_scale,type:varchar(2),nullzero"`
+
+	AlternateCodes []*AlternateCode `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InvLocItems    []*InvLoc        `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 }
 
 var _ bun.BeforeInsertHook = (*InvMast)(nil)

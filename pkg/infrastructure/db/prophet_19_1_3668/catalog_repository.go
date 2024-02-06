@@ -80,24 +80,33 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 	}
 
 	var inventorySupplierXLoc []model.InventorySupplierXLoc
-
-	invAdjLine := &model.InvAdjLine{}
-	invTran := &model.InvTran{}
-	itemUom := &model.ItemUom{}
-	averageInventoryValue := &model.AverageInventoryValue{}
-	itemCategoryXInvMast := &model.ItemCategoryXInvMast{}
-	invLocMsp := &model.InvLocMsp{}
-	inventorySupplier := &model.InventorySupplier{}
-	invLocStockStatus := &model.InvLocStockStatus{}
-	invBin := &model.InvBin{}
-	invLoc := &model.InvLoc{}
-	invMast := &model.InvMast{}
+	var pricePageXBook []model.PricePageXBook
 
 	if !b.canDeleteProduct(ctx, dbId) {
 		return errors.New("product cannot be deleted")
 	}
 
 	err = b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+
+		invMast := new(model.InvMast)
+
+		if err := tx.NewSelect().Model(invMast).Where("inv_mast_uid = ?", dbId).Column("inv_mast_uid").Relation("InvLocItems",
+			func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.Column("inv_mast_uid", "company_id", "location_id")
+			},
+		).Relation("AlternateCodes", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Column("inv_mast_uid", "alternate_code")
+		},
+		).Scan(ctx); err != nil {
+			return err
+		}
+
+		if invMast.AlternateCodes != nil {
+			if _, err := tx.NewDelete().Model((*model.AlternateCode)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+				return err
+			}
+		}
+
 		if err := tx.NewSelect().Model(&inventorySupplierXLoc).Column("inventory_supplier_x_loc_uid").Relation(
 			"InventorySupplier",
 			func(q *bun.SelectQuery) *bun.SelectQuery {
@@ -106,40 +115,87 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 		).Scan(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invAdjLine).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+
+		if inventorySupplierXLoc != nil {
+			if _, err := tx.NewDelete().Model(&inventorySupplierXLoc).WherePK().Exec(ctx); err != nil {
+				return err
+			}
+		}
+
+		if err := tx.NewSelect().Model(&pricePageXBook).Column("price_page_x_book_uid").Relation("PricePage",
+			func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.ExcludeColumn("*").Where("inv_mast_uid = ?", dbId)
+			},
+		).Scan(
+			ctx,
+		); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invTran).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+
+		if pricePageXBook != nil {
+			if _, err := tx.NewDelete().Model(&pricePageXBook).WherePK().Exec(ctx); err != nil {
+				return err
+			}
+			if _, err := tx.NewDelete().Model((*model.PricePage)(nil)).Where("inv_mast_uid = ?",
+				dbId,
+			).Exec(ctx); err != nil {
+				return err
+			}
+		}
+
+		if _, err := tx.NewDelete().Model((*model.ItemConversion)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(itemUom).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.InvAdjLine)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(&inventorySupplierXLoc).WherePK().Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.InvTran)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(averageInventoryValue).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.ItemUom)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(itemCategoryXInvMast).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+
+		if _, err := tx.NewDelete().Model((*model.AverageInventoryValue)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invLocMsp).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.ItemCategoryXInvMast)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(inventorySupplier).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.InvLocMsp)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invLocStockStatus).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.InventorySupplier)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invBin).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.InvLocStockStatus)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invLoc).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+
+		if _, err := tx.NewDelete().Model((*model.ItemIdChangeHistory)(nil)).Where("inv_mast_uid = ?",
+			dbId,
+		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model(invMast).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+		if _, err := tx.NewDelete().Model((*model.InvBin)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model((*model.InvLoc)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+			return err
+		}
+		if _, err := tx.NewDelete().Model((*model.InvMast)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 			return err
 		}
 		return nil
