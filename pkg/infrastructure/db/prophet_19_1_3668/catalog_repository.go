@@ -107,6 +107,26 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 			}
 		}
 
+		assemblyHdr := new(model.AssemblyHdr)
+		if err := tx.NewSelect().Model(assemblyHdr).Where("inv_mast_uid = ?",
+			dbId,
+		).Column("inv_mast_uid").Relation("AssemblyLineItems", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Column("assembly_line_uid", "inv_mast_uid")
+		},
+		).Scan(ctx); err != nil {
+			return err
+		}
+
+		if assemblyHdr.AssemblyLineItems != nil {
+			if _, err := tx.NewDelete().Model(&assemblyHdr.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
+				return err
+			}
+		}
+
+		if _, err := tx.NewDelete().Model(assemblyHdr).WherePK().Exec(ctx); err != nil {
+			return err
+		}
+
 		if err := tx.NewSelect().Model(&inventorySupplierXLoc).Column("inventory_supplier_x_loc_uid").Relation(
 			"InventorySupplier",
 			func(q *bun.SelectQuery) *bun.SelectQuery {
