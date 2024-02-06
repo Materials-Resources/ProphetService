@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/url"
@@ -17,7 +18,7 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
@@ -39,7 +40,7 @@ var serveCmd = &cobra.Command{
 		app.NewConfig(cPath.String())
 		s := grpc.NewServer(grpc.StatsHandler(otelgrpc.NewServerHandler()))
 
-		tp, err := tracerProvider("http://localhost:14268/api/traces")
+		tp, err := tracerProvider()
 
 		otel.SetTracerProvider(tp)
 
@@ -90,9 +91,10 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 }
 
-func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
-	// Create the Jaeger exporter
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+func tracerProvider() (*tracesdk.TracerProvider, error) {
+	// Create the GRPC exporter
+	ctx := context.Background()
+	exp, err := otlptracegrpc.New(ctx)
 	if err != nil {
 		return nil, err
 	}
