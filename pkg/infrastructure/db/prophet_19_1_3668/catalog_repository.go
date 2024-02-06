@@ -117,14 +117,13 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 			return err
 		}
 
-		if assemblyHdr.AssemblyLineItems != nil {
+		if assemblyHdr != nil {
 			if _, err := tx.NewDelete().Model(&assemblyHdr.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
 				return err
 			}
-		}
-
-		if _, err := tx.NewDelete().Model(assemblyHdr).WherePK().Exec(ctx); err != nil {
-			return err
+			if _, err := tx.NewDelete().Model(assemblyHdr).WherePK().Exec(ctx); err != nil {
+				return err
+			}
 		}
 
 		if err := tx.NewSelect().Model(&inventorySupplierXLoc).Column("inventory_supplier_x_loc_uid").Relation(
