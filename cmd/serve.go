@@ -5,9 +5,9 @@ import (
 
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/materials-resources/s_prophet/app"
-	_ "github.com/materials-resources/s_prophet/pkg/interface/grpc/catalog"
-	_ "github.com/materials-resources/s_prophet/pkg/interface/grpc/inventory"
-	_ "github.com/materials-resources/s_prophet/pkg/interface/grpc/order"
+	_ "github.com/materials-resources/s_prophet/internal/catalog/delivery/grpc"
+	_ "github.com/materials-resources/s_prophet/internal/inventory/delivery/grpc"
+	_ "github.com/materials-resources/s_prophet/internal/order/delivery/grpc"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc/reflection"
 )
