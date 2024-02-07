@@ -1,4 +1,4 @@
-package grpc
+package inventory
 
 import (
 	"github.com/materials-resources/s_prophet/pkg/domain/entities"

@@ -1,4 +1,4 @@
-package grpc
+package inventory
 
 import (
 	"context"
@@ -17,7 +17,8 @@ type inventoryService struct {
 	repo repositories.InventoryRepository
 }
 
-func (s inventoryService) GetReceiptByID(ctx context.Context, request *rpc.GetReceiptByIDRequest,
+func (s inventoryService) GetReceiptByID(
+	ctx context.Context, request *rpc.GetReceiptByIDRequest,
 ) (*rpc.GetReceiptByIDResponse, error) {
 	//TODO implement me
 

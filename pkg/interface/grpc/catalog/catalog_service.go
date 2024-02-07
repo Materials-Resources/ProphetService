@@ -1,4 +1,4 @@
-package grpc
+package catalog
 
 import (
 	"context"
@@ -6,20 +6,14 @@ import (
 
 	"github.com/materials-resources/s_prophet/pkg/domain/repositories"
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
-	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"google.golang.org/grpc"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 )
 
-var tracer = otel.Tracer("catalog-service")
-
-func NewCatalogService(server *grpc.Server, repo repositories.CatalogRepository) {
-	svc := &catalogService{repo: repo}
-	rpc.RegisterCatalogServiceServer(server, svc)
-}
-
 type catalogService struct {
-	repo repositories.CatalogRepository
+	repo   repositories.CatalogRepository
+	tracer trace.Tracer
 }
 
 func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (*rpc.GetProductResponse, error,
@@ -42,11 +36,14 @@ func (s catalogService) DeleteProduct(
 ) (*rpc.DeleteProductResponse,
 	error,
 ) {
-	_, span := tracer.Start(ctx, "DeleteProduct")
+	ctx, span := s.tracer.Start(ctx, "DeleteProduct", trace.WithSpanKind(trace.SpanKindServer))
 	span.SetAttributes(attribute.String("request.id", request.String()))
 	defer span.End()
+
 	err := s.repo.DeleteProduct(ctx, request.GetId())
 	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
 		return nil, err
 	}
 	return &rpc.DeleteProductResponse{}, nil
@@ -66,7 +63,7 @@ func (s catalogService) ListGroup(
 func (s catalogService) GetGroup(
 	ctx context.Context, request *rpc.GetGroupRequest,
 ) (*rpc.GetGroupResponse, error) {
-	_, span := tracer.Start(ctx, "GetGroup")
+	_, span := s.tracer.Start(ctx, "GetGroup")
 	span.SetAttributes(attribute.String("extra.key", "extra.value"))
 	defer span.End()
 	g, err := s.repo.FindGroupByID(ctx, request.GetId())

@@ -3,19 +3,15 @@ package app
 import (
 	"os"
 
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
 	"gopkg.in/yaml.v3"
-
-	stdout "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-)
-
-var (
-	Configuration Config
 )
 
 type Config struct {
+	Tracing struct {
+		Service     string `yaml:"service"`
+		Environment string `yaml:"environment"`
+		Id          string `yaml:"id"`
+	} `yaml:"tracing"`
 	Database struct {
 		Host     string `yaml:"host"`
 		Port     int    `yaml:"port"`
@@ -38,14 +34,14 @@ type Config struct {
 	} `yaml:"app"`
 }
 
-func NewConfig(path string) error {
+func NewConfigFromPath(path string) (*Config, error) {
 
 	var config Config
 
 	// Open config file
 	file, err := os.Open(path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer file.Close()
 
@@ -53,29 +49,9 @@ func NewConfig(path string) error {
 
 	// Decode config file into Config
 	if err := d.Decode(&config); err != nil {
-		return err
-	}
-
-	Configuration = config
-
-	return nil
-
-}
-
-// Init configures an OpenTelemetry exporter and trace provider.
-func Init() (*sdktrace.TracerProvider, error) {
-	exporter, err := stdout.New(stdout.WithPrettyPrint())
-	if err != nil {
 		return nil, err
 	}
-	tp := sdktrace.NewTracerProvider(
-		sdktrace.WithSampler(sdktrace.AlwaysSample()),
-		sdktrace.WithBatcher(exporter),
-	)
-	otel.SetTracerProvider(tp)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{},
-		propagation.Baggage{},
-	),
-	)
-	return tp, nil
+
+	return &config, nil
+
 }

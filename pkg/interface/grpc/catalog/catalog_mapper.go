@@ -1,11 +1,12 @@
-package grpc
+package catalog
 
 import (
 	"github.com/materials-resources/s_prophet/pkg/domain/entities"
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
 )
 
-func ToPBGetProductGroupResponse(productGroup *entities.ValidatedProductGroup, products []*entities.ValidatedProduct,
+func ToPBGetProductGroupResponse(
+	productGroup *entities.ValidatedProductGroup, products []*entities.ValidatedProduct,
 ) (*rpc.GetGroupResponse, error) {
 	var pb = &rpc.GetGroupResponse{
 		ProductGroup: &rpc.ProductGroup{

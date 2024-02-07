@@ -2,6 +2,7 @@ package prophet_19_1_3668
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"strconv"
@@ -10,14 +11,17 @@ import (
 	"github.com/materials-resources/s_prophet/pkg/domain/repositories"
 	"github.com/materials-resources/s_prophet/pkg/infrastructure/db/prophet_19_1_3668/model"
 	"github.com/uptrace/bun"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/trace"
 )
 
-func NewBunCatalogRepository(db *bun.DB) repositories.CatalogRepository {
-	return &BunCatalogRepository{db: db}
+func NewBunCatalogRepository(db *bun.DB, tp *tracesdk.TracerProvider) repositories.CatalogRepository {
+	return &BunCatalogRepository{db: db, tracer: tp.Tracer("CatalogRepository")}
 }
 
 type BunCatalogRepository struct {
-	db *bun.DB
+	db     *bun.DB
+	tracer trace.Tracer
 }
 
 func (b BunCatalogRepository) CreateProduct() {
@@ -74,6 +78,9 @@ func (b BunCatalogRepository) UpdateProduct() {
 
 func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) error {
 
+	ctx, span := b.tracer.Start(ctx, "DeleteProduct")
+	defer span.End()
+
 	dbId, err := strconv.Atoi(id)
 	if err != nil {
 		return errors.New("could not parse id")
@@ -114,10 +121,11 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 			return q.Column("assembly_line_uid", "inv_mast_uid")
 		},
 		).Scan(ctx); err != nil {
-			return err
-		}
+			if !errors.As(err, &sql.ErrNoRows) {
+				return err
+			}
 
-		if assemblyHdr != nil {
+		} else {
 			if _, err := tx.NewDelete().Model(&assemblyHdr.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
 				return err
 			}

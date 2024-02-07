@@ -1,5 +1,10 @@
 package app
 
-// TODO implement rpc server that allows services to register with hooks
+import (
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"google.golang.org/grpc"
+)
 
-func startServer() {}
+func newGrpcServer() *grpc.Server {
+	return grpc.NewServer(grpc.StatsHandler(otelgrpc.NewServerHandler()))
+}

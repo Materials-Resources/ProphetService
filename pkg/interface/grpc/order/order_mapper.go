@@ -1,4 +1,4 @@
-package grpc
+package order
 
 import (
 	"github.com/materials-resources/s_prophet/pkg/domain/entities"
