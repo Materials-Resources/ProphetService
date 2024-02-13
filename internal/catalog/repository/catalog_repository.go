@@ -77,9 +77,10 @@ func (b BunCatalogRepository) UpdateProduct() {
 }
 
 func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) error {
-
-	ctx, span := b.tracer.Start(ctx, "DeleteProduct")
+	span := trace.SpanFromContext(ctx)
 	defer span.End()
+
+	span.SetName("repository.catalog.deleteProduct")
 
 	dbId, err := strconv.Atoi(id)
 	if err != nil {

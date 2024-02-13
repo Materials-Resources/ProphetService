@@ -9,12 +9,13 @@ import (
 
 	"github.com/uptrace/bun"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/metric"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	"google.golang.org/grpc"
 )
 
 type App struct {
-	config *Config
+	Config *Config
 
 	db     *bun.DB
 	dbOnce sync.Once
@@ -23,6 +24,7 @@ type App struct {
 	serverOnce sync.Once
 
 	tp *tracesdk.TracerProvider
+	mp *metric.MeterProvider
 }
 
 func NewApp(config *Config) (*App, error) {
@@ -35,7 +37,7 @@ func NewApp(config *Config) (*App, error) {
 	otel.SetTracerProvider(tp)
 
 	return &App{
-		config: config,
+		Config: config,
 		tp:     tp,
 	}, nil
 }
@@ -84,4 +86,8 @@ func (a *App) GetDB() *bun.DB {
 
 func (a *App) GetTP() *tracesdk.TracerProvider {
 	return a.tp
+}
+
+func (a *App) GetMP() *metric.MeterProvider {
+	return a.mp
 }

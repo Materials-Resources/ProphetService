@@ -20,6 +20,9 @@ type Config struct {
 		DB       string `yaml:"db"`
 	} `yaml:"database"`
 	App struct {
+		Events struct {
+			Brokers []string `yaml:"brokers"`
+		} `yaml:"events"`
 		Defaults struct {
 			InvMast struct {
 				DefaultSalesDiscountGroup string `yaml:"default_sales_discount_group"`

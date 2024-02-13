@@ -5,15 +5,16 @@ import (
 	"fmt"
 
 	"github.com/materials-resources/s_prophet/internal/catalog"
+	"github.com/materials-resources/s_prophet/internal/catalog/kafka"
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 )
 
 type catalogService struct {
-	repo   catalog.Repository
-	tracer trace.Tracer
+	repo     catalog.Repository
+	tracer   trace.Tracer
+	producer kafka.Producer
 }
 
 func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (*rpc.GetProductResponse, error,
@@ -40,12 +41,14 @@ func (s catalogService) DeleteProduct(
 	span.SetAttributes(attribute.String("request.id", request.String()))
 	defer span.End()
 
-	err := s.repo.DeleteProduct(ctx, request.GetId())
-	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, err.Error())
-		return nil, err
-	}
+	s.producer.PublishDelete(ctx, request.GetId())
+
+	//err := s.repo.DeleteProduct(ctx, request.GetId())
+	//if err != nil {
+	//	span.RecordError(err)
+	//	span.SetStatus(codes.Error, err.Error())
+	//	return nil, err
+	//}
 	return &rpc.DeleteProductResponse{}, nil
 }
 

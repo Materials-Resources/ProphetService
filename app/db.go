@@ -12,10 +12,10 @@ import (
 
 func (a *App) newBunDB() *bun.DB {
 	query := url.Values{}
-	query.Add("database", a.config.Database.DB)
+	query.Add("database", a.Config.Database.DB)
 	u := &url.URL{Scheme: "sqlserver",
-		User:     url.UserPassword(a.config.Database.Username, a.config.Database.Password),
-		Host:     fmt.Sprintf("%s:%d", a.config.Database.Host, a.config.Database.Port),
+		User:     url.UserPassword(a.Config.Database.Username, a.Config.Database.Password),
+		Host:     fmt.Sprintf("%s:%d", a.Config.Database.Host, a.Config.Database.Port),
 		RawQuery: query.Encode(),
 	}
 
@@ -36,7 +36,7 @@ func (a *App) newBunDB() *bun.DB {
 	)
 
 	bundb.AddQueryHook(bunotel.NewQueryHook(bunotel.WithTracerProvider(a.GetTP()),
-		bunotel.WithDBName(a.config.Database.DB),
+		bunotel.WithDBName(a.Config.Database.DB),
 	),
 	)
 
