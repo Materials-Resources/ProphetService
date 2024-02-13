@@ -202,7 +202,7 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 		}
 
 		if len(itemCategoryXInvMast) > 0 {
-			if _, err := tx.NewDelete().Model(itemCategoryXInvMast).WherePK().Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model(&itemCategoryXInvMast).WherePK().Exec(ctx); err != nil {
 				return err
 			}
 		}
@@ -230,7 +230,7 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 		}
 
 		if len(itemIdChangeHistory) > 0 {
-			if _, err := tx.NewDelete().Model(itemIdChangeHistory).WherePK().Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model(&itemIdChangeHistory).WherePK().Exec(ctx); err != nil {
 				return err
 			}
 		}
