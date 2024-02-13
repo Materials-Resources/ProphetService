@@ -194,13 +194,13 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 			return err
 		}
 
+		// Retrieve records for ItemCategoryXInvMast and delete them if they exist
 		var itemCategoryXInvMast []prophet_19_1_3668.ItemCategoryXInvMast
 		if err := tx.NewSelect().Model(&itemCategoryXInvMast).Column("item_category_x_inv_mast_uid").Where("inv_mast_uid = ?",
 			dbId,
 		).Scan(ctx); err != nil {
 			return err
 		}
-
 		if len(itemCategoryXInvMast) > 0 {
 			if _, err := tx.NewDelete().Model(&itemCategoryXInvMast).WherePK().Exec(ctx); err != nil {
 				return err
@@ -215,20 +215,25 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 		).Exec(ctx); err != nil {
 			return err
 		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvLocStockStatus)(nil)).Where("inv_mast_uid = ?",
-			dbId,
-		).Exec(ctx); err != nil {
+
+		// Retrieve records for InvLocStockStatus and delete them if they exist
+		var invLocStockStatus []prophet_19_1_3668.InvLocStockStatus
+		if err := tx.NewSelect().Model(&invLocStockStatus).Column("inv_loc_stock_status_uid").Scan(ctx); err != nil {
 			return err
 		}
+		if len(invLocStockStatus) > 0 {
+			if _, err := tx.NewDelete().Model(&invLocStockStatus).WherePK().Exec(ctx); err != nil {
+				return err
+			}
+		}
 
+		// Retrieve records for ItemIdChangeHistory and delete them if they exist
 		var itemIdChangeHistory []prophet_19_1_3668.ItemIdChangeHistory
-
 		if err := tx.NewSelect().Model(&itemIdChangeHistory).Column("item_id_change_history_uid").Where("inv_mast_uid = ?",
 			dbId,
 		).Scan(ctx); err != nil {
 			return err
 		}
-
 		if len(itemIdChangeHistory) > 0 {
 			if _, err := tx.NewDelete().Model(&itemIdChangeHistory).WherePK().Exec(ctx); err != nil {
 				return err
