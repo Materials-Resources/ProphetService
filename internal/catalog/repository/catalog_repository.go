@@ -218,7 +218,9 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 
 		// Retrieve records for InvLocStockStatus and delete them if they exist
 		var invLocStockStatus []prophet_19_1_3668.InvLocStockStatus
-		if err := tx.NewSelect().Model(&invLocStockStatus).Column("inv_loc_stock_status_uid").Scan(ctx); err != nil {
+		if err := tx.NewSelect().Model(&invLocStockStatus).Column("inv_loc_stock_status_uid").Where("inv_mast_uid = ?",
+			dbId,
+		).Scan(ctx); err != nil {
 			return err
 		}
 		if len(invLocStockStatus) > 0 {
