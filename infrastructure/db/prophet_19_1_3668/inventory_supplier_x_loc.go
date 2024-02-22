@@ -36,6 +36,4 @@ type InventorySupplierXLoc struct {
 	EffectiveDate              sql.NullTime    `bun:"effective_date,type:datetime,nullzero"`
 	ManualLeadTime             sql.NullInt32   `bun:"manual_lead_time,type:int,nullzero"`
 	FutureListPrice            sql.NullFloat64 `bun:"future_list_price,type:decimal(19,9),nullzero"`
-
-	InventorySupplier InventorySupplier `bun:"rel:has-one,join:inventory_supplier_uid=inventory_supplier_uid"`
 }

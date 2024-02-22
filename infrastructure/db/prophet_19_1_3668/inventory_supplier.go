@@ -58,5 +58,6 @@ type InventorySupplier struct {
 	BuybackSupplierPartNo       sql.NullString  `bun:"buyback_supplier_part_no,type:varchar(255),nullzero"`
 	BuybackUom                  sql.NullString  `bun:"buyback_uom,type:varchar(255),nullzero"`
 
-	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+	InventorySupplierXLoc InventorySupplierXLoc `bun:"rel:has-one,join:inventory_supplier_uid=inventory_supplier_uid"`
+	InvMast               InvMast               `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 }

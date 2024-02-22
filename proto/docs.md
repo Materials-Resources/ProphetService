@@ -19,9 +19,13 @@
     - [GetProductResponse](#catalog-v1alpha0-GetProductResponse)
     - [ListGroupRequest](#catalog-v1alpha0-ListGroupRequest)
     - [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse)
+    - [ListProductRequest](#catalog-v1alpha0-ListProductRequest)
+    - [ListProductResponse](#catalog-v1alpha0-ListProductResponse)
     - [Product](#catalog-v1alpha0-Product)
     - [ProductFilter](#catalog-v1alpha0-ProductFilter)
     - [ProductGroup](#catalog-v1alpha0-ProductGroup)
+    - [UpdateGroupRequest](#catalog-v1alpha0-UpdateGroupRequest)
+    - [UpdateGroupResponse](#catalog-v1alpha0-UpdateGroupResponse)
   
     - [CatalogService](#catalog-v1alpha0-CatalogService)
   
@@ -305,6 +309,37 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 
 
+<a name="catalog-v1alpha0-ListProductRequest"></a>
+
+### ListProductRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cursor | [int32](#int32) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-ListProductResponse"></a>
+
+### ListProductResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| products | [Product](#catalog-v1alpha0-Product) | repeated |  |
+| next_cursor | [int32](#int32) |  |  |
+
+
+
+
+
+
 <a name="catalog-v1alpha0-Product"></a>
 
 ### Product
@@ -315,7 +350,9 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
-| name | [string](#string) |  | string description = 3; string product_group_id = 4; double list_price = 5; |
+| name | [string](#string) |  |  |
+| description | [string](#string) |  |  |
+| product_group_name | [string](#string) |  | double list_price = 5; |
 
 
 
@@ -345,9 +382,33 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-UpdateGroupRequest"></a>
+
+### UpdateGroupRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-UpdateGroupResponse"></a>
+
+### UpdateGroupResponse
+
 
 
 
@@ -367,12 +428,14 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| ListProduct | [ListProductRequest](#catalog-v1alpha0-ListProductRequest) | [ListProductResponse](#catalog-v1alpha0-ListProductResponse) |  |
 | GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) |  |
 | CreateProduct | [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest) | [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse) |  |
 | DeleteProduct | [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse) |  |
 | ListGroup | [ListGroupRequest](#catalog-v1alpha0-ListGroupRequest) | [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse) |  |
 | GetGroup | [GetGroupRequest](#catalog-v1alpha0-GetGroupRequest) | [GetGroupResponse](#catalog-v1alpha0-GetGroupResponse) |  |
 | CreateGroup | [CreateGroupRequest](#catalog-v1alpha0-CreateGroupRequest) | [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse) |  |
+| UpdateGroup | [UpdateGroupRequest](#catalog-v1alpha0-UpdateGroupRequest) | [UpdateGroupResponse](#catalog-v1alpha0-UpdateGroupResponse) |  |
 | GetProductBySupplier | [GetProductBySupplierRequest](#catalog-v1alpha0-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#catalog-v1alpha0-GetProductBySupplierResponse) |  |
 
  

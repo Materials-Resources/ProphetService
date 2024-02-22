@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/materials-resources/s_prophet/internal/catalog"
+	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 	"github.com/materials-resources/s_prophet/internal/catalog/kafka"
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
 	"go.opentelemetry.io/otel/attribute"
@@ -15,6 +16,28 @@ type catalogService struct {
 	repo     catalog.Repository
 	tracer   trace.Tracer
 	producer kafka.Producer
+}
+
+func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (*rpc.ListProductResponse,
+	error,
+) {
+	res, nc, err := s.repo.ListProduct(ctx, request.GetCursor(), 100)
+	if err != nil {
+		return nil, err
+	}
+	return ToPBListProductResponse(res, int32(nc))
+}
+
+func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (*rpc.UpdateGroupResponse,
+	error,
+) {
+	d := &domain.ProductGroup{SN: request.GetProductGroup().GetSn(), Name: request.GetProductGroup().GetName()}
+
+	err := s.repo.UpdateGroup(ctx, d)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.UpdateGroupResponse{}, nil
 }
 
 func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (*rpc.GetProductResponse, error,
@@ -83,8 +106,15 @@ func (s catalogService) GetGroup(
 func (s catalogService) CreateGroup(
 	ctx context.Context, request *rpc.CreateGroupRequest,
 ) (*rpc.CreateGroupResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	_, span := s.tracer.Start(ctx, "CreateGroup")
+	defer span.End()
+	d := domain.NewProductGroup(request.GetProductGroup().GetName(), request.GetProductGroup().GetSn())
+	vd, err := domain.NewValidatedProductGroup(d)
+	if err != nil {
+		return nil, err
+	}
+	s.repo.CreateGroup(ctx, vd)
+	return nil, nil
 }
 
 func (s catalogService) GetProductBySupplier(

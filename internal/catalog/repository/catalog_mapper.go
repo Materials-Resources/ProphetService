@@ -9,6 +9,18 @@ import (
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 )
 
+func FromDBListProduct(ms []prophet_19_1_3668.InvLoc) []*domain.Product {
+	var ds []*domain.Product
+	for _, m := range ms {
+		ds = append(ds,
+			&domain.Product{Name: m.InvMast.ItemDesc, Description: m.InvMast.ExtendedDesc.String,
+				ID: strconv.Itoa(int(m.InvMastUid)),
+				SN: m.InvMast.ItemId, ProductGroupName: m.ProductGroup.ProductGroupDesc,
+			},
+		)
+	}
+	return ds
+}
 func ToDBProduct(dbProduct *domain.Product) *prophet_19_1_3668.InvMast {
 	var im = &prophet_19_1_3668.InvMast{
 		ItemDesc:     dbProduct.Name,
@@ -16,23 +28,24 @@ func ToDBProduct(dbProduct *domain.Product) *prophet_19_1_3668.InvMast {
 	}
 	return im
 }
-func FromDBListProduct(dbProducts []prophet_19_1_3668.InvLoc) ([]*domain.ValidatedProduct, error) {
-	var validatedProducts []*domain.ValidatedProduct
-	for _, product := range dbProducts {
-		validatedProduct, err := domain.NewValidatedProduct(&domain.Product{
-			ID:          strconv.Itoa(int(product.InvMastUid)),
-			SN:          product.InvMast.ItemId,
-			Name:        product.InvMast.ItemDesc,
-			Description: product.InvMast.ExtendedDesc.String,
-		},
-		)
-		if err != nil {
-			fmt.Println(err)
-		}
-		validatedProducts = append(validatedProducts, validatedProduct)
-	}
-	return validatedProducts, nil
-}
+
+//	func FromDBListProduct(dbProducts []prophet_19_1_3668.InvLoc) ([]*domain.ValidatedProduct, error) {
+//		var validatedProducts []*domain.ValidatedProduct
+//		for _, product := range dbProducts {
+//			validatedProduct, err := domain.NewValidatedProduct(&domain.Product{
+//				ID:          strconv.Itoa(int(product.InvMastUid)),
+//				SN:          product.InvMast.ItemId,
+//				Name:        product.InvMast.ItemDesc,
+//				Description: product.InvMast.ExtendedDesc.String,
+//			},
+//			)
+//			if err != nil {
+//				fmt.Println(err)
+//			}
+//			validatedProducts = append(validatedProducts, validatedProduct)
+//		}
+//		return validatedProducts, nil
+//	}
 func FromDBProduct(dbProduct *prophet_19_1_3668.InvMast) (*domain.ValidatedProduct, error) {
 	var p = &domain.Product{Name: dbProduct.ItemDesc, Description: dbProduct.ExtendedDesc.String}
 	p.ID = strconv.Itoa(int(dbProduct.InvMastUid))
@@ -44,7 +57,6 @@ func FromDBListGroup(dbProductGroups []prophet_19_1_3668.ProductGroup) ([]*domai
 
 	for _, dbProductGroup := range dbProductGroups {
 		validatedProductGroup, err := domain.NewValidatedProductGroup(&domain.ProductGroup{
-			ID:   strconv.Itoa(int(dbProductGroup.ProductGroupUid)),
 			Name: dbProductGroup.ProductGroupDesc,
 			SN:   dbProductGroup.ProductGroupId,
 		},
@@ -59,6 +71,5 @@ func FromDBListGroup(dbProductGroups []prophet_19_1_3668.ProductGroup) ([]*domai
 
 func FromDBProductGroup(dbProductGroup *prophet_19_1_3668.ProductGroup) (*domain.ValidatedProductGroup, error) {
 	var pg = &domain.ProductGroup{Name: dbProductGroup.ProductGroupDesc, SN: dbProductGroup.ProductGroupId}
-	pg.ID = strconv.Itoa(int(dbProductGroup.ProductGroupUid))
 	return domain.NewValidatedProductGroup(pg)
 }

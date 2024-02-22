@@ -35,8 +35,8 @@ service OrderService {
   rpc GetPickTicketById(GetPickTicketByIdRequest) returns (GetPickTicketByIdResponse);
 }
 
-message CreateOrderRequest{}
-message CreateOrderResponse{}
+message CreateOrderRequest {}
+message CreateOrderResponse {}
 
 message GetOrderRequest {
   string id = 1;
@@ -59,7 +59,7 @@ message GetOrderResponse {
 
   Address shipping_address = 4;
   Customer customer = 5;
-  CustomerContact customer_contact =  6;
+  CustomerContact customer_contact = 6;
 
   string delivery_instructions = 10;
   string taker = 12;
@@ -76,6 +76,3 @@ message GetPickTicketByIdResponse {
   Address shipping_address = 4;
   CustomerContact order_customer_contact = 5;
 }
-
-
-

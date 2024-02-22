@@ -24,6 +24,19 @@ type BunCatalogRepository struct {
 	tracer trace.Tracer
 }
 
+func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product,
+	nextCursor int,
+	err error,
+) {
+	var m []prophet_19_1_3668.InvLoc
+
+	b.db.NewSelect().Model(&m).Relation("InvMast").Relation("ProductGroup").Where("inv_loc.inv_mast_uid > ?",
+		cursor,
+	).Order("inv_mast_uid ASC").Limit(count).Scan(ctx)
+
+	return FromDBListProduct(m), int(m[len(m)-1].InvMastUid), nil
+}
+
 func (b BunCatalogRepository) CreateProduct() {
 	//TODO implement me
 	panic("implement me")
@@ -31,18 +44,18 @@ func (b BunCatalogRepository) CreateProduct() {
 
 func (b BunCatalogRepository) FindProductByID(id string) (*domain.ValidatedProduct, error) {
 	ctx := context.Background()
-	dbProduct := new(prophet_19_1_3668.InvMast)
+	invMast := NewInvMast()
 
 	dbID, err := strconv.Atoi(id)
 	if err != nil {
 		return nil, errors.New("ID provided was not a integer")
 	}
 
-	err = b.db.NewSelect().Model(dbProduct).Where("inv_mast.inv_mast_uid = ?", dbID).Scan(ctx)
+	err = b.db.NewSelect().Model(invMast.GetModel()).Where("inv_mast.inv_mast_uid = ?", dbID).Scan(ctx)
 	if err != nil {
 		return nil, errors.New("could not find requested product")
 	}
-	return FromDBProduct(dbProduct)
+	return FromDBProduct(invMast.GetModel())
 }
 func (b BunCatalogRepository) ListGroup() ([]*domain.ValidatedProductGroup, error) {
 	var dbProductGroup []prophet_19_1_3668.ProductGroup
@@ -53,7 +66,8 @@ func (b BunCatalogRepository) ListGroup() ([]*domain.ValidatedProductGroup, erro
 	}
 	return FromDBListGroup(dbProductGroup)
 }
-func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.ValidatedProduct, error) {
+
+func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, error) {
 	var dbInvLoc []prophet_19_1_3668.InvLoc
 	ctx := context.Background()
 
@@ -68,7 +82,7 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Validated
 	if err != nil {
 		return nil, errors.New("could not find products for product group")
 	}
-	return FromDBListProduct(dbInvLoc)
+	return FromDBListProduct(dbInvLoc), nil
 }
 
 func (b BunCatalogRepository) UpdateProduct() {
@@ -258,43 +272,44 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 	return err
 }
 
-func (b BunCatalogRepository) CreateGroup() {
-	//productGroup := &prophet_19_1_3668.ProductGroup{
-	//	CompanyId:        "MRS",
-	//	ProductGroupId:   domain.SN,
-	//	ProductGroupDesc: domain.Name,
-	//	AssetAccountNo:   "121001",
-	//	DeleteFlag:       "N",
-	//	RevenueAccountNo: sql.NullString{String: "401001", Valid: true},
-	//	CosAccountNo:     sql.NullString{String: "501001", Valid: true},
-	//	DateCreated:      time.Now(),
-	//	DateLastModified: time.Now(),
-	//	LastMaintainedBy: "admin",
-	//}
-	panic("implement me")
+func (b BunCatalogRepository) CreateGroup(ctx context.Context, d *domain.ValidatedProductGroup) error {
+	m := NewProductGroup().WithDefaults().FromDomain(&d.ProductGroup)
+
+	_, err := b.db.NewInsert().Model(m.model).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (b BunCatalogRepository) UpdateGroup(ctx context.Context, group *domain.ProductGroup) error {
+	m := NewProductGroup()
+
+	err := b.db.NewSelect().Model(m.GetModel()).Where("product_group_id = ?", group.SN).Scan(ctx)
+	if err != nil {
+		return err
+	}
+
+	m = m.FromDomain(group)
+	if _, err := b.db.NewUpdate().Model(m.GetModel()).WherePK().Exec(ctx); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (b BunCatalogRepository) FindGroupByID(ctx context.Context, id string) (*domain.ValidatedProductGroup, error) {
-	dbProductGroup := new(prophet_19_1_3668.ProductGroup)
+	m := NewProductGroup()
 
-	dbID, err := strconv.Atoi(id)
-	if err != nil {
-		return nil, errors.New("ID provided was not a integer")
-	}
-
-	err = b.db.NewSelect().Model(dbProductGroup).Column("product_group_id", "product_group_desc", "product_group_uid").Where("product_group.product_group_uid = ?",
-		dbID,
+	err := b.db.NewSelect().Model(m.GetModel()).Column("product_group_id", "product_group_desc",
+		"product_group_uid",
+	).Where("product_group.product_group_id = ?",
+		id,
 	).Scan(ctx)
 	if err != nil {
 		fmt.Println(err)
 		return nil, errors.New("could not find requested product group")
 	}
-	return FromDBProductGroup(dbProductGroup)
-}
-
-func (b BunCatalogRepository) UpdateGroup() {
-	//TODO implement me
-	panic("implement me")
+	return FromDBProductGroup(m.GetModel())
 }
 
 func (b BunCatalogRepository) DeleteGroup() {

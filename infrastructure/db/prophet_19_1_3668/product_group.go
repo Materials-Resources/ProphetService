@@ -1,11 +1,15 @@
 package prophet_19_1_3668
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/schema"
 )
+
+var _ bun.BeforeAppendModelHook = (*ProductGroup)(nil)
 
 type ProductGroup struct {
 	bun.BaseModel              `bun:"table:product_group"`
@@ -23,7 +27,7 @@ type ProductGroup struct {
 	TaxGroupId                 sql.NullString  `bun:"tax_group_id,type:varchar(10)"`
 	CompletionLeadTime         sql.NullInt32   `bun:"completion_lead_time,type:int"`
 	RequiredLeadTime           sql.NullInt32   `bun:"required_lead_time,type:int"`
-	ProductGroupUid            int32           `bun:"product_group_uid,type:int,identity"`
+	ProductGroupUid            int32           `bun:"product_group_uid,type:int,identity,scanonly"`
 	LandedCostAccountNo        sql.NullString  `bun:"landed_cost_account_no,type:varchar(255)"`
 	EnvironmentalFeeFlag       string          `bun:"environmental_fee_flag,type:char,default:('N')"`
 	AdminFeeFlag               string          `bun:"admin_fee_flag,type:char,default:('N')"`
@@ -43,4 +47,15 @@ type ProductGroup struct {
 	TaRentalRevenueAccountNo   sql.NullString  `bun:"ta_rental_revenue_account_no,type:varchar(32)"`
 
 	InvLocItems []*InvLoc `bun:"rel:has-many,join:product_group_id=product_group_id"`
+}
+
+func (p *ProductGroup) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		p.DateCreated = time.Now()
+		p.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		p.DateLastModified = time.Now()
+	}
+	return nil
 }

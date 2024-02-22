@@ -9,13 +9,14 @@ import (
 type Repository interface {
 	CreateProduct()
 	FindProductByID(id string) (*domain.ValidatedProduct, error)
-	ReadProductByGroup(id string) ([]*domain.ValidatedProduct, error)
+	ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product, nextCursor int, err error)
+	ReadProductByGroup(id string) ([]*domain.Product, error)
 	UpdateProduct()
 	DeleteProduct(ctx context.Context, id string) error
 
-	CreateGroup()
+	CreateGroup(ctx context.Context, group *domain.ValidatedProductGroup) error
 	ListGroup() ([]*domain.ValidatedProductGroup, error)
 	FindGroupByID(ctx context.Context, id string) (*domain.ValidatedProductGroup, error)
-	UpdateGroup()
+	UpdateGroup(ctx context.Context, group *domain.ProductGroup) error
 	DeleteGroup()
 }

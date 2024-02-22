@@ -13,34 +13,50 @@ message Product {
   string id = 1;
   string sn = 2;
   string name = 3;
-//  string description = 3;
-//  string product_group_id = 4;
-//  double list_price = 5;
+  string description = 4;
+  string product_group_name = 6;
+  //  double list_price = 5;
+}
+
+message ProductSupplier {
+  string product_id = 1;
+  string supplier_id = 2;
+  string supplier_sn = 3;
+  bool is_primary = 4;
 }
 message ProductGroup {
-  string id = 1;
-  string sn = 2;
-  string name = 3;
+  string sn = 1;
+  string name = 2;
 }
 
 message ProductFilter {
   string product_group_id = 1;
 }
 
-
 service CatalogService {
+  rpc ListProduct(ListProductRequest) returns (ListProductResponse);
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
   rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 
+  rpc CreateProductSupplier(CreateProductSupplierRequest) returns (CreateProductSupplierResponse);
+  rpc UpdateProductSupplier(UpdateProductSupplierRequest) returns (UpdateProductSupplierResponse);
+
   rpc ListGroup(ListGroupRequest) returns (ListGroupResponse);
   rpc GetGroup(GetGroupRequest) returns (GetGroupResponse);
   rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+  rpc UpdateGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
 
   rpc GetProductBySupplier(GetProductBySupplierRequest) returns (GetProductBySupplierResponse);
-
 }
 
+message ListProductRequest {
+  int32 cursor = 1;
+}
+message ListProductResponse {
+  repeated Product products = 1;
+  int32 next_cursor = 2;
+}
 
 message GetProductRequest {
   string id = 1;
@@ -76,8 +92,6 @@ message CreateProductRequest {
 
 message CreateProductResponse {}
 
-
-
 message DeleteProductRequest {
   string id = 1;
 }
@@ -88,6 +102,13 @@ message ListGroupResponse {
   repeated ProductGroup product_groups = 1;
 }
 
+message CreateProductSupplierRequest {}
+
+message CreateProductSupplierResponse {}
+
+message UpdateProductSupplierRequest {}
+message UpdateProductSupplierResponse {}
+
 message GetGroupRequest {
   string id = 1;
 }
@@ -97,12 +118,16 @@ message GetGroupResponse {
 }
 
 message CreateGroupRequest {
-  ProductGroup product_group =1;
+  ProductGroup product_group = 1;
   //  string sn = 1; //Unique identifier of Product Group
   //  string name = 2; // Description of group
 }
 message CreateGroupResponse {}
 
+message UpdateGroupRequest {
+  ProductGroup product_group = 1;
+}
+message UpdateGroupResponse {}
 
 message GetProductBySupplierRequest {
   string supplier_id = 1;

@@ -149,5 +149,6 @@ type InvLoc struct {
 	TaRentalTaxGroupId              sql.NullString  `bun:"ta_rental_tax_group_id,type:varchar(10),nullzero"`
 	TransferConversionUom           sql.NullString  `bun:"transfer_conversion_uom,type:varchar(8),nullzero"`
 
-	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+	InvMast      InvMast      `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+	ProductGroup ProductGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
 }

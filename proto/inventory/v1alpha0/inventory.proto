@@ -5,8 +5,8 @@ package inventory.v1alpha0;
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/inventory_v1alpha0";
 
 service InventoryService {
-//  rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
-//  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+  //  rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
+  //  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
 
   // GetReceiptByID returns details for a inventory receipt given an identifier.
   rpc GetReceiptByID(GetReceiptByIDRequest) returns (GetReceiptByIDResponse);
@@ -61,5 +61,4 @@ message GetReceiptByIDResponse {
   string id = 1;
   //Items that were received for this receipt
   repeated Item items = 2;
-
 }

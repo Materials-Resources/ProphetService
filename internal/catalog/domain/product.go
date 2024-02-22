@@ -5,10 +5,11 @@ import (
 )
 
 type Product struct {
-	ID          string
-	SN          string
-	Name        string
-	Description string
+	ID               string
+	SN               string
+	Name             string
+	Description      string
+	ProductGroupName string
 }
 
 func (p *Product) validate() error {
