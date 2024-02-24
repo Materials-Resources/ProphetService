@@ -1,11 +1,15 @@
 package prophet_19_1_3668
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/schema"
 )
+
+var _ bun.BeforeAppendModelHook = (*InventorySupplierXLoc)(nil)
 
 type InventorySupplierXLoc struct {
 	bun.BaseModel `bun:"table:inventory_supplier_x_loc"`
@@ -36,4 +40,15 @@ type InventorySupplierXLoc struct {
 	EffectiveDate              sql.NullTime    `bun:"effective_date,type:datetime,nullzero"`
 	ManualLeadTime             sql.NullInt32   `bun:"manual_lead_time,type:int,nullzero"`
 	FutureListPrice            sql.NullFloat64 `bun:"future_list_price,type:decimal(19,9),nullzero"`
+}
+
+func (i *InventorySupplierXLoc) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		i.DateCreated = time.Now()
+		i.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		i.DateLastModified = time.Now()
+	}
+	return nil
 }

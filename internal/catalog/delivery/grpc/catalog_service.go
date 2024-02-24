@@ -18,6 +18,30 @@ type catalogService struct {
 	producer kafka.Producer
 }
 
+func (s catalogService) CreateProductSupplier(
+	ctx context.Context,
+	request *rpc.CreateProductSupplierRequest) (*rpc.CreateProductSupplierResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s catalogService) UpdateProductSupplier(
+	ctx context.Context,
+	request *rpc.UpdateProductSupplierRequest) (*rpc.UpdateProductSupplierResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s catalogService) SetPrimaryProductSupplier(
+	ctx context.Context,
+	request *rpc.SetPrimaryProductSupplierRequest) (*rpc.SetPrimaryProductSupplierResponse, error) {
+	err := s.repo.SetPrimaryProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
 func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (*rpc.ListProductResponse,
 	error,
 ) {

@@ -6,3 +6,7 @@ type ProductSupplier struct {
 	SupplierSn string
 	IsPrimary  bool
 }
+
+func (p *ProductSupplier) validate() error {
+	return nil
+}

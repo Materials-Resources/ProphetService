@@ -8,6 +8,8 @@
     - [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse)
     - [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest)
     - [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse)
+    - [CreateProductSupplierRequest](#catalog-v1alpha0-CreateProductSupplierRequest)
+    - [CreateProductSupplierResponse](#catalog-v1alpha0-CreateProductSupplierResponse)
     - [Cursor](#catalog-v1alpha0-Cursor)
     - [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest)
     - [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse)
@@ -24,8 +26,13 @@
     - [Product](#catalog-v1alpha0-Product)
     - [ProductFilter](#catalog-v1alpha0-ProductFilter)
     - [ProductGroup](#catalog-v1alpha0-ProductGroup)
+    - [ProductSupplier](#catalog-v1alpha0-ProductSupplier)
+    - [SetPrimaryProductSupplierRequest](#catalog-v1alpha0-SetPrimaryProductSupplierRequest)
+    - [SetPrimaryProductSupplierResponse](#catalog-v1alpha0-SetPrimaryProductSupplierResponse)
     - [UpdateGroupRequest](#catalog-v1alpha0-UpdateGroupRequest)
     - [UpdateGroupResponse](#catalog-v1alpha0-UpdateGroupResponse)
+    - [UpdateProductSupplierRequest](#catalog-v1alpha0-UpdateProductSupplierRequest)
+    - [UpdateProductSupplierResponse](#catalog-v1alpha0-UpdateProductSupplierResponse)
   
     - [CatalogService](#catalog-v1alpha0-CatalogService)
   
@@ -135,6 +142,26 @@
 <a name="catalog-v1alpha0-CreateProductResponse"></a>
 
 ### CreateProductResponse
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-CreateProductSupplierRequest"></a>
+
+### CreateProductSupplierRequest
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-CreateProductSupplierResponse"></a>
+
+### CreateProductSupplierResponse
 
 
 
@@ -390,6 +417,50 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 
 
+<a name="catalog-v1alpha0-ProductSupplier"></a>
+
+### ProductSupplier
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_id | [string](#string) |  |  |
+| supplier_id | [string](#string) |  |  |
+| supplier_sn | [string](#string) |  |  |
+| is_primary | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-SetPrimaryProductSupplierRequest"></a>
+
+### SetPrimaryProductSupplierRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_id | [string](#string) |  |  |
+| supplier_id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-SetPrimaryProductSupplierResponse"></a>
+
+### SetPrimaryProductSupplierResponse
+
+
+
+
+
+
+
 <a name="catalog-v1alpha0-UpdateGroupRequest"></a>
 
 ### UpdateGroupRequest
@@ -414,6 +485,26 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 
 
+
+<a name="catalog-v1alpha0-UpdateProductSupplierRequest"></a>
+
+### UpdateProductSupplierRequest
+
+
+
+
+
+
+
+<a name="catalog-v1alpha0-UpdateProductSupplierResponse"></a>
+
+### UpdateProductSupplierResponse
+
+
+
+
+
+
  
 
  
@@ -432,6 +523,9 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) |  |
 | CreateProduct | [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest) | [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse) |  |
 | DeleteProduct | [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse) |  |
+| CreateProductSupplier | [CreateProductSupplierRequest](#catalog-v1alpha0-CreateProductSupplierRequest) | [CreateProductSupplierResponse](#catalog-v1alpha0-CreateProductSupplierResponse) |  |
+| UpdateProductSupplier | [UpdateProductSupplierRequest](#catalog-v1alpha0-UpdateProductSupplierRequest) | [UpdateProductSupplierResponse](#catalog-v1alpha0-UpdateProductSupplierResponse) |  |
+| SetPrimaryProductSupplier | [SetPrimaryProductSupplierRequest](#catalog-v1alpha0-SetPrimaryProductSupplierRequest) | [SetPrimaryProductSupplierResponse](#catalog-v1alpha0-SetPrimaryProductSupplierResponse) |  |
 | ListGroup | [ListGroupRequest](#catalog-v1alpha0-ListGroupRequest) | [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse) |  |
 | GetGroup | [GetGroupRequest](#catalog-v1alpha0-GetGroupRequest) | [GetGroupResponse](#catalog-v1alpha0-GetGroupResponse) |  |
 | CreateGroup | [CreateGroupRequest](#catalog-v1alpha0-CreateGroupRequest) | [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse) |  |

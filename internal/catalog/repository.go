@@ -14,6 +14,10 @@ type Repository interface {
 	UpdateProduct()
 	DeleteProduct(ctx context.Context, id string) error
 
+	GetProductSupplier(ctx context.Context, productId, supplierId string) (*domain.ProductSupplier, error)
+	UpdateProductSupplier(ctx context.Context, p *domain.ValidatedProductSupplier) error
+	SetPrimaryProductSupplier(ctx context.Context, productId, supplierId string) error
+
 	CreateGroup(ctx context.Context, group *domain.ValidatedProductGroup) error
 	ListGroup() ([]*domain.ValidatedProductGroup, error)
 	FindGroupByID(ctx context.Context, id string) (*domain.ValidatedProductGroup, error)

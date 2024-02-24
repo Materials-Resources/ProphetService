@@ -41,6 +41,7 @@ service CatalogService {
 
   rpc CreateProductSupplier(CreateProductSupplierRequest) returns (CreateProductSupplierResponse);
   rpc UpdateProductSupplier(UpdateProductSupplierRequest) returns (UpdateProductSupplierResponse);
+  rpc SetPrimaryProductSupplier(SetPrimaryProductSupplierRequest) returns (SetPrimaryProductSupplierResponse);
 
   rpc ListGroup(ListGroupRequest) returns (ListGroupResponse);
   rpc GetGroup(GetGroupRequest) returns (GetGroupResponse);
@@ -108,6 +109,12 @@ message CreateProductSupplierResponse {}
 
 message UpdateProductSupplierRequest {}
 message UpdateProductSupplierResponse {}
+
+message SetPrimaryProductSupplierRequest {
+  string product_id = 1;
+  string supplier_id = 2;
+}
+message SetPrimaryProductSupplierResponse {}
 
 message GetGroupRequest {
   string id = 1;

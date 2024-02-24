@@ -24,6 +24,55 @@ type BunCatalogRepository struct {
 	tracer trace.Tracer
 }
 
+func (b BunCatalogRepository) GetProductSupplier(
+	ctx context.Context,
+	productId, supplierId string) (*domain.ProductSupplier, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (b BunCatalogRepository) UpdateProductSupplier(ctx context.Context, p *domain.ValidatedProductSupplier) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, productId, supplierId string) error {
+	sIdF, err := strconv.ParseFloat(supplierId, 64)
+	if err != nil {
+		return err
+	}
+	var ms []prophet_19_1_3668.InventorySupplier
+
+	err = b.db.NewSelect().Model(&ms).Where("inv_mast_uid = ?", productId).Relation("InventorySupplierXLoc").Scan(
+		ctx,
+	)
+	if err != nil {
+		return err
+	}
+
+	exists, err := b.db.NewSelect().Model((*prophet_19_1_3668.InventorySupplier)(nil)).Where(
+		"inv_mast_uid = ? AND supplier_id = ?", productId, sIdF,
+	).Exists(ctx)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("this supplier does not exist on product")
+	}
+
+	for _, m := range ms {
+		if m.InventorySupplierXLoc != nil {
+			if m.SupplierId == sIdF {
+				m.InventorySupplierXLoc.PrimarySupplier = "Y"
+			} else {
+				m.InventorySupplierXLoc.PrimarySupplier = "N"
+			}
+			fmt.Println(b.db.NewUpdate().Model(m.InventorySupplierXLoc).WherePK().Exec(ctx))
+		}
+	}
+	return nil
+}
+
 func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product,
 	nextCursor int,
 	err error,
