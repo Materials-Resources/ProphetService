@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/url"
 
 	"github.com/uptrace/bun"
@@ -39,6 +40,8 @@ func (a *App) newBunDB() *bun.DB {
 		bunotel.WithDBName(a.Config.Database.DB),
 	),
 	)
+
+	log.Printf("connected to database %s on %s", query.Get("database"), u.Hostname())
 
 	return bundb
 }

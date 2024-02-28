@@ -42,8 +42,18 @@ func (s catalogService) CreateProductSupplier(
 func (s catalogService) UpdateProductSupplier(
 	ctx context.Context,
 	request *rpc.UpdateProductSupplierRequest) (*rpc.UpdateProductSupplierResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	p := &domain.ProductSupplier{ProductId: request.GetProductSupplier().GetProductId(),
+		SupplierId: request.GetProductSupplier().SupplierId, Delete: request.GetProductSupplier().GetDelete(),
+	}
+
+	vp, err := domain.NewValidatedProductSupplier(p)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.repo.UpdateProductSupplier(ctx, vp); err != nil {
+		return nil, err
+	}
+	return &rpc.UpdateProductSupplierResponse{}, nil
 }
 
 func (s catalogService) SetPrimaryProductSupplier(

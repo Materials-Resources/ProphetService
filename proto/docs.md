@@ -439,7 +439,9 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | product_id | [string](#string) |  |  |
 | supplier_id | [string](#string) |  |  |
 | supplier_sn | [string](#string) |  |  |
-| is_primary | [bool](#bool) |  |  |
+| list_price | [double](#double) |  |  |
+| purchase_price | [double](#double) |  |  |
+| delete | [bool](#bool) |  |  |
 
 
 
@@ -526,6 +528,11 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 ### UpdateProductSupplierRequest
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_supplier | [ProductSupplier](#catalog-v1alpha0-ProductSupplier) |  |  |
 
 
 

@@ -65,8 +65,34 @@ func (b BunCatalogRepository) GetProductSupplier(
 }
 
 func (b BunCatalogRepository) UpdateProductSupplier(ctx context.Context, p *domain.ValidatedProductSupplier) error {
-	//TODO implement me
-	panic("implement me")
+	existing := new(prophet_19_1_3668.InventorySupplier)
+
+	productId, err := strconv.Atoi(p.ProductId)
+	if err != nil {
+		return errors.New("invalid productId")
+	}
+
+	supplierId, err := strconv.ParseFloat(p.SupplierId, 64)
+	if err != nil {
+		return err
+	}
+
+	err = b.db.NewSelect().Model(existing).Where("inv_mast_uid = ? AND supplier_id = ?", productId,
+		supplierId,
+	).Scan(ctx)
+	if err != nil {
+		return err
+	}
+
+	if p.Delete {
+		existing.DeleteFlag = "Y"
+	}
+
+	_, err = b.db.NewUpdate().Model(existing).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, productId, supplierId string) error {

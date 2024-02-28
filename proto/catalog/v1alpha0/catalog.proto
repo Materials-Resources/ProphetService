@@ -22,7 +22,9 @@ message ProductSupplier {
   string product_id = 1;
   string supplier_id = 2;
   string supplier_sn = 3;
-  bool is_primary = 4;
+  double list_price = 4;
+  double purchase_price = 5;
+  bool delete = 6;
 }
 message ProductGroup {
   string sn = 1;
@@ -118,7 +120,9 @@ message CreateProductSupplierRequest {
 
 message CreateProductSupplierResponse {}
 
-message UpdateProductSupplierRequest {}
+message UpdateProductSupplierRequest {
+  ProductSupplier product_supplier = 1;
+}
 message UpdateProductSupplierResponse {}
 
 message SetPrimaryProductSupplierRequest {

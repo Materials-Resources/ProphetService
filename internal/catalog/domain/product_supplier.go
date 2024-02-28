@@ -9,9 +9,9 @@ type ProductSupplier struct {
 	SupplierId    string
 	DivisionId    string
 	SupplierSn    string
-	IsPrimary     bool
 	ListPrice     float64
 	PurchasePrice float64
+	Delete        bool
 }
 
 func (p *ProductSupplier) validate() error {
