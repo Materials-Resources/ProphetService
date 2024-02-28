@@ -31,6 +31,8 @@
     - [SetPrimaryProductSupplierResponse](#catalog-v1alpha0-SetPrimaryProductSupplierResponse)
     - [UpdateGroupRequest](#catalog-v1alpha0-UpdateGroupRequest)
     - [UpdateGroupResponse](#catalog-v1alpha0-UpdateGroupResponse)
+    - [UpdateProductRequest](#catalog-v1alpha0-UpdateProductRequest)
+    - [UpdateProductResponse](#catalog-v1alpha0-UpdateProductResponse)
     - [UpdateProductSupplierRequest](#catalog-v1alpha0-UpdateProductSupplierRequest)
     - [UpdateProductSupplierResponse](#catalog-v1alpha0-UpdateProductSupplierResponse)
   
@@ -153,6 +155,15 @@
 
 ### CreateProductSupplierRequest
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_id | [string](#string) |  |  |
+| supplier_id | [string](#string) |  |  |
+| supplier_product_sn | [string](#string) |  |  |
+| list_price | [double](#double) |  |  |
+| purchase_price | [double](#double) |  |  |
 
 
 
@@ -486,6 +497,31 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 
 
+<a name="catalog-v1alpha0-UpdateProductRequest"></a>
+
+### UpdateProductRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product | [Product](#catalog-v1alpha0-Product) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1alpha0-UpdateProductResponse"></a>
+
+### UpdateProductResponse
+
+
+
+
+
+
+
 <a name="catalog-v1alpha0-UpdateProductSupplierRequest"></a>
 
 ### UpdateProductSupplierRequest
@@ -522,6 +558,7 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | ListProduct | [ListProductRequest](#catalog-v1alpha0-ListProductRequest) | [ListProductResponse](#catalog-v1alpha0-ListProductResponse) |  |
 | GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) |  |
 | CreateProduct | [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest) | [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse) |  |
+| UpdateProduct | [UpdateProductRequest](#catalog-v1alpha0-UpdateProductRequest) | [UpdateProductResponse](#catalog-v1alpha0-UpdateProductResponse) |  |
 | DeleteProduct | [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse) |  |
 | CreateProductSupplier | [CreateProductSupplierRequest](#catalog-v1alpha0-CreateProductSupplierRequest) | [CreateProductSupplierResponse](#catalog-v1alpha0-CreateProductSupplierResponse) |  |
 | UpdateProductSupplier | [UpdateProductSupplierRequest](#catalog-v1alpha0-UpdateProductSupplierRequest) | [UpdateProductSupplierResponse](#catalog-v1alpha0-UpdateProductSupplierResponse) |  |

@@ -24,6 +24,39 @@ type BunCatalogRepository struct {
 	tracer trace.Tracer
 }
 
+func (b BunCatalogRepository) AddProductSupplier(ctx context.Context, supplier *domain.ValidatedProductSupplier) error {
+	inventorySupplier := &prophet_19_1_3668.InventorySupplier{
+		LeadTimeDays:     0,
+		DeleteFlag:       "N",
+		LastMaintainedBy: "admin",
+		BackhaulType:     "R",
+		CreatedBy:        sql.NullString{String: "admin", Valid: true},
+	}
+
+	err := b.db.NewRaw(
+		`DECLARE @id int
+			EXEC @id = p21_get_counter 'inventory_supplier', 1
+			SELECT @id`,
+	).Scan(ctx, &inventorySupplier.InventorySupplierUid)
+
+	err = ProductSupplierFromDomain(&supplier.ProductSupplier, inventorySupplier)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	_, err = b.db.NewInsert().Model(inventorySupplier).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (b BunCatalogRepository) CreateProductSupplier(ctx context.Context) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (b BunCatalogRepository) GetProductSupplier(
 	ctx context.Context,
 	productId, supplierId string) (*domain.ProductSupplier, error) {
@@ -41,36 +74,68 @@ func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, pro
 	if err != nil {
 		return err
 	}
-	var ms []prophet_19_1_3668.InventorySupplier
 
-	err = b.db.NewSelect().Model(&ms).Where("inv_mast_uid = ?", productId).Relation("InventorySupplierXLoc").Scan(
+	// Get existing InventorySuppliers from an inv_mast_uid
+	var existingInventorySuppliers []prophet_19_1_3668.InventorySupplier
+	err = b.db.NewSelect().Model(&existingInventorySuppliers).Where("inv_mast_uid = ?", productId).Relation("InventorySupplierXLoc").Scan(
 		ctx,
 	)
 	if err != nil {
 		return err
 	}
 
-	exists, err := b.db.NewSelect().Model((*prophet_19_1_3668.InventorySupplier)(nil)).Where(
-		"inv_mast_uid = ? AND supplier_id = ?", productId, sIdF,
-	).Exists(ctx)
-	if err != nil {
-		return err
-	}
-	if !exists {
-		return errors.New("this supplier does not exist on product")
-	}
-
-	for _, m := range ms {
-		if m.InventorySupplierXLoc != nil {
-			if m.SupplierId == sIdF {
-				m.InventorySupplierXLoc.PrimarySupplier = "Y"
-			} else {
-				m.InventorySupplierXLoc.PrimarySupplier = "N"
-			}
-			fmt.Println(b.db.NewUpdate().Model(m.InventorySupplierXLoc).WherePK().Exec(ctx))
+	// Check if the given supplierId exists in existingInventorySupplier
+	var supplierFound = false
+	for _, supplier := range existingInventorySuppliers {
+		if supplier.SupplierId == sIdF {
+			supplierFound = true
 		}
 	}
-	return nil
+	if supplierFound != true {
+		return errors.New("could not find supplier")
+	}
+
+	return b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+
+		var uInventorySupplierXLoc []prophet_19_1_3668.InventorySupplierXLoc
+		for _, supplier := range existingInventorySuppliers {
+
+			if supplier.SupplierId == sIdF {
+				if supplier.InventorySupplierXLoc != nil {
+					supplier.InventorySupplierXLoc.PrimarySupplier = "Y"
+					uInventorySupplierXLoc = append(uInventorySupplierXLoc, *supplier.InventorySupplierXLoc)
+				} else {
+					uid, err := b.getInventorySupplierXLocUid(ctx)
+					if err != nil {
+						return err
+					}
+					nIXL := &prophet_19_1_3668.InventorySupplierXLoc{
+						InventorySupplierXLocUid: int32(uid),
+						InventorySupplierUid:     supplier.InventorySupplierUid,
+						LocationId:               1001,
+						PrimarySupplier:          "Y",
+						RowStatusFlag:            704,
+						LastMaintainedBy:         "admin",
+						OverrideVmiStatusFlag:    "N",
+					}
+					if _, err = tx.NewInsert().Model(nIXL).Exec(ctx); err != nil {
+						return err
+					}
+				}
+			} else {
+				if supplier.InventorySupplierXLoc != nil {
+					supplier.InventorySupplierXLoc.PrimarySupplier = "N"
+					uInventorySupplierXLoc = append(uInventorySupplierXLoc, *supplier.InventorySupplierXLoc)
+				}
+			}
+		}
+
+		if _, err = tx.NewUpdate().Model(&uInventorySupplierXLoc).Bulk().Exec(ctx); err != nil {
+			return err
+		}
+		return nil
+	},
+	)
 }
 
 func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product,
@@ -134,9 +199,19 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 	return FromDBListProduct(dbInvLoc), nil
 }
 
-func (b BunCatalogRepository) UpdateProduct() {
-	//TODO implement me
-	panic("implement me")
+func (b BunCatalogRepository) UpdateProduct(ctx context.Context, p *domain.ValidatedProduct) {
+	invMast := new(prophet_19_1_3668.InvMast)
+
+	idInt, err := strconv.Atoi(p.ID)
+	if err != nil {
+		return
+	}
+
+	b.db.NewSelect().Model(&invMast).Relation("InvLocItems").Where("inv_mast_uid = ?", idInt).Scan(ctx)
+
+	fmt.Println(invMast)
+	fmt.Println(invMast.InvLocItems)
+
 }
 
 func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) error {
@@ -391,4 +466,13 @@ WHERE im.inv_mast_uid = ?`
 	}
 
 	return false
+}
+
+func (b BunCatalogRepository) getInventorySupplierXLocUid(ctx context.Context) (id int, err error) {
+	err = b.db.NewRaw(
+		`DECLARE @id int
+			EXEC @id = p21_get_counter 'inventory_supplier_x_loc', 1
+			SELECT @id`,
+	).Scan(ctx, &id)
+	return id, err
 }

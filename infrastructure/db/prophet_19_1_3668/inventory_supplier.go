@@ -1,11 +1,15 @@
 package prophet_19_1_3668
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/schema"
 )
+
+var _ bun.BeforeAppendModelHook = (*ProductGroup)(nil)
 
 type InventorySupplier struct {
 	bun.BaseModel `bun:"table:inventory_supplier"`
@@ -60,4 +64,15 @@ type InventorySupplier struct {
 
 	InventorySupplierXLoc *InventorySupplierXLoc `bun:"rel:has-one,join:inventory_supplier_uid=inventory_supplier_uid"`
 	InvMast               InvMast                `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+}
+
+func (i *InventorySupplier) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		i.DateCreated = time.Now()
+		i.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		i.DateLastModified = time.Now()
+	}
+	return nil
 }

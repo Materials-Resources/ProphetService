@@ -9,6 +9,8 @@ type Product struct {
 	SN               string
 	Name             string
 	Description      string
+	ProductGroup     *ProductGroup
+	ProductGroupId   string
 	ProductGroupName string
 }
 
@@ -19,7 +21,7 @@ func (p *Product) validate() error {
 	return nil
 }
 
-func NewProduct(name string, description string) *Product {
+func NewProduct(name, description string) *Product {
 	return &Product{
 		Name:        name,
 		Description: description,

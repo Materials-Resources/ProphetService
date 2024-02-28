@@ -11,10 +11,12 @@ type Repository interface {
 	FindProductByID(id string) (*domain.ValidatedProduct, error)
 	ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product, nextCursor int, err error)
 	ReadProductByGroup(id string) ([]*domain.Product, error)
-	UpdateProduct()
+	UpdateProduct(ctx context.Context, p *domain.ValidatedProduct)
 	DeleteProduct(ctx context.Context, id string) error
 
 	GetProductSupplier(ctx context.Context, productId, supplierId string) (*domain.ProductSupplier, error)
+	AddProductSupplier(ctx context.Context, supplier *domain.ValidatedProductSupplier) error
+	CreateProductSupplier(ctx context.Context)
 	UpdateProductSupplier(ctx context.Context, p *domain.ValidatedProductSupplier) error
 	SetPrimaryProductSupplier(ctx context.Context, productId, supplierId string) error
 
