@@ -24,6 +24,7 @@ const (
 	CatalogService_CreateProduct_FullMethodName             = "/catalog.v1alpha0.CatalogService/CreateProduct"
 	CatalogService_UpdateProduct_FullMethodName             = "/catalog.v1alpha0.CatalogService/UpdateProduct"
 	CatalogService_DeleteProduct_FullMethodName             = "/catalog.v1alpha0.CatalogService/DeleteProduct"
+	CatalogService_GetProductSupplier_FullMethodName        = "/catalog.v1alpha0.CatalogService/GetProductSupplier"
 	CatalogService_CreateProductSupplier_FullMethodName     = "/catalog.v1alpha0.CatalogService/CreateProductSupplier"
 	CatalogService_UpdateProductSupplier_FullMethodName     = "/catalog.v1alpha0.CatalogService/UpdateProductSupplier"
 	CatalogService_SetPrimaryProductSupplier_FullMethodName = "/catalog.v1alpha0.CatalogService/SetPrimaryProductSupplier"
@@ -38,11 +39,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CatalogServiceClient interface {
+	// List all products
 	ListProduct(ctx context.Context, in *ListProductRequest, opts ...grpc.CallOption) (*ListProductResponse, error)
+	// Get product by GetProductRequest
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error)
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*CreateProductResponse, error)
 	UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*UpdateProductResponse, error)
 	DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error)
+	// Gets Product supplier
+	GetProductSupplier(ctx context.Context, in *GetProductSupplierRequest, opts ...grpc.CallOption) (*ProductSupplier, error)
 	CreateProductSupplier(ctx context.Context, in *CreateProductSupplierRequest, opts ...grpc.CallOption) (*CreateProductSupplierResponse, error)
 	UpdateProductSupplier(ctx context.Context, in *UpdateProductSupplierRequest, opts ...grpc.CallOption) (*UpdateProductSupplierResponse, error)
 	SetPrimaryProductSupplier(ctx context.Context, in *SetPrimaryProductSupplierRequest, opts ...grpc.CallOption) (*SetPrimaryProductSupplierResponse, error)
@@ -100,6 +105,15 @@ func (c *catalogServiceClient) UpdateProduct(ctx context.Context, in *UpdateProd
 func (c *catalogServiceClient) DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error) {
 	out := new(DeleteProductResponse)
 	err := c.cc.Invoke(ctx, CatalogService_DeleteProduct_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) GetProductSupplier(ctx context.Context, in *GetProductSupplierRequest, opts ...grpc.CallOption) (*ProductSupplier, error) {
+	out := new(ProductSupplier)
+	err := c.cc.Invoke(ctx, CatalogService_GetProductSupplier_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -182,11 +196,15 @@ func (c *catalogServiceClient) GetProductBySupplier(ctx context.Context, in *Get
 // All implementations should embed UnimplementedCatalogServiceServer
 // for forward compatibility
 type CatalogServiceServer interface {
+	// List all products
 	ListProduct(context.Context, *ListProductRequest) (*ListProductResponse, error)
+	// Get product by GetProductRequest
 	GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error)
 	CreateProduct(context.Context, *CreateProductRequest) (*CreateProductResponse, error)
 	UpdateProduct(context.Context, *UpdateProductRequest) (*UpdateProductResponse, error)
 	DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error)
+	// Gets Product supplier
+	GetProductSupplier(context.Context, *GetProductSupplierRequest) (*ProductSupplier, error)
 	CreateProductSupplier(context.Context, *CreateProductSupplierRequest) (*CreateProductSupplierResponse, error)
 	UpdateProductSupplier(context.Context, *UpdateProductSupplierRequest) (*UpdateProductSupplierResponse, error)
 	SetPrimaryProductSupplier(context.Context, *SetPrimaryProductSupplierRequest) (*SetPrimaryProductSupplierResponse, error)
@@ -215,6 +233,9 @@ func (UnimplementedCatalogServiceServer) UpdateProduct(context.Context, *UpdateP
 }
 func (UnimplementedCatalogServiceServer) DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProduct not implemented")
+}
+func (UnimplementedCatalogServiceServer) GetProductSupplier(context.Context, *GetProductSupplierRequest) (*ProductSupplier, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProductSupplier not implemented")
 }
 func (UnimplementedCatalogServiceServer) CreateProductSupplier(context.Context, *CreateProductSupplierRequest) (*CreateProductSupplierResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProductSupplier not implemented")
@@ -338,6 +359,24 @@ func _CatalogService_DeleteProduct_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CatalogServiceServer).DeleteProduct(ctx, req.(*DeleteProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_GetProductSupplier_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductSupplierRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).GetProductSupplier(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CatalogService_GetProductSupplier_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).GetProductSupplier(ctx, req.(*GetProductSupplierRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -512,6 +551,10 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteProduct",
 			Handler:    _CatalogService_DeleteProduct_Handler,
+		},
+		{
+			MethodName: "GetProductSupplier",
+			Handler:    _CatalogService_GetProductSupplier_Handler,
 		},
 		{
 			MethodName: "CreateProductSupplier",

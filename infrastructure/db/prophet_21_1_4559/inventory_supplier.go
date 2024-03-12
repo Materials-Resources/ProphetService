@@ -1,4 +1,4 @@
-package prophet_19_1_3668
+package prophet_21_1_4559
 
 import (
 	"context"
@@ -10,8 +10,7 @@ import (
 )
 
 type InventorySupplier struct {
-	bun.BaseModel `bun:"table:inventory_supplier"`
-
+	bun.BaseModel               `bun:"table:inventory_supplier"`
 	InvMastUid                  int32           `bun:"inv_mast_uid,type:int"`
 	SupplierId                  float64         `bun:"supplier_id,type:decimal(19,0)"`
 	DivisionId                  float64         `bun:"division_id,type:decimal(19,0)"`
@@ -63,6 +62,8 @@ type InventorySupplier struct {
 	InventorySupplierXLoc *InventorySupplierXLoc `bun:"rel:has-one,join:inventory_supplier_uid=inventory_supplier_uid"`
 	InvMast               InvMast                `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 }
+
+var _ bun.BeforeAppendModelHook = (*InventorySupplier)(nil)
 
 func (i *InventorySupplier) BeforeAppendModel(ctx context.Context, query schema.Query) error {
 	switch query.(type) {

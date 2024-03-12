@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/materials-resources/s_prophet/internal/catalog"
@@ -18,6 +19,24 @@ type catalogService struct {
 	producer kafka.Producer
 }
 
+func (s catalogService) GetProductSupplier(
+	ctx context.Context,
+	request *rpc.GetProductSupplierRequest) (*rpc.ProductSupplier, error) {
+	ps, err := s.repo.SelectProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
+	if err != nil {
+		return nil, err
+	}
+
+	return &rpc.ProductSupplier{
+		ProductId:     ps.ProductId,
+		SupplierId:    ps.SupplierId,
+		SupplierSn:    ps.SupplierSn,
+		ListPrice:     ps.ListPrice,
+		PurchasePrice: ps.PurchasePrice,
+		Delete:        false,
+	}, nil
+}
+
 func (s catalogService) UpdateProduct(
 	ctx context.Context,
 	request *rpc.UpdateProductRequest) (*rpc.UpdateProductResponse, error) {
@@ -32,6 +51,7 @@ func (s catalogService) CreateProductSupplier(
 		ProductId: request.GetProductId(), ListPrice: request.GetListPrice(), PurchasePrice: request.GetPurchasePrice(),
 	}
 	vd, err := domain.NewValidatedProductSupplier(d)
+
 	if err != nil {
 		return nil, err
 	}
@@ -42,15 +62,37 @@ func (s catalogService) CreateProductSupplier(
 func (s catalogService) UpdateProductSupplier(
 	ctx context.Context,
 	request *rpc.UpdateProductSupplierRequest) (*rpc.UpdateProductSupplierResponse, error) {
-	p := &domain.ProductSupplier{ProductId: request.GetProductSupplier().GetProductId(),
-		SupplierId: request.GetProductSupplier().SupplierId, Delete: request.GetProductSupplier().GetDelete(),
+
+	var paths []string
+
+	if !request.UpdateMask.IsValid(request.ProductSupplier) {
+		return nil, errors.New("invalid field mask")
 	}
 
-	vp, err := domain.NewValidatedProductSupplier(p)
-	if err != nil {
-		return nil, err
+	if fm := request.GetUpdateMask(); fm != nil && len(fm.Paths) > 0 {
+		paths = fm.Paths
 	}
-	if err := s.repo.UpdateProductSupplier(ctx, vp); err != nil {
+
+	psp := domain.ProductSupplierPatch{}
+
+	// TODO: Map specified paths to the domain.ProductSupplierPatch struct
+
+	for _, p := range paths {
+		switch p {
+		case "list_price":
+			psp.ListPrice = &request.GetProductSupplier().ListPrice
+		case "purchase_price":
+			psp.PurchasePrice = &request.GetProductSupplier().PurchasePrice
+		case "supplier_sn":
+			psp.SupplierProductSn = &request.GetProductSupplier().SupplierSn
+		case "delete":
+			psp.Delete = &request.GetProductSupplier().Delete
+		}
+	}
+
+	if err := s.repo.UpdateProductSupplier(ctx, request.GetProductSupplier().ProductId,
+		request.GetProductSupplier().SupplierId, &psp,
+	); err != nil {
 		return nil, err
 	}
 	return &rpc.UpdateProductSupplierResponse{}, nil
@@ -69,11 +111,11 @@ func (s catalogService) SetPrimaryProductSupplier(
 func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (*rpc.ListProductResponse,
 	error,
 ) {
-	res, nc, err := s.repo.ListProduct(ctx, request.GetCursor(), 100)
+	res, err := s.repo.ListProducts(&domain.ProductFilter{Limit: 500})
 	if err != nil {
 		return nil, err
 	}
-	return ToPBListProductResponse(res, int32(nc))
+	return ToPBListProductResponse(res, 2)
 }
 
 func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (*rpc.UpdateGroupResponse,
@@ -90,8 +132,13 @@ func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGrou
 
 func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (*rpc.GetProductResponse, error,
 ) {
-	fmt.Println(s.repo.FindProductByID(request.GetId()))
-	return nil, nil
+	dProduct, err := s.repo.SelectProduct(request.GetId())
+	if err != nil {
+		return &rpc.GetProductResponse{}, err
+	}
+
+	pbProduct, err := ToPBProduct(dProduct)
+	return &rpc.GetProductResponse{Product: pbProduct}, nil
 }
 
 func (s catalogService) CreateProduct(
@@ -144,7 +191,7 @@ func (s catalogService) GetGroup(
 	if err != nil {
 		fmt.Println(err)
 	}
-	p, err := s.repo.ReadProductByGroup(g.SN)
+	p, err := s.repo.ListProducts(&domain.ProductFilter{GroupID: request.GetId()})
 	if err != nil {
 		fmt.Println(err)
 	}

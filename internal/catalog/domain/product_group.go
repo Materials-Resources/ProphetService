@@ -5,6 +5,7 @@ import (
 )
 
 type ProductGroup struct {
+	ID   string
 	Name string
 	SN   string
 }

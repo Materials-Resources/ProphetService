@@ -5,18 +5,26 @@ import (
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
 )
 
-func ToPBListProductResponse(ds []*domain.Product, nc int32) (*rpc.ListProductResponse, error) {
+// ToPBProduct Converts domain.Product to rpc.Product
+func ToPBProduct(d *domain.Product) (*rpc.Product, error) {
+	return &rpc.Product{Id: d.ID, Name: d.Name, Sn: d.SN, Description: d.Description}, nil
+}
+
+// ToPBListProductResponse Converts a slice of domain.Product to rpc.ListProductResponse
+func ToPBListProductResponse(dProducts []*domain.Product, nc int32) (*rpc.ListProductResponse, error) {
 	pb := &rpc.ListProductResponse{NextCursor: nc}
-	for _, d := range ds {
-		pb.Products = append(pb.Products, &rpc.Product{Id: d.ID, Name: d.Name, Sn: d.SN, Description: d.Description,
-			ProductGroupName: d.ProductGroupName,
-		},
-		)
+	for _, d := range dProducts {
+		pbProduct, err := ToPBProduct(d)
+		if err != nil {
+			return nil, err
+		}
+		pb.Products = append(pb.Products, pbProduct)
 	}
 	return pb, nil
 }
+
 func ToPBGetProductGroupResponse(
-	productGroup *domain.ValidatedProductGroup, products []*domain.Product,
+	productGroup *domain.ProductGroup, products []*domain.Product,
 ) (*rpc.GetGroupResponse, error) {
 	var pb = &rpc.GetGroupResponse{
 		ProductGroup: &rpc.ProductGroup{
@@ -25,25 +33,36 @@ func ToPBGetProductGroupResponse(
 		},
 	}
 	for _, product := range products {
-		pb.Products = append(pb.Products, &rpc.Product{
-			Id:   product.ID,
-			Sn:   product.SN,
-			Name: product.Name,
-		},
-		)
+
+		pbProduct, err := ToPBProduct(product)
+		if err != nil {
+			return nil, err
+		}
+		pb.Products = append(pb.Products, pbProduct)
 	}
 	return pb, nil
 }
 
-func ToPBListProductGroup(productGroups []*domain.ValidatedProductGroup) (*rpc.ListGroupResponse, error) {
+// ToPBProductGroup Converts domain.ProductGroup to rpc.ProductGroup
+func ToPBProductGroup(productGroup *domain.ProductGroup) (*rpc.ProductGroup, error) {
+	return &rpc.ProductGroup{
+		Sn:   productGroup.SN,
+		Name: productGroup.Name,
+		Id:   productGroup.ID,
+	}, nil
+}
+
+// ToPBListProductGroup Converts a slice of domain.ProductGroup to rpc.ListGroupResponse
+func ToPBListProductGroup(dProductGroups []*domain.ProductGroup) (*rpc.ListGroupResponse, error) {
 	var pb = &rpc.ListGroupResponse{}
 
-	for _, productGroup := range productGroups {
-		pb.ProductGroups = append(pb.ProductGroups, &rpc.ProductGroup{
-			Sn:   productGroup.SN,
-			Name: productGroup.Name,
-		},
-		)
+	for _, productGroup := range dProductGroups {
+		pbProductGroup, err := ToPBProductGroup(productGroup)
+		if err != nil {
+			return nil, err
+		}
+		pb.ProductGroups = append(pb.ProductGroups, pbProductGroup)
+
 	}
 	return pb, nil
 }

@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_19_1_3668"
+	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
 	"github.com/materials-resources/s_prophet/internal/catalog"
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 	"github.com/uptrace/bun"
@@ -24,8 +25,94 @@ type BunCatalogRepository struct {
 	tracer trace.Tracer
 }
 
-func (b BunCatalogRepository) AddProductSupplier(ctx context.Context, supplier *domain.ValidatedProductSupplier) error {
-	inventorySupplier := &prophet_19_1_3668.InventorySupplier{
+func (b BunCatalogRepository) ListProducts(filter *domain.ProductFilter) ([]*domain.Product, error) {
+	var dProducts []*domain.Product
+	var mInvLoc []invLoc
+
+	bq := b.db.NewSelect().Model(&mInvLoc).Column(new(invLoc).LimitColumns()...).Column().Relation("InvMast",
+		func(query *bun.SelectQuery) *bun.SelectQuery {
+			return query.Column(new(invMast).LimitColumns()...)
+		},
+	).Relation(
+		"ProductGroup", func(query *bun.SelectQuery) *bun.SelectQuery {
+			return query.ExcludeColumn("*")
+		},
+	)
+
+	b.queryProductsWithFilter(context.Background(), bq, filter)
+
+	err := bq.Scan(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	for _, m := range mInvLoc {
+		d := domain.Product{}
+		m.WriteToDomain(&d)
+		dProducts = append(dProducts, &d)
+	}
+
+	return dProducts, nil
+
+}
+
+func (b BunCatalogRepository) FilterProductByGroup(filter *domain.ProductFilter) ([]*domain.Product, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (b BunCatalogRepository) SelectProduct(id string) (*domain.Product, error) {
+	d := domain.Product{}
+
+	ctx := context.Background()
+	im := new(invMast)
+
+	// Convert id to int
+	dbID, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, errors.New("ID provided was not a integer")
+	}
+
+	// Retrieve product by id
+	err = b.db.NewSelect().Model(im).Where("inv_mast.inv_mast_uid = ?", dbID).Scan(ctx)
+	if err != nil {
+		return nil, errors.New("could not find requested product")
+	}
+
+	im.WriteToDomain(&d)
+
+	return &d, nil
+}
+
+func (b BunCatalogRepository) SelectProductSupplier(
+	ctx context.Context,
+	productId, supplierId string) (*domain.ProductSupplier, error) {
+	pId, err := strconv.Atoi(productId)
+	if err != nil {
+		return nil, errors.New("invalid productId")
+	}
+
+	sId, err := strconv.ParseFloat(supplierId, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	is := new(inventorySupplier)
+
+	err = b.db.NewSelect().Model(is).Where("inv_mast_uid = ? AND supplier_id = ?", pId, sId).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	dps := domain.ProductSupplier{}
+
+	is.WriteToDomain(&dps)
+
+	return &dps, nil
+}
+
+func (b BunCatalogRepository) AddProductSupplier(ctx context.Context, d *domain.ValidatedProductSupplier) error {
+	is := &inventorySupplier{
 		LeadTimeDays:     0,
 		DeleteFlag:       "N",
 		LastMaintainedBy: "admin",
@@ -33,19 +120,20 @@ func (b BunCatalogRepository) AddProductSupplier(ctx context.Context, supplier *
 		CreatedBy:        sql.NullString{String: "admin", Valid: true},
 	}
 
+	// Get the next inventory_supplier_uid
 	err := b.db.NewRaw(
 		`DECLARE @id int
 			EXEC @id = p21_get_counter 'inventory_supplier', 1
 			SELECT @id`,
-	).Scan(ctx, &inventorySupplier.InventorySupplierUid)
+	).Scan(ctx, &is.InventorySupplierUid)
 
-	err = ProductSupplierFromDomain(&supplier.ProductSupplier, inventorySupplier)
+	err = is.FromDomain(&d.ProductSupplier)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	_, err = b.db.NewInsert().Model(inventorySupplier).Exec(ctx)
+	_, err = b.db.NewInsert().Model(is).Exec(ctx)
 	if err != nil {
 		return err
 	}
@@ -57,38 +145,70 @@ func (b BunCatalogRepository) CreateProductSupplier(ctx context.Context) {
 	panic("implement me")
 }
 
-func (b BunCatalogRepository) GetProductSupplier(
-	ctx context.Context,
-	productId, supplierId string) (*domain.ProductSupplier, error) {
-	//TODO implement me
-	panic("implement me")
-}
+func (b BunCatalogRepository) UpdateProductSupplier(
+	ctx context.Context, pId, sId string,
+	p *domain.ProductSupplierPatch) error {
 
-func (b BunCatalogRepository) UpdateProductSupplier(ctx context.Context, p *domain.ValidatedProductSupplier) error {
-	existing := new(prophet_19_1_3668.InventorySupplier)
+	is := new(inventorySupplier)
 
-	productId, err := strconv.Atoi(p.ProductId)
+	productId, err := strconv.Atoi(pId)
 	if err != nil {
 		return errors.New("invalid productId")
 	}
 
-	supplierId, err := strconv.ParseFloat(p.SupplierId, 64)
+	supplierId, err := strconv.ParseFloat(sId, 64)
 	if err != nil {
 		return err
 	}
 
-	err = b.db.NewSelect().Model(existing).Where("inv_mast_uid = ? AND supplier_id = ?", productId,
+	err = b.db.NewSelect().Model(is).Where("inv_mast_uid = ? AND supplier_id = ?", productId,
 		supplierId,
 	).Scan(ctx)
 	if err != nil {
 		return err
 	}
 
-	if p.Delete {
-		existing.DeleteFlag = "Y"
-	}
+	is.FromDomainPatch(p)
 
-	_, err = b.db.NewUpdate().Model(existing).WherePK().Exec(ctx)
+	//	err = b.db.NewSelect().Model(is).Where("inv_mast_uid = ? AND supplier_id = ?", productId,
+	//		supplierId,
+	//	).Scan(ctx)
+	//	if err != nil {
+	//		return err
+	//	}
+	//
+	//	if p.Delete {
+	//		var orderCount int32
+	//		b.db.NewRaw(`
+	//SELECT COUNT(*)
+	//FROM inventory_supplier
+	//         INNER JOIN oe_line on inventory_supplier.inv_mast_uid = oe_line.inv_mast_uid AND
+	//                               oe_line.supplier_id = inventory_supplier.supplier_id
+	//         LEFT JOIN quote_line on oe_line.oe_line_uid = quote_line.oe_line_uid
+	//         INNER JOIN inv_mast on inventory_supplier.inv_mast_uid = inv_mast.inv_mast_uid
+	//
+	//WHERE inventory_supplier.supplier_id = ? AND oe_line.inv_mast_uid = ?
+	//  AND (oe_line.complete != 'Y' OR quote_line.line_complete_flag != 'Y')`, supplierId, productId,
+	//		).Exec(ctx, &orderCount)
+	//		var poCount int32
+	//		b.db.NewRaw(`
+	//SELECT COUNT(*)
+	//FROM inventory_supplier
+	//         INNER JOIN inv_mast on inventory_supplier.inv_mast_uid = inv_mast.inv_mast_uid
+	//         INNER JOIN po_hdr on inventory_supplier.supplier_id = po_hdr.supplier_id
+	//         INNER JOIN po_line on inventory_supplier.inv_mast_uid = po_line.inv_mast_uid AND po_line.po_no = po_hdr.po_no
+	//WHERE inventory_supplier.supplier_id = ? and inventory_supplier.inv_mast_uid = ? and po_line.complete != 'Y'`,
+	//			supplierId, productId,
+	//		).Exec(ctx, &orderCount)
+	//		if orderCount == 0 && poCount == 0 {
+	//			existing.DeleteFlag = "Y"
+	//		}
+	//	} else {
+	//		existing.DeleteFlag = "N"
+	//	}
+	//	existing.LastMaintainedBy = "admin"
+	//
+	_, err = b.db.NewUpdate().Model((*prophet_21_1_4559.InventorySupplier)(is)).WherePK().Exec(ctx)
 	if err != nil {
 		return err
 	}
@@ -102,7 +222,7 @@ func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, pro
 	}
 
 	// Get existing InventorySuppliers from an inv_mast_uid
-	var existingInventorySuppliers []prophet_19_1_3668.InventorySupplier
+	var existingInventorySuppliers []prophet_21_1_4559.InventorySupplier
 	err = b.db.NewSelect().Model(&existingInventorySuppliers).Where("inv_mast_uid = ?", productId).Relation("InventorySupplierXLoc").Scan(
 		ctx,
 	)
@@ -123,7 +243,7 @@ func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, pro
 
 	return b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 
-		var uInventorySupplierXLoc []prophet_19_1_3668.InventorySupplierXLoc
+		var uInventorySupplierXLoc []prophet_21_1_4559.InventorySupplierXLoc
 		for _, supplier := range existingInventorySuppliers {
 
 			if supplier.SupplierId == sIdF {
@@ -182,36 +302,33 @@ func (b BunCatalogRepository) CreateProduct() {
 	panic("implement me")
 }
 
-func (b BunCatalogRepository) FindProductByID(id string) (*domain.ValidatedProduct, error) {
-	ctx := context.Background()
-	invMast := NewInvMast()
+func (b BunCatalogRepository) ListGroup() ([]*domain.ProductGroup, error) {
+	var ds []*domain.ProductGroup
+	var msProductGroup []productGroup
 
-	dbID, err := strconv.Atoi(id)
-	if err != nil {
-		return nil, errors.New("ID provided was not a integer")
-	}
-
-	err = b.db.NewSelect().Model(invMast.GetModel()).Where("inv_mast.inv_mast_uid = ?", dbID).Scan(ctx)
-	if err != nil {
-		return nil, errors.New("could not find requested product")
-	}
-	return FromDBProduct(invMast.GetModel())
-}
-func (b BunCatalogRepository) ListGroup() ([]*domain.ValidatedProductGroup, error) {
-	var dbProductGroup []prophet_19_1_3668.ProductGroup
 	ctx := context.Background()
-	err := b.db.NewSelect().Model(&dbProductGroup).Scan(ctx)
+	// Retrieve all product groups
+	err := b.db.NewSelect().Model(&msProductGroup).Order("product_group_id ASC").Scan(ctx)
 	if err != nil {
 		return nil, errors.New("could not list product groups")
 	}
-	return FromDBListGroup(dbProductGroup)
+
+	// Iterate through msProductGroup and convert to domain.ProductGroup
+	for _, m := range msProductGroup {
+		d := domain.ProductGroup{}
+		m.WriteToDomain(&d)
+		ds = append(ds, &d)
+	}
+
+	return ds, nil
 }
 
 func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, error) {
-	var dbInvLoc []prophet_19_1_3668.InvLoc
+	var dProducts []*domain.Product
+	var mInvLoc []invLoc
 	ctx := context.Background()
 
-	err := b.db.NewSelect().Model(&dbInvLoc).Column("inv_mast_uid").Relation("InvMast",
+	err := b.db.NewSelect().Model(&mInvLoc).Column("inv_mast_uid").Relation("InvMast",
 		func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Column("item_id", "item_desc")
 		},
@@ -222,21 +339,31 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 	if err != nil {
 		return nil, errors.New("could not find products for product group")
 	}
-	return FromDBListProduct(dbInvLoc), nil
+
+	for _, m := range mInvLoc {
+		dProducts = append(dProducts, &domain.Product{
+			Name: m.InvMast.ItemDesc,
+			ID:   strconv.Itoa(int(m.InvMastUid)),
+			SN:   m.InvMast.ItemId,
+		},
+		)
+
+	}
+	return dProducts, nil
 }
 
 func (b BunCatalogRepository) UpdateProduct(ctx context.Context, p *domain.ValidatedProduct) {
-	invMast := new(prophet_19_1_3668.InvMast)
+	im := new(invMast)
 
 	idInt, err := strconv.Atoi(p.ID)
 	if err != nil {
 		return
 	}
 
-	b.db.NewSelect().Model(&invMast).Relation("InvLocItems").Where("inv_mast_uid = ?", idInt).Scan(ctx)
+	b.db.NewSelect().Model(im).Relation("InvLocItems").Where("inv_mast_uid = ?", idInt).Scan(ctx)
 
-	fmt.Println(invMast)
-	fmt.Println(invMast.InvLocItems)
+	fmt.Println(im)
+	fmt.Println(im.InvLocItems)
 
 }
 
@@ -251,8 +378,8 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 		return errors.New("could not parse id")
 	}
 
-	var inventorySupplierXLoc []prophet_19_1_3668.InventorySupplierXLoc
-	var pricePageXBook []prophet_19_1_3668.PricePageXBook
+	var inventorySupplierXLoc []prophet_21_1_4559.InventorySupplierXLoc
+	var pricePageXBook []prophet_21_1_4559.PricePageXBook
 
 	if !b.canDeleteProduct(ctx, dbId) {
 		return errors.New("product cannot be deleted")
@@ -260,9 +387,10 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 
 	err = b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 
-		invMast := new(prophet_19_1_3668.InvMast)
+		im := new(invMast)
 
-		if err := tx.NewSelect().Model(invMast).Where("inv_mast_uid = ?", dbId).Column("inv_mast_uid").Relation("InvLocItems",
+		if err := tx.NewSelect().Model(im).Where("inv_mast_uid = ?", dbId).Column("inv_mast_uid").Relation(
+			"InvLocItems",
 			func(q *bun.SelectQuery) *bun.SelectQuery {
 				return q.Column("inv_mast_uid", "company_id", "location_id")
 			},
@@ -273,14 +401,14 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 			return err
 		}
 
-		if invMast.AlternateCodes != nil {
+		if im.AlternateCodes != nil {
 			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.AlternateCode)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 				return err
 			}
 		}
 
-		assemblyHdr := new(prophet_19_1_3668.AssemblyHdr)
-		if err := tx.NewSelect().Model(assemblyHdr).Where("inv_mast_uid = ?",
+		ah := new(assemblyHdr)
+		if err := tx.NewSelect().Model(ah).Where("inv_mast_uid = ?",
 			dbId,
 		).Column("inv_mast_uid").Relation("AssemblyLineItems", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Column("assembly_line_uid", "inv_mast_uid")
@@ -291,10 +419,10 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 			}
 
 		} else {
-			if _, err := tx.NewDelete().Model(&assemblyHdr.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model(ah.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
 				return err
 			}
-			if _, err := tx.NewDelete().Model(assemblyHdr).WherePK().Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model(ah).WherePK().Exec(ctx); err != nil {
 				return err
 			}
 		}
@@ -423,43 +551,52 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 }
 
 func (b BunCatalogRepository) CreateGroup(ctx context.Context, d *domain.ValidatedProductGroup) error {
-	m := NewProductGroup().WithDefaults().FromDomain(&d.ProductGroup)
+	pg := new(productGroup)
 
-	_, err := b.db.NewInsert().Model(m.model).Exec(ctx)
+	pg.WithDefaults()
+	pg.FromDomain(&d.ProductGroup)
+
+	_, err := b.db.NewInsert().Model(pg).Exec(ctx)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (b BunCatalogRepository) UpdateGroup(ctx context.Context, group *domain.ProductGroup) error {
-	m := NewProductGroup()
+func (b BunCatalogRepository) UpdateGroup(ctx context.Context, d *domain.ProductGroup) error {
+	pg := new(productGroup)
 
-	err := b.db.NewSelect().Model(m.GetModel()).Where("product_group_id = ?", group.SN).Scan(ctx)
+	err := b.db.NewSelect().Model(pg).Where("product_group_id = ?", d.SN).Scan(ctx)
 	if err != nil {
 		return err
 	}
 
-	m = m.FromDomain(group)
-	if _, err := b.db.NewUpdate().Model(m.GetModel()).WherePK().Exec(ctx); err != nil {
+	pg.FromDomain(d)
+	if _, err := b.db.NewUpdate().Model(pg).WherePK().Exec(ctx); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (b BunCatalogRepository) FindGroupByID(ctx context.Context, id string) (*domain.ValidatedProductGroup, error) {
-	m := NewProductGroup()
+func (b BunCatalogRepository) FindGroupByID(ctx context.Context, id string) (*domain.ProductGroup, error) {
+	pg := new(productGroup)
 
-	err := b.db.NewSelect().Model(m.GetModel()).Column("product_group_id", "product_group_desc",
+	err := b.db.NewSelect().Model(pg).Column("product_group_id",
+		"product_group_desc",
 		"product_group_uid",
-	).Where("product_group.product_group_id = ?",
+	).Where("product_group.product_group_uid = ?",
 		id,
 	).Scan(ctx)
 	if err != nil {
 		fmt.Println(err)
 		return nil, errors.New("could not find requested product group")
 	}
-	return FromDBProductGroup(m.GetModel())
+
+	dpg := domain.ProductGroup{}
+
+	pg.WriteToDomain(&dpg)
+
+	return &dpg, nil
 }
 
 func (b BunCatalogRepository) DeleteGroup() {
@@ -501,4 +638,18 @@ func (b BunCatalogRepository) getInventorySupplierXLocUid(ctx context.Context) (
 			SELECT @id`,
 	).Scan(ctx, &id)
 	return id, err
+}
+
+func (b BunCatalogRepository) queryProductsWithFilter(
+	ctx context.Context,
+	query *bun.SelectQuery,
+	filter *domain.ProductFilter) {
+	if filter.GroupID != "" {
+		query = query.Where("product_group."+
+			"product_group_uid = ?",
+			filter.GroupID,
+		)
+	}
+
+	query = query.Limit(filter.Limit).Order("inv_mast_uid ASC")
 }

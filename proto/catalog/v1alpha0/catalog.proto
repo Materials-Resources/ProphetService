@@ -1,5 +1,7 @@
 syntax = 'proto3';
 
+import "google/protobuf/field_mask.proto";
+
 package catalog.v1alpha0;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/catalog_v1alpha0";
@@ -14,8 +16,6 @@ message Product {
   string sn = 2;
   string name = 3;
   string description = 4;
-  string product_group_name = 6;
-  //  double list_price = 5;
 }
 
 message ProductSupplier {
@@ -29,6 +29,7 @@ message ProductSupplier {
 message ProductGroup {
   string sn = 1;
   string name = 2;
+  string id = 3;
 }
 
 message ProductFilter {
@@ -36,12 +37,16 @@ message ProductFilter {
 }
 
 service CatalogService {
+  // List all products
   rpc ListProduct(ListProductRequest) returns (ListProductResponse);
+  // Get product by GetProductRequest
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
   rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
   rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 
+  // Gets Product supplier
+  rpc GetProductSupplier(GetProductSupplierRequest) returns (ProductSupplier);
   rpc CreateProductSupplier(CreateProductSupplierRequest) returns (CreateProductSupplierResponse);
   rpc UpdateProductSupplier(UpdateProductSupplierRequest) returns (UpdateProductSupplierResponse);
   rpc SetPrimaryProductSupplier(SetPrimaryProductSupplierRequest) returns (SetPrimaryProductSupplierResponse);
@@ -52,6 +57,12 @@ service CatalogService {
   rpc UpdateGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
 
   rpc GetProductBySupplier(GetProductBySupplierRequest) returns (GetProductBySupplierResponse);
+}
+
+
+message GetProductSupplierRequest {
+  string product_id = 1;
+  string supplier_id = 2;
 }
 
 message ListProductRequest {
@@ -66,20 +77,23 @@ message GetProductRequest {
   string id = 1;
 }
 message GetProductResponse {
-  //Unique ID of product
-  string id = 1;
-  //Serialized ID
-  string sn = 2; //products item ID usually formatted as MRS-XXX00-123456
-  //Name of product
-  string name = 3;
-  //Description of product
-  string description = 4;
-  //Product group
-  string product_group_id = 5;
-  //MSRP price of product
-  double msrp_price = 6;
-  double available_quantity = 7;
-  string available_unit = 8;
+
+  Product product = 1;
+
+//  //Unique ID of product
+//  string id = 1;
+//  //Serialized ID
+//  string sn = 2; //products item ID usually formatted as MRS-XXX00-123456
+//  //Name of product
+//  string name = 3;
+//  //Description of product
+//  string description = 4;
+//  //Product group
+//  string product_group_id = 5;
+//  //MSRP price of product
+//  double msrp_price = 6;
+//  double available_quantity = 7;
+//  string available_unit = 8;
 }
 
 message CreateProductRequest {
@@ -103,7 +117,9 @@ message UpdateProductResponse {}
 message DeleteProductRequest {
   string id = 1;
 }
-message DeleteProductResponse {}
+message DeleteProductResponse {
+
+}
 
 message ListGroupRequest {}
 message ListGroupResponse {
@@ -122,6 +138,9 @@ message CreateProductSupplierResponse {}
 
 message UpdateProductSupplierRequest {
   ProductSupplier product_supplier = 1;
+
+  google.protobuf.FieldMask update_mask = 2;
+
 }
 message UpdateProductSupplierResponse {}
 

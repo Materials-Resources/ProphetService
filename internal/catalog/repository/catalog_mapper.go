@@ -9,7 +9,7 @@ import (
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 )
 
-func ProductSupplierFromDomain(d *domain.ProductSupplier, m *prophet_19_1_3668.InventorySupplier) error {
+func ProductSupplierFromDomain(d domain.ProductSupplier, m *inventorySupplier) error {
 	productId, err := strconv.Atoi(d.ProductId)
 	if err != nil {
 		return err
@@ -41,35 +41,12 @@ func FromDBListProduct(ms []prophet_19_1_3668.InvLoc) []*domain.Product {
 	}
 	return ds
 }
-func ToDBProduct(dbProduct *domain.Product) *prophet_19_1_3668.InvMast {
-	var im = &prophet_19_1_3668.InvMast{
+func ToDBProduct(dbProduct *domain.Product) *invMast {
+	var im = &invMast{
 		ItemDesc:     dbProduct.Name,
 		ExtendedDesc: sql.NullString{Valid: true, String: dbProduct.Description},
 	}
 	return im
-}
-
-//	func FromDBListProduct(dbProducts []prophet_19_1_3668.InvLoc) ([]*domain.ValidatedProduct, error) {
-//		var validatedProducts []*domain.ValidatedProduct
-//		for _, product := range dbProducts {
-//			validatedProduct, err := domain.NewValidatedProduct(&domain.Product{
-//				ID:          strconv.Itoa(int(product.InvMastUid)),
-//				SN:          product.InvMast.ItemId,
-//				Name:        product.InvMast.ItemDesc,
-//				Description: product.InvMast.ExtendedDesc.String,
-//			},
-//			)
-//			if err != nil {
-//				fmt.Println(err)
-//			}
-//			validatedProducts = append(validatedProducts, validatedProduct)
-//		}
-//		return validatedProducts, nil
-//	}
-func FromDBProduct(dbProduct *prophet_19_1_3668.InvMast) (*domain.ValidatedProduct, error) {
-	var p = &domain.Product{Name: dbProduct.ItemDesc, Description: dbProduct.ExtendedDesc.String}
-	p.ID = strconv.Itoa(int(dbProduct.InvMastUid))
-	return domain.NewValidatedProduct(p)
 }
 
 func FromDBListGroup(dbProductGroups []prophet_19_1_3668.ProductGroup) ([]*domain.ValidatedProductGroup, error) {
@@ -87,9 +64,4 @@ func FromDBListGroup(dbProductGroups []prophet_19_1_3668.ProductGroup) ([]*domai
 		productGroups = append(productGroups, validatedProductGroup)
 	}
 	return productGroups, nil
-}
-
-func FromDBProductGroup(dbProductGroup *prophet_19_1_3668.ProductGroup) (*domain.ValidatedProductGroup, error) {
-	var pg = &domain.ProductGroup{Name: dbProductGroup.ProductGroupDesc, SN: dbProductGroup.ProductGroupId}
-	return domain.NewValidatedProductGroup(pg)
 }

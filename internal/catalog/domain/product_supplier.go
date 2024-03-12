@@ -14,6 +14,13 @@ type ProductSupplier struct {
 	Delete        bool
 }
 
+type ProductSupplierPatch struct {
+	SupplierProductSn *string
+	ListPrice         *float64
+	PurchasePrice     *float64
+	Delete            *bool
+}
+
 func (p *ProductSupplier) validate() error {
 	if p.ProductId == "" {
 		return errors.New("invalid Product Id")

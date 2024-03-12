@@ -19,6 +19,7 @@
     - [GetProductBySupplierResponse](#catalog-v1alpha0-GetProductBySupplierResponse)
     - [GetProductRequest](#catalog-v1alpha0-GetProductRequest)
     - [GetProductResponse](#catalog-v1alpha0-GetProductResponse)
+    - [GetProductSupplierRequest](#catalog-v1alpha0-GetProductSupplierRequest)
     - [ListGroupRequest](#catalog-v1alpha0-ListGroupRequest)
     - [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse)
     - [ListProductRequest](#catalog-v1alpha0-ListProductRequest)
@@ -306,16 +307,23 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  | Unique ID of product |
-| sn | [string](#string) |  | Serialized ID
+| product | [Product](#catalog-v1alpha0-Product) |  |  |
 
-products item ID usually formatted as MRS-XXX00-123456 |
-| name | [string](#string) |  | Name of product |
-| description | [string](#string) |  | Description of product |
-| product_group_id | [string](#string) |  | Product group |
-| msrp_price | [double](#double) |  | MSRP price of product |
-| available_quantity | [double](#double) |  |  |
-| available_unit | [string](#string) |  |  |
+
+
+
+
+
+<a name="catalog-v1alpha0-GetProductSupplierRequest"></a>
+
+### GetProductSupplierRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_id | [string](#string) |  |  |
+| supplier_id | [string](#string) |  |  |
 
 
 
@@ -390,7 +398,6 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
-| product_group_name | [string](#string) |  | double list_price = 5; |
 
 
 
@@ -422,6 +429,7 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | ----- | ---- | ----- | ----------- |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
+| id | [string](#string) |  |  |
 
 
 
@@ -533,6 +541,7 @@ products item ID usually formatted as MRS-XXX00-123456 |
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | product_supplier | [ProductSupplier](#catalog-v1alpha0-ProductSupplier) |  |  |
+| update_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  |  |
 
 
 
@@ -562,11 +571,12 @@ products item ID usually formatted as MRS-XXX00-123456 |
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| ListProduct | [ListProductRequest](#catalog-v1alpha0-ListProductRequest) | [ListProductResponse](#catalog-v1alpha0-ListProductResponse) |  |
-| GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) |  |
+| ListProduct | [ListProductRequest](#catalog-v1alpha0-ListProductRequest) | [ListProductResponse](#catalog-v1alpha0-ListProductResponse) | List all products |
+| GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) | Get product by GetProductRequest |
 | CreateProduct | [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest) | [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse) |  |
 | UpdateProduct | [UpdateProductRequest](#catalog-v1alpha0-UpdateProductRequest) | [UpdateProductResponse](#catalog-v1alpha0-UpdateProductResponse) |  |
 | DeleteProduct | [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse) |  |
+| GetProductSupplier | [GetProductSupplierRequest](#catalog-v1alpha0-GetProductSupplierRequest) | [ProductSupplier](#catalog-v1alpha0-ProductSupplier) | Gets Product supplier |
 | CreateProductSupplier | [CreateProductSupplierRequest](#catalog-v1alpha0-CreateProductSupplierRequest) | [CreateProductSupplierResponse](#catalog-v1alpha0-CreateProductSupplierResponse) |  |
 | UpdateProductSupplier | [UpdateProductSupplierRequest](#catalog-v1alpha0-UpdateProductSupplierRequest) | [UpdateProductSupplierResponse](#catalog-v1alpha0-UpdateProductSupplierResponse) |  |
 | SetPrimaryProductSupplier | [SetPrimaryProductSupplierRequest](#catalog-v1alpha0-SetPrimaryProductSupplierRequest) | [SetPrimaryProductSupplierResponse](#catalog-v1alpha0-SetPrimaryProductSupplierResponse) |  |

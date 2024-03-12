@@ -14,6 +14,9 @@ type Product struct {
 	ProductGroupName string
 }
 
+type ProductPatch struct {
+}
+
 func (p *Product) validate() error {
 	if p.Name == "" {
 		return errors.New("invalid product details")
