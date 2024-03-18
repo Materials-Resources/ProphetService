@@ -5,6 +5,20 @@ import (
 	rpc "github.com/materials-resources/s_prophet/proto/inventory/v1alpha0"
 )
 
+func ToPbGetProductStockResponse(
+	dPS []*domain.ProductStock,
+) (*rpc.GetProductStockResponse, error) {
+	pb := &rpc.GetProductStockResponse{}
+	for _, ps := range dPS {
+		pb.ProductStock = append(pb.ProductStock, &rpc.GetProductStockResponseProductStock{
+			ProductUid:        ps.ProductUID,
+			QuantityAvailable: ps.QuantityAvailable,
+		},
+		)
+	}
+	return pb, nil
+}
+
 func ToPBGetReceiptByIDResponse(ir *domain.ValidatedInventoryReceipt) (*rpc.GetReceiptByIDResponse, error) {
 	pb := &rpc.GetReceiptByIDResponse{Id: ir.ID}
 

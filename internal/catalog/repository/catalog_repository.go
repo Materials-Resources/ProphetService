@@ -25,7 +25,9 @@ type BunCatalogRepository struct {
 	tracer trace.Tracer
 }
 
-func (b BunCatalogRepository) ListProducts(filter *domain.ProductFilter) ([]*domain.Product, error) {
+func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) ([]*domain.Product,
+	error,
+) {
 	var dProducts []*domain.Product
 	var mInvLoc []invLoc
 
@@ -41,7 +43,7 @@ func (b BunCatalogRepository) ListProducts(filter *domain.ProductFilter) ([]*dom
 
 	b.queryProductsWithFilter(context.Background(), bq, filter)
 
-	err := bq.Scan(context.Background())
+	err := bq.Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -61,10 +63,8 @@ func (b BunCatalogRepository) FilterProductByGroup(filter *domain.ProductFilter)
 	panic("implement me")
 }
 
-func (b BunCatalogRepository) SelectProduct(id string) (*domain.Product, error) {
+func (b BunCatalogRepository) SelectProduct(ctx context.Context, id string) (*domain.Product, error) {
 	d := domain.Product{}
-
-	ctx := context.Background()
 	im := new(invMast)
 
 	// Convert id to int

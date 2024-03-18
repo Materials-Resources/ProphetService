@@ -15,6 +15,24 @@ type bunInventoryRepository struct {
 	db *bun.DB
 }
 
+func (b bunInventoryRepository) SelectProductStockById(ctx context.Context, id []int32) ([]*domain.ProductStock,
+	error,
+) {
+	var mInvLoc []invLoc
+	err := b.db.NewSelect().Model(&mInvLoc).Column("inv_mast_uid",
+		"qty_on_hand",
+	).Where("inv_mast_uid IN (?)", bun.In(id)).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var dProductStock []*domain.ProductStock
+	for _, invLoc := range mInvLoc {
+		dProductStock = append(dProductStock, invLoc.WriteToProductStock())
+
+	}
+	return dProductStock, nil
+}
+
 func NewBunInventoryRepository(db *bun.DB) inventory.Repository {
 	return &bunInventoryRepository{db: db}
 }

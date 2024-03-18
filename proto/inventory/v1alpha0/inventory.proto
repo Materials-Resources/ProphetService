@@ -5,6 +5,7 @@ package inventory.v1alpha0;
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/inventory_v1alpha0";
 
 service InventoryService {
+  rpc GetProductStock(GetProductStockRequest) returns (GetProductStockResponse);
   //  rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
   //  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
 
@@ -23,6 +24,16 @@ message AddSupplierRequest {
   string supplier_part_no = 7;
 }
 
+message GetProductStockRequest {
+  repeated int32 product_uid = 1;
+}
+message GetProductStockResponse {
+  message productStock {
+    int32 product_uid = 1;
+    double quantity_available = 2;
+  }
+  repeated productStock product_stock = 1;
+}
 message AddSupplierResponse {}
 
 message DeleteSupplierRequest {}

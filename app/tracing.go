@@ -3,8 +3,10 @@ package app
 import (
 	"context"
 
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
@@ -33,6 +35,10 @@ func newTraceProvider(svcName, env string) (provider *tracesdk.TracerProvider, e
 			attribute.String("environment", env),
 		),
 		),
+	)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{},
+		propagation.Baggage{},
+	),
 	)
 	return tp, nil
 }

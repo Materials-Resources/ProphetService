@@ -111,7 +111,7 @@ func (s catalogService) SetPrimaryProductSupplier(
 func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (*rpc.ListProductResponse,
 	error,
 ) {
-	res, err := s.repo.ListProducts(&domain.ProductFilter{Limit: 500})
+	res, err := s.repo.ListProducts(ctx, &domain.ProductFilter{Limit: 500})
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +132,9 @@ func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGrou
 
 func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (*rpc.GetProductResponse, error,
 ) {
-	dProduct, err := s.repo.SelectProduct(request.GetId())
+	_, span := s.tracer.Start(ctx, "getProduct")
+	defer span.End()
+	dProduct, err := s.repo.SelectProduct(ctx, request.GetId())
 	if err != nil {
 		return &rpc.GetProductResponse{}, err
 	}
@@ -173,6 +175,8 @@ func (s catalogService) DeleteProduct(
 func (s catalogService) ListGroup(
 	ctx context.Context, request *rpc.ListGroupRequest,
 ) (*rpc.ListGroupResponse, error) {
+	_, span := s.tracer.Start(ctx, "ListGroup")
+	defer span.End()
 	productGroups, err := s.repo.ListGroup()
 
 	if err != nil {
@@ -184,14 +188,11 @@ func (s catalogService) ListGroup(
 func (s catalogService) GetGroup(
 	ctx context.Context, request *rpc.GetGroupRequest,
 ) (*rpc.GetGroupResponse, error) {
-	_, span := s.tracer.Start(ctx, "GetGroup")
-	span.SetAttributes(attribute.String("extra.key", "extra.value"))
-	defer span.End()
 	g, err := s.repo.FindGroupByID(ctx, request.GetId())
 	if err != nil {
 		fmt.Println(err)
 	}
-	p, err := s.repo.ListProducts(&domain.ProductFilter{GroupID: request.GetId()})
+	p, err := s.repo.ListProducts(ctx, &domain.ProductFilter{GroupID: request.GetId()})
 	if err != nil {
 		fmt.Println(err)
 	}

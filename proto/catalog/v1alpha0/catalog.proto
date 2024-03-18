@@ -11,11 +11,12 @@ message Cursor {
   int64 size = 2;
 }
 
-message Product {
+message ProductDetail {
   string id = 1;
   string sn = 2;
   string name = 3;
   string description = 4;
+  double stock_qty = 5;
 }
 
 message ProductSupplier {
@@ -69,7 +70,7 @@ message ListProductRequest {
   int32 cursor = 1;
 }
 message ListProductResponse {
-  repeated Product products = 1;
+  repeated ProductDetail products = 1;
   int32 next_cursor = 2;
 }
 
@@ -78,7 +79,7 @@ message GetProductRequest {
 }
 message GetProductResponse {
 
-  Product product = 1;
+  ProductDetail product = 1;
 
 //  //Unique ID of product
 //  string id = 1;
@@ -110,7 +111,7 @@ message CreateProductRequest {
 
 message CreateProductResponse {}
 message UpdateProductRequest {
-  Product product = 1;
+  ProductDetail product = 1;
 }
 message UpdateProductResponse {}
 
@@ -155,7 +156,7 @@ message GetGroupRequest {
 }
 message GetGroupResponse {
   ProductGroup product_group = 1;
-  repeated Product products = 2;
+  repeated ProductDetail products = 2;
 }
 
 message CreateGroupRequest {

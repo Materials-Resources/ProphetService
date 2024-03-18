@@ -24,7 +24,7 @@
     - [ListGroupResponse](#catalog-v1alpha0-ListGroupResponse)
     - [ListProductRequest](#catalog-v1alpha0-ListProductRequest)
     - [ListProductResponse](#catalog-v1alpha0-ListProductResponse)
-    - [Product](#catalog-v1alpha0-Product)
+    - [ProductDetail](#catalog-v1alpha0-ProductDetail)
     - [ProductFilter](#catalog-v1alpha0-ProductFilter)
     - [ProductGroup](#catalog-v1alpha0-ProductGroup)
     - [ProductSupplier](#catalog-v1alpha0-ProductSupplier)
@@ -51,6 +51,9 @@
     - [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse)
     - [DeleteSupplierRequest](#inventory-v1alpha0-DeleteSupplierRequest)
     - [DeleteSupplierResponse](#inventory-v1alpha0-DeleteSupplierResponse)
+    - [GetProductStockRequest](#inventory-v1alpha0-GetProductStockRequest)
+    - [GetProductStockResponse](#inventory-v1alpha0-GetProductStockResponse)
+    - [GetProductStockResponse.productStock](#inventory-v1alpha0-GetProductStockResponse-productStock)
     - [GetReceiptByIDRequest](#inventory-v1alpha0-GetReceiptByIDRequest)
     - [GetReceiptByIDResponse](#inventory-v1alpha0-GetReceiptByIDResponse)
     - [GetReceiptByIDResponse.Item](#inventory-v1alpha0-GetReceiptByIDResponse-Item)
@@ -246,7 +249,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  |  |
-| products | [Product](#catalog-v1alpha0-Product) | repeated |  |
+| products | [ProductDetail](#catalog-v1alpha0-ProductDetail) | repeated |  |
 
 
 
@@ -307,7 +310,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product | [Product](#catalog-v1alpha0-Product) |  |  |
+| product | [ProductDetail](#catalog-v1alpha0-ProductDetail) |  |  |
 
 
 
@@ -378,7 +381,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| products | [Product](#catalog-v1alpha0-Product) | repeated |  |
+| products | [ProductDetail](#catalog-v1alpha0-ProductDetail) | repeated |  |
 | next_cursor | [int32](#int32) |  |  |
 
 
@@ -386,9 +389,9 @@
 
 
 
-<a name="catalog-v1alpha0-Product"></a>
+<a name="catalog-v1alpha0-ProductDetail"></a>
 
-### Product
+### ProductDetail
 
 
 
@@ -398,6 +401,7 @@
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
+| stock_qty | [double](#double) |  |  |
 
 
 
@@ -515,7 +519,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product | [Product](#catalog-v1alpha0-Product) |  |  |
+| product | [ProductDetail](#catalog-v1alpha0-ProductDetail) |  |  |
 
 
 
@@ -720,6 +724,52 @@
 
 
 
+<a name="inventory-v1alpha0-GetProductStockRequest"></a>
+
+### GetProductStockRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_uid | [int32](#int32) | repeated |  |
+
+
+
+
+
+
+<a name="inventory-v1alpha0-GetProductStockResponse"></a>
+
+### GetProductStockResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_stock | [GetProductStockResponse.productStock](#inventory-v1alpha0-GetProductStockResponse-productStock) | repeated |  |
+
+
+
+
+
+
+<a name="inventory-v1alpha0-GetProductStockResponse-productStock"></a>
+
+### GetProductStockResponse.productStock
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_uid | [int32](#int32) |  |  |
+| quantity_available | [double](#double) |  |  |
+
+
+
+
+
+
 <a name="inventory-v1alpha0-GetReceiptByIDRequest"></a>
 
 ### GetReceiptByIDRequest
@@ -798,11 +848,11 @@
 <a name="inventory-v1alpha0-InventoryService"></a>
 
 ### InventoryService
-rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse);
- rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| GetProductStock | [GetProductStockRequest](#inventory-v1alpha0-GetProductStockRequest) | [GetProductStockResponse](#inventory-v1alpha0-GetProductStockResponse) | rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse); rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse); |
 | GetReceiptByID | [GetReceiptByIDRequest](#inventory-v1alpha0-GetReceiptByIDRequest) | [GetReceiptByIDResponse](#inventory-v1alpha0-GetReceiptByIDResponse) | GetReceiptByID returns details for a inventory receipt given an identifier. |
 
  

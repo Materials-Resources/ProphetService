@@ -10,11 +10,11 @@ import (
 type Repository interface {
 	CreateProduct()
 	// ListProducts by given filter
-	ListProducts(filter *domain.ProductFilter) ([]*domain.Product, error)
+	ListProducts(ctx context.Context, filter *domain.ProductFilter) ([]*domain.Product, error)
 
 	FilterProductByGroup(filter *domain.ProductFilter) ([]*domain.Product, error)
 	// SelectProduct returns a product by id
-	SelectProduct(id string) (*domain.Product, error)
+	SelectProduct(ctx context.Context, id string) (*domain.Product, error)
 	ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product, nextCursor int, err error)
 	ReadProductByGroup(id string) ([]*domain.Product, error)
 	// UpdateProduct updates a product by id

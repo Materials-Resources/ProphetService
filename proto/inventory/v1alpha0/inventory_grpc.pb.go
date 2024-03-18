@@ -19,13 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	InventoryService_GetReceiptByID_FullMethodName = "/inventory.v1alpha0.InventoryService/GetReceiptByID"
+	InventoryService_GetProductStock_FullMethodName = "/inventory.v1alpha0.InventoryService/GetProductStock"
+	InventoryService_GetReceiptByID_FullMethodName  = "/inventory.v1alpha0.InventoryService/GetReceiptByID"
 )
 
 // InventoryServiceClient is the client API for InventoryService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type InventoryServiceClient interface {
+	GetProductStock(ctx context.Context, in *GetProductStockRequest, opts ...grpc.CallOption) (*GetProductStockResponse, error)
 	// GetReceiptByID returns details for a inventory receipt given an identifier.
 	GetReceiptByID(ctx context.Context, in *GetReceiptByIDRequest, opts ...grpc.CallOption) (*GetReceiptByIDResponse, error)
 }
@@ -36,6 +38,15 @@ type inventoryServiceClient struct {
 
 func NewInventoryServiceClient(cc grpc.ClientConnInterface) InventoryServiceClient {
 	return &inventoryServiceClient{cc}
+}
+
+func (c *inventoryServiceClient) GetProductStock(ctx context.Context, in *GetProductStockRequest, opts ...grpc.CallOption) (*GetProductStockResponse, error) {
+	out := new(GetProductStockResponse)
+	err := c.cc.Invoke(ctx, InventoryService_GetProductStock_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *inventoryServiceClient) GetReceiptByID(ctx context.Context, in *GetReceiptByIDRequest, opts ...grpc.CallOption) (*GetReceiptByIDResponse, error) {
@@ -51,6 +62,7 @@ func (c *inventoryServiceClient) GetReceiptByID(ctx context.Context, in *GetRece
 // All implementations should embed UnimplementedInventoryServiceServer
 // for forward compatibility
 type InventoryServiceServer interface {
+	GetProductStock(context.Context, *GetProductStockRequest) (*GetProductStockResponse, error)
 	// GetReceiptByID returns details for a inventory receipt given an identifier.
 	GetReceiptByID(context.Context, *GetReceiptByIDRequest) (*GetReceiptByIDResponse, error)
 }
@@ -59,6 +71,9 @@ type InventoryServiceServer interface {
 type UnimplementedInventoryServiceServer struct {
 }
 
+func (UnimplementedInventoryServiceServer) GetProductStock(context.Context, *GetProductStockRequest) (*GetProductStockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProductStock not implemented")
+}
 func (UnimplementedInventoryServiceServer) GetReceiptByID(context.Context, *GetReceiptByIDRequest) (*GetReceiptByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReceiptByID not implemented")
 }
@@ -72,6 +87,24 @@ type UnsafeInventoryServiceServer interface {
 
 func RegisterInventoryServiceServer(s grpc.ServiceRegistrar, srv InventoryServiceServer) {
 	s.RegisterService(&InventoryService_ServiceDesc, srv)
+}
+
+func _InventoryService_GetProductStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductStockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).GetProductStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_GetProductStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).GetProductStock(ctx, req.(*GetProductStockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _InventoryService_GetReceiptByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -99,6 +132,10 @@ var InventoryService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "inventory.v1alpha0.InventoryService",
 	HandlerType: (*InventoryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetProductStock",
+			Handler:    _InventoryService_GetProductStock_Handler,
+		},
 		{
 			MethodName: "GetReceiptByID",
 			Handler:    _InventoryService_GetReceiptByID_Handler,
