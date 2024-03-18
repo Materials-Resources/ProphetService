@@ -343,7 +343,7 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 	for _, m := range mInvLoc {
 		dProducts = append(dProducts, &domain.Product{
 			Name: m.InvMast.ItemDesc,
-			ID:   strconv.Itoa(int(m.InvMastUid)),
+			ID:   m.InvMastUid,
 			SN:   m.InvMast.ItemId,
 		},
 		)
@@ -355,12 +355,7 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 func (b BunCatalogRepository) UpdateProduct(ctx context.Context, p *domain.ValidatedProduct) {
 	im := new(invMast)
 
-	idInt, err := strconv.Atoi(p.ID)
-	if err != nil {
-		return
-	}
-
-	b.db.NewSelect().Model(im).Relation("InvLocItems").Where("inv_mast_uid = ?", idInt).Scan(ctx)
+	b.db.NewSelect().Model(im).Relation("InvLocItems").Where("inv_mast_uid = ?", p.ID).Scan(ctx)
 
 	fmt.Println(im)
 	fmt.Println(im.InvLocItems)
