@@ -12,6 +12,7 @@ type Product struct {
 	ProductGroup     *ProductGroup
 	ProductGroupId   string
 	ProductGroupName string
+	ListPrice        float64
 }
 
 type ProductPatch struct {

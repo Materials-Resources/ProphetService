@@ -23,6 +23,21 @@ func ToPBListProductResponse(dProducts []*domain.Product, nc int32) (*rpc.ListPr
 	return pb, nil
 }
 
+func ToPBGetProductPriceResponse(d []*domain.ProductPrice) (*rpc.GetProductPriceResponse, error) {
+
+	pb := &rpc.GetProductPriceResponse{}
+
+	for _, price := range d {
+		pb.ProductPrices = append(pb.ProductPrices, &rpc.GetProductPriceResponse_ProductPrice{
+			ProductUid: price.ProductUid,
+			ListPrice:  price.ListPrice,
+		},
+		)
+	}
+
+	return pb, nil
+
+}
 func ToPBGetProductGroupResponse(
 	productGroup *domain.ProductGroup, products []*domain.Product,
 ) (*rpc.GetGroupResponse, error) {

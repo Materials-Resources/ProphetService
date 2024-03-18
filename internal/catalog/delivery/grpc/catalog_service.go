@@ -19,6 +19,19 @@ type catalogService struct {
 	producer kafka.Producer
 }
 
+func (s catalogService) GetProductPrice(
+	ctx context.Context,
+	request *rpc.GetProductPriceRequest) (*rpc.GetProductPriceResponse, error) {
+	dPP, err := s.repo.SelectProductPrice(ctx, request.GetProductUid())
+	if err != nil {
+		return &rpc.GetProductPriceResponse{}, err
+
+	}
+
+	return ToPBGetProductPriceResponse(dPP)
+
+}
+
 func (s catalogService) GetProductSupplier(
 	ctx context.Context,
 	request *rpc.GetProductSupplierRequest) (*rpc.ProductSupplier, error) {

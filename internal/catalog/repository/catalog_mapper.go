@@ -34,7 +34,7 @@ func FromDBListProduct(ms []prophet_19_1_3668.InvLoc) []*domain.Product {
 	for _, m := range ms {
 		ds = append(ds,
 			&domain.Product{Name: m.InvMast.ItemDesc, Description: m.InvMast.ExtendedDesc.String,
-				ID: strconv.Itoa(int(m.InvMastUid)),
+				ID: m.InvMastUid,
 				SN: m.InvMast.ItemId, ProductGroupName: m.ProductGroup.ProductGroupDesc,
 			},
 		)

@@ -46,6 +46,8 @@ service CatalogService {
   rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 
+  rpc GetProductPrice(GetProductPriceRequest) returns (GetProductPriceResponse);
+
   // Gets Product supplier
   rpc GetProductSupplier(GetProductSupplierRequest) returns (ProductSupplier);
   rpc CreateProductSupplier(CreateProductSupplierRequest) returns (CreateProductSupplierResponse);
@@ -80,6 +82,8 @@ message GetProductRequest {
 message GetProductResponse {
 
   ProductDetail product = 1;
+
+
 
 //  //Unique ID of product
 //  string id = 1;
@@ -120,6 +124,20 @@ message DeleteProductRequest {
 }
 message DeleteProductResponse {
 
+}
+
+message GetProductPriceRequest {
+  repeated int32 product_uid = 1;
+  string customer_id = 2;
+}
+
+message GetProductPriceResponse {
+  message ProductPrice {
+    int32 product_uid = 1;
+    double list_price = 2;
+    double customer_price = 3;
+  }
+  repeated ProductPrice product_prices = 1;
 }
 
 message ListGroupRequest {}

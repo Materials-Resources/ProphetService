@@ -25,6 +25,31 @@ type BunCatalogRepository struct {
 	tracer trace.Tracer
 }
 
+func (b BunCatalogRepository) SelectProductPrice(ctx context.Context, uid []int32) ([]*domain.ProductPrice, error) {
+	var mIL []invLoc
+
+	err := b.db.NewSelect().Model(&mIL).Column("inv_mast_uid", "price1").Where("inv_mast_uid IN (?)",
+		bun.In(uid),
+	).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var dPPs []*domain.ProductPrice
+
+	for _, m := range mIL {
+		dPPs = append(
+			dPPs, &domain.ProductPrice{
+				ProductUid: m.InvMastUid,
+				ListPrice:  m.Price1.Float64,
+			},
+		)
+	}
+
+	return dPPs, nil
+
+}
+
 func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) ([]*domain.Product,
 	error,
 ) {
@@ -65,7 +90,7 @@ func (b BunCatalogRepository) FilterProductByGroup(filter *domain.ProductFilter)
 
 func (b BunCatalogRepository) SelectProduct(ctx context.Context, id string) (*domain.Product, error) {
 	d := domain.Product{}
-	im := new(invMast)
+	il := new(invLoc)
 
 	// Convert id to int
 	dbID, err := strconv.Atoi(id)
@@ -74,12 +99,12 @@ func (b BunCatalogRepository) SelectProduct(ctx context.Context, id string) (*do
 	}
 
 	// Retrieve product by id
-	err = b.db.NewSelect().Model(im).Where("inv_mast.inv_mast_uid = ?", dbID).Scan(ctx)
+	err = b.db.NewSelect().Model(il).Where("inv_loc.inv_mast_uid = ?", dbID).Relation("InvMast").Scan(ctx)
 	if err != nil {
 		return nil, errors.New("could not find requested product")
 	}
 
-	im.WriteToDomain(&d)
+	il.WriteToDomain(&d)
 
 	return &d, nil
 }
