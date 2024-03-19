@@ -124,11 +124,11 @@ func (s catalogService) SetPrimaryProductSupplier(
 func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (*rpc.ListProductResponse,
 	error,
 ) {
-	res, err := s.repo.ListProducts(ctx, &domain.ProductFilter{Limit: 500})
+	res, nextCursor, err := s.repo.ListProducts(ctx, &domain.ProductFilter{Limit: 1000, Cursor: request.GetCursor()})
 	if err != nil {
 		return nil, err
 	}
-	return ToPBListProductResponse(res, 2)
+	return ToPBListProductResponse(res, nextCursor)
 }
 
 func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (*rpc.UpdateGroupResponse,
@@ -205,7 +205,7 @@ func (s catalogService) GetGroup(
 	if err != nil {
 		fmt.Println(err)
 	}
-	p, err := s.repo.ListProducts(ctx, &domain.ProductFilter{GroupID: request.GetId()})
+	p, _, err := s.repo.ListProducts(ctx, &domain.ProductFilter{GroupID: request.GetId()})
 	if err != nil {
 		fmt.Println(err)
 	}

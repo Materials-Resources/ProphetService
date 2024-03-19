@@ -7,7 +7,9 @@ import (
 
 // ToPBProduct Converts domain.Product to rpc.Product
 func ToPBProduct(d *domain.Product) (*rpc.ProductDetail, error) {
-	return &rpc.ProductDetail{Id: d.ID, Name: d.Name, Sn: d.SN, Description: d.Description}, nil
+	return &rpc.ProductDetail{Id: d.ID, Name: d.Name, Sn: d.SN, Description: d.Description,
+		ProductGroupSn: d.ProductGroupId,
+	}, nil
 }
 
 // ToPBListProductResponse Converts a slice of domain.Product to rpc.ListProductResponse

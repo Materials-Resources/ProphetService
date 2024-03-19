@@ -453,6 +453,7 @@
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
 | stock_qty | [double](#double) |  |  |
+| product_group_sn | [string](#string) |  |  |
 
 
 

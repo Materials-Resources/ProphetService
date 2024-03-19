@@ -50,7 +50,7 @@ func (b BunCatalogRepository) SelectProductPrice(ctx context.Context, uid []int3
 
 }
 
-func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) ([]*domain.Product,
+func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) ([]*domain.Product, int32,
 	error,
 ) {
 	var dProducts []*domain.Product
@@ -64,13 +64,13 @@ func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.P
 		"ProductGroup", func(query *bun.SelectQuery) *bun.SelectQuery {
 			return query.ExcludeColumn("*")
 		},
-	)
+	).Offset(int(filter.Cursor))
 
 	b.queryProductsWithFilter(context.Background(), bq, filter)
 
 	err := bq.Scan(ctx)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	for _, m := range mInvLoc {
@@ -79,7 +79,7 @@ func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.P
 		dProducts = append(dProducts, &d)
 	}
 
-	return dProducts, nil
+	return dProducts, dProducts[len(dProducts)-1].ID, nil
 
 }
 

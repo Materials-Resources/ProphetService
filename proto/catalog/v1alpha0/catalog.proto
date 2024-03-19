@@ -17,6 +17,7 @@ message ProductDetail {
   string name = 3;
   string description = 4;
   double stock_qty = 5;
+  string product_group_sn = 6;
 }
 
 message ProductSupplier {

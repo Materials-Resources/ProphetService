@@ -115,7 +115,7 @@ type invLoc prophet_21_1_4559.InvLoc
 
 // LimitColumns Get slice of columns to be selected
 func (i *invLoc) LimitColumns() []string {
-	return []string{"inv_mast_uid", "product_group_id", "price_1"}
+	return []string{"inv_mast_uid", "product_group_id", "price1"}
 
 }
 
@@ -125,6 +125,7 @@ func (i *invLoc) WriteToDomain(d *domain.Product) {
 	d.Description = i.InvMast.ExtendedDesc.String
 	d.ID = i.InvMastUid
 	d.SN = i.InvMast.ItemId
+	d.ProductGroupId = i.ProductGroupId.String
 	d.ProductGroupName = i.ProductGroup.ProductGroupDesc
 	d.ListPrice = i.Price1.Float64
 }
