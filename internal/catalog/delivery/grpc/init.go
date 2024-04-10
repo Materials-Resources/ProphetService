@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
 
 	"github.com/materials-resources/s_prophet/app"
 	kafka2 "github.com/materials-resources/s_prophet/internal/catalog/kafka"
@@ -27,8 +28,12 @@ func init() {
 
 		producer := kafka2.NewProducer(a.Config.App.Events.Brokers, topic, kotel, a.GetTP().Tracer("producer"))
 		//go consumer1.DeleteProduct()
-		svc.RegisterCatalogServiceServer(a.GetServer(), &catalogService{tracer: a.GetTP().Tracer("CatalogService"),
-			repo: repo, producer: *producer,
+
+		m := prophet_21_1_4559.NewModels(a.GetDB())
+		svc.RegisterCatalogServiceServer(a.GetServer(), &catalogService{
+			tracer: a.GetTP().Tracer("CatalogService"),
+			repo:   repo, producer: *producer,
+			models: *m,
 		},
 		)
 		return nil

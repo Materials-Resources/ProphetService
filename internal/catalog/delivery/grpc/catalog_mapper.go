@@ -8,7 +8,7 @@ import (
 // ToPBProduct Converts domain.Product to rpc.Product
 func ToPBProduct(d *domain.Product) (*rpc.ProductDetail, error) {
 	return &rpc.ProductDetail{Id: d.ID, Name: d.Name, Sn: d.SN, Description: d.Description,
-		ProductGroupSn: d.ProductGroupId,
+		ProductGroupSn: d.ProductGroupId, StockQty: d.StockQuantity,
 	}, nil
 }
 

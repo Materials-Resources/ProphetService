@@ -1,7 +1,9 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -167,4 +169,24 @@ type InvLoc struct {
 
 	InvMast      InvMast      `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 	ProductGroup ProductGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
+}
+
+type InvLocModel struct {
+	bun *bun.DB
+}
+
+// SelectByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
+func (m InvLocModel) SelectByInvMastUid(uid int32, ctx context.Context) (InvLoc, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var invLoc InvLoc
+	err := m.bun.NewSelect().Model(&invLoc).Relation("ProductGroup").Relation("InvMast").Where("inv_loc.inv_mast_uid = ?", uid).Scan(ctx)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return InvLoc{}, ErrNotFound
+		}
+		return InvLoc{}, err
+	}
+	return invLoc, nil
 }

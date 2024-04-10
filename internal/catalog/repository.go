@@ -14,7 +14,7 @@ type Repository interface {
 
 	FilterProductByGroup(filter *domain.ProductFilter) ([]*domain.Product, error)
 	// SelectProduct returns a product by id
-	SelectProduct(ctx context.Context, id string) (*domain.Product, error)
+	SelectProduct(ctx context.Context, id int32) (*domain.Product, error)
 
 	SelectProductPrice(ctx context.Context, uid []int32) ([]*domain.ProductPrice, error)
 	ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product, nextCursor int, err error)

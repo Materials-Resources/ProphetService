@@ -50,7 +50,8 @@ func (b BunCatalogRepository) SelectProductPrice(ctx context.Context, uid []int3
 
 }
 
-func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) ([]*domain.Product, int32,
+func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) (
+	[]*domain.Product, int32,
 	error,
 ) {
 	var dProducts []*domain.Product
@@ -64,7 +65,7 @@ func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.P
 		"ProductGroup", func(query *bun.SelectQuery) *bun.SelectQuery {
 			return query.ExcludeColumn("*")
 		},
-	).Offset(int(filter.Cursor))
+	).Order("inv_loc.inv_mast_uid ASC").Where("inv_loc.inv_mast_uid > ?", filter.Cursor)
 
 	b.queryProductsWithFilter(context.Background(), bq, filter)
 
@@ -79,7 +80,13 @@ func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.P
 		dProducts = append(dProducts, &d)
 	}
 
-	return dProducts, dProducts[len(dProducts)-1].ID, nil
+	nc := 0
+
+	if len(dProducts) > 0 {
+		nc = int(dProducts[len(dProducts)-1].ID)
+	}
+
+	return dProducts, int32(nc), nil
 
 }
 
@@ -88,18 +95,12 @@ func (b BunCatalogRepository) FilterProductByGroup(filter *domain.ProductFilter)
 	panic("implement me")
 }
 
-func (b BunCatalogRepository) SelectProduct(ctx context.Context, id string) (*domain.Product, error) {
+func (b BunCatalogRepository) SelectProduct(ctx context.Context, id int32) (*domain.Product, error) {
 	d := domain.Product{}
 	il := new(invLoc)
 
-	// Convert id to int
-	dbID, err := strconv.Atoi(id)
-	if err != nil {
-		return nil, errors.New("ID provided was not a integer")
-	}
-
 	// Retrieve product by id
-	err = b.db.NewSelect().Model(il).Where("inv_loc.inv_mast_uid = ?", dbID).Relation("InvMast").Scan(ctx)
+	err := b.db.NewSelect().Model(il).Where("inv_loc.inv_mast_uid = ?", id).Relation("InvMast").Scan(ctx)
 	if err != nil {
 		return nil, errors.New("could not find requested product")
 	}
@@ -111,7 +112,8 @@ func (b BunCatalogRepository) SelectProduct(ctx context.Context, id string) (*do
 
 func (b BunCatalogRepository) SelectProductSupplier(
 	ctx context.Context,
-	productId, supplierId string) (*domain.ProductSupplier, error) {
+	productId, supplierId string,
+) (*domain.ProductSupplier, error) {
 	pId, err := strconv.Atoi(productId)
 	if err != nil {
 		return nil, errors.New("invalid productId")
@@ -172,7 +174,8 @@ func (b BunCatalogRepository) CreateProductSupplier(ctx context.Context) {
 
 func (b BunCatalogRepository) UpdateProductSupplier(
 	ctx context.Context, pId, sId string,
-	p *domain.ProductSupplierPatch) error {
+	p *domain.ProductSupplierPatch,
+) error {
 
 	is := new(inventorySupplier)
 
@@ -309,7 +312,8 @@ func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, pro
 	)
 }
 
-func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product,
+func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, count int) (
+	res []*domain.Product,
 	nextCursor int,
 	err error,
 ) {
@@ -663,13 +667,14 @@ func (b BunCatalogRepository) getInventorySupplierXLocUid(ctx context.Context) (
 func (b BunCatalogRepository) queryProductsWithFilter(
 	ctx context.Context,
 	query *bun.SelectQuery,
-	filter *domain.ProductFilter) {
-	if filter.GroupID != "" {
-		query = query.Where("product_group."+
-			"product_group_uid = ?",
-			filter.GroupID,
+	filter *domain.ProductFilter,
+) {
+	if filter.ProductGroupSn != "" {
+		query = query.Where("inv_loc."+
+			"product_group_id = ?",
+			filter.ProductGroupSn,
 		)
 	}
 
-	query = query.Limit(filter.Limit).Order("inv_mast_uid ASC")
+	query = query.Limit(filter.Limit)
 }

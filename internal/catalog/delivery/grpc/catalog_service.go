@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/materials-resources/s_prophet/internal/catalog"
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
@@ -14,6 +17,7 @@ import (
 )
 
 type catalogService struct {
+	models   prophet_21_1_4559.Models
 	repo     catalog.Repository
 	tracer   trace.Tracer
 	producer kafka.Producer
@@ -21,7 +25,8 @@ type catalogService struct {
 
 func (s catalogService) GetProductPrice(
 	ctx context.Context,
-	request *rpc.GetProductPriceRequest) (*rpc.GetProductPriceResponse, error) {
+	request *rpc.GetProductPriceRequest,
+) (*rpc.GetProductPriceResponse, error) {
 	dPP, err := s.repo.SelectProductPrice(ctx, request.GetProductUid())
 	if err != nil {
 		return &rpc.GetProductPriceResponse{}, err
@@ -34,7 +39,8 @@ func (s catalogService) GetProductPrice(
 
 func (s catalogService) GetProductSupplier(
 	ctx context.Context,
-	request *rpc.GetProductSupplierRequest) (*rpc.ProductSupplier, error) {
+	request *rpc.GetProductSupplierRequest,
+) (*rpc.ProductSupplier, error) {
 	ps, err := s.repo.SelectProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
 	if err != nil {
 		return nil, err
@@ -52,15 +58,18 @@ func (s catalogService) GetProductSupplier(
 
 func (s catalogService) UpdateProduct(
 	ctx context.Context,
-	request *rpc.UpdateProductRequest) (*rpc.UpdateProductResponse, error) {
+	request *rpc.UpdateProductRequest,
+) (*rpc.UpdateProductResponse, error) {
 
 	return nil, nil
 }
 
 func (s catalogService) CreateProductSupplier(
 	ctx context.Context,
-	request *rpc.CreateProductSupplierRequest) (*rpc.CreateProductSupplierResponse, error) {
-	d := &domain.ProductSupplier{SupplierId: request.GetSupplierId(), SupplierSn: request.GetSupplierProductSn(),
+	request *rpc.CreateProductSupplierRequest,
+) (*rpc.CreateProductSupplierResponse, error) {
+	d := &domain.ProductSupplier{
+		SupplierId: request.GetSupplierId(), SupplierSn: request.GetSupplierProductSn(),
 		ProductId: request.GetProductId(), ListPrice: request.GetListPrice(), PurchasePrice: request.GetPurchasePrice(),
 	}
 	vd, err := domain.NewValidatedProductSupplier(d)
@@ -74,7 +83,8 @@ func (s catalogService) CreateProductSupplier(
 
 func (s catalogService) UpdateProductSupplier(
 	ctx context.Context,
-	request *rpc.UpdateProductSupplierRequest) (*rpc.UpdateProductSupplierResponse, error) {
+	request *rpc.UpdateProductSupplierRequest,
+) (*rpc.UpdateProductSupplierResponse, error) {
 
 	var paths []string
 
@@ -113,7 +123,8 @@ func (s catalogService) UpdateProductSupplier(
 
 func (s catalogService) SetPrimaryProductSupplier(
 	ctx context.Context,
-	request *rpc.SetPrimaryProductSupplierRequest) (*rpc.SetPrimaryProductSupplierResponse, error) {
+	request *rpc.SetPrimaryProductSupplierRequest,
+) (*rpc.SetPrimaryProductSupplierResponse, error) {
 	err := s.repo.SetPrimaryProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
 	if err != nil {
 		return nil, err
@@ -121,7 +132,8 @@ func (s catalogService) SetPrimaryProductSupplier(
 	return &rpc.SetPrimaryProductSupplierResponse{}, nil
 }
 
-func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (*rpc.ListProductResponse,
+func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (
+	*rpc.ListProductResponse,
 	error,
 ) {
 	res, nextCursor, err := s.repo.ListProducts(ctx, &domain.ProductFilter{Limit: 1000, Cursor: request.GetCursor()})
@@ -131,7 +143,8 @@ func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProduc
 	return ToPBListProductResponse(res, nextCursor)
 }
 
-func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (*rpc.UpdateGroupResponse,
+func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (
+	*rpc.UpdateGroupResponse,
 	error,
 ) {
 	d := &domain.ProductGroup{SN: request.GetProductGroup().GetSn(), Name: request.GetProductGroup().GetName()}
@@ -143,22 +156,36 @@ func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGrou
 	return &rpc.UpdateGroupResponse{}, nil
 }
 
-func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (*rpc.GetProductResponse, error,
+func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (
+	*rpc.GetProductResponse, error,
 ) {
 	_, span := s.tracer.Start(ctx, "getProduct")
 	defer span.End()
-	dProduct, err := s.repo.SelectProduct(ctx, request.GetId())
-	if err != nil {
-		return &rpc.GetProductResponse{}, err
-	}
 
-	pbProduct, err := ToPBProduct(dProduct)
-	return &rpc.GetProductResponse{Product: pbProduct}, nil
+	m, err := s.models.InvLoc.SelectByInvMastUid(request.GetId(), ctx)
+	if err != nil {
+		switch {
+		case errors.Is(err, prophet_21_1_4559.ErrNotFound):
+			return nil, status.Error(codes.NotFound, "product not found")
+		}
+
+	}
+	return &rpc.GetProductResponse{
+		Product: &rpc.ProductDetail{
+			Id:             m.InvMastUid,
+			Sn:             m.InvMast.ItemId,
+			Name:           m.InvMast.ItemDesc,
+			Description:    m.InvMast.ExtendedDesc.String,
+			StockQty:       m.QtyOnHand.Float64,
+			ProductGroupSn: m.ProductGroup.ProductGroupId,
+		},
+	}, nil
 }
 
 func (s catalogService) CreateProduct(
 	ctx context.Context, request *rpc.CreateProductRequest,
-) (*rpc.CreateProductResponse,
+) (
+	*rpc.CreateProductResponse,
 	error,
 ) {
 	//TODO implement me
@@ -167,7 +194,8 @@ func (s catalogService) CreateProduct(
 
 func (s catalogService) DeleteProduct(
 	ctx context.Context, request *rpc.DeleteProductRequest,
-) (*rpc.DeleteProductResponse,
+) (
+	*rpc.DeleteProductResponse,
 	error,
 ) {
 	ctx, span := s.tracer.Start(ctx, "DeleteProduct", trace.WithSpanKind(trace.SpanKindServer))
@@ -205,7 +233,8 @@ func (s catalogService) GetGroup(
 	if err != nil {
 		fmt.Println(err)
 	}
-	p, _, err := s.repo.ListProducts(ctx, &domain.ProductFilter{GroupID: request.GetId()})
+	p, _, err := s.repo.ListProducts(ctx, &domain.ProductFilter{ProductGroupSn: g.SN})
+
 	if err != nil {
 		fmt.Println(err)
 	}

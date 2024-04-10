@@ -13,6 +13,7 @@ type Product struct {
 	ProductGroupId   string
 	ProductGroupName string
 	ListPrice        float64
+	StockQuantity    float64
 }
 
 type ProductPatch struct {
