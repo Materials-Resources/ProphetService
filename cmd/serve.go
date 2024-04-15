@@ -5,7 +5,7 @@ import (
 
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/materials-resources/s_prophet/app"
-	_ "github.com/materials-resources/s_prophet/internal/catalog/delivery/grpc"
+	_ "github.com/materials-resources/s_prophet/internal/catalog/api/grpc"
 	_ "github.com/materials-resources/s_prophet/internal/inventory/delivery/grpc"
 	_ "github.com/materials-resources/s_prophet/internal/order/delivery/grpc"
 	"github.com/spf13/cobra"

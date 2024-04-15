@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"strconv"
 
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_19_1_3668"
@@ -33,9 +32,9 @@ func FromDBListProduct(ms []prophet_19_1_3668.InvLoc) []*domain.Product {
 	var ds []*domain.Product
 	for _, m := range ms {
 		ds = append(ds,
-			&domain.Product{Name: m.InvMast.ItemDesc, Description: m.InvMast.ExtendedDesc.String,
+			&domain.Product{
+				Name: m.InvMast.ItemDesc, Description: m.InvMast.ExtendedDesc.String,
 				ID: m.InvMastUid,
-				SN: m.InvMast.ItemId, ProductGroupName: m.ProductGroup.ProductGroupDesc,
 			},
 		)
 	}
@@ -47,21 +46,4 @@ func ToDBProduct(dbProduct *domain.Product) *invMast {
 		ExtendedDesc: sql.NullString{Valid: true, String: dbProduct.Description},
 	}
 	return im
-}
-
-func FromDBListGroup(dbProductGroups []prophet_19_1_3668.ProductGroup) ([]*domain.ValidatedProductGroup, error) {
-	var productGroups []*domain.ValidatedProductGroup
-
-	for _, dbProductGroup := range dbProductGroups {
-		validatedProductGroup, err := domain.NewValidatedProductGroup(&domain.ProductGroup{
-			Name: dbProductGroup.ProductGroupDesc,
-			SN:   dbProductGroup.ProductGroupId,
-		},
-		)
-		if err != nil {
-			fmt.Println(err)
-		}
-		productGroups = append(productGroups, validatedProductGroup)
-	}
-	return productGroups, nil
 }

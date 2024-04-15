@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -240,4 +241,32 @@ type OeLine struct {
 	RestrictedClassUid          sql.NullInt32   `bun:"restricted_class_uid,type:int,nullzero"`
 
 	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+}
+
+func (ol *OeLine) setDefaults() {
+
+}
+
+type OeLineModel struct {
+	bun *bun.DB
+}
+
+func (m *OeLineModel) Insert(ctx context.Context, oeLine *OeLine) error {
+	_, err := m.bun.NewInsert().Model(oeLine).Exec(ctx)
+	return err
+}
+
+// generateOeLineUid returns a newly generated value for oe_line_uid
+func (m *OeLineModel) generateOeLineUid(ctx context.Context) int32 {
+	q := `
+		DECLARE @oe_line_uid int
+		EXEC @oe_line_uid = p21_get_counter 'oe_line', 1
+		SELECT @oe_line_uid`
+	id := new(int)
+	rows, err := m.bun.QueryContext(ctx, q)
+	if err != nil {
+		return 0
+	}
+	err = m.bun.ScanRows(ctx, rows, id)
+	return int32(*id)
 }

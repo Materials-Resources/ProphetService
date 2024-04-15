@@ -19,8 +19,6 @@ type Repository interface {
 	SelectProductPrice(ctx context.Context, uid []int32) ([]*domain.ProductPrice, error)
 	ListProduct(ctx context.Context, cursor int32, count int) (res []*domain.Product, nextCursor int, err error)
 	ReadProductByGroup(id string) ([]*domain.Product, error)
-	// UpdateProduct updates a product by id
-	UpdateProduct(ctx context.Context, p *domain.ValidatedProduct)
 	// DeleteProduct deletes a product by id
 	DeleteProduct(ctx context.Context, id string) error
 
@@ -33,7 +31,6 @@ type Repository interface {
 	// SetPrimaryProductSupplier sets a product supplier as the primary supplier for a product
 	SetPrimaryProductSupplier(ctx context.Context, productId, supplierId string) error
 
-	CreateGroup(ctx context.Context, group *domain.ValidatedProductGroup) error
 	ListGroup() ([]*domain.ProductGroup, error)
 	FindGroupByID(ctx context.Context, id string) (*domain.ProductGroup, error)
 	UpdateGroup(ctx context.Context, group *domain.ProductGroup) error

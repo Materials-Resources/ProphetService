@@ -61,10 +61,6 @@ func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.P
 		func(query *bun.SelectQuery) *bun.SelectQuery {
 			return query.Column(new(invMast).LimitColumns()...)
 		},
-	).Relation(
-		"ProductGroup", func(query *bun.SelectQuery) *bun.SelectQuery {
-			return query.ExcludeColumn("*")
-		},
 	).Order("inv_loc.inv_mast_uid ASC").Where("inv_loc.inv_mast_uid > ?", filter.Cursor)
 
 	b.queryProductsWithFilter(context.Background(), bq, filter)
@@ -319,7 +315,7 @@ func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, cou
 ) {
 	var m []prophet_19_1_3668.InvLoc
 
-	b.db.NewSelect().Model(&m).Relation("InvMast").Relation("ProductGroup").Where("inv_loc.inv_mast_uid > ?",
+	b.db.NewSelect().Model(&m).Relation("InvMast").Where("inv_loc.inv_mast_uid > ?",
 		cursor,
 	).Order("inv_mast_uid ASC").Limit(count).Scan(ctx)
 
@@ -379,16 +375,6 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 
 	}
 	return dProducts, nil
-}
-
-func (b BunCatalogRepository) UpdateProduct(ctx context.Context, p *domain.ValidatedProduct) {
-	im := new(invMast)
-
-	b.db.NewSelect().Model(im).Relation("InvLocItems").Where("inv_mast_uid = ?", p.ID).Scan(ctx)
-
-	fmt.Println(im)
-	fmt.Println(im.InvLocItems)
-
 }
 
 func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) error {
@@ -572,19 +558,6 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 	)
 
 	return err
-}
-
-func (b BunCatalogRepository) CreateGroup(ctx context.Context, d *domain.ValidatedProductGroup) error {
-	pg := new(productGroup)
-
-	pg.WithDefaults()
-	pg.FromDomain(&d.ProductGroup)
-
-	_, err := b.db.NewInsert().Model(pg).Exec(ctx)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (b BunCatalogRepository) UpdateGroup(ctx context.Context, d *domain.ProductGroup) error {

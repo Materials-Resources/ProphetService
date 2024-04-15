@@ -167,21 +167,20 @@ type InvLoc struct {
 	CritMinSafetyStockDays          sql.NullFloat64 `bun:"crit_min_safety_stock_days,type:decimal(19,9),nullzero"`
 	CritMaxSafetyStockDays          sql.NullFloat64 `bun:"crit_max_safety_stock_days,type:decimal(19,9),nullzero"`
 
-	InvMast      InvMast      `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
-	ProductGroup ProductGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
+	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 }
 
 type InvLocModel struct {
 	bun *bun.DB
 }
 
-// SelectByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
-func (m InvLocModel) SelectByInvMastUid(uid int32, ctx context.Context) (InvLoc, error) {
+// GetByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
+func (m InvLocModel) GetByInvMastUid(uid int32, ctx context.Context) (InvLoc, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	var invLoc InvLoc
-	err := m.bun.NewSelect().Model(&invLoc).Relation("ProductGroup").Relation("InvMast").Where("inv_loc.inv_mast_uid = ?", uid).Scan(ctx)
+	err := m.bun.NewSelect().Model(&invLoc).Relation("InvMast").Where("inv_loc.inv_mast_uid = ?", uid).Scan(ctx)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return InvLoc{}, ErrNotFound
@@ -189,4 +188,16 @@ func (m InvLocModel) SelectByInvMastUid(uid int32, ctx context.Context) (InvLoc,
 		return InvLoc{}, err
 	}
 	return invLoc, nil
+}
+
+func (m InvLocModel) GetAll(ctx context.Context) ([]InvLoc, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var invLocs []InvLoc
+	err := m.bun.NewSelect().Model(&invLocs).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return invLocs, nil
 }

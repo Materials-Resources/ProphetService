@@ -8,13 +8,15 @@ import (
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
+	"github.com/uptrace/bun/extra/bundebug"
 	"github.com/uptrace/bun/extra/bunotel"
 )
 
 func (a *App) newBunDB() *bun.DB {
 	query := url.Values{}
 	query.Add("database", a.Config.Database.DB)
-	u := &url.URL{Scheme: "sqlserver",
+	u := &url.URL{
+		Scheme:   "sqlserver",
 		User:     url.UserPassword(a.Config.Database.Username, a.Config.Database.Password),
 		Host:     fmt.Sprintf("%s:%d", a.Config.Database.Host, a.Config.Database.Port),
 		RawQuery: query.Encode(),
@@ -35,6 +37,8 @@ func (a *App) newBunDB() *bun.DB {
 		db,
 		mssqldialect.New(),
 	)
+
+	bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	bundb.AddQueryHook(bunotel.NewQueryHook(bunotel.WithTracerProvider(a.GetTP()),
 		bunotel.WithDBName(a.Config.Database.DB),

@@ -94,7 +94,6 @@ func (p *productGroup) FromDomain(d *domain.ProductGroup) *productGroup {
 func (p *productGroup) WriteToDomain(d *domain.ProductGroup) {
 	d.Name = p.ProductGroupDesc
 	d.SN = p.ProductGroupId
-	d.ID = strconv.Itoa(int(p.ProductGroupUid))
 }
 
 type invMast prophet_21_1_4559.InvMast
@@ -125,8 +124,6 @@ func (i *invLoc) WriteToDomain(d *domain.Product) {
 	d.Description = i.InvMast.ExtendedDesc.String
 	d.ID = i.InvMastUid
 	d.SN = i.InvMast.ItemId
-	d.ProductGroupId = i.ProductGroupId.String
-	d.ProductGroupName = i.ProductGroup.ProductGroupDesc
 	d.ListPrice = i.Price1.Float64
 	d.StockQuantity = i.QtyOnHand.Float64
 }

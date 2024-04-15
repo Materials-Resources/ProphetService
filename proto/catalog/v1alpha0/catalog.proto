@@ -6,6 +6,11 @@ package catalog.v1alpha0;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/catalog_v1alpha0";
 
+message ValidationError {
+  string field = 1;
+  string message = 2;
+}
+
 message Cursor {
   int64 select = 1;
   int64 size = 2;
@@ -28,10 +33,11 @@ message ProductSupplier {
   double purchase_price = 5;
   bool delete = 6;
 }
+
 message ProductGroup {
   string sn = 1;
   string name = 2;
-  string id = 3;
+  int32 uid = 3;
 }
 
 message ProductFilter {
@@ -55,10 +61,10 @@ service CatalogService {
   rpc UpdateProductSupplier(UpdateProductSupplierRequest) returns (UpdateProductSupplierResponse);
   rpc SetPrimaryProductSupplier(SetPrimaryProductSupplierRequest) returns (SetPrimaryProductSupplierResponse);
 
-  rpc ListGroup(ListGroupRequest) returns (ListGroupResponse);
-  rpc GetGroup(GetGroupRequest) returns (GetGroupResponse);
-  rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
-  rpc UpdateGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
+  rpc ListProductGroup(ListGroupRequest) returns (ListGroupResponse);
+  rpc GetProductGroup(GetProductGroupRequest) returns (GetProductGroupResponse);
+  rpc CreateProductGroup(CreateGroupRequest) returns (CreateGroupResponse);
+  rpc UpdateProductGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
 
   rpc GetProductBySupplier(GetProductBySupplierRequest) returns (GetProductBySupplierResponse);
 }
@@ -86,20 +92,20 @@ message GetProductResponse {
 
 
 
-//  //Unique ID of product
-//  string id = 1;
-//  //Serialized ID
-//  string sn = 2; //products item ID usually formatted as MRS-XXX00-123456
-//  //Name of product
-//  string name = 3;
-//  //Description of product
-//  string description = 4;
-//  //Product group
-//  string product_group_id = 5;
-//  //MSRP price of product
-//  double msrp_price = 6;
-//  double available_quantity = 7;
-//  string available_unit = 8;
+  //  //Unique ID of product
+  //  string id = 1;
+  //  //Serialized ID
+  //  string sn = 2; //products item ID usually formatted as MRS-XXX00-123456
+  //  //Name of product
+  //  string name = 3;
+  //  //Description of product
+  //  string description = 4;
+  //  //Product group
+  //  string product_group_id = 5;
+  //  //MSRP price of product
+  //  double msrp_price = 6;
+  //  double available_quantity = 7;
+  //  string available_unit = 8;
 }
 
 message CreateProductRequest {
@@ -113,8 +119,11 @@ message CreateProductRequest {
   string supplier_part_no = 11;
   float cost = 12;
 }
+message CreateProductResponse {
+  repeated ValidationError validation_errors = 1;
+}
 
-message CreateProductResponse {}
+
 message UpdateProductRequest {
   ProductDetail product = 1;
 }
@@ -170,10 +179,10 @@ message SetPrimaryProductSupplierRequest {
 }
 message SetPrimaryProductSupplierResponse {}
 
-message GetGroupRequest {
-  string id = 1;
+message GetProductGroupRequest {
+  string sn = 1;
 }
-message GetGroupResponse {
+message GetProductGroupResponse {
   ProductGroup product_group = 1;
   repeated ProductDetail products = 2;
 }
@@ -183,7 +192,9 @@ message CreateGroupRequest {
   //  string sn = 1; //Unique identifier of Product Group
   //  string name = 2; // Description of group
 }
-message CreateGroupResponse {}
+message CreateGroupResponse {
+  repeated ValidationError validation_errors = 1;
+}
 
 message UpdateGroupRequest {
   ProductGroup product_group = 1;
@@ -194,7 +205,6 @@ message GetProductBySupplierRequest {
   string supplier_id = 1;
   string supplier_part_no = 2;
 }
-
 message GetProductBySupplierResponse {
   string sn = 1;
 }

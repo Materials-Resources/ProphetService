@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -246,6 +247,75 @@ type OeHdr struct {
 	GlDimensionProjectNo           sql.NullString  `bun:"gl_dimension_project_no,type:varchar(255),nullzero"`
 	RentalStartDate                sql.NullTime    `bun:"rental_start_date,type:datetime,nullzero"`
 
-	OeLineItems []OeLine `bun:"rel:has-many,join:order_no=order_no"`
-	Contact     Contacts `bun:"rel:has-one,join:contact_id=id"`
+	OeLines []OeLine `bun:"rel:has-many,join:order_no=order_no"`
+	Contact Contacts `bun:"rel:has-one,join:contact_id=id"`
+}
+
+type OeHdrModel struct {
+	bun *bun.DB
+}
+
+// Create creates a new order.
+func (m *OeHdrModel) Create(ctx context.Context, oeHdr *OeHdr) error {
+	err := m.generateOeHdrUid(ctx, *oeHdr)
+	if err != nil {
+		return err
+	}
+	_, err = m.bun.NewInsert().Model(oeHdr).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get returns the order by the given order number.
+func (m *OeHdrModel) Get(ctx context.Context, orderNo string) (*OeHdr, error) {
+	var oeHdr OeHdr
+	err := m.bun.NewSelect().Model(&oeHdr).Relation("OeLines").Where("order_no = ?", orderNo).Scan(ctx)
+	if err != nil {
+
+	}
+	return nil, nil
+}
+
+// Update updates the given order.
+func (m *OeHdrModel) Update(ctx context.Context, oeHdr *OeHdr) error {
+	return nil
+}
+
+// Delete soft deletes the order by the given order number.
+func (m *OeHdrModel) Delete(ctx context.Context, orderNo string) error {
+	return nil
+}
+
+// GetByCustomerId returns all orders for a given customer ID.
+func (m *OeHdrModel) GetByCustomerId(ctx context.Context, customerId float64) ([]*OeHdr, error) {
+	var oeHdrs []*OeHdr
+	count, err := m.bun.NewSelect().Model(&oeHdrs).Relation("OeLines").Where("customer_id = ?", customerId).ScanAndCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if count == 0 {
+		return nil, ErrNotFound
+	}
+
+	return oeHdrs, nil
+}
+
+// generateOeHdrUid generates a new OeJdrUid for oeHdr.
+func (m *OeHdrModel) generateOeHdrUid(ctx context.Context, oeHdr OeHdr) error {
+
+	var uid int32
+
+	query := `DECLARE @order_no int
+			EXEC @order_no = p21_get_counter 'oe_hdr', 1
+			SELECT @order_no`
+
+	err := m.bun.DB.QueryRowContext(ctx, query).Scan(&uid)
+	if err != nil {
+		return err
+	}
+
+	oeHdr.OeHdrUid = uid
+	return nil
 }

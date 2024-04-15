@@ -1,25 +1,20 @@
 package domain
 
 import (
-	"errors"
+	"github.com/materials-resources/s_prophet/internal/validator"
 )
 
 type ProductGroup struct {
-	ID   string
-	Name string
+	UID  int32
 	SN   string
+	Name string
 }
 
-func (p *ProductGroup) validate() error {
-	if p.Name == "" {
-		return errors.New("invalid product group details")
-	}
-	return nil
-}
+// ValidateProductGroup runs validator against fields of ProductGroup
+func ValidateProductGroup(v *validator.Validator, productGroup ProductGroup) {
+	v.Check(productGroup.Name != "", "name", "must be provided")
+	v.Check(len(productGroup.Name) <= 80, "name", "must not be more than 80 characters")
 
-func NewProductGroup(name, sn string) *ProductGroup {
-	return &ProductGroup{
-		Name: name,
-		SN:   sn,
-	}
+	v.Check(productGroup.SN != "", "sn", "must be provided")
+	v.Check(len(productGroup.SN) <= 8, "sn", "must be more than 8 characters")
 }

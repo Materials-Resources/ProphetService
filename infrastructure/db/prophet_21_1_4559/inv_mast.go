@@ -208,3 +208,23 @@ func (m *InvMast) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) erro
 	m.DateLastModified = time.Now()
 	return nil
 }
+
+type InvMastModel struct {
+	bun *bun.DB
+}
+
+func (m *InvMastModel) Create(ctx context.Context, invMast *InvMast) error {
+	_, err := m.bun.NewInsert().Model(invMast).Exec(ctx)
+	return err
+}
+
+func (m *InvMastModel) Get(ctx context.Context, invMastUid int32) (*InvMast, error) {
+	invMast := new(InvMast)
+	err := m.bun.NewSelect().Model(invMast).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	return invMast, err
+}
+
+func (m *InvMastModel) Update(ctx context.Context, invMast *InvMast) error {
+	_, err := m.bun.NewUpdate().Model(invMast).WherePK().Exec(ctx)
+	return err
+}

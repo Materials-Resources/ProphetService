@@ -3,6 +3,7 @@ package catalog
 import (
 	"context"
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
+	"github.com/materials-resources/s_prophet/internal/catalog/service"
 
 	"github.com/materials-resources/s_prophet/app"
 	kafka2 "github.com/materials-resources/s_prophet/internal/catalog/kafka"
@@ -33,7 +34,8 @@ func init() {
 		svc.RegisterCatalogServiceServer(a.GetServer(), &catalogService{
 			tracer: a.GetTP().Tracer("CatalogService"),
 			repo:   repo, producer: *producer,
-			models: *m,
+			models:  *m,
+			service: service.NewCatalogService(*m),
 		},
 		)
 		return nil
