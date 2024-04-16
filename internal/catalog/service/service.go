@@ -15,6 +15,8 @@ type CatalogService interface {
 	// UpdateProduct updates a Product for specified locations
 	UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error
 
+	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
+
 	// ListProductGroup returns a list of ProductGroup
 	ListProductGroup(ctx context.Context) ([]*domain.ProductGroup, error)
 	// GetProductGroup returns ProductGroup by the given SN
@@ -23,4 +25,8 @@ type CatalogService interface {
 	UpdateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error
 	// CreateProductGroup creates a new product group
 	CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+}
+
+type Producer interface {
+	PublishUpdateProduct(ctx context.Context, product *domain.Product) error
 }

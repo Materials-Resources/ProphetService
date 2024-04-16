@@ -10,7 +10,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/materials-resources/s_prophet/internal/catalog"
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 	"github.com/materials-resources/s_prophet/internal/catalog/kafka"
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
@@ -19,9 +18,7 @@ import (
 )
 
 type catalogService struct {
-	models   prophet_21_1_4559.Models
 	service  service.CatalogService
-	repo     catalog.Repository
 	tracer   trace.Tracer
 	producer kafka.Producer
 }
@@ -135,22 +132,23 @@ func (s catalogService) GetProductPrice(
 	ctx context.Context,
 	request *rpc.GetProductPriceRequest,
 ) (*rpc.GetProductPriceResponse, error) {
-	dPP, err := s.repo.SelectProductPrice(ctx, request.GetProductUid())
-	if err != nil {
-		return &rpc.GetProductPriceResponse{}, err
+	// dPP, err := s.repo.SelectProductPrice(ctx, request.GetProductUid())
+	// if err != nil {
+	// 	return &rpc.GetProductPriceResponse{}, err
+	//
+	// }
+	//
+	// productPrices := make([]*rpc.GetProductPriceResponse_ProductPrice, 0, len(dPP))
+	// for _, pp := range dPP {
+	// 	productPrices = append(
+	// 		productPrices, &rpc.GetProductPriceResponse_ProductPrice{
+	// 			ProductUid: pp.ProductUid, CustomerPrice: pp.CustomerPrice, ListPrice: pp.ListPrice,
+	// 		})
+	//
+	// }
 
-	}
-
-	productPrices := make([]*rpc.GetProductPriceResponse_ProductPrice, 0, len(dPP))
-	for _, pp := range dPP {
-		productPrices = append(
-			productPrices, &rpc.GetProductPriceResponse_ProductPrice{
-				ProductUid: pp.ProductUid, CustomerPrice: pp.CustomerPrice, ListPrice: pp.ListPrice,
-			})
-
-	}
-
-	return &rpc.GetProductPriceResponse{ProductPrices: productPrices}, nil
+	// return &rpc.GetProductPriceResponse{ProductPrices: productPrices}, nil
+	return nil, nil
 
 }
 
@@ -158,19 +156,20 @@ func (s catalogService) GetProductSupplier(
 	ctx context.Context,
 	request *rpc.GetProductSupplierRequest,
 ) (*rpc.ProductSupplier, error) {
-	ps, err := s.repo.SelectProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
-	if err != nil {
-		return nil, err
-	}
-
-	return &rpc.ProductSupplier{
-		ProductId:     ps.ProductId,
-		SupplierId:    ps.SupplierId,
-		SupplierSn:    ps.SupplierSn,
-		ListPrice:     ps.ListPrice,
-		PurchasePrice: ps.PurchasePrice,
-		Delete:        false,
-	}, nil
+	// ps, err := s.repo.SelectProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
+	// if err != nil {
+	// 	return nil, err
+	// }
+	//
+	// return &rpc.ProductSupplier{
+	// 	ProductId:     ps.ProductId,
+	// 	SupplierId:    ps.SupplierId,
+	// 	SupplierSn:    ps.SupplierSn,
+	// 	ListPrice:     ps.ListPrice,
+	// 	PurchasePrice: ps.PurchasePrice,
+	// 	Delete:        false,
+	// }, nil
+	return nil, nil
 }
 
 func (s catalogService) UpdateProduct(
@@ -190,23 +189,24 @@ func (s catalogService) UpdateProduct(
 		return nil, err
 	}
 
-	return nil, nil
+	return &rpc.UpdateProductResponse{}, nil
 }
 
 func (s catalogService) CreateProductSupplier(
 	ctx context.Context,
 	request *rpc.CreateProductSupplierRequest,
 ) (*rpc.CreateProductSupplierResponse, error) {
-	d := &domain.ProductSupplier{
-		SupplierId: request.GetSupplierId(), SupplierSn: request.GetSupplierProductSn(),
-		ProductId: request.GetProductId(), ListPrice: request.GetListPrice(), PurchasePrice: request.GetPurchasePrice(),
-	}
-	vd, err := domain.NewValidatedProductSupplier(d)
-
-	if err != nil {
-		return nil, err
-	}
-	s.repo.AddProductSupplier(ctx, vd)
+	// d := &domain.ProductSupplier{
+	// 	SupplierId: request.GetSupplierId(), SupplierSn: request.GetSupplierProductSn(),
+	// 	ProductId: request.GetProductId(), ListPrice: request.GetListPrice(), PurchasePrice: request.GetPurchasePrice(),
+	// }
+	// vd, err := domain.NewValidatedProductSupplier(d)
+	//
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// s.repo.AddProductSupplier(ctx, vd)
+	// return nil, nil
 	return nil, nil
 }
 
@@ -215,51 +215,52 @@ func (s catalogService) UpdateProductSupplier(
 	request *rpc.UpdateProductSupplierRequest,
 ) (*rpc.UpdateProductSupplierResponse, error) {
 
-	var paths []string
-
-	if !request.UpdateMask.IsValid(request.ProductSupplier) {
-		return nil, errors.New("invalid field mask")
-	}
-
-	if fm := request.GetUpdateMask(); fm != nil && len(fm.Paths) > 0 {
-		paths = fm.Paths
-	}
-
-	psp := domain.ProductSupplierPatch{}
-
-	// TODO: Map specified paths to the domain.ProductSupplierPatch struct
-
-	for _, p := range paths {
-		switch p {
-		case "list_price":
-			psp.ListPrice = &request.GetProductSupplier().ListPrice
-		case "purchase_price":
-			psp.PurchasePrice = &request.GetProductSupplier().PurchasePrice
-		case "supplier_sn":
-			psp.SupplierProductSn = &request.GetProductSupplier().SupplierSn
-		case "delete":
-			psp.Delete = &request.GetProductSupplier().Delete
-		}
-	}
-
-	if err := s.repo.UpdateProductSupplier(
-		ctx, request.GetProductSupplier().ProductId,
-		request.GetProductSupplier().SupplierId, &psp,
-	); err != nil {
-		return nil, err
-	}
-	return &rpc.UpdateProductSupplierResponse{}, nil
+	// var paths []string
+	//
+	// if !request.UpdateMask.IsValid(request.ProductSupplier) {
+	// 	return nil, errors.New("invalid field mask")
+	// }
+	//
+	// if fm := request.GetUpdateMask(); fm != nil && len(fm.Paths) > 0 {
+	// 	paths = fm.Paths
+	// }
+	//
+	// psp := domain.ProductSupplierPatch{}
+	//
+	// // TODO: Map specified paths to the domain.ProductSupplierPatch struct
+	//
+	// for _, p := range paths {
+	// 	switch p {
+	// 	case "list_price":
+	// 		psp.ListPrice = &request.GetProductSupplier().ListPrice
+	// 	case "purchase_price":
+	// 		psp.PurchasePrice = &request.GetProductSupplier().PurchasePrice
+	// 	case "supplier_sn":
+	// 		psp.SupplierProductSn = &request.GetProductSupplier().SupplierSn
+	// 	case "delete":
+	// 		psp.Delete = &request.GetProductSupplier().Delete
+	// 	}
+	// }
+	//
+	// if err := s.repo.UpdateProductSupplier(
+	// 	ctx, request.GetProductSupplier().ProductId,
+	// 	request.GetProductSupplier().SupplierId, &psp,
+	// ); err != nil {
+	// 	return nil, err
+	// }
+	return nil, nil
 }
 
 func (s catalogService) SetPrimaryProductSupplier(
 	ctx context.Context,
 	request *rpc.SetPrimaryProductSupplierRequest,
 ) (*rpc.SetPrimaryProductSupplierResponse, error) {
-	err := s.repo.SetPrimaryProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
-	if err != nil {
-		return nil, err
-	}
-	return &rpc.SetPrimaryProductSupplierResponse{}, nil
+	// err := s.repo.SetPrimaryProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// return &rpc.SetPrimaryProductSupplierResponse{}, nil
+	return nil, nil
 }
 
 func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (
@@ -287,27 +288,6 @@ func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProduc
 
 	}
 	return &rpc.ListProductResponse{Products: rpcProducts, NextCursor: 0}, nil
-}
-
-func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (
-	*rpc.UpdateGroupResponse,
-	error,
-) {
-
-	productGroup, err := s.models.ProductGroup.GetById(ctx, request.GetProductGroup().GetSn())
-
-	if err != nil {
-		return nil, err
-	}
-
-	productGroup.ProductGroupDesc = request.GetProductGroup().GetName()
-
-	err = s.models.ProductGroup.Update(ctx, productGroup)
-
-	if err != nil {
-		return nil, err
-	}
-	return &rpc.UpdateGroupResponse{}, nil
 }
 
 func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (

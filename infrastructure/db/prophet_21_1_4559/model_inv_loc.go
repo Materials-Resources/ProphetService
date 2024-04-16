@@ -188,6 +188,7 @@ type InvLocModel struct {
 	bun *bun.DB
 }
 
+// GetByProductGroupId selects InvLoc by product_group_id and returns records
 func (m InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId string) ([]InvLoc, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()

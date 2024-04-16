@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
 	"github.com/materials-resources/s_prophet/internal/catalog/service"
+	"github.com/twmb/franz-go/pkg/sr"
 
 	"github.com/materials-resources/s_prophet/app"
 	kafka2 "github.com/materials-resources/s_prophet/internal/catalog/kafka"
@@ -24,6 +25,8 @@ func init() {
 			repo := repository.NewBunCatalogRepository(a.GetDB(), a.GetTP())
 
 			productWorker := kafka2.NewProductWorker(repo)
+			var serde sr.Serde
+			service.RegisterSchema(&serde)
 
 			cg := kafka.NewConsumerGroup(productWorker.ConsumeDeleteProduct, kotelTracer)
 			cg.Start(a.Config.App.Events.Brokers, topic, "14", kotel)
@@ -34,9 +37,9 @@ func init() {
 			m := prophet_21_1_4559.NewModels(a.GetDB())
 			svc.RegisterCatalogServiceServer(
 				a.GetServer(), &catalogService{
-					tracer: a.GetTP().Tracer("CatalogService"),
-					repo:   repo, producer: *producer,
-					service: service.NewCatalogService(*m),
+					producer: *producer,
+					tracer:   a.GetTP().Tracer("CatalogService"),
+					service:  service.NewCatalogService(*m),
 				},
 			)
 			return nil

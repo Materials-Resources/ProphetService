@@ -15,6 +15,11 @@ type Catalog struct {
 	models prophet_21_1_4559.Models
 }
 
+func (c Catalog) UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error {
+	// TODO implement me
+	panic("implement me")
+}
+
 func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error {
 	invMast, err := c.models.InvMast.Get(ctx, product.UID)
 	if err != nil {
