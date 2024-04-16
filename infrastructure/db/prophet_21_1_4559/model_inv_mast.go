@@ -3,6 +3,7 @@ package prophet_21_1_4559
 import (
 	"context"
 	"database/sql"
+	"github.com/uptrace/bun/schema"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -75,7 +76,7 @@ type InvMast struct {
 	TpcxStatus                    sql.NullInt32   `bun:"tpcx_status,type:int,nullzero"`
 	DefaultTransferUnit           sql.NullString  `bun:"default_transfer_unit,type:varchar(8),nullzero"`
 	Keywords                      sql.NullString  `bun:"keywords,type:text(2147483647),nullzero"`
-	FulltextTimestamp             *[]byte         `bun:"fulltext_timestamp,type:timestamp,nullzero"`
+	FulltextTimestamp             *[]byte         `bun:"fulltext_timestamp,type:timestamp,nullzero,scanonly"`
 	VendorConsigned               string          `bun:"vendor_consigned,type:char,default:('N')"`
 	CreatedBy                     sql.NullString  `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	Disposition                   sql.NullString  `bun:"disposition,type:char,default:('N')"`
@@ -190,22 +191,21 @@ type InvMast struct {
 	EccEnabledFlag                string          `bun:"ecc_enabled_flag,type:char,default:('N')"`
 	LocalItemFlag                 sql.NullString  `bun:"local_item_flag,type:char,default:('N')"`
 
-	AlternateCodes []*AlternateCode `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	InvLocItems    []*InvLoc        `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	AlternateCodes     []*AlternateCode     `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InvLocItems        []*InvLoc            `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InventorySuppliers []*InventorySupplier `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 }
 
-var _ bun.BeforeInsertHook = (*InvMast)(nil)
+var _ bun.BeforeAppendModelHook = (*InvMast)(nil)
 
-func (m *InvMast) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
-	m.DateCreated = time.Now()
-	m.DateLastModified = time.Now()
-	return nil
-}
-
-var _ bun.BeforeUpdateHook = (*InvMast)(nil)
-
-func (m *InvMast) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
-	m.DateLastModified = time.Now()
+func (m *InvMast) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		m.DateCreated = time.Now()
+		m.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		m.DateLastModified = time.Now()
+	}
 	return nil
 }
 
@@ -221,6 +221,18 @@ func (m *InvMastModel) Create(ctx context.Context, invMast *InvMast) error {
 func (m *InvMastModel) Get(ctx context.Context, invMastUid int32) (*InvMast, error) {
 	invMast := new(InvMast)
 	err := m.bun.NewSelect().Model(invMast).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	return invMast, err
+}
+
+func (m *InvMastModel) GetBySupplierPartNumber(ctx context.Context, supplierId float64, supplierPartNumber string) (
+	*InvMast, error) {
+	invMast := new(InvMast)
+
+	err := m.bun.NewSelect().Model(invMast).Join(
+		"JOIN inventory_supplier as inventory_supplier ON inventory_supplier."+
+			"inv_mast_uid = inv_mast.inv_mast_uid").Where(
+		"inventory_supplier.supplier_part_no = ? AND inventory_supplier.supplier_id = ?",
+		supplierPartNumber, supplierId).Scan(ctx)
 	return invMast, err
 }
 

@@ -28,7 +28,8 @@ type BunCatalogRepository struct {
 func (b BunCatalogRepository) SelectProductPrice(ctx context.Context, uid []int32) ([]*domain.ProductPrice, error) {
 	var mIL []invLoc
 
-	err := b.db.NewSelect().Model(&mIL).Column("inv_mast_uid", "price1").Where("inv_mast_uid IN (?)",
+	err := b.db.NewSelect().Model(&mIL).Column("inv_mast_uid", "price1").Where(
+		"inv_mast_uid IN (?)",
 		bun.In(uid),
 	).Scan(ctx)
 	if err != nil {
@@ -48,47 +49,6 @@ func (b BunCatalogRepository) SelectProductPrice(ctx context.Context, uid []int3
 
 	return dPPs, nil
 
-}
-
-func (b BunCatalogRepository) ListProducts(ctx context.Context, filter *domain.ProductFilter) (
-	[]*domain.Product, int32,
-	error,
-) {
-	var dProducts []*domain.Product
-	var mInvLoc []invLoc
-
-	bq := b.db.NewSelect().Model(&mInvLoc).Column(new(invLoc).LimitColumns()...).Column().Relation("InvMast",
-		func(query *bun.SelectQuery) *bun.SelectQuery {
-			return query.Column(new(invMast).LimitColumns()...)
-		},
-	).Order("inv_loc.inv_mast_uid ASC").Where("inv_loc.inv_mast_uid > ?", filter.Cursor)
-
-	b.queryProductsWithFilter(context.Background(), bq, filter)
-
-	err := bq.Scan(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	for _, m := range mInvLoc {
-		d := domain.Product{}
-		m.WriteToDomain(&d)
-		dProducts = append(dProducts, &d)
-	}
-
-	nc := 0
-
-	if len(dProducts) > 0 {
-		nc = int(dProducts[len(dProducts)-1].ID)
-	}
-
-	return dProducts, int32(nc), nil
-
-}
-
-func (b BunCatalogRepository) FilterProductByGroup(filter *domain.ProductFilter) ([]*domain.Product, error) {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (b BunCatalogRepository) SelectProduct(ctx context.Context, id int32) (*domain.Product, error) {
@@ -164,7 +124,7 @@ func (b BunCatalogRepository) AddProductSupplier(ctx context.Context, d *domain.
 }
 
 func (b BunCatalogRepository) CreateProductSupplier(ctx context.Context) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
@@ -185,7 +145,8 @@ func (b BunCatalogRepository) UpdateProductSupplier(
 		return err
 	}
 
-	err = b.db.NewSelect().Model(is).Where("inv_mast_uid = ? AND supplier_id = ?", productId,
+	err = b.db.NewSelect().Model(is).Where(
+		"inv_mast_uid = ? AND supplier_id = ?", productId,
 		supplierId,
 	).Scan(ctx)
 	if err != nil {
@@ -204,24 +165,24 @@ func (b BunCatalogRepository) UpdateProductSupplier(
 	//	if p.Delete {
 	//		var orderCount int32
 	//		b.db.NewRaw(`
-	//SELECT COUNT(*)
-	//FROM inventory_supplier
+	// SELECT COUNT(*)
+	// FROM inventory_supplier
 	//         INNER JOIN oe_line on inventory_supplier.inv_mast_uid = oe_line.inv_mast_uid AND
 	//                               oe_line.supplier_id = inventory_supplier.supplier_id
 	//         LEFT JOIN quote_line on oe_line.oe_line_uid = quote_line.oe_line_uid
 	//         INNER JOIN inv_mast on inventory_supplier.inv_mast_uid = inv_mast.inv_mast_uid
 	//
-	//WHERE inventory_supplier.supplier_id = ? AND oe_line.inv_mast_uid = ?
+	// WHERE inventory_supplier.supplier_id = ? AND oe_line.inv_mast_uid = ?
 	//  AND (oe_line.complete != 'Y' OR quote_line.line_complete_flag != 'Y')`, supplierId, productId,
 	//		).Exec(ctx, &orderCount)
 	//		var poCount int32
 	//		b.db.NewRaw(`
-	//SELECT COUNT(*)
-	//FROM inventory_supplier
+	// SELECT COUNT(*)
+	// FROM inventory_supplier
 	//         INNER JOIN inv_mast on inventory_supplier.inv_mast_uid = inv_mast.inv_mast_uid
 	//         INNER JOIN po_hdr on inventory_supplier.supplier_id = po_hdr.supplier_id
 	//         INNER JOIN po_line on inventory_supplier.inv_mast_uid = po_line.inv_mast_uid AND po_line.po_no = po_hdr.po_no
-	//WHERE inventory_supplier.supplier_id = ? and inventory_supplier.inv_mast_uid = ? and po_line.complete != 'Y'`,
+	// WHERE inventory_supplier.supplier_id = ? and inventory_supplier.inv_mast_uid = ? and po_line.complete != 'Y'`,
 	//			supplierId, productId,
 	//		).Exec(ctx, &orderCount)
 	//		if orderCount == 0 && poCount == 0 {
@@ -247,7 +208,8 @@ func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, pro
 
 	// Get existing InventorySuppliers from an inv_mast_uid
 	var existingInventorySuppliers []prophet_21_1_4559.InventorySupplier
-	err = b.db.NewSelect().Model(&existingInventorySuppliers).Where("inv_mast_uid = ?", productId).Relation("InventorySupplierXLoc").Scan(
+	err = b.db.NewSelect().Model(&existingInventorySuppliers).Where(
+		"inv_mast_uid = ?", productId).Relation("InventorySupplierXLoc").Scan(
 		ctx,
 	)
 	if err != nil {
@@ -265,46 +227,47 @@ func (b BunCatalogRepository) SetPrimaryProductSupplier(ctx context.Context, pro
 		return errors.New("could not find supplier")
 	}
 
-	return b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+	return b.db.RunInTx(
+		ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 
-		var uInventorySupplierXLoc []prophet_21_1_4559.InventorySupplierXLoc
-		for _, supplier := range existingInventorySuppliers {
+			var uInventorySupplierXLoc []prophet_21_1_4559.InventorySupplierXLoc
+			for _, supplier := range existingInventorySuppliers {
 
-			if supplier.SupplierId == sIdF {
-				if supplier.InventorySupplierXLoc != nil {
-					supplier.InventorySupplierXLoc.PrimarySupplier = "Y"
-					uInventorySupplierXLoc = append(uInventorySupplierXLoc, *supplier.InventorySupplierXLoc)
+				if supplier.SupplierId == sIdF {
+					if supplier.InventorySupplierXLoc != nil {
+						supplier.InventorySupplierXLoc.PrimarySupplier = "Y"
+						uInventorySupplierXLoc = append(uInventorySupplierXLoc, *supplier.InventorySupplierXLoc)
+					} else {
+						uid, err := b.getInventorySupplierXLocUid(ctx)
+						if err != nil {
+							return err
+						}
+						nIXL := &prophet_19_1_3668.InventorySupplierXLoc{
+							InventorySupplierXLocUid: int32(uid),
+							InventorySupplierUid:     supplier.InventorySupplierUid,
+							LocationId:               1001,
+							PrimarySupplier:          "Y",
+							RowStatusFlag:            704,
+							LastMaintainedBy:         "admin",
+							OverrideVmiStatusFlag:    "N",
+						}
+						if _, err = tx.NewInsert().Model(nIXL).Exec(ctx); err != nil {
+							return err
+						}
+					}
 				} else {
-					uid, err := b.getInventorySupplierXLocUid(ctx)
-					if err != nil {
-						return err
+					if supplier.InventorySupplierXLoc != nil {
+						supplier.InventorySupplierXLoc.PrimarySupplier = "N"
+						uInventorySupplierXLoc = append(uInventorySupplierXLoc, *supplier.InventorySupplierXLoc)
 					}
-					nIXL := &prophet_19_1_3668.InventorySupplierXLoc{
-						InventorySupplierXLocUid: int32(uid),
-						InventorySupplierUid:     supplier.InventorySupplierUid,
-						LocationId:               1001,
-						PrimarySupplier:          "Y",
-						RowStatusFlag:            704,
-						LastMaintainedBy:         "admin",
-						OverrideVmiStatusFlag:    "N",
-					}
-					if _, err = tx.NewInsert().Model(nIXL).Exec(ctx); err != nil {
-						return err
-					}
-				}
-			} else {
-				if supplier.InventorySupplierXLoc != nil {
-					supplier.InventorySupplierXLoc.PrimarySupplier = "N"
-					uInventorySupplierXLoc = append(uInventorySupplierXLoc, *supplier.InventorySupplierXLoc)
 				}
 			}
-		}
 
-		if _, err = tx.NewUpdate().Model(&uInventorySupplierXLoc).Bulk().Exec(ctx); err != nil {
-			return err
-		}
-		return nil
-	},
+			if _, err = tx.NewUpdate().Model(&uInventorySupplierXLoc).Bulk().Exec(ctx); err != nil {
+				return err
+			}
+			return nil
+		},
 	)
 }
 
@@ -315,7 +278,8 @@ func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, cou
 ) {
 	var m []prophet_19_1_3668.InvLoc
 
-	b.db.NewSelect().Model(&m).Relation("InvMast").Where("inv_loc.inv_mast_uid > ?",
+	b.db.NewSelect().Model(&m).Relation("InvMast").Where(
+		"inv_loc.inv_mast_uid > ?",
 		cursor,
 	).Order("inv_mast_uid ASC").Limit(count).Scan(ctx)
 
@@ -323,7 +287,7 @@ func (b BunCatalogRepository) ListProduct(ctx context.Context, cursor int32, cou
 }
 
 func (b BunCatalogRepository) CreateProduct() {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
@@ -353,11 +317,13 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 	var mInvLoc []invLoc
 	ctx := context.Background()
 
-	err := b.db.NewSelect().Model(&mInvLoc).Column("inv_mast_uid").Relation("InvMast",
+	err := b.db.NewSelect().Model(&mInvLoc).Column("inv_mast_uid").Relation(
+		"InvMast",
 		func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Column("item_id", "item_desc")
 		},
-	).Where("inv_loc.product_group_id = ?",
+	).Where(
+		"inv_loc.product_group_id = ?",
 		id,
 	).Scan(ctx)
 
@@ -366,11 +332,12 @@ func (b BunCatalogRepository) ReadProductByGroup(id string) ([]*domain.Product, 
 	}
 
 	for _, m := range mInvLoc {
-		dProducts = append(dProducts, &domain.Product{
-			Name: m.InvMast.ItemDesc,
-			ID:   m.InvMastUid,
-			SN:   m.InvMast.ItemId,
-		},
+		dProducts = append(
+			dProducts, &domain.Product{
+				Name: m.InvMast.ItemDesc,
+				UID:  m.InvMastUid,
+				SN:   m.InvMast.ItemId,
+			},
 		)
 
 	}
@@ -395,210 +362,189 @@ func (b BunCatalogRepository) DeleteProduct(ctx context.Context, id string) erro
 		return errors.New("product cannot be deleted")
 	}
 
-	err = b.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+	err = b.db.RunInTx(
+		ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 
-		im := new(invMast)
+			im := new(invMast)
 
-		if err := tx.NewSelect().Model(im).Where("inv_mast_uid = ?", dbId).Column("inv_mast_uid").Relation(
-			"InvLocItems",
-			func(q *bun.SelectQuery) *bun.SelectQuery {
-				return q.Column("inv_mast_uid", "company_id", "location_id")
-			},
-		).Relation("AlternateCodes", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Column("inv_mast_uid", "alternate_code")
-		},
-		).Scan(ctx); err != nil {
-			return err
-		}
-
-		if im.AlternateCodes != nil {
-			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.AlternateCode)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-				return err
-			}
-		}
-
-		ah := new(assemblyHdr)
-		if err := tx.NewSelect().Model(ah).Where("inv_mast_uid = ?",
-			dbId,
-		).Column("inv_mast_uid").Relation("AssemblyLineItems", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Column("assembly_line_uid", "inv_mast_uid")
-		},
-		).Scan(ctx); err != nil {
-			if !errors.As(err, &sql.ErrNoRows) {
+			if err := tx.NewSelect().Model(im).Where("inv_mast_uid = ?", dbId).Column("inv_mast_uid").Relation(
+				"InvLocItems",
+				func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Column("inv_mast_uid", "company_id", "location_id")
+				},
+			).Relation(
+				"AlternateCodes", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Column("inv_mast_uid", "alternate_code")
+				},
+			).Scan(ctx); err != nil {
 				return err
 			}
 
-		} else {
-			if _, err := tx.NewDelete().Model(ah.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
+			if im.AlternateCodes != nil {
+				if _, err := tx.NewDelete().Model((*prophet_19_1_3668.AlternateCode)(nil)).Where(
+					"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+					return err
+				}
+			}
+
+			ah := new(assemblyHdr)
+			if err := tx.NewSelect().Model(ah).Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Column("inv_mast_uid").Relation(
+				"AssemblyLineItems", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Column("assembly_line_uid", "inv_mast_uid")
+				},
+			).Scan(ctx); err != nil {
+				if !errors.As(err, &sql.ErrNoRows) {
+					return err
+				}
+
+			} else {
+				if _, err := tx.NewDelete().Model(ah.AssemblyLineItems).WherePK("assembly_line_uid").Exec(ctx); err != nil {
+					return err
+				}
+				if _, err := tx.NewDelete().Model(ah).WherePK().Exec(ctx); err != nil {
+					return err
+				}
+			}
+
+			if err := tx.NewSelect().Model(&inventorySupplierXLoc).Column("inventory_supplier_x_loc_uid").Relation(
+				"InventorySupplier",
+				func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.ExcludeColumn("*").Where("inv_mast_uid = ?", dbId)
+				},
+			).Scan(ctx); err != nil {
 				return err
 			}
-			if _, err := tx.NewDelete().Model(ah).WherePK().Exec(ctx); err != nil {
+
+			if inventorySupplierXLoc != nil {
+				if _, err := tx.NewDelete().Model(&inventorySupplierXLoc).WherePK().Exec(ctx); err != nil {
+					return err
+				}
+			}
+
+			if err := tx.NewSelect().Model(&pricePageXBook).Column("price_page_x_book_uid").Relation(
+				"PricePage",
+				func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.ExcludeColumn("*").Where("inv_mast_uid = ?", dbId)
+				},
+			).Scan(
+				ctx,
+			); err != nil {
 				return err
 			}
-		}
 
-		if err := tx.NewSelect().Model(&inventorySupplierXLoc).Column("inventory_supplier_x_loc_uid").Relation(
-			"InventorySupplier",
-			func(q *bun.SelectQuery) *bun.SelectQuery {
-				return q.ExcludeColumn("*").Where("inv_mast_uid = ?", dbId)
-			},
-		).Scan(ctx); err != nil {
-			return err
-		}
-
-		if inventorySupplierXLoc != nil {
-			if _, err := tx.NewDelete().Model(&inventorySupplierXLoc).WherePK().Exec(ctx); err != nil {
-				return err
+			if pricePageXBook != nil {
+				if _, err := tx.NewDelete().Model(&pricePageXBook).WherePK().Exec(ctx); err != nil {
+					return err
+				}
+				if _, err := tx.NewDelete().Model((*prophet_19_1_3668.PricePage)(nil)).Where(
+					"inv_mast_uid = ?",
+					dbId,
+				).Exec(ctx); err != nil {
+					return err
+				}
 			}
-		}
 
-		if err := tx.NewSelect().Model(&pricePageXBook).Column("price_page_x_book_uid").Relation("PricePage",
-			func(q *bun.SelectQuery) *bun.SelectQuery {
-				return q.ExcludeColumn("*").Where("inv_mast_uid = ?", dbId)
-			},
-		).Scan(
-			ctx,
-		); err != nil {
-			return err
-		}
-
-		if pricePageXBook != nil {
-			if _, err := tx.NewDelete().Model(&pricePageXBook).WherePK().Exec(ctx); err != nil {
-				return err
-			}
-			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.PricePage)(nil)).Where("inv_mast_uid = ?",
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.ItemConversion)(nil)).Where(
+				"inv_mast_uid = ?",
 				dbId,
 			).Exec(ctx); err != nil {
 				return err
 			}
-		}
-
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.ItemConversion)(nil)).Where("inv_mast_uid = ?",
-			dbId,
-		).Exec(ctx); err != nil {
-			return err
-		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvAdjLine)(nil)).Where("inv_mast_uid = ?",
-			dbId,
-		).Exec(ctx); err != nil {
-			return err
-		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvTran)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-			return err
-		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.ItemUom)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-			return err
-		}
-
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.AverageInventoryValue)(nil)).Where("inv_mast_uid = ?",
-			dbId,
-		).Exec(ctx); err != nil {
-			return err
-		}
-
-		// Retrieve records for ItemCategoryXInvMast and delete them if they exist
-		var itemCategoryXInvMast []prophet_19_1_3668.ItemCategoryXInvMast
-		if err := tx.NewSelect().Model(&itemCategoryXInvMast).Column("item_category_x_inv_mast_uid").Where("inv_mast_uid = ?",
-			dbId,
-		).Scan(ctx); err != nil {
-			return err
-		}
-		if len(itemCategoryXInvMast) > 0 {
-			if _, err := tx.NewDelete().Model(&itemCategoryXInvMast).WherePK().Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvAdjLine)(nil)).Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Exec(ctx); err != nil {
 				return err
 			}
-		}
-
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvLocMsp)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-			return err
-		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InventorySupplier)(nil)).Where("inv_mast_uid = ?",
-			dbId,
-		).Exec(ctx); err != nil {
-			return err
-		}
-
-		// Retrieve records for InvLocStockStatus and delete them if they exist
-		var invLocStockStatus []prophet_19_1_3668.InvLocStockStatus
-		if err := tx.NewSelect().Model(&invLocStockStatus).Column("inv_loc_stock_status_uid").Where("inv_mast_uid = ?",
-			dbId,
-		).Scan(ctx); err != nil {
-			return err
-		}
-		if len(invLocStockStatus) > 0 {
-			if _, err := tx.NewDelete().Model(&invLocStockStatus).WherePK().Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvTran)(nil)).Where(
+				"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 				return err
 			}
-		}
-
-		// Retrieve records for ItemIdChangeHistory and delete them if they exist
-		var itemIdChangeHistory []prophet_19_1_3668.ItemIdChangeHistory
-		if err := tx.NewSelect().Model(&itemIdChangeHistory).Column("item_id_change_history_uid").Where("inv_mast_uid = ?",
-			dbId,
-		).Scan(ctx); err != nil {
-			return err
-		}
-		if len(itemIdChangeHistory) > 0 {
-			if _, err := tx.NewDelete().Model(&itemIdChangeHistory).WherePK().Exec(ctx); err != nil {
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.ItemUom)(nil)).Where(
+				"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
 				return err
 			}
-		}
 
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvBin)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-			return err
-		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvLoc)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-			return err
-		}
-		if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvMast)(nil)).Where("inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
-			return err
-		}
-		return nil
-	},
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.AverageInventoryValue)(nil)).Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Exec(ctx); err != nil {
+				return err
+			}
+
+			// Retrieve records for ItemCategoryXInvMast and delete them if they exist
+			var itemCategoryXInvMast []prophet_19_1_3668.ItemCategoryXInvMast
+			if err := tx.NewSelect().Model(&itemCategoryXInvMast).Column("item_category_x_inv_mast_uid").Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Scan(ctx); err != nil {
+				return err
+			}
+			if len(itemCategoryXInvMast) > 0 {
+				if _, err := tx.NewDelete().Model(&itemCategoryXInvMast).WherePK().Exec(ctx); err != nil {
+					return err
+				}
+			}
+
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvLocMsp)(nil)).Where(
+				"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+				return err
+			}
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InventorySupplier)(nil)).Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Exec(ctx); err != nil {
+				return err
+			}
+
+			// Retrieve records for InvLocStockStatus and delete them if they exist
+			var invLocStockStatus []prophet_19_1_3668.InvLocStockStatus
+			if err := tx.NewSelect().Model(&invLocStockStatus).Column("inv_loc_stock_status_uid").Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Scan(ctx); err != nil {
+				return err
+			}
+			if len(invLocStockStatus) > 0 {
+				if _, err := tx.NewDelete().Model(&invLocStockStatus).WherePK().Exec(ctx); err != nil {
+					return err
+				}
+			}
+
+			// Retrieve records for ItemIdChangeHistory and delete them if they exist
+			var itemIdChangeHistory []prophet_19_1_3668.ItemIdChangeHistory
+			if err := tx.NewSelect().Model(&itemIdChangeHistory).Column("item_id_change_history_uid").Where(
+				"inv_mast_uid = ?",
+				dbId,
+			).Scan(ctx); err != nil {
+				return err
+			}
+			if len(itemIdChangeHistory) > 0 {
+				if _, err := tx.NewDelete().Model(&itemIdChangeHistory).WherePK().Exec(ctx); err != nil {
+					return err
+				}
+			}
+
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvBin)(nil)).Where(
+				"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+				return err
+			}
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvLoc)(nil)).Where(
+				"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+				return err
+			}
+			if _, err := tx.NewDelete().Model((*prophet_19_1_3668.InvMast)(nil)).Where(
+				"inv_mast_uid = ?", dbId).Exec(ctx); err != nil {
+				return err
+			}
+			return nil
+		},
 	)
 
 	return err
-}
-
-func (b BunCatalogRepository) UpdateGroup(ctx context.Context, d *domain.ProductGroup) error {
-	pg := new(productGroup)
-
-	err := b.db.NewSelect().Model(pg).Where("product_group_id = ?", d.SN).Scan(ctx)
-	if err != nil {
-		return err
-	}
-
-	pg.FromDomain(d)
-	if _, err := b.db.NewUpdate().Model(pg).WherePK().Exec(ctx); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (b BunCatalogRepository) FindGroupByID(ctx context.Context, id string) (*domain.ProductGroup, error) {
-	pg := new(productGroup)
-
-	err := b.db.NewSelect().Model(pg).Column("product_group_id",
-		"product_group_desc",
-		"product_group_uid",
-	).Where("product_group.product_group_uid = ?",
-		id,
-	).Scan(ctx)
-	if err != nil {
-		fmt.Println(err)
-		return nil, errors.New("could not find requested product group")
-	}
-
-	dpg := domain.ProductGroup{}
-
-	pg.WriteToDomain(&dpg)
-
-	return &dpg, nil
-}
-
-func (b BunCatalogRepository) DeleteGroup() {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (b BunCatalogRepository) canDeleteProduct(ctx context.Context, id int) bool {
@@ -643,8 +589,9 @@ func (b BunCatalogRepository) queryProductsWithFilter(
 	filter *domain.ProductFilter,
 ) {
 	if filter.ProductGroupSn != "" {
-		query = query.Where("inv_loc."+
-			"product_group_id = ?",
+		query = query.Where(
+			"inv_loc."+
+				"product_group_id = ?",
 			filter.ProductGroupSn,
 		)
 	}

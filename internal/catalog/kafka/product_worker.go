@@ -16,5 +16,6 @@ func NewProductWorker(repo catalog.Repository) *ProductWorker {
 }
 
 func (w *ProductWorker) ConsumeDeleteProduct(ctx context.Context, rec *kgo.Record) error {
-	return w.repo.DeleteProduct(ctx, string(rec.Value))
+	return nil
+	// return w.repo.DeleteProduct(ctx, string(rec.Value))
 }

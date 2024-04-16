@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/uptrace/bun/schema"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -170,34 +171,81 @@ type InvLoc struct {
 	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 }
 
+var _ bun.BeforeAppendModelHook = (*InvLoc)(nil)
+
+func (m *InvLoc) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		m.DateCreated = time.Now()
+		m.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		m.DateLastModified = time.Now()
+	}
+	return nil
+}
+
 type InvLocModel struct {
 	bun *bun.DB
 }
 
-// GetByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
-func (m InvLocModel) GetByInvMastUid(uid int32, ctx context.Context) (InvLoc, error) {
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
-	defer cancel()
-
-	var invLoc InvLoc
-	err := m.bun.NewSelect().Model(&invLoc).Relation("InvMast").Where("inv_loc.inv_mast_uid = ?", uid).Scan(ctx)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return InvLoc{}, ErrNotFound
-		}
-		return InvLoc{}, err
-	}
-	return invLoc, nil
-}
-
-func (m InvLocModel) GetAll(ctx context.Context) ([]InvLoc, error) {
+func (m InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId string) ([]InvLoc, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	var invLocs []InvLoc
-	err := m.bun.NewSelect().Model(&invLocs).Scan(ctx)
+
+	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where("product_group_id = ?", productGroupId).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
+
 	return invLocs, nil
+
+}
+
+// GetByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
+func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64, uid int32) ([]InvLoc, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var invLocs []InvLoc
+	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
+		"inv_loc.inv_mast_uid = ?",
+		uid).Where("inv_loc.location_id IN (?)", bun.In(locationIds)).Scan(ctx)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNotFound
+		}
+		return nil, err
+	}
+	return invLocs, nil
+}
+
+// GetAll selects all records from inv_loc table
+func (m InvLocModel) GetAll(ctx context.Context, locationId float64, deleteFlag DeleteFlag, filter Filters) (
+	[]InvLoc, Metadata, error,
+) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var invLocs []InvLoc
+	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
+		"inv_loc.inv_mast_uid > ?", filter.cursor()).Where(
+		"location_id = ?", locationId).Limit(filter.limit()).Order("inv_loc.inv_mast_uid ASC").Scan(ctx)
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := calculateMetadata(1, int(invLocs[len(invLocs)-1].InvMastUid), filter.cursor())
+	return invLocs, metadata, nil
+}
+
+// Update updates record with provided invLoc if matching version is found
+func (m InvLocModel) Update(ctx context.Context, invLoc *InvLoc) error {
+	_, err := m.bun.NewUpdate().Model(invLoc).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

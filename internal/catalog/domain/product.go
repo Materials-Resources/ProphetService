@@ -5,7 +5,7 @@ import (
 )
 
 type Product struct {
-	ID             int32
+	UID            int32
 	SN             string
 	Name           string
 	Description    string

@@ -107,7 +107,7 @@ func (i *invMast) WriteToDomain(d *domain.Product) {
 	d.Name = i.ItemDesc
 	d.SN = i.ItemId
 	d.Description = i.ExtendedDesc.String
-	d.ID = i.InvMastUid
+	d.UID = i.InvMastUid
 }
 
 type invLoc prophet_21_1_4559.InvLoc
@@ -122,7 +122,7 @@ func (i *invLoc) LimitColumns() []string {
 func (i *invLoc) WriteToDomain(d *domain.Product) {
 	d.Name = i.InvMast.ItemDesc
 	d.Description = i.InvMast.ExtendedDesc.String
-	d.ID = i.InvMastUid
+	d.UID = i.InvMastUid
 	d.SN = i.InvMast.ItemId
 	d.ListPrice = i.Price1.Float64
 	d.StockQuantity = i.QtyOnHand.Float64

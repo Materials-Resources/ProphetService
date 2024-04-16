@@ -57,13 +57,7 @@ func domainToProductGroups(productGroups []*domain.ProductGroup) []*rpc.ProductG
 func (s catalogService) GetProductGroup(
 	ctx context.Context, request *rpc.GetProductGroupRequest,
 ) (*rpc.GetProductGroupResponse, error) {
-	productGroup, err := s.service.GetProductGroup(ctx, request.GetSn())
-
-	if err != nil {
-		fmt.Println(err)
-	}
-	p, _, err := s.repo.ListProducts(ctx, &domain.ProductFilter{ProductGroupSn: productGroup.SN})
-
+	productGroup, products, err := s.service.GetProductGroup(ctx, request.GetSn())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -74,15 +68,15 @@ func (s catalogService) GetProductGroup(
 		},
 	}
 
-	res.Products = make([]*rpc.ProductDetail, 0, len(p))
-	for _, product := range p {
-		res.Products = append(res.Products, &rpc.ProductDetail{
-			Id:          product.ID,
+	res.Products = make([]*rpc.ProductDetail, len(products))
+	for i, product := range products {
+		res.Products[i] = &rpc.ProductDetail{
+			Id:          product.UID,
 			Name:        product.Name,
 			Sn:          product.SN,
 			Description: product.Description,
 			StockQty:    product.StockQuantity,
-		})
+		}
 
 	}
 	return res, nil
@@ -106,7 +100,9 @@ func (s catalogService) CreateProductGroup(
 		for key, msg := range v.Errors {
 			validationErrors = append(validationErrors, &rpc.ValidationError{Field: key, Message: msg})
 		}
-		return &rpc.CreateGroupResponse{ValidationErrors: validationErrors}, status.Error(codes.InvalidArgument, "validation error")
+		return &rpc.CreateGroupResponse{ValidationErrors: validationErrors}, status.Error(
+			codes.InvalidArgument,
+			"validation error")
 	}
 	err := s.service.CreateProductGroup(ctx, &productGroup)
 	if err != nil {
@@ -116,8 +112,8 @@ func (s catalogService) CreateProductGroup(
 }
 
 func (s catalogService) UpdateProductGroup(
-	ctx context.Context, request *rpc.UpdateGroupRequest,
-) (*rpc.UpdateGroupResponse, error) {
+	ctx context.Context,
+	request *rpc.UpdateGroupRequest) (*rpc.UpdateGroupResponse, error) {
 	productGroup := &domain.ProductGroup{
 		SN: request.GetProductGroup().GetSn(), Name: request.GetProductGroup().GetName(),
 	}
@@ -147,9 +143,10 @@ func (s catalogService) GetProductPrice(
 
 	productPrices := make([]*rpc.GetProductPriceResponse_ProductPrice, 0, len(dPP))
 	for _, pp := range dPP {
-		productPrices = append(productPrices, &rpc.GetProductPriceResponse_ProductPrice{
-			ProductUid: pp.ProductUid, CustomerPrice: pp.CustomerPrice, ListPrice: pp.ListPrice,
-		})
+		productPrices = append(
+			productPrices, &rpc.GetProductPriceResponse_ProductPrice{
+				ProductUid: pp.ProductUid, CustomerPrice: pp.CustomerPrice, ListPrice: pp.ListPrice,
+			})
 
 	}
 
@@ -180,6 +177,18 @@ func (s catalogService) UpdateProduct(
 	ctx context.Context,
 	request *rpc.UpdateProductRequest,
 ) (*rpc.UpdateProductResponse, error) {
+
+	product := &domain.Product{
+		UID:            request.GetProduct().GetId(),
+		Name:           request.GetProduct().GetName(),
+		Description:    request.GetProduct().GetDescription(),
+		ProductGroupSn: request.GetProduct().GetProductGroupSn(),
+	}
+
+	err := s.service.UpdateProduct(ctx, product, []float64{1001})
+	if err != nil {
+		return nil, err
+	}
 
 	return nil, nil
 }
@@ -233,7 +242,8 @@ func (s catalogService) UpdateProductSupplier(
 		}
 	}
 
-	if err := s.repo.UpdateProductSupplier(ctx, request.GetProductSupplier().ProductId,
+	if err := s.repo.UpdateProductSupplier(
+		ctx, request.GetProductSupplier().ProductId,
 		request.GetProductSupplier().SupplierId, &psp,
 	); err != nil {
 		return nil, err
@@ -256,24 +266,27 @@ func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProduc
 	*rpc.ListProductResponse,
 	error,
 ) {
-	res, nextCursor, err := s.repo.ListProducts(ctx, &domain.ProductFilter{Limit: 1000, Cursor: request.GetCursor()})
+	filter := &domain.Filter{Cursor: int(request.GetCursor()), Limit: 200}
+	products, err := s.service.ListProduct(ctx, *filter)
+
 	if err != nil {
 		return nil, err
 	}
 
-	products := make([]*rpc.ProductDetail, 0, len(res))
+	rpcProducts := make([]*rpc.ProductDetail, len(products))
 
-	for _, p := range res {
-		products = append(products, &rpc.ProductDetail{
-			Id:          p.ID,
-			Name:        p.Name,
-			Sn:          p.SN,
-			Description: p.Description,
-			StockQty:    p.StockQuantity,
-		})
+	for i, p := range products {
+		rpcProducts[i] = &rpc.ProductDetail{
+			Id:             p.UID,
+			Sn:             p.SN,
+			Name:           p.Name,
+			Description:    p.Description,
+			StockQty:       p.StockQuantity,
+			ProductGroupSn: p.ProductGroupSn,
+		}
 
 	}
-	return &rpc.ListProductResponse{Products: products, NextCursor: nextCursor}, nil
+	return &rpc.ListProductResponse{Products: rpcProducts, NextCursor: 0}, nil
 }
 
 func (s catalogService) UpdateGroup(ctx context.Context, request *rpc.UpdateGroupRequest) (
@@ -302,8 +315,7 @@ func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductR
 ) {
 	_, span := s.tracer.Start(ctx, "getProduct")
 	defer span.End()
-
-	m, err := s.models.InvLoc.GetByInvMastUid(request.GetId(), ctx)
+	product, err := s.service.GetProductBySupplierPartNumber(ctx, "OBS50358", 103687)
 	if err != nil {
 		switch {
 		case errors.Is(err, prophet_21_1_4559.ErrNotFound):
@@ -313,11 +325,10 @@ func (s catalogService) GetProduct(ctx context.Context, request *rpc.GetProductR
 	}
 	return &rpc.GetProductResponse{
 		Product: &rpc.ProductDetail{
-			Id:          m.InvMastUid,
-			Sn:          m.InvMast.ItemId,
-			Name:        m.InvMast.ItemDesc,
-			Description: m.InvMast.ExtendedDesc.String,
-			StockQty:    m.QtyOnHand.Float64,
+			Id:          product.UID,
+			Sn:          product.SN,
+			Name:        product.Name,
+			Description: product.Description,
 		},
 	}, nil
 }
@@ -328,7 +339,7 @@ func (s catalogService) CreateProduct(
 	*rpc.CreateProductResponse,
 	error,
 ) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
@@ -344,18 +355,18 @@ func (s catalogService) DeleteProduct(
 
 	s.producer.PublishDelete(ctx, request.GetId())
 
-	//err := s.repo.DeleteProduct(ctx, request.GetId())
-	//if err != nil {
+	// err := s.repo.DeleteProduct(ctx, request.GetId())
+	// if err != nil {
 	//	span.RecordError(err)
 	//	span.SetStatus(codes.Error, err.Error())
 	//	return nil, err
-	//}
+	// }
 	return &rpc.DeleteProductResponse{}, nil
 }
 
 func (s catalogService) GetProductBySupplier(
 	ctx context.Context, request *rpc.GetProductBySupplierRequest,
 ) (*rpc.GetProductBySupplierResponse, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
