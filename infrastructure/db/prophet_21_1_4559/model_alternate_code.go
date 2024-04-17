@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -21,4 +22,17 @@ type AlternateCode struct {
 	SourceTypeCd       int32          `bun:"source_type_cd,type:int,default:((2051))"`
 	DefaultUom         sql.NullString `bun:"default_uom,type:varchar(8),nullzero"`
 	ExcludeFromB2bFlag sql.NullString `bun:"exclude_from_b2b_flag,type:char,nullzero"`
+}
+
+type AlternateCodeModel struct {
+	bun bun.IDB
+}
+
+func (m *AlternateCodeModel) GetByInvMastUid(ctx context.Context, invMastUid int32) (*AlternateCode, error) {
+	var code AlternateCode
+	err := m.bun.NewSelect().Model(&code).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &code, err
 }

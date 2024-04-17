@@ -130,7 +130,7 @@ message UpdateProductRequest {
 message UpdateProductResponse {}
 
 message DeleteProductRequest {
-  string id = 1;
+  int32 uid = 1;
 }
 message DeleteProductResponse {
 

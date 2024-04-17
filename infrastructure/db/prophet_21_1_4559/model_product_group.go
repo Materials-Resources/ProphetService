@@ -72,7 +72,7 @@ func (p *ProductGroup) setDefaults() {
 }
 
 type ProductGroupModel struct {
-	bun *bun.DB
+	bun bun.IDB
 }
 
 // GetById returns a ProductGroup by the given product_group_id

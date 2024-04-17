@@ -252,7 +252,7 @@ type OeHdr struct {
 }
 
 type OeHdrModel struct {
-	bun *bun.DB
+	bun bun.IDB
 }
 
 // Create creates a new order.
@@ -291,7 +291,8 @@ func (m *OeHdrModel) Delete(ctx context.Context, orderNo string) error {
 // GetByCustomerId returns all orders for a given customer ID.
 func (m *OeHdrModel) GetByCustomerId(ctx context.Context, customerId float64) ([]*OeHdr, error) {
 	var oeHdrs []*OeHdr
-	count, err := m.bun.NewSelect().Model(&oeHdrs).Relation("OeLines").Where("customer_id = ?", customerId).ScanAndCount(ctx)
+	count, err := m.bun.NewSelect().Model(&oeHdrs).Relation("OeLines").Where(
+		"customer_id = ?", customerId).ScanAndCount(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -311,7 +312,7 @@ func (m *OeHdrModel) generateOeHdrUid(ctx context.Context, oeHdr OeHdr) error {
 			EXEC @order_no = p21_get_counter 'oe_hdr', 1
 			SELECT @order_no`
 
-	err := m.bun.DB.QueryRowContext(ctx, query).Scan(&uid)
+	err := m.bun.QueryRowContext(ctx, query).Scan(&uid)
 	if err != nil {
 		return err
 	}

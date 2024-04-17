@@ -77,19 +77,34 @@ func (i *InventorySupplier) BeforeAppendModel(ctx context.Context, query schema.
 }
 
 type InventorySupplierModel struct {
-	bun *bun.DB
+	bun bun.IDB
 }
 
 func (m *InventorySupplierModel) Get(ctx context.Context) error {
 	return nil
 }
 
-func (m *InventorySupplierModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*InventorySupplier, error) {
-	return nil, nil
+func (m *InventorySupplierModel) GetByInvMastUid(
+	ctx context.Context, invMastUid int32) ([]*InventorySupplier, error) {
+	var inventorySuppliers []*InventorySupplier
+	err := m.bun.NewSelect().Model(&inventorySuppliers).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+
+	}
+	return inventorySuppliers, nil
 }
 
 func (m *InventorySupplierModel) Update(ctx context.Context, inventorySupplier *InventorySupplier) error {
 	_, err := m.bun.NewUpdate().Model(inventorySupplier).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *InventorySupplierModel) Delete(ctx context.Context, inventorySupplier *InventorySupplier) error {
+	_, err := m.bun.NewDelete().Model(inventorySupplier).WherePK().Exec(ctx)
 	if err != nil {
 		return err
 	}

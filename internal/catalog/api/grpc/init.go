@@ -2,44 +2,54 @@ package catalog
 
 import (
 	"context"
+	"fmt"
+	"github.com/materials-resources/s_prophet/app"
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
 	"github.com/materials-resources/s_prophet/internal/catalog/service"
-	"github.com/twmb/franz-go/pkg/sr"
-
-	"github.com/materials-resources/s_prophet/app"
-	kafka2 "github.com/materials-resources/s_prophet/internal/catalog/kafka"
-	"github.com/materials-resources/s_prophet/internal/catalog/repository"
+	"github.com/materials-resources/s_prophet/pkg/consumer"
 	"github.com/materials-resources/s_prophet/pkg/kafka"
 	svc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
+	"github.com/twmb/franz-go/pkg/kgo"
+	"github.com/twmb/franz-go/pkg/sr"
 )
 
 func init() {
 	app.OnStart(
 		"catalogService.init", func(ctx context.Context, a *app.App) error {
-			topic := "prophet.catalog"
+
+			var serde sr.Serde
+			service.RegisterSchema(&serde)
 
 			kotelTracer := kafka.NewKotelTracer(a.GetTP())
 
 			kotel := kafka.NewKotel(kotelTracer)
 
-			repo := repository.NewBunCatalogRepository(a.GetDB(), a.GetTP())
-
-			productWorker := kafka2.NewProductWorker(repo)
-			var serde sr.Serde
-			service.RegisterSchema(&serde)
-
-			cg := kafka.NewConsumerGroup(productWorker.ConsumeDeleteProduct, kotelTracer)
-			cg.Start(a.Config.App.Events.Brokers, topic, "14", kotel)
-
-			producer := kafka2.NewProducer(a.Config.App.Events.Brokers, topic, kotel, a.GetTP().Tracer("producer"))
-			// go consumer1.DeleteProduct()
+			client, err := kgo.NewClient(
+				kgo.SeedBrokers(a.Config.App.Events.Brokers...), kgo.WithHooks(kotel.Hooks()...),
+				kgo.ConsumeTopics(service.UpdateProductTopic),
+			)
 
 			m := prophet_21_1_4559.NewModels(a.GetDB())
+
+			cg := consumer.NewConsumerGroup()
+
+			cg.RegisterWorkers(
+				service.NewUpdateProductWorker(
+					&serde, service.NewCatalogService(
+						*m,
+						a.GetTP().Tracer("CatalogService"))))
+
+			cg.Start(a.Config.App.Events.Brokers, "18", kotel)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
 			svc.RegisterCatalogServiceServer(
 				a.GetServer(), &catalogService{
-					producer: *producer,
+					producer: &service.KafkaProducer{Client: client, Serde: &serde},
 					tracer:   a.GetTP().Tracer("CatalogService"),
-					service:  service.NewCatalogService(*m),
+					service:  service.NewCatalogService(*m, a.GetTP().Tracer("CatalogService")),
 				},
 			)
 			return nil

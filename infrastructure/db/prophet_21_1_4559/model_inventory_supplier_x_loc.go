@@ -51,3 +51,30 @@ func (i *InventorySupplierXLoc) BeforeAppendModel(ctx context.Context, query sch
 	}
 	return nil
 }
+
+type InventorySupplierXLocModel struct {
+	bun bun.IDB
+}
+
+// GetByInventorySupplierUid returns a slice of InventorySupplierXLoc by the given InventorySupplierUid
+func (m InventorySupplierXLocModel) GetByInventorySupplierUid(
+	ctx context.Context, inventorySupplierUid int32) ([]*InventorySupplierXLoc, error) {
+	var inventorySupplierXLocs []*InventorySupplierXLoc
+	err := m.bun.NewSelect().Model(&inventorySupplierXLocs).Where(
+		"inventory_supplier_uid = ?", inventorySupplierUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return inventorySupplierXLocs, nil
+}
+
+// Delete deletes the InventorySupplierXLoc from the database.
+func (m InventorySupplierXLocModel) Delete(
+	ctx context.Context,
+	inventorySupplierXLoc *InventorySupplierXLoc) error {
+	_, err := m.bun.NewDelete().Model(inventorySupplierXLoc).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}

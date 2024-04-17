@@ -8,7 +8,6 @@ import (
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
-	"github.com/uptrace/bun/extra/bundebug"
 	"github.com/uptrace/bun/extra/bunotel"
 )
 
@@ -38,11 +37,11 @@ func (a *App) newBunDB() *bun.DB {
 		mssqldialect.New(),
 	)
 
-	bundb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
-
-	bundb.AddQueryHook(bunotel.NewQueryHook(bunotel.WithTracerProvider(a.GetTP()),
-		bunotel.WithDBName(a.Config.Database.DB),
-	),
+	bundb.AddQueryHook(
+		bunotel.NewQueryHook(
+			bunotel.WithTracerProvider(a.GetTP()),
+			bunotel.WithDBName(a.Config.Database.DB),
+		),
 	)
 
 	log.Printf("connected to database %s on %s", query.Get("database"), u.Hostname())

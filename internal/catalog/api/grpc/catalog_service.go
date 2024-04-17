@@ -11,7 +11,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
-	"github.com/materials-resources/s_prophet/internal/catalog/kafka"
 	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -20,7 +19,7 @@ import (
 type catalogService struct {
 	service  service.CatalogService
 	tracer   trace.Tracer
-	producer kafka.Producer
+	producer service.Producer
 }
 
 func (s catalogService) ListProductGroup(ctx context.Context, request *rpc.ListGroupRequest) (
@@ -184,10 +183,12 @@ func (s catalogService) UpdateProduct(
 		ProductGroupSn: request.GetProduct().GetProductGroupSn(),
 	}
 
-	err := s.service.UpdateProduct(ctx, product, []float64{1001})
-	if err != nil {
-		return nil, err
-	}
+	s.producer.PublishUpdateProduct(ctx, product)
+
+	// err := s.service.UpdateProduct(ctx, product, []float64{1001})
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	return &rpc.UpdateProductResponse{}, nil
 }
@@ -332,8 +333,12 @@ func (s catalogService) DeleteProduct(
 	ctx, span := s.tracer.Start(ctx, "DeleteProduct", trace.WithSpanKind(trace.SpanKindServer))
 	span.SetAttributes(attribute.String("request.id", request.String()))
 	defer span.End()
+	err := s.service.DeleteProduct(ctx, request.GetUid())
+	if err != nil {
+		return &rpc.DeleteProductResponse{}, err
+	}
 
-	s.producer.PublishDelete(ctx, request.GetId())
+	// s.producer.PublishDelete(ctx, request.GetId())
 
 	// err := s.repo.DeleteProduct(ctx, request.GetId())
 	// if err != nil {

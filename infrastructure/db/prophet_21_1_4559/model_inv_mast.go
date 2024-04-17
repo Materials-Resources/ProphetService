@@ -210,7 +210,7 @@ func (m *InvMast) BeforeAppendModel(ctx context.Context, query schema.Query) err
 }
 
 type InvMastModel struct {
-	bun *bun.DB
+	bun bun.IDB
 }
 
 func (m *InvMastModel) Create(ctx context.Context, invMast *InvMast) error {
@@ -239,4 +239,12 @@ func (m *InvMastModel) GetBySupplierPartNumber(ctx context.Context, supplierId f
 func (m *InvMastModel) Update(ctx context.Context, invMast *InvMast) error {
 	_, err := m.bun.NewUpdate().Model(invMast).WherePK().Exec(ctx)
 	return err
+}
+
+func (m *InvMastModel) Delete(ctx context.Context, invMastUid int32) error {
+	_, err := m.bun.NewDelete().Model(&InvMast{}).Where("inv_mast_uid = ?", invMastUid).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

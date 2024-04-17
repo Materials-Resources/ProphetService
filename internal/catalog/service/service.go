@@ -14,6 +14,8 @@ type CatalogService interface {
 	ListProduct(ctx context.Context, filter domain.Filter) ([]*domain.Product, error)
 	// UpdateProduct updates a Product for specified locations
 	UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error
+	// DeleteProduct deletes a Product
+	DeleteProduct(ctx context.Context, uid int32) error
 
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 

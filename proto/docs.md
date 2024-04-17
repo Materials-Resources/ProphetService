@@ -222,7 +222,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
+| uid | [int32](#int32) |  |  |
 
 
 

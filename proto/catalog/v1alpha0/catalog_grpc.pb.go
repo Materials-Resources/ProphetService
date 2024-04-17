@@ -40,7 +40,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CatalogServiceClient interface {
-	// GetAll all products
+	// List all products
 	ListProduct(ctx context.Context, in *ListProductRequest, opts ...grpc.CallOption) (*ListProductResponse, error)
 	// Get product by GetProductRequest
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error)
@@ -207,7 +207,7 @@ func (c *catalogServiceClient) GetProductBySupplier(ctx context.Context, in *Get
 // All implementations should embed UnimplementedCatalogServiceServer
 // for forward compatibility
 type CatalogServiceServer interface {
-	// GetAll all products
+	// List all products
 	ListProduct(context.Context, *ListProductRequest) (*ListProductResponse, error)
 	// Get product by GetProductRequest
 	GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error)

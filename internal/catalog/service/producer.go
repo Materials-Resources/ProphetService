@@ -7,11 +7,18 @@ import (
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
+	"time"
 )
 
-const productSchemaText = `{
+const (
+	UpdateProductTopic    = "product_update"
+	UpdateProductDlqTopic = "product_update_dlq"
+)
+
+const (
+	productSchemaText = `{
 	"type": "record",
-	"name": "simple",
+	"name": "product_update",
 	"namespace": "org.hamba.avro",
 	"fields" : [
 		{"name": "uid", "type": "int"},
@@ -20,10 +27,22 @@ const productSchemaText = `{
 		{"name": "product_group_sn", "type": "string"}
 	]
 }`
+	updateProductDlqSchema = `{
+	"type": "record",
+	"name": "product_update_dlq",
+	"namespace": "org.hamba.avro",
+	"fields" : [
+		{"name": "uid", "type": "int"},
+		{"name": "error", "type": "string"},
+		{"name": "time", "type": "string", "logicalType": "timestamp-millis"}
+	]
+}
+`
+)
 
 type KafkaProducer struct {
-	client *kgo.Client
-	serde  sr.Serde
+	Client *kgo.Client
+	Serde  *sr.Serde
 }
 
 func RegisterSchema(serde *sr.Serde) error {
@@ -31,20 +50,27 @@ func RegisterSchema(serde *sr.Serde) error {
 	if err != nil {
 		return err
 	}
+	register("update_product", productSchemaText, ProductRecord{}, serde, err, rcl)
+	register("update_product_dlq", updateProductDlqSchema, UpdateProductDlqRecord{}, serde, err, rcl)
+
+	return nil
+}
+
+func register(subject, schema string, schemaStruct any, serde *sr.Serde, err error, rcl *sr.Client) {
 	ss, err := rcl.CreateSchema(
-		context.Background(), "product", sr.Schema{
-			Schema: productSchemaText,
+		context.Background(), subject, sr.Schema{
+			Schema: schema,
 			Type:   sr.TypeAvro,
 		})
 	if err != nil {
 		fmt.Println(err)
 	}
-	avroSchema, err := avro.Parse(productSchemaText)
+	avroSchema, err := avro.Parse(schema)
 	if err != nil {
 		fmt.Println(err)
 	}
 	serde.Register(
-		ss.ID, UpdateProductRecord{}, sr.EncodeFn(
+		ss.ID, schemaStruct, sr.EncodeFn(
 			func(v any) ([]byte, error) {
 				return avro.Marshal(avroSchema, v)
 			}), sr.DecodeFn(
@@ -52,25 +78,38 @@ func RegisterSchema(serde *sr.Serde) error {
 				return avro.Unmarshal(avroSchema, bytes, a)
 			}),
 	)
-	return nil
 }
 
-type UpdateProductRecord struct {
+type ProductRecord struct {
 	Uid            int32  `avro:"uid"`
 	Name           string `avro:"name"`
 	Description    string `avro:"description"`
 	ProductGroupSn string `avro:"product_group_sn"`
 }
 
+type UpdateProductDlqRecord struct {
+	Uid   int32     `avro:"uid"`
+	Error string    `avro:"error"`
+	Time  time.Time `avro:"time"`
+}
+
 func (p *KafkaProducer) PublishUpdateProduct(ctx context.Context, product *domain.Product) error {
 
-	// rec := &UpdateProductRecord{
-	// 	Uid:            product.UID,
-	// 	Name:           product.Name,
-	// 	Description:    product.Description,
-	// 	ProductGroupSn: product.ProductGroupSn,
-	// }
+	p.Client.Produce(
+		context.Background(), &kgo.Record{
+			Topic: UpdateProductTopic,
+			Value: p.Serde.MustEncode(
+				ProductRecord{
+					Uid:            product.UID,
+					Name:           product.Name,
+					Description:    product.Description,
+					ProductGroupSn: product.ProductGroupSn,
+				}),
+		}, func(record *kgo.Record, err error) {
+			if err != nil {
+				fmt.Printf("record had a produce error: %v\n", err)
+			}
 
-	// p.client.Produce(ctx, &kgo.Record{})
+		})
 	return nil
 }

@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"github.com/uptrace/bun"
 )
 
@@ -22,4 +23,27 @@ type InvLocStockStatus struct {
 	QtyOnSpecialPo       float64 `bun:"qty_on_special_po,type:decimal(19,9),default:(0)"`
 	QtyOnDsPo            float64 `bun:"qty_on_ds_po,type:decimal(19,9),default:(0)"`
 	QtyOnSpecialPoCost   float64 `bun:"qty_on_special_po_cost,type:decimal(19,9),default:((0))"`
+}
+
+type InvLocStockStatusModel struct {
+	bun bun.IDB
+}
+
+func (m *InvLocStockStatusModel) GetByInvMastUid(
+	ctx context.Context, invMastUid int32) ([]*InvLocStockStatus, error) {
+	var invLocStockStatus []*InvLocStockStatus
+	err := m.bun.NewSelect().Model(&invLocStockStatus).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return invLocStockStatus, nil
+}
+
+// Delete deletes the InvLocStockStatus from the database.
+func (m *InvLocStockStatusModel) Delete(ctx context.Context, invLocStockStatus *InvLocStockStatus) error {
+	_, err := m.bun.NewDelete().Model(invLocStockStatus).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/uptrace/bun/schema"
+	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -185,7 +186,7 @@ func (m *InvLoc) BeforeAppendModel(ctx context.Context, query schema.Query) erro
 }
 
 type InvLocModel struct {
-	bun *bun.DB
+	bun bun.IDB
 }
 
 // GetByProductGroupId selects InvLoc by product_group_id and returns records
@@ -205,7 +206,9 @@ func (m InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId str
 }
 
 // GetByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
-func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64, uid int32) ([]InvLoc, error) {
+func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64, uid int32) (
+	[]InvLoc,
+	error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
@@ -223,7 +226,8 @@ func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64,
 }
 
 // GetAll selects all records from inv_loc table
-func (m InvLocModel) GetAll(ctx context.Context, locationId float64, deleteFlag DeleteFlag, filter Filters) (
+func (m InvLocModel) GetAll(
+	ctx context.Context, locationId float64, deleteFlag DeleteFlag, filter Filters) (
 	[]InvLoc, Metadata, error,
 ) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -245,8 +249,22 @@ func (m InvLocModel) GetAll(ctx context.Context, locationId float64, deleteFlag 
 func (m InvLocModel) Update(ctx context.Context, invLoc *InvLoc) error {
 	_, err := m.bun.NewUpdate().Model(invLoc).WherePK().Exec(ctx)
 	if err != nil {
+		switch {
+		case strings.Contains(
+			err.Error(),
+			"The UPDATE statement conflicted with the FOREIGN KEY constraint \"fk_inv_loc_product_group\""):
+			return errors.New("the provided product group was not found")
+		}
 		return err
 	}
 	return nil
 
+}
+
+func (m InvLocModel) Delete(ctx context.Context, invLoc *InvLoc) error {
+	_, err := m.bun.NewDelete().Model(invLoc).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

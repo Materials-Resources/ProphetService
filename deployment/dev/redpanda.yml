@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: 'Deployment'
 metadata:
-  name: 'redpanda-dev'
+  name: 'prophet-redpanda-dev'
   namespace: 'default'
   labels:
     app: 'redpanda-dev'

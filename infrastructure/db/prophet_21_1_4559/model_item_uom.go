@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -25,4 +26,27 @@ type ItemUom struct {
 	WwmsFlag         sql.NullString  `bun:"wwms_flag,type:char,default:('N')"`
 	ProdOrderFactor  sql.NullInt32   `bun:"prod_order_factor,type:int,nullzero"`
 	MinimumOrderQty  sql.NullFloat64 `bun:"minimum_order_qty,type:decimal(19,4),nullzero"`
+}
+
+type ItemUomModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns an slice of ItemUom by the given InvMastUid
+func (m ItemUomModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*ItemUom, error) {
+	var itemUoms []*ItemUom
+	err := m.bun.NewSelect().Model(&itemUoms).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return itemUoms, nil
+}
+
+// Delete deletes the ItemUom from the database.
+func (m ItemUomModel) Delete(ctx context.Context, itemUom *ItemUom) error {
+	_, err := m.bun.NewDelete().Model(itemUom).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
