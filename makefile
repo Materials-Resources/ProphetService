@@ -27,3 +27,9 @@ dev/metrics/down:
 ## dev/generate/proto: Generate packages from proto files using the buf cli tool
 dev/generate/proto:
 	buf generate proto
+
+.PHONY: dev/app/run
+## dev/app/run: Run the application
+dev/app/run:
+	set OTEL_EXPORTER_OTLP_INSECURE=true
+	go run . serve -c config.yml

@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -55,4 +56,21 @@ type InventoryReceiptsLine struct {
 	InvLoc InvLoc `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 
 	Ira []*InvTran `bun:"rel:has-many,join:receipt_number=sub_document_no,join:inv_mast_uid=inv_mast_uid,join:type=trans_type,polymorphic:IRA"`
+}
+
+type InventoryReceiptsLineModel struct {
+	bun bun.IDB
+}
+
+func (m *InventoryReceiptsLineModel) CountByInvMastUid(
+	ctx context.Context,
+	invMastUid int32,
+) (int, error) {
+	query := `SELECT COUNT(*) FROM inventory_receipts_line WHERE inv_mast_uid = ?`
+	var count int
+	err := m.bun.QueryRowContext(ctx, query, invMastUid).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }

@@ -34,7 +34,9 @@ type Models struct {
 	InventorySupplier     InventorySupplierModel
 	InventorySupplierXLoc InventorySupplierXLocModel
 	InventorySupplierXUom InventorySupplierXUomModel
+	InventoryReceiptsLine InventoryReceiptsLineModel
 	OeHdr                 OeHdrModel
+	OeLine                OeLineModel
 	ProductGroup          ProductGroupModel
 }
 
@@ -51,7 +53,9 @@ func NewModels(db bun.IDB) *Models {
 		InventorySupplier:     InventorySupplierModel{bun: db},
 		InventorySupplierXLoc: InventorySupplierXLocModel{bun: db},
 		InventorySupplierXUom: InventorySupplierXUomModel{bun: db},
+		InventoryReceiptsLine: InventoryReceiptsLineModel{bun: db},
 		OeHdr:                 OeHdrModel{bun: db},
+		OeLine:                OeLineModel{bun: db},
 		ProductGroup:          ProductGroupModel{bun: db},
 	}
 

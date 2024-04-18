@@ -4,12 +4,12 @@ metadata:
   name: 'prophet-redpanda-dev'
   namespace: 'default'
   labels:
-    app: 'redpanda-dev'
+    app: 'prophet-redpanda-dev'
 spec:
   template:
     metadata:
         labels:
-            app: 'redpanda-dev'
+            app: 'prophet-redpanda-dev'
     spec:
       containers:
         - name: 'broker-0'

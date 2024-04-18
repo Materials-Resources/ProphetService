@@ -333,19 +333,10 @@ func (s catalogService) DeleteProduct(
 	ctx, span := s.tracer.Start(ctx, "DeleteProduct", trace.WithSpanKind(trace.SpanKindServer))
 	span.SetAttributes(attribute.String("request.id", request.String()))
 	defer span.End()
-	err := s.service.DeleteProduct(ctx, request.GetUid())
+	err := s.service.RequestDeleteProduct(ctx, request.GetUid())
 	if err != nil {
 		return &rpc.DeleteProductResponse{}, err
 	}
-
-	// s.producer.PublishDelete(ctx, request.GetId())
-
-	// err := s.repo.DeleteProduct(ctx, request.GetId())
-	// if err != nil {
-	//	span.RecordError(err)
-	//	span.SetStatus(codes.Error, err.Error())
-	//	return nil, err
-	// }
 	return &rpc.DeleteProductResponse{}, nil
 }
 

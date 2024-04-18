@@ -3,25 +3,86 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
+	"github.com/materials-resources/s_prophet/pkg/consumer"
+	"github.com/twmb/franz-go/pkg/kgo"
+	"github.com/twmb/franz-go/pkg/sr"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 )
 
-func NewCatalogService(models prophet_21_1_4559.Models, tracer trace.Tracer) Catalog {
+type EventService struct {
+	Producer *EventProducer
+	Consumer *EventConsumer
+}
 
-	return Catalog{models, tracer}
+func NewCatalogService(
+	models prophet_21_1_4559.Models, tracer trace.Tracer, cli *kgo.Client,
+	serde *sr.Serde) Catalog {
+
+	return Catalog{
+		models: models, tracer: tracer, event: EventService{
+			Producer: &EventProducer{client: cli, serde: serde}, Consumer: &EventConsumer{client: cli, serde: serde},
+		}}
 }
 
 type Catalog struct {
 	models prophet_21_1_4559.Models
 	tracer trace.Tracer
+	event  EventService
+}
+
+func (c Catalog) RegisterWorkers() {
+
+	cg := consumer.NewConsumerGroup()
+
+	cg.RegisterWorkers(
+		consumer.NewWorker(
+			DeleteProductTopic, func(rec *kgo.Record) error {
+				return c.event.Consumer.ConsumeDeleteProduct(context.Background(), rec, c.DeleteProduct)
+
+			}))
+
+	cg.Start([]string{"localhost:19092"}, "18")
+}
+
+func (c Catalog) RequestDeleteProduct(ctx context.Context, uid int32) error {
+
+	err := c.event.Producer.PublishDeleteProduct(ctx, uid)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
+	ctx, span := c.tracer.Start(ctx, "service.catalog.DeleteProduct")
+	defer span.End()
 
 	err := c.models.ExecTx(
 		ctx, func(models *prophet_21_1_4559.Models) error {
+			invMast, err := models.InvMast.Get(ctx, uid)
+			if err != nil {
+				return err
+			}
+
+			receiptCount, err := models.InventoryReceiptsLine.CountByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			if receiptCount > 0 {
+				return errors.New("cannot delete product with receipts")
+			}
+
+			orderCount, err := models.OeLine.CountByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			if orderCount > 0 {
+				return errors.New("cannot delete product with orders")
+			}
 			invBins, err := models.InvBin.GetByInvMastUid(ctx, uid)
 			for _, invBin := range invBins {
 				err = models.InvBin.Delete(ctx, invBin)
@@ -79,6 +140,13 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 
 			}
 
+			alternateCodes, err := models.AlternateCode.GetByInvMastUid(ctx, uid)
+			for _, alternateCode := range alternateCodes {
+				if err := models.AlternateCode.Delete(ctx, alternateCode); err != nil {
+					return err
+				}
+			}
+
 			invLocs, err := models.InvLoc.GetByInvMastUid(ctx, []float64{1001}, uid)
 			if err != nil {
 				return err
@@ -97,13 +165,16 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 
 			}
 
-			if err := models.InvMast.Delete(ctx, uid); err != nil {
+			if err := models.InvMast.Delete(ctx, invMast); err != nil {
 				return err
 			}
 			return nil
 		})
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+	}
 
-	return err
+	return nil
 }
 func (c Catalog) UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error {
 	// TODO implement me

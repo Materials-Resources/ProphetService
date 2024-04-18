@@ -104,6 +104,8 @@ spec:
             - containerPort: 14250
               hostPort: 14250
             - containerPort: 4317
+          args:
+            - "--memory.max-traces=10000"
           env:
             - name: LOG_LEVEL
               value: "debug"

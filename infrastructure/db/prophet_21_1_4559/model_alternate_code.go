@@ -28,11 +28,20 @@ type AlternateCodeModel struct {
 	bun bun.IDB
 }
 
-func (m *AlternateCodeModel) GetByInvMastUid(ctx context.Context, invMastUid int32) (*AlternateCode, error) {
-	var code AlternateCode
-	err := m.bun.NewSelect().Model(&code).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+func (m *AlternateCodeModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*AlternateCode, error) {
+	var alternateCodes []*AlternateCode
+	err := m.bun.NewSelect().Model(&alternateCodes).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &code, err
+	return alternateCodes, err
+}
+
+// Delete deletes the alternate code
+func (m *AlternateCodeModel) Delete(ctx context.Context, alternateCode *AlternateCode) error {
+	_, err := m.bun.NewDelete().Model(alternateCode).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

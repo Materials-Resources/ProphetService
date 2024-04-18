@@ -20,7 +20,7 @@ func newTraceProvider(svcName, env string) (provider *tracesdk.TracerProvider, e
 	// Create the GRPC exporter
 	ctx := context.Background()
 
-	exp, err := otlptracegrpc.New(ctx)
+	exp, err := otlptracegrpc.New(ctx, otlptracegrpc.WithInsecure(), otlptracegrpc.WithEndpoint("localhost:4317"))
 
 	if err != nil {
 		return nil, err
@@ -29,16 +29,19 @@ func newTraceProvider(svcName, env string) (provider *tracesdk.TracerProvider, e
 		// Always be sure to batch in production.
 		tracesdk.WithBatcher(exp),
 		// Record information about this application in a Resource.
-		tracesdk.WithResource(resource.NewWithAttributes(
-			semconv.SchemaURL,
-			semconv.ServiceNameKey.String(svcName),
-			attribute.String("environment", env),
-		),
+		tracesdk.WithResource(
+			resource.NewWithAttributes(
+				semconv.SchemaURL,
+				semconv.ServiceNameKey.String(svcName),
+				attribute.String("environment", env),
+			),
 		),
 	)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{},
-		propagation.Baggage{},
-	),
+	otel.SetTextMapPropagator(
+		propagation.NewCompositeTextMapPropagator(
+			propagation.TraceContext{},
+			propagation.Baggage{},
+		),
 	)
 	return tp, nil
 }

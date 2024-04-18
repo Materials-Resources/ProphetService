@@ -9,6 +9,27 @@ import (
 	"time"
 )
 
+type EventConsumer struct {
+	client *kgo.Client
+	serde  *sr.Serde
+}
+
+func (c *EventConsumer) ConsumeDeleteProduct(
+	ctx context.Context, rec *kgo.Record, deleteProduct func(
+		ctx context.Context,
+		uid int32) error) error {
+	var productRecord ProductRecord
+	err := c.serde.Decode(rec.Value, &productRecord)
+	if err != nil {
+	}
+	err = deleteProduct(ctx, productRecord.Uid)
+	if err != nil {
+		return err
+
+	}
+	return nil
+}
+
 func NewDeleteProductWorker(sered *sr.Serde, service CatalogService) DeleteProductWorker {
 	return DeleteProductWorker{sered: sered, service: service}
 }

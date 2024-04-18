@@ -4,10 +4,15 @@ import (
 	"github.com/twmb/franz-go/pkg/kgo"
 )
 
-type Worker interface {
+type WorkerI interface {
 	GetTopic() string
 	ConsumeRecord(rec *kgo.Record) error
 	SendToDLQ(cl *kgo.Client, rec *kgo.Record, err error) error
+}
+
+type Worker struct {
+	topic       string
+	consumeFunc ConsumeFunc
 }
 
 type ConsumeFunc func(rec *kgo.Record) error
@@ -31,10 +36,10 @@ func (c *consumer) consume() {
 			return
 		case p := <-c.recs:
 			for _, rec := range p.Records {
-				err := c.consumeMsg(rec)
-				if err != nil {
-					c.sendToDLQ(c.cl, rec, err)
-				}
+				c.consumeMsg(rec)
+				// if err != nil {
+				// 	c.sendToDLQ(c.cl, rec, err)
+				// }
 				c.cl.MarkCommitRecords(rec)
 			}
 		}

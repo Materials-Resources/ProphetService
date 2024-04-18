@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/twmb/franz-go/pkg/kgo"
-	"github.com/twmb/franz-go/plugin/kotel"
 	"sync"
 )
 
@@ -27,7 +26,7 @@ func NewConsumerGroup() ConsumerGroup {
 }
 
 // Start starts the consumer group in a new go routine
-func (g *ConsumerGroup) Start(brokers []string, group string, kotel *kotel.Kotel) {
+func (g *ConsumerGroup) Start(brokers []string, group string) {
 
 	opts := []kgo.Opt{
 		kgo.SeedBrokers(brokers...), kgo.ConsumeTopics(g.topics...), kgo.ConsumerGroup(group),
@@ -52,8 +51,7 @@ func (g *ConsumerGroup) assigned(_ context.Context, cl *kgo.Client, assigned map
 				cl:         cl,
 				topic:      topic,
 				partition:  partition,
-				consumeMsg: g.workers[topic].ConsumeRecord,
-				sendToDLQ:  g.workers[topic].SendToDLQ,
+				consumeMsg: g.workers[topic].consumeFunc,
 				recs:       make(chan kgo.FetchTopicPartition, 5),
 			}
 			g.consumers[tp{topic, partition}] = pc
@@ -115,10 +113,14 @@ func (g *ConsumerGroup) poll(cl *kgo.Client) {
 
 }
 
+func NewWorker(topic string, consumerFunc ConsumeFunc) Worker {
+	return Worker{topic: topic, consumeFunc: consumerFunc}
+}
+
 func (g *ConsumerGroup) RegisterWorkers(workers ...Worker) {
 
 	for _, worker := range workers {
-		g.topics = append(g.topics, worker.GetTopic())
-		g.workers[worker.GetTopic()] = worker
+		g.topics = append(g.topics, worker.topic)
+		g.workers[worker.topic] = worker
 	}
 }

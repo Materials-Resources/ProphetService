@@ -248,12 +248,22 @@ func (ol *OeLine) setDefaults() {
 }
 
 type OeLineModel struct {
-	bun *bun.DB
+	bun bun.IDB
 }
 
 func (m *OeLineModel) Insert(ctx context.Context, oeLine *OeLine) error {
 	_, err := m.bun.NewInsert().Model(oeLine).Exec(ctx)
 	return err
+}
+
+func (m *OeLineModel) CountByInvMastUid(ctx context.Context, invMastUid int32) (int32, error) {
+	query := `SELECT COUNT(*) FROM oe_line WHERE inv_mast_uid = ?`
+	var count int32
+	err := m.bun.QueryRowContext(ctx, query, invMastUid).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 // generateOeLineUid returns a newly generated value for oe_line_uid
@@ -267,6 +277,6 @@ func (m *OeLineModel) generateOeLineUid(ctx context.Context) int32 {
 	if err != nil {
 		return 0
 	}
-	err = m.bun.ScanRows(ctx, rows, id)
+	err = rows.Scan(ctx, rows, id)
 	return int32(*id)
 }

@@ -19,6 +19,9 @@ type CatalogService interface {
 
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 
+	// RequestDeleteProduct adds a request to deletes a Product
+	RequestDeleteProduct(ctx context.Context, uid int32) error
+
 	// ListProductGroup returns a list of ProductGroup
 	ListProductGroup(ctx context.Context) ([]*domain.ProductGroup, error)
 	// GetProductGroup returns ProductGroup by the given SN

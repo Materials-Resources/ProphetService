@@ -241,8 +241,8 @@ func (m *InvMastModel) Update(ctx context.Context, invMast *InvMast) error {
 	return err
 }
 
-func (m *InvMastModel) Delete(ctx context.Context, invMastUid int32) error {
-	_, err := m.bun.NewDelete().Model(&InvMast{}).Where("inv_mast_uid = ?", invMastUid).Exec(ctx)
+func (m *InvMastModel) Delete(ctx context.Context, invMast *InvMast) error {
+	_, err := m.bun.NewDelete().Model(invMast).WherePK().Exec(ctx)
 	if err != nil {
 		return err
 	}
