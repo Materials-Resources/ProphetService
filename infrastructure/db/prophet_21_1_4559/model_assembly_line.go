@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -41,4 +42,27 @@ type AssemblyLine struct {
 	LooseShipFlag            sql.NullString  `bun:"loose_ship_flag,type:char,nullzero"`
 	MinimumMccCode           sql.NullString  `bun:"minimum_mcc_code,type:varchar(255),nullzero"`
 	ExtendedItemFlag         sql.NullString  `bun:"extended_item_flag,type:char,nullzero"`
+}
+
+type AssemblyLineModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of AssemblyLine by the given InvMastUid
+func (m AssemblyLineModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*AssemblyLine, error) {
+	var assemblyLines []*AssemblyLine
+	err := m.bun.NewSelect().Model(&assemblyLines).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return assemblyLines, nil
+}
+
+// Delete removes the record from the database.
+func (m AssemblyLineModel) Delete(ctx context.Context, assemblyLine *AssemblyLine) error {
+	_, err := m.bun.NewDelete().Model(assemblyLine).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

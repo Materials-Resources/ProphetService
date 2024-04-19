@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -43,4 +44,27 @@ type InvTran struct {
 	UsedSpecificCostFlag   sql.NullString  `bun:"used_specific_cost_flag,type:char,nullzero"`
 
 	OeHdr *OeHdr `bun:"rel:has-one,join:document_no=order_no"`
+}
+
+type InvTranModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of InvTran by the given InvMastUid
+func (m InvTranModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*InvTran, error) {
+	var invTrans []*InvTran
+	err := m.bun.NewSelect().Model(&invTrans).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return invTrans, nil
+}
+
+// Delete deletes the record from the database.
+func (m InvTranModel) Delete(ctx context.Context, invTran *InvTran) error {
+	_, err := m.bun.NewDelete().Model(invTran).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

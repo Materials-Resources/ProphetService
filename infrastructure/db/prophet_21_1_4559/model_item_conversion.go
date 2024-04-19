@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -29,4 +30,27 @@ type ItemConversion struct {
 	ConvertAtTransferFlag  string          `bun:"convert_at_transfer_flag,type:char,default:('N')"`
 	MinOrderQty            sql.NullFloat64 `bun:"min_order_qty,type:decimal(19,9),nullzero"`
 	ConvertAtProdOrderFlag string          `bun:"convert_at_prod_order_flag,type:char,default:('N')"`
+}
+
+type ItemConversionModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of ItemConversion by the given InvMastUid
+func (m ItemConversionModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*ItemConversion, error) {
+	var itemConversions []*ItemConversion
+	err := m.bun.NewSelect().Model(&itemConversions).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return itemConversions, nil
+}
+
+// Delete deletes the record from the database.
+func (m ItemConversionModel) Delete(ctx context.Context, itemConversion *ItemConversion) error {
+	_, err := m.bun.NewDelete().Model(itemConversion).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

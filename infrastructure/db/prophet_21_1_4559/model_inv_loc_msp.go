@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -19,4 +20,27 @@ type InvLocMsp struct {
 	CreatedBy          string        `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	DateLastModified   time.Time     `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy   string        `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
+}
+
+type InvLocMspModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of InvLocMsp by the given InvMastUid
+func (m InvLocMspModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*InvLocMsp, error) {
+	var invLocMsps []*InvLocMsp
+	err := m.bun.NewSelect().Model(&invLocMsps).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return invLocMsps, nil
+}
+
+// Delete deletes the InvLocMsp from the database.
+func (m InvLocMspModel) Delete(ctx context.Context, invLocMsp *InvLocMsp) error {
+	_, err := m.bun.NewDelete().Model(invLocMsp).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -22,4 +23,28 @@ type ItemCategoryXInvMast struct {
 	DisplayDesc             string         `bun:"display_desc,type:varchar(255)"`
 	Comments                sql.NullString `bun:"comments,type:varchar(255),nullzero"`
 	AlternateCodeUid        sql.NullInt32  `bun:"alternate_code_uid,type:int,nullzero"`
+}
+
+type ItemCategoryXInvMastModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of ItemCategoryXInvMast by the given InvMastUid
+func (m ItemCategoryXInvMastModel) GetByInvMastUid(ctx context.Context, invMastUid int32) (
+	[]*ItemCategoryXInvMast, error) {
+	var itemCategoryXInvMasts []*ItemCategoryXInvMast
+	err := m.bun.NewSelect().Model(&itemCategoryXInvMasts).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return itemCategoryXInvMasts, nil
+}
+
+// Delete deletes the record from the database.
+func (m ItemCategoryXInvMastModel) Delete(ctx context.Context, itemCategoryXInvMast *ItemCategoryXInvMast) error {
+	_, err := m.bun.NewDelete().Model(itemCategoryXInvMast).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

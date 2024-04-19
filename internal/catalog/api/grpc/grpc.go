@@ -256,12 +256,13 @@ func (s catalogService) SetPrimaryProductSupplier(
 	ctx context.Context,
 	request *rpc.SetPrimaryProductSupplierRequest,
 ) (*rpc.SetPrimaryProductSupplierResponse, error) {
-	// err := s.repo.SetPrimaryProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return &rpc.SetPrimaryProductSupplierResponse{}, nil
-	return nil, nil
+
+	err := s.service.SetPrimaryProductSupplier(
+		ctx, request.GetProductUid(), request.GetLocationId(), request.GetSupplierId(), request.GetDivisionId())
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.SetPrimaryProductSupplierResponse{}, nil
 }
 
 func (s catalogService) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (

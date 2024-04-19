@@ -531,8 +531,10 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_id | [string](#string) |  |  |
-| supplier_id | [string](#string) |  |  |
+| product_uid | [int32](#int32) |  |  |
+| location_id | [double](#double) |  |  |
+| supplier_id | [double](#double) |  |  |
+| division_id | [double](#double) |  |  |
 
 
 

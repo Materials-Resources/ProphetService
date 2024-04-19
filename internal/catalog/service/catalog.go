@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 	"github.com/materials-resources/s_prophet/pkg/consumer"
@@ -34,6 +35,43 @@ type Catalog struct {
 	event  EventService
 }
 
+func (c Catalog) SetPrimaryProductSupplier(
+	ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error {
+
+	err := c.models.ExecTx(
+		ctx, func(models *prophet_21_1_4559.Models) error {
+
+			inventorySupplier, err := models.InventorySupplier.GetBySupplierIdDivisionIdInvMastUid(
+				ctx, supplierUid,
+				divisionId, productUid)
+			if err != nil {
+				return err
+
+			}
+			inventorySupplierXLocs, err := models.InventorySupplierXLoc.GetByInvMastUidAndLocationId(
+				ctx, productUid,
+				locationId)
+
+			for _, inventorySupplierXLoc := range inventorySupplierXLocs {
+				if inventorySupplierXLoc.InventorySupplierUid == inventorySupplier.InventorySupplierUid {
+					inventorySupplierXLoc.PrimarySupplier = "Y"
+				} else {
+					inventorySupplierXLoc.PrimarySupplier = "N"
+				}
+				fmt.Println(
+					inventorySupplier.InventorySupplierUid, inventorySupplierXLoc.InventorySupplierUid,
+					inventorySupplierXLoc.PrimarySupplier)
+				if err := models.InventorySupplierXLoc.Update(ctx, inventorySupplierXLoc); err != nil {
+					return err
+				}
+
+			}
+			return nil
+		})
+
+	return err
+}
+
 func (c Catalog) RegisterWorkers() {
 
 	cg := consumer.NewConsumerGroup()
@@ -62,12 +100,15 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 	defer span.End()
 
 	err := c.models.ExecTx(
+
 		ctx, func(models *prophet_21_1_4559.Models) error {
+			// get invMast record to see if it exists
 			invMast, err := models.InvMast.Get(ctx, uid)
 			if err != nil {
 				return err
 			}
 
+			// check if product has receipts
 			receiptCount, err := models.InventoryReceiptsLine.CountByInvMastUid(ctx, uid)
 			if err != nil {
 				return err
@@ -76,6 +117,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 				return errors.New("cannot delete product with receipts")
 			}
 
+			// check if product has orders
 			orderCount, err := models.OeLine.CountByInvMastUid(ctx, uid)
 			if err != nil {
 				return err
@@ -91,6 +133,115 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 				}
 
 			}
+
+			// query and delete alternateCode records belonging to the product
+			alternateCodes, err := models.AlternateCode.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, alternateCode := range alternateCodes {
+				err = models.AlternateCode.Delete(ctx, alternateCode)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete assemblyHdr and assemblyLine records belonging to the product
+			assemblyHdr, err := models.AssemblyHdr.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			if assemblyHdr != nil {
+				assemblyLine, err := models.AssemblyLine.GetByInvMastUid(ctx, assemblyHdr.InvMastUid)
+				if err != nil {
+					return err
+				}
+				for _, line := range assemblyLine {
+					err = models.AssemblyLine.Delete(ctx, line)
+					if err != nil {
+						return err
+					}
+				}
+				err = models.AssemblyHdr.Delete(ctx, assemblyHdr)
+			}
+
+			// query and delete pricePage and pricePageXBook records belonging to the product
+			pricePages, err := models.PricePage.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, pricePage := range pricePages {
+				pricePageXBook, err := models.PricePageXBook.GetByPricePageUid(ctx, pricePage.PricePageUid)
+				if err != nil {
+					return err
+				}
+				err = models.PricePageXBook.Delete(ctx, pricePageXBook)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete itemConversion records belonging to the product
+			itemConversions, err := models.ItemConversion.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, conversion := range itemConversions {
+				err = models.ItemConversion.Delete(ctx, conversion)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete invAdjLine records belonging to the product
+			invAdjLines, err := models.InvAdjLine.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, invAdjLine := range invAdjLines {
+				err = models.InvAdjLine.Delete(ctx, invAdjLine)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete invTran records belonging to the product
+			invTrans, err := models.InvTran.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, invTran := range invTrans {
+				err = models.InvTran.Delete(ctx, invTran)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete itemCategoryXInvMast records belonging to the product
+			itemCategoryXInvMasts, err := models.ItemCategoryXInvMast.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, itemCategoryXInvMast := range itemCategoryXInvMasts {
+				err = models.ItemCategoryXInvMast.Delete(ctx, itemCategoryXInvMast)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete invLocMsp records belonging to the product
+			invLocMsps, err := models.InvLocMsp.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, invLocMsp := range invLocMsps {
+				err = models.InvLocMsp.Delete(ctx, invLocMsp)
+				if err != nil {
+					return err
+				}
+			}
+
+			// query and delete invLocStockStatus records belonging to the product
 			invLocStockStatus, err := models.InvLocStockStatus.GetByInvMastUid(ctx, uid)
 			if err != nil {
 				return err
@@ -101,6 +252,17 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 				}
 			}
 
+			itemIdChangeHistories, err := models.ItemIdChangeHistory.GetByInvMastUid(ctx, uid)
+			if err != nil {
+				return err
+			}
+			for _, itemIdChangeHistory := range itemIdChangeHistories {
+				if err := models.ItemIdChangeHistory.Delete(ctx, itemIdChangeHistory); err != nil {
+					return err
+				}
+			}
+
+			// query and delete itemUom records belonging to the product
 			itemUoms, err := models.ItemUom.GetByInvMastUid(ctx, uid)
 			for _, itemUom := range itemUoms {
 				inventorySupplierXUoms, err := models.InventorySupplierXUom.GetByItemUomUid(
@@ -119,6 +281,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 				}
 			}
 
+			// query and delete inventorySupplier records belonging to the product
 			inventorySuppliers, err := models.InventorySupplier.GetByInvMastUid(ctx, uid)
 			for _, inventorySupplier := range inventorySuppliers {
 
@@ -140,13 +303,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 
 			}
 
-			alternateCodes, err := models.AlternateCode.GetByInvMastUid(ctx, uid)
-			for _, alternateCode := range alternateCodes {
-				if err := models.AlternateCode.Delete(ctx, alternateCode); err != nil {
-					return err
-				}
-			}
-
+			// query and delete invLoc records belonging to the product
 			invLocs, err := models.InvLoc.GetByInvMastUid(ctx, []float64{1001}, uid)
 			if err != nil {
 				return err
@@ -157,6 +314,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 				}
 			}
 
+			// query and delete averageInventoryValue records belonging to the product
 			averageInventoryValues, err := models.AverageInventoryValue.GetByInvMastUid(ctx, uid)
 			for _, averageInventoryValue := range averageInventoryValues {
 				if err := models.AverageInventoryValue.Delete(ctx, averageInventoryValue); err != nil {
@@ -165,6 +323,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 
 			}
 
+			// delete invMast records belonging to the product
 			if err := models.InvMast.Delete(ctx, invMast); err != nil {
 				return err
 			}
@@ -197,8 +356,7 @@ func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, loc
 		invMast.ExtendedDesc = sql.NullString{String: product.Description, Valid: true}
 	}
 
-	err = c.models.InvMast.Update(ctx, invMast)
-	if err != nil {
+	if err = c.models.InvMast.Update(ctx, invMast); err != nil {
 		return err
 	}
 	invLocs, err := c.models.InvLoc.GetByInvMastUid(ctx, locations, product.UID)
@@ -210,8 +368,7 @@ func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, loc
 			invLoc.LastMaintainedBy = "admin"
 			invLoc.ProductGroupId = sql.NullString{String: product.ProductGroupSn, Valid: true}
 		}
-		err := c.models.InvLoc.Update(ctx, &invLoc)
-		if err != nil {
+		if err = c.models.InvLoc.Update(ctx, &invLoc); err != nil {
 			return err
 		}
 	}
@@ -221,9 +378,7 @@ func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, loc
 
 func (c Catalog) GetProductBySupplierPartNumber(
 	ctx context.Context, partNumber string,
-	supplier float64) (
-	domain.Product,
-	error) {
+	supplier float64) (domain.Product, error) {
 	invMast, err := c.models.InvMast.GetBySupplierPartNumber(ctx, supplier, partNumber)
 	if err != nil {
 		return domain.Product{}, err
@@ -237,20 +392,23 @@ func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*doma
 	dbFilter := &prophet_21_1_4559.Filters{Cursor: filter.Cursor, Limit: filter.Limit}
 
 	invLocs, _, err := c.models.InvLoc.GetAll(ctx, 1001, prophet_21_1_4559.DeleteFlagNo, *dbFilter)
-
-	products := make([]*domain.Product, len(invLocs))
-	for i, invLoc := range invLocs {
-		products[i] = &domain.Product{
-			UID: invLoc.InvMastUid, SN: invLoc.InvMast.ItemId, Name: invLoc.InvMast.ItemDesc,
-			Description: invLoc.InvMast.ExtendedDesc.String,
-		}
-	}
-
 	if err != nil {
 		return nil, err
 	}
 
+	products := make([]*domain.Product, len(invLocs))
+	for i, invLoc := range invLocs {
+		products[i] = mapInvLocToProduct(invLoc)
+	}
+
 	return products, nil
+}
+
+func mapInvLocToProduct(invLoc prophet_21_1_4559.InvLoc) *domain.Product {
+	return &domain.Product{
+		UID: invLoc.InvMastUid, SN: invLoc.InvMast.ItemId, Name: invLoc.InvMast.ItemDesc,
+		Description: invLoc.InvMast.ExtendedDesc.String,
+	}
 }
 
 func (c Catalog) GetProduct(ctx context.Context, uid int32) (domain.Product, error) {

@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -31,4 +32,27 @@ type InvAdjLine struct {
 	ReasonId               sql.NullString  `bun:"reason_id,type:varchar(5),nullzero"`
 	Comment                sql.NullString  `bun:"comment,type:varchar(255),nullzero"`
 	AdjustFoundItemFlag    string          `bun:"adjust_found_item_flag,type:char,default:('N')"`
+}
+
+type InvAdjLineModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of InvAdjLine by the given InvMastUid
+func (m InvAdjLineModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*InvAdjLine, error) {
+	var invAdjLines []*InvAdjLine
+	err := m.bun.NewSelect().Model(&invAdjLines).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return invAdjLines, nil
+}
+
+// Delete deletes the InvAdjLine from the database.
+func (m InvAdjLineModel) Delete(ctx context.Context, invAdjLine *InvAdjLine) error {
+	_, err := m.bun.NewDelete().Model(invAdjLine).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

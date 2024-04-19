@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -142,4 +143,27 @@ type PricePage struct {
 	LowerMarginVariance        sql.NullFloat64 `bun:"lower_margin_variance,type:decimal(19,9),nullzero"`
 	ExcludeOrderLevelDiscFlag  sql.NullString  `bun:"exclude_order_level_disc_flag,type:char,nullzero"`
 	RolledItemPricingTypeCd    sql.NullInt32   `bun:"rolled_item_pricing_type_cd,type:int,nullzero"`
+}
+
+type PricePageModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid returns a slice of PricePage by the given InvMastUid
+func (m PricePageModel) GetByInvMastUid(ctx context.Context, invMastUid int32) ([]*PricePage, error) {
+	var pricePages []*PricePage
+	err := m.bun.NewSelect().Model(&pricePages).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return pricePages, nil
+}
+
+// Delete removes the record from the database.
+func (m PricePageModel) Delete(ctx context.Context, pricePage *PricePage) error {
+	_, err := m.bun.NewDelete().Model(pricePage).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

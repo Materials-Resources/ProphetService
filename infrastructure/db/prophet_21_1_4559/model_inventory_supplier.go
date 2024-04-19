@@ -70,6 +70,7 @@ func (i *InventorySupplier) BeforeAppendModel(ctx context.Context, query schema.
 	case *bun.InsertQuery:
 		i.DateCreated = time.Now()
 		i.DateLastModified = time.Now()
+		i.CreatedBy = sql.NullString{String: i.LastMaintainedBy, Valid: true}
 	case *bun.UpdateQuery:
 		i.DateLastModified = time.Now()
 	}
@@ -80,8 +81,61 @@ type InventorySupplierModel struct {
 	bun bun.IDB
 }
 
+func (m *InventorySupplierModel) New(
+	ctx context.Context, invMastUid int32, supplierId,
+	divisionId, leadTimeDays float64, lastMaintainedBy, supplierPartNo string, listPrice,
+	cost, minimumPurchaseQty, incrementalPurchaseQty float64) (
+	*InventorySupplier,
+	error) {
+
+	inventorySupplierUid, err := m.generateInventorySupplierUid(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	inventorySupplier := &InventorySupplier{
+		InventorySupplierUid:   inventorySupplierUid,
+		InvMastUid:             invMastUid,
+		SupplierId:             supplierId,
+		DivisionId:             divisionId,
+		LeadTimeDays:           leadTimeDays,
+		DeleteFlag:             "N",
+		SupplierPartNo:         sql.NullString{String: supplierPartNo, Valid: true},
+		LastMaintainedBy:       lastMaintainedBy,
+		ListPrice:              listPrice,
+		Cost:                   cost,
+		MinimumPurchaseQty:     minimumPurchaseQty,
+		IncrementalPurchaseQty: incrementalPurchaseQty,
+	}
+
+	err = m.Insert(ctx, inventorySupplier)
+	if err != nil {
+		return nil, err
+	}
+	return inventorySupplier, nil
+
+}
+func (m *InventorySupplierModel) Insert(ctx context.Context, inventorySupplier *InventorySupplier) error {
+	_, err := m.bun.NewInsert().Model(inventorySupplier).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
 func (m *InventorySupplierModel) Get(ctx context.Context) error {
 	return nil
+}
+
+func (m *InventorySupplierModel) GetBySupplierIdDivisionIdInvMastUid(
+	ctx context.Context, supplierId, divisionId float64, invMastUid int32) (*InventorySupplier, error) {
+	inventorySupplier := new(InventorySupplier)
+	err := m.bun.NewSelect().Model(inventorySupplier).Where(
+		"supplier_id = ? AND division_id = ? AND inv_mast_uid = ?", supplierId, divisionId, invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return inventorySupplier, nil
 }
 
 func (m *InventorySupplierModel) GetByInvMastUid(
@@ -109,4 +163,16 @@ func (m *InventorySupplierModel) Delete(ctx context.Context, inventorySupplier *
 		return err
 	}
 	return nil
+}
+
+func (m *InventorySupplierModel) generateInventorySupplierUid(ctx context.Context) (int32, error) {
+	query := `DECLARE @id int
+			EXEC @id = p21_get_counter 'inventory_supplier', 1
+			SELECT @id`
+	var inventorySupplierUid int32
+	err := m.bun.QueryRowContext(ctx, query).Scan(ctx, &inventorySupplierUid)
+	if err != nil {
+		return 0, err
+	}
+	return inventorySupplierUid, nil
 }

@@ -174,8 +174,10 @@ message UpdateProductSupplierRequest {
 message UpdateProductSupplierResponse {}
 
 message SetPrimaryProductSupplierRequest {
-  string product_id = 1;
-  string supplier_id = 2;
+  int32 product_uid = 1;
+  double location_id = 2;
+  double supplier_id = 3;
+  double division_id = 4;
 }
 message SetPrimaryProductSupplierResponse {}
 

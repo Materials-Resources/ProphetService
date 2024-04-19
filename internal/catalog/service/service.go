@@ -19,6 +19,9 @@ type CatalogService interface {
 
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 
+	// SetPrimaryProductSupplier sets the primary product supplier
+	SetPrimaryProductSupplier(ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error
+
 	// RequestDeleteProduct adds a request to deletes a Product
 	RequestDeleteProduct(ctx context.Context, uid int32) error
 

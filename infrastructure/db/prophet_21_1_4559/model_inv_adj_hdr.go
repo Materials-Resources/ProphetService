@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -32,4 +33,17 @@ type InvAdjHdr struct {
 	ShowAllItemsFlag      string          `bun:"show_all_items_flag,type:char,default:('N')"`
 	ShowExpectedQtyFlag   sql.NullString  `bun:"show_expected_qty_flag,type:char,default:('N')"`
 	DisplayFoundItemsFlag string          `bun:"display_found_items_flag,type:char,default:('N')"`
+}
+
+type InvAdjHdrModel struct {
+	bun bun.IDB
+}
+
+func (m InvAdjHdrModel) Get(ctx context.Context, adjustmentNumber float64) (*InvAdjHdr, error) {
+	var invAdjHdr *InvAdjHdr
+	err := m.bun.NewSelect().Model(&invAdjHdr).Where("adjustment_number = ?", adjustmentNumber).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return invAdjHdr, nil
 }

@@ -267,16 +267,15 @@ func (m *OeLineModel) CountByInvMastUid(ctx context.Context, invMastUid int32) (
 }
 
 // generateOeLineUid returns a newly generated value for oe_line_uid
-func (m *OeLineModel) generateOeLineUid(ctx context.Context) int32 {
+func (m *OeLineModel) generateOeLineUid(ctx context.Context) (int32, error) {
 	q := `
 		DECLARE @oe_line_uid int
 		EXEC @oe_line_uid = p21_get_counter 'oe_line', 1
 		SELECT @oe_line_uid`
-	id := new(int)
-	rows, err := m.bun.QueryContext(ctx, q)
+	var id int32
+	err := m.bun.QueryRowContext(ctx, q).Scan(&id)
 	if err != nil {
-		return 0
+		return 0, nil
 	}
-	err = rows.Scan(ctx, rows, id)
-	return int32(*id)
+	return id, nil
 }

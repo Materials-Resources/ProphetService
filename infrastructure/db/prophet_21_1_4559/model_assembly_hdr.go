@@ -1,6 +1,7 @@
 package prophet_21_1_4559
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -58,6 +59,24 @@ type AssemblyHdr struct {
 	PackBy                       string         `bun:"pack_by,type:char,default:('H')"`
 	MinutesToMake                int32          `bun:"minutes_to_make,type:int"`
 	IncludeComponentsOnEdi856    string         `bun:"include_components_on_edi_856,type:char,default:('N')"`
+}
 
-	AssemblyLineItems []*AssemblyLine `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+type AssemblyHdrModel struct {
+	bun bun.IDB
+}
+
+// GetByInvMastUid retrieves a record by the value of inv_mast_uid.
+func (m *AssemblyHdrModel) GetByInvMastUid(ctx context.Context, invMastUid int32) (*AssemblyHdr, error) {
+	assemblyHdr := new(AssemblyHdr)
+	err := m.bun.NewSelect().Model(assemblyHdr).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	return assemblyHdr, err
+}
+
+// Delete removes the record from the database.
+func (m *AssemblyHdrModel) Delete(ctx context.Context, assemblyHdr *AssemblyHdr) error {
+	_, err := m.bun.NewDelete().Model(assemblyHdr).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

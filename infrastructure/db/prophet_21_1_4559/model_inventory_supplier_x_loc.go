@@ -56,6 +56,45 @@ type InventorySupplierXLocModel struct {
 	bun bun.IDB
 }
 
+func (m InventorySupplierXLocModel) New(
+	ctx context.Context, inventorySupplierUid int32, locationId float64) (*InventorySupplierXLoc, error) {
+	inventorySupplierXLocUid, err := m.generateInventorySupplierXLocUid(ctx)
+	inventorySupplierXLoc := &InventorySupplierXLoc{
+		InventorySupplierXLocUid: inventorySupplierXLocUid,
+		InventorySupplierUid:     inventorySupplierUid,
+		LocationId:               locationId,
+	}
+	err = m.Insert(inventorySupplierXLoc)
+	if err != nil {
+		return nil, err
+	}
+	return inventorySupplierXLoc, nil
+}
+
+// Insert inserts the InventorySupplierXLoc into the database.
+func (m InventorySupplierXLocModel) Insert(inventorySupplierXLoc *InventorySupplierXLoc) error {
+	_, err := m.bun.NewInsert().Model(inventorySupplierXLoc).Exec(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetByInvMastUidAndLocationId returns a slice of InventorySupplierXLoc by the associated inv_mast_uid and location_id
+func (m InventorySupplierXLocModel) GetByInvMastUidAndLocationId(
+	ctx context.Context, invMastUid int32,
+	locationId float64) ([]*InventorySupplierXLoc, error) {
+	var inventorySupplierXLocs []*InventorySupplierXLoc
+	err := m.bun.NewSelect().Model(&inventorySupplierXLocs).Join(
+		"JOIN inventory_supplier on inventory_supplier."+
+			"inventory_supplier_uid = inventory_supplier_x_loc.inventory_supplier_uid").
+		Where("location_id = ? AND inventory_supplier.inv_mast_uid = ?", locationId, invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return inventorySupplierXLocs, nil
+}
+
 // GetByInventorySupplierUid returns a slice of InventorySupplierXLoc by the given InventorySupplierUid
 func (m InventorySupplierXLocModel) GetByInventorySupplierUid(
 	ctx context.Context, inventorySupplierUid int32) ([]*InventorySupplierXLoc, error) {
@@ -68,6 +107,17 @@ func (m InventorySupplierXLocModel) GetByInventorySupplierUid(
 	return inventorySupplierXLocs, nil
 }
 
+// Update updates the InventorySupplierXLoc in the database.
+func (m InventorySupplierXLocModel) Update(
+	ctx context.Context,
+	inventorySupplierXLoc *InventorySupplierXLoc) error {
+	_, err := m.bun.NewUpdate().Model(inventorySupplierXLoc).WherePK().Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Delete deletes the InventorySupplierXLoc from the database.
 func (m InventorySupplierXLocModel) Delete(
 	ctx context.Context,
@@ -77,4 +127,19 @@ func (m InventorySupplierXLocModel) Delete(
 		return err
 	}
 	return nil
+}
+
+func (m InventorySupplierXLocModel) generateInventorySupplierXLocUid(ctx context.Context) (int32, error) {
+	query := `
+		DECLARE @id int
+		EXEC @oe_line_uid = p21_get_counter 'inventory_supplier_x_loc', 1
+		SELECT @id`
+
+	var id int32
+	err := m.bun.QueryRowContext(ctx, query).Scan(ctx, &id)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+
 }
