@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/materials-resources/s_prophet/infrastructure/db/prophet_21_1_4559"
+	"github.com/materials-resources/s_prophet/infrastructure/data"
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
 	"github.com/materials-resources/s_prophet/pkg/consumer"
 	"github.com/twmb/franz-go/pkg/kgo"
@@ -20,7 +20,7 @@ type EventService struct {
 }
 
 func NewCatalogService(
-	models prophet_21_1_4559.Models, tracer trace.Tracer, cli *kgo.Client,
+	models data.Models, tracer trace.Tracer, cli *kgo.Client,
 	serde *sr.Serde) Catalog {
 
 	return Catalog{
@@ -30,7 +30,7 @@ func NewCatalogService(
 }
 
 type Catalog struct {
-	models prophet_21_1_4559.Models
+	models data.Models
 	tracer trace.Tracer
 	event  EventService
 }
@@ -39,7 +39,7 @@ func (c Catalog) SetPrimaryProductSupplier(
 	ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error {
 
 	err := c.models.ExecTx(
-		ctx, func(models *prophet_21_1_4559.Models) error {
+		ctx, func(models *data.Models) error {
 
 			inventorySupplier, err := models.InventorySupplier.GetBySupplierIdDivisionIdInvMastUid(
 				ctx, supplierUid,
@@ -101,7 +101,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 
 	err := c.models.ExecTx(
 
-		ctx, func(models *prophet_21_1_4559.Models) error {
+		ctx, func(models *data.Models) error {
 			// get invMast record to see if it exists
 			invMast, err := models.InvMast.Get(ctx, uid)
 			if err != nil {
@@ -389,9 +389,9 @@ func (c Catalog) GetProductBySupplierPartNumber(
 }
 
 func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*domain.Product, error) {
-	dbFilter := &prophet_21_1_4559.Filters{Cursor: filter.Cursor, Limit: filter.Limit}
+	dbFilter := &data.Filters{Cursor: filter.Cursor, Limit: filter.Limit}
 
-	invLocs, _, err := c.models.InvLoc.GetAll(ctx, 1001, prophet_21_1_4559.DeleteFlagNo, *dbFilter)
+	invLocs, _, err := c.models.InvLoc.GetAll(ctx, 1001, data.DeleteFlagNo, *dbFilter)
 	if err != nil {
 		return nil, err
 	}
@@ -404,7 +404,7 @@ func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*doma
 	return products, nil
 }
 
-func mapInvLocToProduct(invLoc prophet_21_1_4559.InvLoc) *domain.Product {
+func mapInvLocToProduct(invLoc data.InvLoc) *domain.Product {
 	return &domain.Product{
 		UID: invLoc.InvMastUid, SN: invLoc.InvMast.ItemId, Name: invLoc.InvMast.ItemDesc,
 		Description: invLoc.InvMast.ExtendedDesc.String,
@@ -418,7 +418,7 @@ func (c Catalog) GetProduct(ctx context.Context, uid int32) (domain.Product, err
 
 func (c Catalog) CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 
-	dbProductGroup := &prophet_21_1_4559.ProductGroup{
+	dbProductGroup := &data.ProductGroup{
 		ProductGroupDesc: productGroup.Name, ProductGroupId: productGroup.SN,
 	}
 

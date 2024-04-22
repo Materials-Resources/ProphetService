@@ -1,6 +1,7 @@
 package domain
 
 type ProductStock struct {
-	ProductUID        int32
+	ProductUid        int32
 	QuantityAvailable float64
+	QuantityUnit      string
 }

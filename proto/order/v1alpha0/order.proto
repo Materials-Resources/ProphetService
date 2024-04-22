@@ -5,16 +5,17 @@ package order.v1alpha0;
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/order_v1alpha0";
 
 message Address {
-  string name = 1;
-  string line_one = 2;
-  string line_two = 3;
-  string city = 4;
-  string state = 5;
-  string postal_code = 8;
-  string country = 9;
+  double id = 1;
+  string name = 2;
+  string line_one = 3;
+  string line_two = 4;
+  string city = 5;
+  string state = 6;
+  string postal_code = 7;
+  string country = 8;
 }
 message Customer {
-  string id = 1;
+  double id = 1;
   string name = 2;
   string phone_number = 3;
   string email = 4;
@@ -59,7 +60,7 @@ message GetOrderResponse {
 
   Address shipping_address = 4;
   Customer customer = 5;
-  CustomerContact customer_contact = 6;
+  CustomerContact contact = 6;
 
   string delivery_instructions = 10;
   string taker = 12;
@@ -67,12 +68,13 @@ message GetOrderResponse {
 }
 
 message GetPickTicketByIdRequest {
-  string id = 1;
+  double id = 1;
 }
 message GetPickTicketByIdResponse {
-  string id = 1;
+  double id = 1;
   string order_id = 2;
   string order_purchase_order = 3;
-  Address shipping_address = 4;
-  CustomerContact order_customer_contact = 5;
+  CustomerContact order_contact = 4;
+  Address shipping_address = 5;
+  string delivery_instructions = 6;
 }

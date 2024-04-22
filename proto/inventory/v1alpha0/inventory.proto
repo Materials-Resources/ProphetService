@@ -41,7 +41,7 @@ message DeleteSupplierRequest {}
 message DeleteSupplierResponse {}
 
 message GetReceiptByIDRequest {
-  string id = 1;
+  double id = 1;
 }
 message GetReceiptByIDResponse {
   message Item {
@@ -56,20 +56,18 @@ message GetReceiptByIDResponse {
       string allocated_unit = 4;
     }
     //Unique ID of product
-    string product_id = 1;
-    //Serialized ID of product
-    string product_sn = 2;
-    //Name of product
-    string product_name = 3;
+    int32 product_uid = 1;
+    //Primary bin where product is stored
+    string product_primary_bin = 2;
     //Quantity of product received
     double received_quantity = 4;
     //Unit associated with received_quantity
     string received_unit = 5;
     //Orders that were allocated to
-    repeated Order allocated_orders = 6;
+    repeated string allocated_orders = 6;
   }
   //Unique ID of receipt
-  string id = 1;
+  double id = 1;
   //Items that were received for this receipt
   repeated Item items = 2;
 }

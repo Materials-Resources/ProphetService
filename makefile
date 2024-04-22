@@ -23,9 +23,9 @@ dev/metrics/up:
 dev/metrics/down:
 	podman kube down deployment/dev/metrics.yml
 
-.PHONY: dev/generate/proto
-## dev/generate/proto: Generate packages from proto files using the buf cli tool
-dev/generate/proto:
+.PHONY: generate/proto
+## generate/proto: Generate packages from proto files using the buf cli tool
+generate/proto:
 	buf generate proto
 
 .PHONY: dev/app/run

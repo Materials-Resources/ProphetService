@@ -1,29 +1,23 @@
 package domain
 
-import (
-	"errors"
-)
+import "github.com/materials-resources/s_prophet/internal/validator"
 
 type Order struct {
-	ID                string
-	ShippingAddressId string
-	ShippingAddress   ValidatedAddress
-	CustomerContact   ValidatedOrderCustomerContact
-	CustomerId        string
-	CustomerName      string
-	Items             []ValidatedOrderItem
-	PurchaseOrder     string
+	Id                   string
+	ShippingAddress      Address
+	Contact              Contact
+	Customer             Customer
+	AddressId            float64
+	CustomerName         string
+	Items                []OrderItem
+	PurchaseOrder        string
+	DeliveryInstructions string
 }
 
-func (o *Order) validate() error {
-	if o.ID == "" {
-		return errors.New("invalid order details")
-	}
-	return nil
-}
-
-func NewOrder(customerContactId string, purchaseOrder string) *Order {
-	return &Order{}
+func ValidateOrder(v *validator.Validator, order *Order) {
+	v.Check(order.Customer.Id != 0, "customer.id", "must be set")
+	v.Check(order.AddressId != 0, "address_id", "must be set")
+	v.Check(len(order.PurchaseOrder) <= 50, "purchase_order", "must be less than 50 characters")
 }
 
 type OrderItem struct {
@@ -33,19 +27,16 @@ type OrderItem struct {
 	QuantityOrdered float64
 }
 
-func (p *OrderItem) validate() error {
-	return nil
-}
-
-func NewOrderItem() *OrderItem {
-	return &OrderItem{}
-}
-
-type OrderCustomerContact struct {
+type Contact struct {
 	Id          string
 	Name        string
 	PhoneNumber string
 	Title       string
 }
 
-func (e *OrderCustomerContact) validate() error { return nil }
+type Customer struct {
+	Id          float64
+	Name        string
+	PhoneNumber string
+	Title       string
+}

@@ -79,14 +79,6 @@
   
     - [OrderService](#order-v1alpha0-OrderService)
   
-- [receiving/v1alpha0/receiving.proto](#receiving_v1alpha0_receiving-proto)
-    - [GetReceiptRequest](#receiving-v1alpha0-GetReceiptRequest)
-    - [GetReceiptResponse](#receiving-v1alpha0-GetReceiptResponse)
-    - [GetReceiptResponse.Product](#receiving-v1alpha0-GetReceiptResponse-Product)
-    - [GetReceiptResponse.Product.Order](#receiving-v1alpha0-GetReceiptResponse-Product-Order)
-  
-    - [ReceivingService](#receiving-v1alpha0-ReceivingService)
-  
 - [supplier/v1alpha0/supplier.proto](#supplier_v1alpha0_supplier-proto)
     - [SupplierService](#supplier-v1alpha0-SupplierService)
   
@@ -860,7 +852,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
+| id | [double](#double) |  |  |
 
 
 
@@ -875,7 +867,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  | Unique ID of receipt |
+| id | [double](#double) |  | Unique ID of receipt |
 | items | [GetReceiptByIDResponse.Item](#inventory-v1alpha0-GetReceiptByIDResponse-Item) | repeated | Items that were received for this receipt |
 
 
@@ -891,12 +883,11 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_id | [string](#string) |  | Unique ID of product |
-| product_sn | [string](#string) |  | Serialized ID of product |
-| product_name | [string](#string) |  | Name of product |
+| product_uid | [int32](#int32) |  | Unique ID of product |
+| product_primary_bin | [string](#string) |  | Primary bin where product is stored |
 | received_quantity | [double](#double) |  | Quantity of product received |
 | received_unit | [string](#string) |  | Unit associated with received_quantity |
-| allocated_orders | [GetReceiptByIDResponse.Item.Order](#inventory-v1alpha0-GetReceiptByIDResponse-Item-Order) | repeated | Orders that were allocated to |
+| allocated_orders | [string](#string) | repeated | Orders that were allocated to |
 
 
 
@@ -956,6 +947,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| id | [double](#double) |  |  |
 | name | [string](#string) |  |  |
 | line_one | [string](#string) |  |  |
 | line_two | [string](#string) |  |  |
@@ -997,7 +989,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
+| id | [double](#double) |  |  |
 | name | [string](#string) |  |  |
 | phone_number | [string](#string) |  |  |
 | email | [string](#string) |  |  |
@@ -1054,7 +1046,7 @@
 | status | [string](#string) |  |  |
 | shipping_address | [Address](#order-v1alpha0-Address) |  |  |
 | customer | [Customer](#order-v1alpha0-Customer) |  |  |
-| customer_contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
+| contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
 | delivery_instructions | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 | purchase_order | [string](#string) |  |  |
@@ -1093,7 +1085,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
+| id | [double](#double) |  |  |
 
 
 
@@ -1108,11 +1100,12 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
+| id | [double](#double) |  |  |
 | order_id | [string](#string) |  |  |
 | order_purchase_order | [string](#string) |  |  |
+| order_contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
 | shipping_address | [Address](#order-v1alpha0-Address) |  |  |
-| order_customer_contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
+| delivery_instructions | [string](#string) |  |  |
 
 
 
@@ -1135,102 +1128,6 @@
 | CreateOrder | [CreateOrderRequest](#order-v1alpha0-CreateOrderRequest) | [CreateOrderResponse](#order-v1alpha0-CreateOrderResponse) |  |
 | GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1alpha0-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1alpha0-GetPickTicketByIdResponse) |  |
-
- 
-
-
-
-<a name="receiving_v1alpha0_receiving-proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## receiving/v1alpha0/receiving.proto
-
-
-
-<a name="receiving-v1alpha0-GetReceiptRequest"></a>
-
-### GetReceiptRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="receiving-v1alpha0-GetReceiptResponse"></a>
-
-### GetReceiptResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| products | [GetReceiptResponse.Product](#receiving-v1alpha0-GetReceiptResponse-Product) | repeated |  |
-
-
-
-
-
-
-<a name="receiving-v1alpha0-GetReceiptResponse-Product"></a>
-
-### GetReceiptResponse.Product
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| sn | [string](#string) |  |  |
-| name | [string](#string) |  |  |
-| units_received | [double](#double) |  |  |
-| unit_label | [string](#string) |  |  |
-| primary_bin | [string](#string) |  |  |
-| allocated_orders | [GetReceiptResponse.Product.Order](#receiving-v1alpha0-GetReceiptResponse-Product-Order) | repeated |  |
-
-
-
-
-
-
-<a name="receiving-v1alpha0-GetReceiptResponse-Product-Order"></a>
-
-### GetReceiptResponse.Product.Order
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  | Order ID |
-| name | [string](#string) |  | Order Name |
-| units_allocated | [double](#double) |  | Quantity Allocated |
-| unit_label | [string](#string) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="receiving-v1alpha0-ReceivingService"></a>
-
-### ReceivingService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| GetReceipt | [GetReceiptRequest](#receiving-v1alpha0-GetReceiptRequest) | [GetReceiptResponse](#receiving-v1alpha0-GetReceiptResponse) |  |
 
  
 

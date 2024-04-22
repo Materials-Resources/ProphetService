@@ -1,17 +1,17 @@
 package domain
 
 import (
-	"errors"
+	"github.com/materials-resources/s_prophet/internal/validator"
 )
 
 type ProductSupplier struct {
-	ProductId     string
-	SupplierId    string
-	DivisionId    string
-	SupplierSn    string
-	ListPrice     float64
-	PurchasePrice float64
-	Delete        bool
+	ProductUid        int32
+	SupplierId        float64
+	DivisionId        float64
+	SupplierProductSn string
+	ListPrice         float64
+	PurchasePrice     float64
+	Delete            bool
 }
 
 type ProductSupplierPatch struct {
@@ -21,18 +21,7 @@ type ProductSupplierPatch struct {
 	Delete            *bool
 }
 
-func (p *ProductSupplier) validate() error {
-	if p.ProductId == "" {
-		return errors.New("invalid Product Id")
-	}
-	if p.SupplierId == "" {
-		return errors.New("invalid Supplier Id")
-	}
-	return nil
-}
-
-func NewProductSupplier(productId, locationId, supplierId, divisionId, supplierSn string) *ProductSupplier {
-	return &ProductSupplier{ProductId: productId, SupplierId: supplierId,
-		DivisionId: divisionId, SupplierSn: supplierSn,
-	}
+func ValidateProductSupplier(v *validator.Validator, productSupplier ProductSupplier) {
+	v.Check(productSupplier.ProductUid != 0, "product_uid", "must be provided")
+	v.Check(productSupplier.SupplierId != 0, "supplier_id", "must be provided")
 }

@@ -1,29 +1,14 @@
 package domain
 
 type InventoryReceipt struct {
-	ID    string
-	Items []ValidatedInventoryReceiptItem
+	ID    float64
+	Items []InventoryReceiptItem
 }
 
-func (e *InventoryReceipt) validate() error { return nil }
-
 type InventoryReceiptItem struct {
-	ProductId        string
-	ProductName      string
-	ProductSn        string
+	ProductUid       int32
 	PrimaryBin       string
 	ReceivedQuantity float64
 	ReceivedUnit     string
-	Orders           []ValidatedInventoryReceiptItemOrder
+	AllocatedOrders  []string
 }
-
-func (e *InventoryReceiptItem) validate() error { return nil }
-
-type InventoryReceiptItemOrder struct {
-	ID                string
-	CustomerName      string
-	AllocatedQuantity float64
-	AllocatedUnit     string
-}
-
-func (e *InventoryReceiptItemOrder) validate() error { return nil }
