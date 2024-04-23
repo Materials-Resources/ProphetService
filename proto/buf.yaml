@@ -1,5 +1,5 @@
 version: v1
-name: "buf.build/materials-resources/s_prophet"
+name: "buf.build/materials-resources/s-prophet"
 breaking:
   use:
     - FILE
