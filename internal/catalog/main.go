@@ -8,7 +8,7 @@ import (
 	"github.com/materials-resources/s_prophet/internal/catalog/api"
 	"github.com/materials-resources/s_prophet/internal/catalog/service"
 	"github.com/materials-resources/s_prophet/pkg/kafka"
-	svc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
+	svc "github.com/materials-resources/s_prophet/proto/catalog/v1"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
 )

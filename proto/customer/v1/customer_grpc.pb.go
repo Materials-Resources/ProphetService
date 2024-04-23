@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: customer/v1alpha0/customer.proto
+// source: customer/v1/customer.proto
 
 package customer_v1alpha0
 
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CustomerService_GetOrders_FullMethodName = "/customer.v1alpha0.CustomerService/GetOrders"
+	CustomerService_GetOrders_FullMethodName = "/customer.v1.CustomerService/GetOrders"
 )
 
 // CustomerServiceClient is the client API for CustomerService service.
@@ -94,7 +94,7 @@ func _CustomerService_GetOrders_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CustomerService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "customer.v1alpha0.CustomerService",
+	ServiceName: "customer.v1.CustomerService",
 	HandlerType: (*CustomerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -103,5 +103,5 @@ var CustomerService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "customer/v1alpha0/customer.proto",
+	Metadata: "customer/v1/customer.proto",
 }

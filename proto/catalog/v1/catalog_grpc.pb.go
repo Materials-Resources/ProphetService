@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: catalog/v1alpha0/catalog.proto
+// source: catalog/v1/catalog.proto
 
 package catalog_v1alpha0
 
@@ -19,22 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CatalogService_ListProducts_FullMethodName         = "/catalog.v1alpha0.CatalogService/ListProducts"
-	CatalogService_GetProduct_FullMethodName           = "/catalog.v1alpha0.CatalogService/GetProduct"
-	CatalogService_CreateProduct_FullMethodName        = "/catalog.v1alpha0.CatalogService/CreateProduct"
-	CatalogService_UpdateProduct_FullMethodName        = "/catalog.v1alpha0.CatalogService/UpdateProduct"
-	CatalogService_DeleteProduct_FullMethodName        = "/catalog.v1alpha0.CatalogService/DeleteProduct"
-	CatalogService_GetProductPrice_FullMethodName      = "/catalog.v1alpha0.CatalogService/GetProductPrice"
-	CatalogService_ListSuppliers_FullMethodName        = "/catalog.v1alpha0.CatalogService/ListSuppliers"
-	CatalogService_GetSupplier_FullMethodName          = "/catalog.v1alpha0.CatalogService/GetSupplier"
-	CatalogService_CreateSupplier_FullMethodName       = "/catalog.v1alpha0.CatalogService/CreateSupplier"
-	CatalogService_UpdateSupplier_FullMethodName       = "/catalog.v1alpha0.CatalogService/UpdateSupplier"
-	CatalogService_SetPrimarySupplier_FullMethodName   = "/catalog.v1alpha0.CatalogService/SetPrimarySupplier"
-	CatalogService_ListProductGroups_FullMethodName    = "/catalog.v1alpha0.CatalogService/ListProductGroups"
-	CatalogService_GetProductGroup_FullMethodName      = "/catalog.v1alpha0.CatalogService/GetProductGroup"
-	CatalogService_CreateProductGroup_FullMethodName   = "/catalog.v1alpha0.CatalogService/CreateProductGroup"
-	CatalogService_UpdateProductGroup_FullMethodName   = "/catalog.v1alpha0.CatalogService/UpdateProductGroup"
-	CatalogService_GetProductBySupplier_FullMethodName = "/catalog.v1alpha0.CatalogService/GetProductBySupplier"
+	CatalogService_ListProducts_FullMethodName         = "/catalog.v1.CatalogService/ListProducts"
+	CatalogService_GetProduct_FullMethodName           = "/catalog.v1.CatalogService/GetProduct"
+	CatalogService_CreateProduct_FullMethodName        = "/catalog.v1.CatalogService/CreateProduct"
+	CatalogService_UpdateProduct_FullMethodName        = "/catalog.v1.CatalogService/UpdateProduct"
+	CatalogService_DeleteProduct_FullMethodName        = "/catalog.v1.CatalogService/DeleteProduct"
+	CatalogService_GetProductPrice_FullMethodName      = "/catalog.v1.CatalogService/GetProductPrice"
+	CatalogService_ListSuppliers_FullMethodName        = "/catalog.v1.CatalogService/ListSuppliers"
+	CatalogService_GetSupplier_FullMethodName          = "/catalog.v1.CatalogService/GetSupplier"
+	CatalogService_CreateSupplier_FullMethodName       = "/catalog.v1.CatalogService/CreateSupplier"
+	CatalogService_UpdateSupplier_FullMethodName       = "/catalog.v1.CatalogService/UpdateSupplier"
+	CatalogService_SetPrimarySupplier_FullMethodName   = "/catalog.v1.CatalogService/SetPrimarySupplier"
+	CatalogService_ListProductGroups_FullMethodName    = "/catalog.v1.CatalogService/ListProductGroups"
+	CatalogService_GetProductGroup_FullMethodName      = "/catalog.v1.CatalogService/GetProductGroup"
+	CatalogService_CreateProductGroup_FullMethodName   = "/catalog.v1.CatalogService/CreateProductGroup"
+	CatalogService_UpdateProductGroup_FullMethodName   = "/catalog.v1.CatalogService/UpdateProductGroup"
+	CatalogService_GetProductBySupplier_FullMethodName = "/catalog.v1.CatalogService/GetProductBySupplier"
 )
 
 // CatalogServiceClient is the client API for CatalogService service.
@@ -56,7 +56,7 @@ type CatalogServiceClient interface {
 	// ListSuppliers returns a List of suppliers for a product
 	ListSuppliers(ctx context.Context, in *ListSuppliersRequest, opts ...grpc.CallOption) (*ListSuppliersResponse, error)
 	// GetSupplier returns the supplier of a product
-	GetSupplier(ctx context.Context, in *GetSupplierRequest, opts ...grpc.CallOption) (*ProductSupplier, error)
+	GetSupplier(ctx context.Context, in *GetSupplierRequest, opts ...grpc.CallOption) (*GetSupplierResponse, error)
 	// CreateSupplier creates a supplier for a product
 	CreateSupplier(ctx context.Context, in *CreateSupplierRequest, opts ...grpc.CallOption) (*CreateSupplierResponse, error)
 	// UpdateSupplier updates a supplier for a product
@@ -68,9 +68,9 @@ type CatalogServiceClient interface {
 	// GetProductGroup returns a single product group
 	GetProductGroup(ctx context.Context, in *GetProductGroupRequest, opts ...grpc.CallOption) (*GetProductGroupResponse, error)
 	// CreateProductGroup creates a product group
-	CreateProductGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error)
+	CreateProductGroup(ctx context.Context, in *CreateProductGroupRequest, opts ...grpc.CallOption) (*CreateProductGroupResponse, error)
 	// UpdateProductGroup updates a product group
-	UpdateProductGroup(ctx context.Context, in *UpdateGroupRequest, opts ...grpc.CallOption) (*UpdateGroupResponse, error)
+	UpdateProductGroup(ctx context.Context, in *UpdateProductGroupRequest, opts ...grpc.CallOption) (*UpdateProductGroupResponse, error)
 	// GetProductBySupplier returns a product by supplier identifiers
 	GetProductBySupplier(ctx context.Context, in *GetProductBySupplierRequest, opts ...grpc.CallOption) (*GetProductBySupplierResponse, error)
 }
@@ -146,8 +146,8 @@ func (c *catalogServiceClient) ListSuppliers(ctx context.Context, in *ListSuppli
 	return out, nil
 }
 
-func (c *catalogServiceClient) GetSupplier(ctx context.Context, in *GetSupplierRequest, opts ...grpc.CallOption) (*ProductSupplier, error) {
-	out := new(ProductSupplier)
+func (c *catalogServiceClient) GetSupplier(ctx context.Context, in *GetSupplierRequest, opts ...grpc.CallOption) (*GetSupplierResponse, error) {
+	out := new(GetSupplierResponse)
 	err := c.cc.Invoke(ctx, CatalogService_GetSupplier_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -200,8 +200,8 @@ func (c *catalogServiceClient) GetProductGroup(ctx context.Context, in *GetProdu
 	return out, nil
 }
 
-func (c *catalogServiceClient) CreateProductGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error) {
-	out := new(CreateGroupResponse)
+func (c *catalogServiceClient) CreateProductGroup(ctx context.Context, in *CreateProductGroupRequest, opts ...grpc.CallOption) (*CreateProductGroupResponse, error) {
+	out := new(CreateProductGroupResponse)
 	err := c.cc.Invoke(ctx, CatalogService_CreateProductGroup_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -209,8 +209,8 @@ func (c *catalogServiceClient) CreateProductGroup(ctx context.Context, in *Creat
 	return out, nil
 }
 
-func (c *catalogServiceClient) UpdateProductGroup(ctx context.Context, in *UpdateGroupRequest, opts ...grpc.CallOption) (*UpdateGroupResponse, error) {
-	out := new(UpdateGroupResponse)
+func (c *catalogServiceClient) UpdateProductGroup(ctx context.Context, in *UpdateProductGroupRequest, opts ...grpc.CallOption) (*UpdateProductGroupResponse, error) {
+	out := new(UpdateProductGroupResponse)
 	err := c.cc.Invoke(ctx, CatalogService_UpdateProductGroup_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -246,7 +246,7 @@ type CatalogServiceServer interface {
 	// ListSuppliers returns a List of suppliers for a product
 	ListSuppliers(context.Context, *ListSuppliersRequest) (*ListSuppliersResponse, error)
 	// GetSupplier returns the supplier of a product
-	GetSupplier(context.Context, *GetSupplierRequest) (*ProductSupplier, error)
+	GetSupplier(context.Context, *GetSupplierRequest) (*GetSupplierResponse, error)
 	// CreateSupplier creates a supplier for a product
 	CreateSupplier(context.Context, *CreateSupplierRequest) (*CreateSupplierResponse, error)
 	// UpdateSupplier updates a supplier for a product
@@ -258,9 +258,9 @@ type CatalogServiceServer interface {
 	// GetProductGroup returns a single product group
 	GetProductGroup(context.Context, *GetProductGroupRequest) (*GetProductGroupResponse, error)
 	// CreateProductGroup creates a product group
-	CreateProductGroup(context.Context, *CreateGroupRequest) (*CreateGroupResponse, error)
+	CreateProductGroup(context.Context, *CreateProductGroupRequest) (*CreateProductGroupResponse, error)
 	// UpdateProductGroup updates a product group
-	UpdateProductGroup(context.Context, *UpdateGroupRequest) (*UpdateGroupResponse, error)
+	UpdateProductGroup(context.Context, *UpdateProductGroupRequest) (*UpdateProductGroupResponse, error)
 	// GetProductBySupplier returns a product by supplier identifiers
 	GetProductBySupplier(context.Context, *GetProductBySupplierRequest) (*GetProductBySupplierResponse, error)
 }
@@ -290,7 +290,7 @@ func (UnimplementedCatalogServiceServer) GetProductPrice(context.Context, *GetPr
 func (UnimplementedCatalogServiceServer) ListSuppliers(context.Context, *ListSuppliersRequest) (*ListSuppliersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSuppliers not implemented")
 }
-func (UnimplementedCatalogServiceServer) GetSupplier(context.Context, *GetSupplierRequest) (*ProductSupplier, error) {
+func (UnimplementedCatalogServiceServer) GetSupplier(context.Context, *GetSupplierRequest) (*GetSupplierResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSupplier not implemented")
 }
 func (UnimplementedCatalogServiceServer) CreateSupplier(context.Context, *CreateSupplierRequest) (*CreateSupplierResponse, error) {
@@ -308,10 +308,10 @@ func (UnimplementedCatalogServiceServer) ListProductGroups(context.Context, *Lis
 func (UnimplementedCatalogServiceServer) GetProductGroup(context.Context, *GetProductGroupRequest) (*GetProductGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProductGroup not implemented")
 }
-func (UnimplementedCatalogServiceServer) CreateProductGroup(context.Context, *CreateGroupRequest) (*CreateGroupResponse, error) {
+func (UnimplementedCatalogServiceServer) CreateProductGroup(context.Context, *CreateProductGroupRequest) (*CreateProductGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProductGroup not implemented")
 }
-func (UnimplementedCatalogServiceServer) UpdateProductGroup(context.Context, *UpdateGroupRequest) (*UpdateGroupResponse, error) {
+func (UnimplementedCatalogServiceServer) UpdateProductGroup(context.Context, *UpdateProductGroupRequest) (*UpdateProductGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProductGroup not implemented")
 }
 func (UnimplementedCatalogServiceServer) GetProductBySupplier(context.Context, *GetProductBySupplierRequest) (*GetProductBySupplierResponse, error) {
@@ -564,7 +564,7 @@ func _CatalogService_GetProductGroup_Handler(srv interface{}, ctx context.Contex
 }
 
 func _CatalogService_CreateProductGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateGroupRequest)
+	in := new(CreateProductGroupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -576,13 +576,13 @@ func _CatalogService_CreateProductGroup_Handler(srv interface{}, ctx context.Con
 		FullMethod: CatalogService_CreateProductGroup_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).CreateProductGroup(ctx, req.(*CreateGroupRequest))
+		return srv.(CatalogServiceServer).CreateProductGroup(ctx, req.(*CreateProductGroupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CatalogService_UpdateProductGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGroupRequest)
+	in := new(UpdateProductGroupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -594,7 +594,7 @@ func _CatalogService_UpdateProductGroup_Handler(srv interface{}, ctx context.Con
 		FullMethod: CatalogService_UpdateProductGroup_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServiceServer).UpdateProductGroup(ctx, req.(*UpdateGroupRequest))
+		return srv.(CatalogServiceServer).UpdateProductGroup(ctx, req.(*UpdateProductGroupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -621,7 +621,7 @@ func _CatalogService_GetProductBySupplier_Handler(srv interface{}, ctx context.C
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CatalogService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "catalog.v1alpha0.CatalogService",
+	ServiceName: "catalog.v1.CatalogService",
 	HandlerType: (*CatalogServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -690,5 +690,5 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "catalog/v1alpha0/catalog.proto",
+	Metadata: "catalog/v1/catalog.proto",
 }

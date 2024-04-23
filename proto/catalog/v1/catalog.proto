@@ -2,7 +2,7 @@ syntax = 'proto3';
 
 import "google/protobuf/field_mask.proto";
 
-package catalog.v1alpha0;
+package catalog.v1;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/catalog_v1alpha0";
 
@@ -62,7 +62,7 @@ service CatalogService {
   // ListSuppliers returns a List of suppliers for a product
   rpc ListSuppliers(ListSuppliersRequest) returns (ListSuppliersResponse);
   // GetSupplier returns the supplier of a product
-  rpc GetSupplier(GetSupplierRequest) returns (ProductSupplier);
+  rpc GetSupplier(GetSupplierRequest) returns (GetSupplierResponse);
   // CreateSupplier creates a supplier for a product
   rpc CreateSupplier(CreateSupplierRequest) returns (CreateSupplierResponse);
   // UpdateSupplier updates a supplier for a product
@@ -75,9 +75,9 @@ service CatalogService {
   // GetProductGroup returns a single product group
   rpc GetProductGroup(GetProductGroupRequest) returns (GetProductGroupResponse);
   // CreateProductGroup creates a product group
-  rpc CreateProductGroup(CreateGroupRequest) returns (CreateGroupResponse);
+  rpc CreateProductGroup(CreateProductGroupRequest) returns (CreateProductGroupResponse);
   // UpdateProductGroup updates a product group
-  rpc UpdateProductGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
+  rpc UpdateProductGroup(UpdateProductGroupRequest) returns (UpdateProductGroupResponse);
 
   // GetProductBySupplier returns a product by supplier identifiers
   rpc GetProductBySupplier(GetProductBySupplierRequest) returns (GetProductBySupplierResponse);
@@ -157,6 +157,10 @@ message ListProductGroupsResponse {
   repeated ProductGroup product_groups = 1;
 }
 
+message GetSupplierResponse{
+  ProductSupplier product_supplier = 1;
+}
+
 message CreateSupplierRequest {
   string product_id = 1;
   string supplier_id = 2;
@@ -164,8 +168,8 @@ message CreateSupplierRequest {
   double list_price = 4;
   double purchase_price = 5;
 }
-
 message CreateSupplierResponse {}
+
 
 message UpdateSupplierRequest {
   ProductSupplier product_supplier = 1;
@@ -191,19 +195,19 @@ message GetProductGroupResponse {
   repeated ProductDetail products = 2;
 }
 
-message CreateGroupRequest {
+message CreateProductGroupRequest {
   ProductGroup product_group = 1;
   //  string sn = 1; //Unique identifier of Product Group
   //  string name = 2; // Description of group
 }
-message CreateGroupResponse {
+message CreateProductGroupResponse {
   repeated ValidationError validation_errors = 1;
 }
 
-message UpdateGroupRequest {
+message UpdateProductGroupRequest {
   ProductGroup product_group = 1;
 }
-message UpdateGroupResponse {}
+message UpdateProductGroupResponse {}
 
 message GetProductBySupplierRequest {
   string supplier_id = 1;

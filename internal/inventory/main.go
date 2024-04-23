@@ -6,7 +6,7 @@ import (
 	"github.com/materials-resources/s_prophet/infrastructure/data"
 	"github.com/materials-resources/s_prophet/internal/inventory/api"
 	"github.com/materials-resources/s_prophet/internal/inventory/service"
-	svc "github.com/materials-resources/s_prophet/proto/inventory/v1alpha0"
+	svc "github.com/materials-resources/s_prophet/proto/inventory/v1"
 )
 
 func init() {

@@ -1,6 +1,6 @@
 syntax = 'proto3';
 
-package customer.v1alpha0;
+package customer.v1;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/customer_v1alpha0";
 

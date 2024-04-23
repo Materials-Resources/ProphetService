@@ -1,6 +1,6 @@
 syntax = 'proto3';
 
-package inventory.v1alpha0;
+package inventory.v1;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/inventory_v1alpha0";
 
@@ -28,11 +28,11 @@ message GetProductStockRequest {
   repeated int32 product_uid = 1;
 }
 message GetProductStockResponse {
-  message productStock {
+  message ProductStock {
     int32 product_uid = 1;
     double quantity_available = 2;
   }
-  repeated productStock product_stock = 1;
+  repeated ProductStock product_stock = 1;
 }
 message AddSupplierResponse {}
 

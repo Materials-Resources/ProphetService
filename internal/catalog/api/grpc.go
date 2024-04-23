@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/materials-resources/s_prophet/internal/catalog/domain"
-	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1alpha0"
+	rpc "github.com/materials-resources/s_prophet/proto/catalog/v1"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -28,19 +28,75 @@ type CatalogApi struct {
 	producer service.Producer
 }
 
-func (s CatalogApi) ListProductGroup(ctx context.Context, request *rpc.ListGroupRequest) (
-	*rpc.ListGroupResponse, error,
+func (s CatalogApi) ListSuppliers(ctx context.Context, request *rpc.ListSuppliersRequest) (
+	*rpc.ListSuppliersResponse, error) {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (s CatalogApi) ListProducts(ctx context.Context, request *rpc.ListProductsRequest) (
+	*rpc.ListProductsResponse,
+	error,
+) {
+	filter := &domain.Filter{Cursor: int(request.GetCursor()), Limit: 200}
+	products, err := s.service.ListProduct(ctx, *filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	rpcProducts := make([]*rpc.ProductDetail, len(products))
+
+	for i, p := range products {
+		rpcProducts[i] = &rpc.ProductDetail{
+			Id:             p.UID,
+			Sn:             p.SN,
+			Name:           p.Name,
+			Description:    p.Description,
+			StockQty:       p.StockQuantity,
+			ProductGroupSn: p.ProductGroupSn,
+		}
+
+	}
+	return &rpc.ListProductsResponse{Products: rpcProducts, NextCursor: 0}, nil
+}
+
+func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (
+	*rpc.GetProductResponse, error,
+) {
+	_, span := s.tracer.Start(ctx, "getProduct")
+	defer span.End()
+	product, err := s.service.GetProductBySupplierPartNumber(ctx, "OBS50358", 103687)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			return nil, status.Error(codes.NotFound, "product not found")
+		}
+
+	}
+	return &rpc.GetProductResponse{
+		Product: &rpc.ProductDetail{
+			Id:          product.UID,
+			Sn:          product.SN,
+			Name:        product.Name,
+			Description: product.Description,
+		},
+	}, nil
+}
+
+func (s CatalogApi) ListProductGroups(ctx context.Context, request *rpc.ListProductGroupsRequest) (
+	*rpc.ListProductGroupsResponse, error,
 ) {
 	_, span := s.tracer.Start(ctx, "ListGroup")
 	defer span.End()
 	productGroups, err := s.service.ListProductGroup(ctx)
 
 	if err != nil {
-		return &rpc.ListGroupResponse{}, err
+		return &rpc.ListProductGroupsResponse{}, err
 	}
 
 	res := domainToProductGroups(productGroups)
-	return &rpc.ListGroupResponse{ProductGroups: res}, nil
+	return &rpc.ListProductGroupsResponse{ProductGroups: res}, nil
 }
 
 func domainToProductGroups(productGroups []*domain.ProductGroup) []*rpc.ProductGroup {
@@ -85,8 +141,8 @@ func (s CatalogApi) GetProductGroup(
 }
 
 func (s CatalogApi) CreateProductGroup(
-	ctx context.Context, request *rpc.CreateGroupRequest,
-) (*rpc.CreateGroupResponse, error) {
+	ctx context.Context, request *rpc.CreateProductGroupRequest,
+) (*rpc.CreateProductGroupResponse, error) {
 	_, span := s.tracer.Start(ctx, "CreateGroup")
 	defer span.End()
 
@@ -102,20 +158,20 @@ func (s CatalogApi) CreateProductGroup(
 		for key, msg := range v.Errors {
 			validationErrors = append(validationErrors, &rpc.ValidationError{Field: key, Message: msg})
 		}
-		return &rpc.CreateGroupResponse{ValidationErrors: validationErrors}, status.Error(
+		return &rpc.CreateProductGroupResponse{ValidationErrors: validationErrors}, status.Error(
 			codes.InvalidArgument,
 			"validation error")
 	}
 	err := s.service.CreateProductGroup(ctx, &productGroup)
 	if err != nil {
-		return &rpc.CreateGroupResponse{}, err
+		return &rpc.CreateProductGroupResponse{}, err
 	}
-	return &rpc.CreateGroupResponse{}, nil
+	return &rpc.CreateProductGroupResponse{}, nil
 }
 
 func (s CatalogApi) UpdateProductGroup(
 	ctx context.Context,
-	request *rpc.UpdateGroupRequest) (*rpc.UpdateGroupResponse, error) {
+	request *rpc.UpdateProductGroupRequest) (*rpc.UpdateProductGroupResponse, error) {
 	productGroup := &domain.ProductGroup{
 		SN: request.GetProductGroup().GetSn(), Name: request.GetProductGroup().GetName(),
 	}
@@ -130,7 +186,7 @@ func (s CatalogApi) UpdateProductGroup(
 	if err != nil {
 		return nil, err
 	}
-	return &rpc.UpdateGroupResponse{}, nil
+	return &rpc.UpdateProductGroupResponse{}, nil
 }
 
 func (s CatalogApi) GetProductPrice(
@@ -157,10 +213,10 @@ func (s CatalogApi) GetProductPrice(
 
 }
 
-func (s CatalogApi) GetProductSupplier(
+func (s CatalogApi) GetSupplier(
 	ctx context.Context,
-	request *rpc.GetProductSupplierRequest,
-) (*rpc.ProductSupplier, error) {
+	request *rpc.GetSupplierRequest,
+) (*rpc.GetSupplierResponse, error) {
 	// ps, err := s.repo.SelectProductSupplier(ctx, request.GetProductId(), request.GetSupplierId())
 	// if err != nil {
 	// 	return nil, err
@@ -199,10 +255,10 @@ func (s CatalogApi) UpdateProduct(
 	return &rpc.UpdateProductResponse{}, nil
 }
 
-func (s CatalogApi) CreateProductSupplier(
+func (s CatalogApi) CreateSupplier(
 	ctx context.Context,
-	request *rpc.CreateProductSupplierRequest,
-) (*rpc.CreateProductSupplierResponse, error) {
+	request *rpc.CreateSupplierRequest,
+) (*rpc.CreateSupplierResponse, error) {
 	// d := &domain.ProductSupplier{
 	// 	SupplierId: request.GetSupplierId(), SupplierSn: request.GetSupplierProductSn(),
 	// 	ProductUid: request.GetProductId(), ListPrice: request.GetListPrice(), PurchasePrice: request.GetPurchasePrice(),
@@ -217,10 +273,10 @@ func (s CatalogApi) CreateProductSupplier(
 	return nil, nil
 }
 
-func (s CatalogApi) UpdateProductSupplier(
+func (s CatalogApi) UpdateSupplier(
 	ctx context.Context,
-	request *rpc.UpdateProductSupplierRequest,
-) (*rpc.UpdateProductSupplierResponse, error) {
+	request *rpc.UpdateSupplierRequest,
+) (*rpc.UpdateSupplierResponse, error) {
 
 	// var paths []string
 	//
@@ -258,67 +314,17 @@ func (s CatalogApi) UpdateProductSupplier(
 	return nil, nil
 }
 
-func (s CatalogApi) SetPrimaryProductSupplier(
+func (s CatalogApi) SetPrimarySupplier(
 	ctx context.Context,
-	request *rpc.SetPrimaryProductSupplierRequest,
-) (*rpc.SetPrimaryProductSupplierResponse, error) {
+	request *rpc.SetPrimarySupplierRequest,
+) (*rpc.SetPrimarySupplierResponse, error) {
 
 	err := s.service.SetPrimaryProductSupplier(
 		ctx, request.GetProductUid(), request.GetLocationId(), request.GetSupplierId(), request.GetDivisionId())
 	if err != nil {
 		return nil, err
 	}
-	return &rpc.SetPrimaryProductSupplierResponse{}, nil
-}
-
-func (s CatalogApi) ListProduct(ctx context.Context, request *rpc.ListProductRequest) (
-	*rpc.ListProductResponse,
-	error,
-) {
-	filter := &domain.Filter{Cursor: int(request.GetCursor()), Limit: 200}
-	products, err := s.service.ListProduct(ctx, *filter)
-
-	if err != nil {
-		return nil, err
-	}
-
-	rpcProducts := make([]*rpc.ProductDetail, len(products))
-
-	for i, p := range products {
-		rpcProducts[i] = &rpc.ProductDetail{
-			Id:             p.UID,
-			Sn:             p.SN,
-			Name:           p.Name,
-			Description:    p.Description,
-			StockQty:       p.StockQuantity,
-			ProductGroupSn: p.ProductGroupSn,
-		}
-
-	}
-	return &rpc.ListProductResponse{Products: rpcProducts, NextCursor: 0}, nil
-}
-
-func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (
-	*rpc.GetProductResponse, error,
-) {
-	_, span := s.tracer.Start(ctx, "getProduct")
-	defer span.End()
-	product, err := s.service.GetProductBySupplierPartNumber(ctx, "OBS50358", 103687)
-	if err != nil {
-		switch {
-		case errors.Is(err, data.ErrRecordNotFound):
-			return nil, status.Error(codes.NotFound, "product not found")
-		}
-
-	}
-	return &rpc.GetProductResponse{
-		Product: &rpc.ProductDetail{
-			Id:          product.UID,
-			Sn:          product.SN,
-			Name:        product.Name,
-			Description: product.Description,
-		},
-	}, nil
+	return &rpc.SetPrimarySupplierResponse{}, nil
 }
 
 func (s CatalogApi) CreateProduct(

@@ -5,7 +5,7 @@ import (
 	"github.com/materials-resources/s_prophet/internal/order/domain"
 	"github.com/materials-resources/s_prophet/internal/order/service"
 
-	rpc "github.com/materials-resources/s_prophet/proto/order/v1alpha0"
+	rpc "github.com/materials-resources/s_prophet/proto/order/v1"
 )
 
 func NewOrderApi(service service.Service) OrderApi {

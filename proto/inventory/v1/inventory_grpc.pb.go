@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: inventory/v1alpha0/inventory.proto
+// source: inventory/v1/inventory.proto
 
 package inventory_v1alpha0
 
@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	InventoryService_GetProductStock_FullMethodName = "/inventory.v1alpha0.InventoryService/GetProductStock"
-	InventoryService_GetReceiptByID_FullMethodName  = "/inventory.v1alpha0.InventoryService/GetReceiptByID"
+	InventoryService_GetProductStock_FullMethodName = "/inventory.v1.InventoryService/GetProductStock"
+	InventoryService_GetReceiptByID_FullMethodName  = "/inventory.v1.InventoryService/GetReceiptByID"
 )
 
 // InventoryServiceClient is the client API for InventoryService service.
@@ -129,7 +129,7 @@ func _InventoryService_GetReceiptByID_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var InventoryService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "inventory.v1alpha0.InventoryService",
+	ServiceName: "inventory.v1.InventoryService",
 	HandlerType: (*InventoryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -142,5 +142,5 @@ var InventoryService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "inventory/v1alpha0/inventory.proto",
+	Metadata: "inventory/v1/inventory.proto",
 }

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: supplier/v1alpha0/supplier.proto
+// source: supplier/v1/supplier.proto
 
 package supplier_v1alpha0
 
@@ -56,9 +56,9 @@ func RegisterSupplierServiceServer(s grpc.ServiceRegistrar, srv SupplierServiceS
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SupplierService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "supplier.v1alpha0.SupplierService",
+	ServiceName: "supplier.v1.SupplierService",
 	HandlerType: (*SupplierServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams:     []grpc.StreamDesc{},
-	Metadata:    "supplier/v1alpha0/supplier.proto",
+	Metadata:    "supplier/v1/supplier.proto",
 }

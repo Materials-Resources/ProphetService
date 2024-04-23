@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: order/v1alpha0/order.proto
+// source: order/v1/order.proto
 
 package order_v1alpha0
 
@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OrderService_CreateOrder_FullMethodName       = "/order.v1alpha0.OrderService/CreateOrder"
-	OrderService_GetOrder_FullMethodName          = "/order.v1alpha0.OrderService/GetOrder"
-	OrderService_GetPickTicketById_FullMethodName = "/order.v1alpha0.OrderService/GetPickTicketById"
+	OrderService_CreateOrder_FullMethodName       = "/order.v1.OrderService/CreateOrder"
+	OrderService_GetOrder_FullMethodName          = "/order.v1.OrderService/GetOrder"
+	OrderService_GetPickTicketById_FullMethodName = "/order.v1.OrderService/GetPickTicketById"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -160,7 +160,7 @@ func _OrderService_GetPickTicketById_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var OrderService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "order.v1alpha0.OrderService",
+	ServiceName: "order.v1.OrderService",
 	HandlerType: (*OrderServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -177,5 +177,5 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "order/v1alpha0/order.proto",
+	Metadata: "order/v1/order.proto",
 }

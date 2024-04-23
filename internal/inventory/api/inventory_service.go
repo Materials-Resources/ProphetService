@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/materials-resources/s_prophet/internal/inventory/service"
 
-	rpc "github.com/materials-resources/s_prophet/proto/inventory/v1alpha0"
+	rpc "github.com/materials-resources/s_prophet/proto/inventory/v1"
 )
 
 func NewInventoryApi(service service.Service) InventoryApi {
@@ -26,9 +26,9 @@ func (s InventoryApi) GetProductStock(
 
 	res := &rpc.GetProductStockResponse{}
 
-	res.ProductStock = make([]*rpc.GetProductStockResponseProductStock, len(productStock))
+	res.ProductStock = make([]*rpc.GetProductStockResponse_ProductStock, len(productStock))
 	for i, stock := range productStock {
-		res.ProductStock[i] = &rpc.GetProductStockResponseProductStock{
+		res.ProductStock[i] = &rpc.GetProductStockResponse_ProductStock{
 			ProductUid:        stock.ProductUid,
 			QuantityAvailable: stock.QuantityAvailable,
 		}
