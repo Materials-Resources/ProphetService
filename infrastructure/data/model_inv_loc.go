@@ -196,7 +196,9 @@ func (m InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId str
 
 	var invLocs []InvLoc
 
-	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where("product_group_id = ?", productGroupId).Scan(ctx)
+	err := m.bun.NewSelect().Model(&invLocs).Where(
+		"product_group_id = ?",
+		productGroupId).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +231,8 @@ func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64,
 func (m InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32) ([]*InvLoc, error) {
 	var invLocs []*InvLoc
 
-	err := m.bun.NewSelect().Model(&invLocs).Where("inv_mast_uid IN (?)", bun.In(invMastUids)).Scan(ctx)
+	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
+		"inv_loc.inv_mast_uid IN (?)", bun.In(invMastUids)).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -35,6 +35,19 @@ type Catalog struct {
 	event  EventService
 }
 
+func (c Catalog) GetBasicProductDetails(ctx context.Context, uids []int32) ([]domain.Product, error) {
+	invLocs, err := c.models.InvLoc.GetByInvMastUids(ctx, uids)
+	if err != nil {
+		return nil, err
+
+	}
+	products := make([]domain.Product, len(invLocs))
+	for i, invLoc := range invLocs {
+		mapInvLocToProduct(invLoc, &products[i])
+	}
+	return products, nil
+}
+
 func (c Catalog) SetPrimaryProductSupplier(
 	ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error {
 
@@ -398,22 +411,35 @@ func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*doma
 
 	products := make([]*domain.Product, len(invLocs))
 	for i, invLoc := range invLocs {
-		products[i] = mapInvLocToProduct(invLoc)
+		var product domain.Product
+		mapInvLocToProduct(&invLoc, &product)
+		products[i] = &product
 	}
 
 	return products, nil
 }
 
-func mapInvLocToProduct(invLoc data.InvLoc) *domain.Product {
-	return &domain.Product{
-		UID: invLoc.InvMastUid, SN: invLoc.InvMast.ItemId, Name: invLoc.InvMast.ItemDesc,
-		Description: invLoc.InvMast.ExtendedDesc.String,
+func (c Catalog) GetProduct(ctx context.Context, uid int32) (domain.Product, error) {
+	invLocs, err := c.models.InvLoc.GetByInvMastUid(ctx, []float64{1001}, uid)
+	if err != nil {
+		return domain.Product{}, err
+
 	}
+	if len(invLocs) == 0 {
+		return domain.Product{}, errors.New("product not found")
+	}
+	var product domain.Product
+	mapInvLocToProduct(&invLocs[0], &product)
+
+	return product, nil
 }
 
-func (c Catalog) GetProduct(ctx context.Context, uid int32) (domain.Product, error) {
-	// TODO implement me
-	panic("implement me")
+func mapInvLocToProduct(invLoc *data.InvLoc, product *domain.Product) {
+	product.UID = invLoc.InvMastUid
+	product.SN = invLoc.InvMast.ItemId
+	product.Name = invLoc.InvMast.ItemDesc
+	product.Description = invLoc.InvMast.ExtendedDesc.String
+	product.ProductGroupSn = invLoc.ProductGroupId.String
 }
 
 func (c Catalog) CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
@@ -432,7 +458,7 @@ func (c Catalog) CreateProductGroup(ctx context.Context, productGroup *domain.Pr
 	return nil
 }
 
-func (c Catalog) GetProductGroup(ctx context.Context, sn string) (domain.ProductGroup, []*domain.Product, error) {
+func (c Catalog) GetProductGroup(ctx context.Context, sn string) (domain.ProductGroup, []int32, error) {
 	dbProductGroup, err := c.models.ProductGroup.GetById(ctx, sn)
 	if err != nil {
 		return domain.ProductGroup{}, nil, err
@@ -440,19 +466,15 @@ func (c Catalog) GetProductGroup(ctx context.Context, sn string) (domain.Product
 
 	dbInvLocs, err := c.models.InvLoc.GetByProductGroupId(ctx, sn)
 
-	products := make([]*domain.Product, len(dbInvLocs))
+	productUids := make([]int32, len(dbInvLocs))
 
 	for i, dbInvLoc := range dbInvLocs {
-		products[i] = &domain.Product{
-			UID: dbInvLoc.InvMastUid, SN: dbInvLoc.InvMast.ItemId, Name: dbInvLoc.InvMast.ItemDesc,
-			Description: dbInvLoc.InvMast.ExtendedDesc.String,
-		}
-
+		productUids[i] = dbInvLoc.InvMastUid
 	}
 
 	return domain.ProductGroup{
 		UID: dbProductGroup.ProductGroupUid, SN: dbProductGroup.ProductGroupId, Name: dbProductGroup.ProductGroupDesc,
-	}, products, nil
+	}, productUids, nil
 }
 
 func (c Catalog) UpdateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {

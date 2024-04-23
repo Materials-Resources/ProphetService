@@ -19,22 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CatalogService_ListProducts_FullMethodName         = "/catalog.v1.CatalogService/ListProducts"
-	CatalogService_GetProduct_FullMethodName           = "/catalog.v1.CatalogService/GetProduct"
-	CatalogService_CreateProduct_FullMethodName        = "/catalog.v1.CatalogService/CreateProduct"
-	CatalogService_UpdateProduct_FullMethodName        = "/catalog.v1.CatalogService/UpdateProduct"
-	CatalogService_DeleteProduct_FullMethodName        = "/catalog.v1.CatalogService/DeleteProduct"
-	CatalogService_GetProductPrice_FullMethodName      = "/catalog.v1.CatalogService/GetProductPrice"
-	CatalogService_ListSuppliers_FullMethodName        = "/catalog.v1.CatalogService/ListSuppliers"
-	CatalogService_GetSupplier_FullMethodName          = "/catalog.v1.CatalogService/GetSupplier"
-	CatalogService_CreateSupplier_FullMethodName       = "/catalog.v1.CatalogService/CreateSupplier"
-	CatalogService_UpdateSupplier_FullMethodName       = "/catalog.v1.CatalogService/UpdateSupplier"
-	CatalogService_SetPrimarySupplier_FullMethodName   = "/catalog.v1.CatalogService/SetPrimarySupplier"
-	CatalogService_ListProductGroups_FullMethodName    = "/catalog.v1.CatalogService/ListProductGroups"
-	CatalogService_GetProductGroup_FullMethodName      = "/catalog.v1.CatalogService/GetProductGroup"
-	CatalogService_CreateProductGroup_FullMethodName   = "/catalog.v1.CatalogService/CreateProductGroup"
-	CatalogService_UpdateProductGroup_FullMethodName   = "/catalog.v1.CatalogService/UpdateProductGroup"
-	CatalogService_GetProductBySupplier_FullMethodName = "/catalog.v1.CatalogService/GetProductBySupplier"
+	CatalogService_ListProducts_FullMethodName           = "/catalog.v1.CatalogService/ListProducts"
+	CatalogService_GetProduct_FullMethodName             = "/catalog.v1.CatalogService/GetProduct"
+	CatalogService_CreateProduct_FullMethodName          = "/catalog.v1.CatalogService/CreateProduct"
+	CatalogService_UpdateProduct_FullMethodName          = "/catalog.v1.CatalogService/UpdateProduct"
+	CatalogService_DeleteProduct_FullMethodName          = "/catalog.v1.CatalogService/DeleteProduct"
+	CatalogService_GetBasicProductDetails_FullMethodName = "/catalog.v1.CatalogService/GetBasicProductDetails"
+	CatalogService_GetProductPrice_FullMethodName        = "/catalog.v1.CatalogService/GetProductPrice"
+	CatalogService_ListSuppliers_FullMethodName          = "/catalog.v1.CatalogService/ListSuppliers"
+	CatalogService_GetSupplier_FullMethodName            = "/catalog.v1.CatalogService/GetSupplier"
+	CatalogService_CreateSupplier_FullMethodName         = "/catalog.v1.CatalogService/CreateSupplier"
+	CatalogService_UpdateSupplier_FullMethodName         = "/catalog.v1.CatalogService/UpdateSupplier"
+	CatalogService_SetPrimarySupplier_FullMethodName     = "/catalog.v1.CatalogService/SetPrimarySupplier"
+	CatalogService_ListProductGroups_FullMethodName      = "/catalog.v1.CatalogService/ListProductGroups"
+	CatalogService_GetProductGroup_FullMethodName        = "/catalog.v1.CatalogService/GetProductGroup"
+	CatalogService_CreateProductGroup_FullMethodName     = "/catalog.v1.CatalogService/CreateProductGroup"
+	CatalogService_UpdateProductGroup_FullMethodName     = "/catalog.v1.CatalogService/UpdateProductGroup"
+	CatalogService_GetProductBySupplier_FullMethodName   = "/catalog.v1.CatalogService/GetProductBySupplier"
 )
 
 // CatalogServiceClient is the client API for CatalogService service.
@@ -51,6 +52,8 @@ type CatalogServiceClient interface {
 	UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*UpdateProductResponse, error)
 	// DeleteProduct deletes a product
 	DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error)
+	// GetBasicProductDetails returns a List of basic product details
+	GetBasicProductDetails(ctx context.Context, in *GetBasicProductDetailsRequest, opts ...grpc.CallOption) (*GetBasicProductDetailsResponse, error)
 	// GetProductPrice returns the price of a product
 	GetProductPrice(ctx context.Context, in *GetProductPriceRequest, opts ...grpc.CallOption) (*GetProductPriceResponse, error)
 	// ListSuppliers returns a List of suppliers for a product
@@ -122,6 +125,15 @@ func (c *catalogServiceClient) UpdateProduct(ctx context.Context, in *UpdateProd
 func (c *catalogServiceClient) DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error) {
 	out := new(DeleteProductResponse)
 	err := c.cc.Invoke(ctx, CatalogService_DeleteProduct_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) GetBasicProductDetails(ctx context.Context, in *GetBasicProductDetailsRequest, opts ...grpc.CallOption) (*GetBasicProductDetailsResponse, error) {
+	out := new(GetBasicProductDetailsResponse)
+	err := c.cc.Invoke(ctx, CatalogService_GetBasicProductDetails_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -241,6 +253,8 @@ type CatalogServiceServer interface {
 	UpdateProduct(context.Context, *UpdateProductRequest) (*UpdateProductResponse, error)
 	// DeleteProduct deletes a product
 	DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error)
+	// GetBasicProductDetails returns a List of basic product details
+	GetBasicProductDetails(context.Context, *GetBasicProductDetailsRequest) (*GetBasicProductDetailsResponse, error)
 	// GetProductPrice returns the price of a product
 	GetProductPrice(context.Context, *GetProductPriceRequest) (*GetProductPriceResponse, error)
 	// ListSuppliers returns a List of suppliers for a product
@@ -283,6 +297,9 @@ func (UnimplementedCatalogServiceServer) UpdateProduct(context.Context, *UpdateP
 }
 func (UnimplementedCatalogServiceServer) DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProduct not implemented")
+}
+func (UnimplementedCatalogServiceServer) GetBasicProductDetails(context.Context, *GetBasicProductDetailsRequest) (*GetBasicProductDetailsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBasicProductDetails not implemented")
 }
 func (UnimplementedCatalogServiceServer) GetProductPrice(context.Context, *GetProductPriceRequest) (*GetProductPriceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProductPrice not implemented")
@@ -415,6 +432,24 @@ func _CatalogService_DeleteProduct_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CatalogServiceServer).DeleteProduct(ctx, req.(*DeleteProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_GetBasicProductDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBasicProductDetailsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).GetBasicProductDetails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CatalogService_GetBasicProductDetails_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).GetBasicProductDetails(ctx, req.(*GetBasicProductDetailsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -643,6 +678,10 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteProduct",
 			Handler:    _CatalogService_DeleteProduct_Handler,
+		},
+		{
+			MethodName: "GetBasicProductDetails",
+			Handler:    _CatalogService_GetBasicProductDetails_Handler,
 		},
 		{
 			MethodName: "GetProductPrice",

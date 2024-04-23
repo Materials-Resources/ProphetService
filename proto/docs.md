@@ -13,6 +13,9 @@
     - [Cursor](#catalog-v1-Cursor)
     - [DeleteProductRequest](#catalog-v1-DeleteProductRequest)
     - [DeleteProductResponse](#catalog-v1-DeleteProductResponse)
+    - [GetBasicProductDetailsRequest](#catalog-v1-GetBasicProductDetailsRequest)
+    - [GetBasicProductDetailsResponse](#catalog-v1-GetBasicProductDetailsResponse)
+    - [GetBasicProductDetailsResponse.BasicProductDetail](#catalog-v1-GetBasicProductDetailsResponse-BasicProductDetail)
     - [GetProductBySupplierRequest](#catalog-v1-GetProductBySupplierRequest)
     - [GetProductBySupplierResponse](#catalog-v1-GetProductBySupplierResponse)
     - [GetProductGroupRequest](#catalog-v1-GetProductGroupRequest)
@@ -234,6 +237,54 @@
 
 
 
+<a name="catalog-v1-GetBasicProductDetailsRequest"></a>
+
+### GetBasicProductDetailsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_uid | [int32](#int32) | repeated |  |
+
+
+
+
+
+
+<a name="catalog-v1-GetBasicProductDetailsResponse"></a>
+
+### GetBasicProductDetailsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| basic_product_details | [GetBasicProductDetailsResponse.BasicProductDetail](#catalog-v1-GetBasicProductDetailsResponse-BasicProductDetail) | repeated |  |
+
+
+
+
+
+
+<a name="catalog-v1-GetBasicProductDetailsResponse-BasicProductDetail"></a>
+
+### GetBasicProductDetailsResponse.BasicProductDetail
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_uid | [int32](#int32) |  |  |
+| sn | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| description | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="catalog-v1-GetProductBySupplierRequest"></a>
 
 ### GetProductBySupplierRequest
@@ -242,7 +293,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| supplier_id | [string](#string) |  |  |
+| supplier_id | [double](#double) |  |  |
 | supplier_part_no | [string](#string) |  |  |
 
 
@@ -289,7 +340,8 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | product_group | [ProductGroup](#catalog-v1-ProductGroup) |  |  |
-| products | [ProductDetail](#catalog-v1-ProductDetail) | repeated |  |
+| products | [ProductDetail](#catalog-v1-ProductDetail) | repeated | **Deprecated.**  |
+| product_uids | [int32](#int32) | repeated |  |
 
 
 
@@ -696,6 +748,7 @@
 | CreateProduct | [CreateProductRequest](#catalog-v1-CreateProductRequest) | [CreateProductResponse](#catalog-v1-CreateProductResponse) | CreateProduct creates a product |
 | UpdateProduct | [UpdateProductRequest](#catalog-v1-UpdateProductRequest) | [UpdateProductResponse](#catalog-v1-UpdateProductResponse) | UpdateProduct updates a product |
 | DeleteProduct | [DeleteProductRequest](#catalog-v1-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1-DeleteProductResponse) | DeleteProduct deletes a product |
+| GetBasicProductDetails | [GetBasicProductDetailsRequest](#catalog-v1-GetBasicProductDetailsRequest) | [GetBasicProductDetailsResponse](#catalog-v1-GetBasicProductDetailsResponse) | GetBasicProductDetails returns a List of basic product details |
 | GetProductPrice | [GetProductPriceRequest](#catalog-v1-GetProductPriceRequest) | [GetProductPriceResponse](#catalog-v1-GetProductPriceResponse) | GetProductPrice returns the price of a product |
 | ListSuppliers | [ListSuppliersRequest](#catalog-v1-ListSuppliersRequest) | [ListSuppliersResponse](#catalog-v1-ListSuppliersResponse) | ListSuppliers returns a List of suppliers for a product |
 | GetSupplier | [GetSupplierRequest](#catalog-v1-GetSupplierRequest) | [GetSupplierResponse](#catalog-v1-GetSupplierResponse) | GetSupplier returns the supplier of a product |
@@ -1115,6 +1168,7 @@
 | quantity_unit | [string](#string) |  |  |
 | cost_per_unit | [double](#double) |  |  |
 | total_price | [double](#double) |  |  |
+| product_uid | [int32](#int32) |  |  |
 
 
 

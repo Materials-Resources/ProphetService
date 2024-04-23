@@ -11,22 +11,24 @@ dev/redpanda/up:
 .PHONY: dev/redpanda/down
 ## dev/redpanda/down: Stop redpanda development cluster
 dev/redpanda/down:
-	podman kube down deployment/dev/redpanda.yml
+	podman play kube --down deployment/dev/redpanda.yml
 
 .PHONY: dev/metrics/up
 ## dev/metrics/up: Start metrics development server
 dev/metrics/up:
-	podman kube play deployment/dev/metrics.yml
+	podman play kube deployment/dev/metrics.yml
 
 .PHONY: dev/metrics/down
 ## dev/metrics/up: Stop metrics development server
 dev/metrics/down:
-	podman kube down deployment/dev/metrics.yml
+	podman play kube --down deployment/dev/metrics.yml
 
 .PHONY: generate/proto
 ## generate/proto: Generate packages from proto files using the buf cli tool
 generate/proto:
 	buf generate proto
+proto/breaking:
+	buf breaking proto --against '.git#branch=main'
 
 .PHONY: dev/app/run
 ## dev/app/run: Run the application

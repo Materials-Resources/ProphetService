@@ -16,6 +16,8 @@ type CatalogService interface {
 	UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error
 	// DeleteProduct deletes a Product
 	DeleteProduct(ctx context.Context, uid int32) error
+	// GetBasicProductDetails returns a list of Product with basic details
+	GetBasicProductDetails(ctx context.Context, uids []int32) ([]domain.Product, error)
 
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 
@@ -28,7 +30,7 @@ type CatalogService interface {
 	// ListProductGroup returns a list of ProductGroup
 	ListProductGroup(ctx context.Context) ([]*domain.ProductGroup, error)
 	// GetProductGroup returns ProductGroup by the given SN
-	GetProductGroup(ctx context.Context, sn string) (domain.ProductGroup, []*domain.Product, error)
+	GetProductGroup(ctx context.Context, sn string) (domain.ProductGroup, []int32, error)
 	// UpdateProductGroup updates a ProductGroup
 	UpdateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error
 	// CreateProductGroup creates a new product group

@@ -28,6 +28,23 @@ type CatalogApi struct {
 	producer service.Producer
 }
 
+func (s CatalogApi) GetBasicProductDetails(
+	ctx context.Context, request *rpc.GetBasicProductDetailsRequest) (*rpc.GetBasicProductDetailsResponse, error) {
+	product, err := s.service.GetBasicProductDetails(ctx, request.GetProductUid())
+	if err != nil {
+		return nil, err
+	}
+	var res rpc.GetBasicProductDetailsResponse
+	res.BasicProductDetails = make([]*rpc.GetBasicProductDetailsResponse_BasicProductDetail, len(product))
+	for i, p := range product {
+		res.BasicProductDetails[i] = &rpc.GetBasicProductDetailsResponse_BasicProductDetail{
+			ProductUid: p.UID, Name: p.Name, Sn: p.SN,
+		}
+
+	}
+	return &res, nil
+}
+
 func (s CatalogApi) ListSuppliers(ctx context.Context, request *rpc.ListSuppliersRequest) (
 	*rpc.ListSuppliersResponse, error) {
 	// TODO implement me
@@ -64,9 +81,7 @@ func (s CatalogApi) ListProducts(ctx context.Context, request *rpc.ListProductsR
 func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (
 	*rpc.GetProductResponse, error,
 ) {
-	_, span := s.tracer.Start(ctx, "getProduct")
-	defer span.End()
-	product, err := s.service.GetProductBySupplierPartNumber(ctx, "OBS50358", 103687)
+	product, err := s.service.GetProduct(ctx, request.GetId())
 	if err != nil {
 		switch {
 		case errors.Is(err, data.ErrRecordNotFound):
@@ -76,10 +91,11 @@ func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductReque
 	}
 	return &rpc.GetProductResponse{
 		Product: &rpc.ProductDetail{
-			Id:          product.UID,
-			Sn:          product.SN,
-			Name:        product.Name,
-			Description: product.Description,
+			Id:             product.UID,
+			Sn:             product.SN,
+			Name:           product.Name,
+			Description:    product.Description,
+			ProductGroupSn: product.ProductGroupSn,
 		},
 	}, nil
 }
@@ -115,7 +131,7 @@ func domainToProductGroups(productGroups []*domain.ProductGroup) []*rpc.ProductG
 func (s CatalogApi) GetProductGroup(
 	ctx context.Context, request *rpc.GetProductGroupRequest,
 ) (*rpc.GetProductGroupResponse, error) {
-	productGroup, products, err := s.service.GetProductGroup(ctx, request.GetSn())
+	productGroup, productUids, err := s.service.GetProductGroup(ctx, request.GetSn())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -124,18 +140,7 @@ func (s CatalogApi) GetProductGroup(
 		ProductGroup: &rpc.ProductGroup{
 			Sn: productGroup.SN, Name: productGroup.Name, Uid: productGroup.UID,
 		},
-	}
-
-	res.Products = make([]*rpc.ProductDetail, len(products))
-	for i, product := range products {
-		res.Products[i] = &rpc.ProductDetail{
-			Id:          product.UID,
-			Name:        product.Name,
-			Sn:          product.SN,
-			Description: product.Description,
-			StockQty:    product.StockQuantity,
-		}
-
+		ProductUids: productUids,
 	}
 	return res, nil
 }
@@ -356,6 +361,16 @@ func (s CatalogApi) DeleteProduct(
 func (s CatalogApi) GetProductBySupplier(
 	ctx context.Context, request *rpc.GetProductBySupplierRequest,
 ) (*rpc.GetProductBySupplierResponse, error) {
-	// TODO implement me
-	panic("implement me")
+	product, err := s.service.GetProductBySupplierPartNumber(ctx, request.GetSupplierPartNo(), request.GetSupplierId())
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			return nil, status.Error(codes.NotFound, "product not found")
+		}
+
+	}
+
+	return &rpc.GetProductBySupplierResponse{
+		Sn: product.SN,
+	}, nil
 }

@@ -52,6 +52,7 @@ message GetOrderResponse {
     string quantity_unit = 5;
     double cost_per_unit = 6;
     double total_price = 7;
+    int32 product_uid = 8;
   }
 
   string id = 1;
