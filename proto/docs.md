@@ -3,129 +3,130 @@
 
 ## Table of Contents
 
-- [catalog/v1alpha0/catalog.proto](#catalog_v1alpha0_catalog-proto)
-    - [CreateGroupRequest](#catalog-v1alpha0-CreateGroupRequest)
-    - [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse)
-    - [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest)
-    - [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse)
-    - [CreateSupplierRequest](#catalog-v1alpha0-CreateSupplierRequest)
-    - [CreateSupplierResponse](#catalog-v1alpha0-CreateSupplierResponse)
-    - [Cursor](#catalog-v1alpha0-Cursor)
-    - [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest)
-    - [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse)
-    - [GetProductBySupplierRequest](#catalog-v1alpha0-GetProductBySupplierRequest)
-    - [GetProductBySupplierResponse](#catalog-v1alpha0-GetProductBySupplierResponse)
-    - [GetProductGroupRequest](#catalog-v1alpha0-GetProductGroupRequest)
-    - [GetProductGroupResponse](#catalog-v1alpha0-GetProductGroupResponse)
-    - [GetProductPriceRequest](#catalog-v1alpha0-GetProductPriceRequest)
-    - [GetProductPriceResponse](#catalog-v1alpha0-GetProductPriceResponse)
-    - [GetProductPriceResponse.ProductPrice](#catalog-v1alpha0-GetProductPriceResponse-ProductPrice)
-    - [GetProductRequest](#catalog-v1alpha0-GetProductRequest)
-    - [GetProductResponse](#catalog-v1alpha0-GetProductResponse)
-    - [GetSupplierRequest](#catalog-v1alpha0-GetSupplierRequest)
-    - [ListProductGroupsRequest](#catalog-v1alpha0-ListProductGroupsRequest)
-    - [ListProductGroupsResponse](#catalog-v1alpha0-ListProductGroupsResponse)
-    - [ListProductsRequest](#catalog-v1alpha0-ListProductsRequest)
-    - [ListProductsResponse](#catalog-v1alpha0-ListProductsResponse)
-    - [ListSuppliersRequest](#catalog-v1alpha0-ListSuppliersRequest)
-    - [ListSuppliersResponse](#catalog-v1alpha0-ListSuppliersResponse)
-    - [ProductDetail](#catalog-v1alpha0-ProductDetail)
-    - [ProductFilter](#catalog-v1alpha0-ProductFilter)
-    - [ProductGroup](#catalog-v1alpha0-ProductGroup)
-    - [ProductSupplier](#catalog-v1alpha0-ProductSupplier)
-    - [SetPrimarySupplierRequest](#catalog-v1alpha0-SetPrimarySupplierRequest)
-    - [SetPrimarySupplierResponse](#catalog-v1alpha0-SetPrimarySupplierResponse)
-    - [UpdateGroupRequest](#catalog-v1alpha0-UpdateGroupRequest)
-    - [UpdateGroupResponse](#catalog-v1alpha0-UpdateGroupResponse)
-    - [UpdateProductRequest](#catalog-v1alpha0-UpdateProductRequest)
-    - [UpdateProductResponse](#catalog-v1alpha0-UpdateProductResponse)
-    - [UpdateSupplierRequest](#catalog-v1alpha0-UpdateSupplierRequest)
-    - [UpdateSupplierResponse](#catalog-v1alpha0-UpdateSupplierResponse)
-    - [ValidationError](#catalog-v1alpha0-ValidationError)
+- [catalog/v1/catalog.proto](#catalog_v1_catalog-proto)
+    - [CreateProductGroupRequest](#catalog-v1-CreateProductGroupRequest)
+    - [CreateProductGroupResponse](#catalog-v1-CreateProductGroupResponse)
+    - [CreateProductRequest](#catalog-v1-CreateProductRequest)
+    - [CreateProductResponse](#catalog-v1-CreateProductResponse)
+    - [CreateSupplierRequest](#catalog-v1-CreateSupplierRequest)
+    - [CreateSupplierResponse](#catalog-v1-CreateSupplierResponse)
+    - [Cursor](#catalog-v1-Cursor)
+    - [DeleteProductRequest](#catalog-v1-DeleteProductRequest)
+    - [DeleteProductResponse](#catalog-v1-DeleteProductResponse)
+    - [GetProductBySupplierRequest](#catalog-v1-GetProductBySupplierRequest)
+    - [GetProductBySupplierResponse](#catalog-v1-GetProductBySupplierResponse)
+    - [GetProductGroupRequest](#catalog-v1-GetProductGroupRequest)
+    - [GetProductGroupResponse](#catalog-v1-GetProductGroupResponse)
+    - [GetProductPriceRequest](#catalog-v1-GetProductPriceRequest)
+    - [GetProductPriceResponse](#catalog-v1-GetProductPriceResponse)
+    - [GetProductPriceResponse.ProductPrice](#catalog-v1-GetProductPriceResponse-ProductPrice)
+    - [GetProductRequest](#catalog-v1-GetProductRequest)
+    - [GetProductResponse](#catalog-v1-GetProductResponse)
+    - [GetSupplierRequest](#catalog-v1-GetSupplierRequest)
+    - [GetSupplierResponse](#catalog-v1-GetSupplierResponse)
+    - [ListProductGroupsRequest](#catalog-v1-ListProductGroupsRequest)
+    - [ListProductGroupsResponse](#catalog-v1-ListProductGroupsResponse)
+    - [ListProductsRequest](#catalog-v1-ListProductsRequest)
+    - [ListProductsResponse](#catalog-v1-ListProductsResponse)
+    - [ListSuppliersRequest](#catalog-v1-ListSuppliersRequest)
+    - [ListSuppliersResponse](#catalog-v1-ListSuppliersResponse)
+    - [ProductDetail](#catalog-v1-ProductDetail)
+    - [ProductFilter](#catalog-v1-ProductFilter)
+    - [ProductGroup](#catalog-v1-ProductGroup)
+    - [ProductSupplier](#catalog-v1-ProductSupplier)
+    - [SetPrimarySupplierRequest](#catalog-v1-SetPrimarySupplierRequest)
+    - [SetPrimarySupplierResponse](#catalog-v1-SetPrimarySupplierResponse)
+    - [UpdateProductGroupRequest](#catalog-v1-UpdateProductGroupRequest)
+    - [UpdateProductGroupResponse](#catalog-v1-UpdateProductGroupResponse)
+    - [UpdateProductRequest](#catalog-v1-UpdateProductRequest)
+    - [UpdateProductResponse](#catalog-v1-UpdateProductResponse)
+    - [UpdateSupplierRequest](#catalog-v1-UpdateSupplierRequest)
+    - [UpdateSupplierResponse](#catalog-v1-UpdateSupplierResponse)
+    - [ValidationError](#catalog-v1-ValidationError)
   
-    - [CatalogService](#catalog-v1alpha0-CatalogService)
+    - [CatalogService](#catalog-v1-CatalogService)
   
-- [customer/v1alpha0/customer.proto](#customer_v1alpha0_customer-proto)
-    - [GetOrdersRequest](#customer-v1alpha0-GetOrdersRequest)
-    - [GetOrdersResponse](#customer-v1alpha0-GetOrdersResponse)
-    - [GetOrdersResponse.Order](#customer-v1alpha0-GetOrdersResponse-Order)
+- [customer/v1/customer.proto](#customer_v1_customer-proto)
+    - [GetOrdersRequest](#customer-v1-GetOrdersRequest)
+    - [GetOrdersResponse](#customer-v1-GetOrdersResponse)
+    - [GetOrdersResponse.Order](#customer-v1-GetOrdersResponse-Order)
   
-    - [CustomerService](#customer-v1alpha0-CustomerService)
+    - [CustomerService](#customer-v1-CustomerService)
   
-- [inventory/v1alpha0/inventory.proto](#inventory_v1alpha0_inventory-proto)
-    - [AddSupplierRequest](#inventory-v1alpha0-AddSupplierRequest)
-    - [AddSupplierResponse](#inventory-v1alpha0-AddSupplierResponse)
-    - [DeleteSupplierRequest](#inventory-v1alpha0-DeleteSupplierRequest)
-    - [DeleteSupplierResponse](#inventory-v1alpha0-DeleteSupplierResponse)
-    - [GetProductStockRequest](#inventory-v1alpha0-GetProductStockRequest)
-    - [GetProductStockResponse](#inventory-v1alpha0-GetProductStockResponse)
-    - [GetProductStockResponse.productStock](#inventory-v1alpha0-GetProductStockResponse-productStock)
-    - [GetReceiptByIDRequest](#inventory-v1alpha0-GetReceiptByIDRequest)
-    - [GetReceiptByIDResponse](#inventory-v1alpha0-GetReceiptByIDResponse)
-    - [GetReceiptByIDResponse.Item](#inventory-v1alpha0-GetReceiptByIDResponse-Item)
-    - [GetReceiptByIDResponse.Item.Order](#inventory-v1alpha0-GetReceiptByIDResponse-Item-Order)
+- [inventory/v1/inventory.proto](#inventory_v1_inventory-proto)
+    - [AddSupplierRequest](#inventory-v1-AddSupplierRequest)
+    - [AddSupplierResponse](#inventory-v1-AddSupplierResponse)
+    - [DeleteSupplierRequest](#inventory-v1-DeleteSupplierRequest)
+    - [DeleteSupplierResponse](#inventory-v1-DeleteSupplierResponse)
+    - [GetProductStockRequest](#inventory-v1-GetProductStockRequest)
+    - [GetProductStockResponse](#inventory-v1-GetProductStockResponse)
+    - [GetProductStockResponse.ProductStock](#inventory-v1-GetProductStockResponse-ProductStock)
+    - [GetReceiptByIDRequest](#inventory-v1-GetReceiptByIDRequest)
+    - [GetReceiptByIDResponse](#inventory-v1-GetReceiptByIDResponse)
+    - [GetReceiptByIDResponse.Item](#inventory-v1-GetReceiptByIDResponse-Item)
+    - [GetReceiptByIDResponse.Item.Order](#inventory-v1-GetReceiptByIDResponse-Item-Order)
   
-    - [InventoryService](#inventory-v1alpha0-InventoryService)
+    - [InventoryService](#inventory-v1-InventoryService)
   
-- [order/v1alpha0/order.proto](#order_v1alpha0_order-proto)
-    - [Address](#order-v1alpha0-Address)
-    - [CreateOrderRequest](#order-v1alpha0-CreateOrderRequest)
-    - [CreateOrderResponse](#order-v1alpha0-CreateOrderResponse)
-    - [Customer](#order-v1alpha0-Customer)
-    - [CustomerContact](#order-v1alpha0-CustomerContact)
-    - [GetOrderRequest](#order-v1alpha0-GetOrderRequest)
-    - [GetOrderResponse](#order-v1alpha0-GetOrderResponse)
-    - [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem)
-    - [GetPickTicketByIdRequest](#order-v1alpha0-GetPickTicketByIdRequest)
-    - [GetPickTicketByIdResponse](#order-v1alpha0-GetPickTicketByIdResponse)
+- [order/v1/order.proto](#order_v1_order-proto)
+    - [Address](#order-v1-Address)
+    - [CreateOrderRequest](#order-v1-CreateOrderRequest)
+    - [CreateOrderResponse](#order-v1-CreateOrderResponse)
+    - [Customer](#order-v1-Customer)
+    - [CustomerContact](#order-v1-CustomerContact)
+    - [GetOrderRequest](#order-v1-GetOrderRequest)
+    - [GetOrderResponse](#order-v1-GetOrderResponse)
+    - [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem)
+    - [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest)
+    - [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse)
   
-    - [OrderService](#order-v1alpha0-OrderService)
+    - [OrderService](#order-v1-OrderService)
   
-- [supplier/v1alpha0/supplier.proto](#supplier_v1alpha0_supplier-proto)
-    - [SupplierService](#supplier-v1alpha0-SupplierService)
+- [supplier/v1/supplier.proto](#supplier_v1_supplier-proto)
+    - [SupplierService](#supplier-v1-SupplierService)
   
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="catalog_v1alpha0_catalog-proto"></a>
+<a name="catalog_v1_catalog-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## catalog/v1alpha0/catalog.proto
+## catalog/v1/catalog.proto
 
 
 
-<a name="catalog-v1alpha0-CreateGroupRequest"></a>
+<a name="catalog-v1-CreateProductGroupRequest"></a>
 
-### CreateGroupRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  | string sn = 1; //Unique identifier of Product Group string name = 2; // Description of group |
-
-
-
-
-
-
-<a name="catalog-v1alpha0-CreateGroupResponse"></a>
-
-### CreateGroupResponse
+### CreateProductGroupRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| validation_errors | [ValidationError](#catalog-v1alpha0-ValidationError) | repeated |  |
+| product_group | [ProductGroup](#catalog-v1-ProductGroup) |  | string sn = 1; //Unique identifier of Product Group string name = 2; // Description of group |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-CreateProductRequest"></a>
+<a name="catalog-v1-CreateProductGroupResponse"></a>
+
+### CreateProductGroupResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| validation_errors | [ValidationError](#catalog-v1-ValidationError) | repeated |  |
+
+
+
+
+
+
+<a name="catalog-v1-CreateProductRequest"></a>
 
 ### CreateProductRequest
 
@@ -148,7 +149,7 @@
 
 
 
-<a name="catalog-v1alpha0-CreateProductResponse"></a>
+<a name="catalog-v1-CreateProductResponse"></a>
 
 ### CreateProductResponse
 
@@ -156,14 +157,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| validation_errors | [ValidationError](#catalog-v1alpha0-ValidationError) | repeated |  |
+| validation_errors | [ValidationError](#catalog-v1-ValidationError) | repeated |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-CreateSupplierRequest"></a>
+<a name="catalog-v1-CreateSupplierRequest"></a>
 
 ### CreateSupplierRequest
 
@@ -182,7 +183,7 @@
 
 
 
-<a name="catalog-v1alpha0-CreateSupplierResponse"></a>
+<a name="catalog-v1-CreateSupplierResponse"></a>
 
 ### CreateSupplierResponse
 
@@ -192,7 +193,7 @@
 
 
 
-<a name="catalog-v1alpha0-Cursor"></a>
+<a name="catalog-v1-Cursor"></a>
 
 ### Cursor
 
@@ -208,7 +209,7 @@
 
 
 
-<a name="catalog-v1alpha0-DeleteProductRequest"></a>
+<a name="catalog-v1-DeleteProductRequest"></a>
 
 ### DeleteProductRequest
 
@@ -223,7 +224,7 @@
 
 
 
-<a name="catalog-v1alpha0-DeleteProductResponse"></a>
+<a name="catalog-v1-DeleteProductResponse"></a>
 
 ### DeleteProductResponse
 
@@ -233,7 +234,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductBySupplierRequest"></a>
+<a name="catalog-v1-GetProductBySupplierRequest"></a>
 
 ### GetProductBySupplierRequest
 
@@ -249,7 +250,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductBySupplierResponse"></a>
+<a name="catalog-v1-GetProductBySupplierResponse"></a>
 
 ### GetProductBySupplierResponse
 
@@ -264,7 +265,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductGroupRequest"></a>
+<a name="catalog-v1-GetProductGroupRequest"></a>
 
 ### GetProductGroupRequest
 
@@ -279,7 +280,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductGroupResponse"></a>
+<a name="catalog-v1-GetProductGroupResponse"></a>
 
 ### GetProductGroupResponse
 
@@ -287,15 +288,15 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  |  |
-| products | [ProductDetail](#catalog-v1alpha0-ProductDetail) | repeated |  |
+| product_group | [ProductGroup](#catalog-v1-ProductGroup) |  |  |
+| products | [ProductDetail](#catalog-v1-ProductDetail) | repeated |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-GetProductPriceRequest"></a>
+<a name="catalog-v1-GetProductPriceRequest"></a>
 
 ### GetProductPriceRequest
 
@@ -311,7 +312,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductPriceResponse"></a>
+<a name="catalog-v1-GetProductPriceResponse"></a>
 
 ### GetProductPriceResponse
 
@@ -319,14 +320,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_prices | [GetProductPriceResponse.ProductPrice](#catalog-v1alpha0-GetProductPriceResponse-ProductPrice) | repeated |  |
+| product_prices | [GetProductPriceResponse.ProductPrice](#catalog-v1-GetProductPriceResponse-ProductPrice) | repeated |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-GetProductPriceResponse-ProductPrice"></a>
+<a name="catalog-v1-GetProductPriceResponse-ProductPrice"></a>
 
 ### GetProductPriceResponse.ProductPrice
 
@@ -343,7 +344,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductRequest"></a>
+<a name="catalog-v1-GetProductRequest"></a>
 
 ### GetProductRequest
 
@@ -358,7 +359,7 @@
 
 
 
-<a name="catalog-v1alpha0-GetProductResponse"></a>
+<a name="catalog-v1-GetProductResponse"></a>
 
 ### GetProductResponse
 
@@ -366,14 +367,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product | [ProductDetail](#catalog-v1alpha0-ProductDetail) |  |  |
+| product | [ProductDetail](#catalog-v1-ProductDetail) |  |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-GetSupplierRequest"></a>
+<a name="catalog-v1-GetSupplierRequest"></a>
 
 ### GetSupplierRequest
 
@@ -389,7 +390,22 @@
 
 
 
-<a name="catalog-v1alpha0-ListProductGroupsRequest"></a>
+<a name="catalog-v1-GetSupplierResponse"></a>
+
+### GetSupplierResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_supplier | [ProductSupplier](#catalog-v1-ProductSupplier) |  |  |
+
+
+
+
+
+
+<a name="catalog-v1-ListProductGroupsRequest"></a>
 
 ### ListProductGroupsRequest
 
@@ -399,7 +415,7 @@
 
 
 
-<a name="catalog-v1alpha0-ListProductGroupsResponse"></a>
+<a name="catalog-v1-ListProductGroupsResponse"></a>
 
 ### ListProductGroupsResponse
 
@@ -407,14 +423,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_groups | [ProductGroup](#catalog-v1alpha0-ProductGroup) | repeated |  |
+| product_groups | [ProductGroup](#catalog-v1-ProductGroup) | repeated |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-ListProductsRequest"></a>
+<a name="catalog-v1-ListProductsRequest"></a>
 
 ### ListProductsRequest
 
@@ -429,7 +445,7 @@
 
 
 
-<a name="catalog-v1alpha0-ListProductsResponse"></a>
+<a name="catalog-v1-ListProductsResponse"></a>
 
 ### ListProductsResponse
 
@@ -437,7 +453,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| products | [ProductDetail](#catalog-v1alpha0-ProductDetail) | repeated |  |
+| products | [ProductDetail](#catalog-v1-ProductDetail) | repeated |  |
 | next_cursor | [int32](#int32) |  |  |
 
 
@@ -445,7 +461,7 @@
 
 
 
-<a name="catalog-v1alpha0-ListSuppliersRequest"></a>
+<a name="catalog-v1-ListSuppliersRequest"></a>
 
 ### ListSuppliersRequest
 
@@ -455,7 +471,7 @@
 
 
 
-<a name="catalog-v1alpha0-ListSuppliersResponse"></a>
+<a name="catalog-v1-ListSuppliersResponse"></a>
 
 ### ListSuppliersResponse
 
@@ -463,14 +479,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_suppliers | [ProductSupplier](#catalog-v1alpha0-ProductSupplier) | repeated |  |
+| product_suppliers | [ProductSupplier](#catalog-v1-ProductSupplier) | repeated |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-ProductDetail"></a>
+<a name="catalog-v1-ProductDetail"></a>
 
 ### ProductDetail
 
@@ -490,7 +506,7 @@
 
 
 
-<a name="catalog-v1alpha0-ProductFilter"></a>
+<a name="catalog-v1-ProductFilter"></a>
 
 ### ProductFilter
 
@@ -505,7 +521,7 @@
 
 
 
-<a name="catalog-v1alpha0-ProductGroup"></a>
+<a name="catalog-v1-ProductGroup"></a>
 
 ### ProductGroup
 
@@ -522,7 +538,7 @@
 
 
 
-<a name="catalog-v1alpha0-ProductSupplier"></a>
+<a name="catalog-v1-ProductSupplier"></a>
 
 ### ProductSupplier
 
@@ -542,7 +558,7 @@
 
 
 
-<a name="catalog-v1alpha0-SetPrimarySupplierRequest"></a>
+<a name="catalog-v1-SetPrimarySupplierRequest"></a>
 
 ### SetPrimarySupplierRequest
 
@@ -560,7 +576,7 @@
 
 
 
-<a name="catalog-v1alpha0-SetPrimarySupplierResponse"></a>
+<a name="catalog-v1-SetPrimarySupplierResponse"></a>
 
 ### SetPrimarySupplierResponse
 
@@ -570,32 +586,32 @@
 
 
 
-<a name="catalog-v1alpha0-UpdateGroupRequest"></a>
+<a name="catalog-v1-UpdateProductGroupRequest"></a>
 
-### UpdateGroupRequest
+### UpdateProductGroupRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_group | [ProductGroup](#catalog-v1alpha0-ProductGroup) |  |  |
+| product_group | [ProductGroup](#catalog-v1-ProductGroup) |  |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-UpdateGroupResponse"></a>
+<a name="catalog-v1-UpdateProductGroupResponse"></a>
 
-### UpdateGroupResponse
-
-
+### UpdateProductGroupResponse
 
 
 
 
 
-<a name="catalog-v1alpha0-UpdateProductRequest"></a>
+
+
+<a name="catalog-v1-UpdateProductRequest"></a>
 
 ### UpdateProductRequest
 
@@ -603,14 +619,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product | [ProductDetail](#catalog-v1alpha0-ProductDetail) |  |  |
+| product | [ProductDetail](#catalog-v1-ProductDetail) |  |  |
 
 
 
 
 
 
-<a name="catalog-v1alpha0-UpdateProductResponse"></a>
+<a name="catalog-v1-UpdateProductResponse"></a>
 
 ### UpdateProductResponse
 
@@ -620,7 +636,7 @@
 
 
 
-<a name="catalog-v1alpha0-UpdateSupplierRequest"></a>
+<a name="catalog-v1-UpdateSupplierRequest"></a>
 
 ### UpdateSupplierRequest
 
@@ -628,7 +644,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_supplier | [ProductSupplier](#catalog-v1alpha0-ProductSupplier) |  |  |
+| product_supplier | [ProductSupplier](#catalog-v1-ProductSupplier) |  |  |
 | update_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  |  |
 
 
@@ -636,7 +652,7 @@
 
 
 
-<a name="catalog-v1alpha0-UpdateSupplierResponse"></a>
+<a name="catalog-v1-UpdateSupplierResponse"></a>
 
 ### UpdateSupplierResponse
 
@@ -646,7 +662,7 @@
 
 
 
-<a name="catalog-v1alpha0-ValidationError"></a>
+<a name="catalog-v1-ValidationError"></a>
 
 ### ValidationError
 
@@ -668,42 +684,42 @@
  
 
 
-<a name="catalog-v1alpha0-CatalogService"></a>
+<a name="catalog-v1-CatalogService"></a>
 
 ### CatalogService
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| ListProducts | [ListProductsRequest](#catalog-v1alpha0-ListProductsRequest) | [ListProductsResponse](#catalog-v1alpha0-ListProductsResponse) | ListProducts returns a List of products |
-| GetProduct | [GetProductRequest](#catalog-v1alpha0-GetProductRequest) | [GetProductResponse](#catalog-v1alpha0-GetProductResponse) | GetProduct returns a single product |
-| CreateProduct | [CreateProductRequest](#catalog-v1alpha0-CreateProductRequest) | [CreateProductResponse](#catalog-v1alpha0-CreateProductResponse) | CreateProduct creates a product |
-| UpdateProduct | [UpdateProductRequest](#catalog-v1alpha0-UpdateProductRequest) | [UpdateProductResponse](#catalog-v1alpha0-UpdateProductResponse) | UpdateProduct updates a product |
-| DeleteProduct | [DeleteProductRequest](#catalog-v1alpha0-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1alpha0-DeleteProductResponse) | DeleteProduct deletes a product |
-| GetProductPrice | [GetProductPriceRequest](#catalog-v1alpha0-GetProductPriceRequest) | [GetProductPriceResponse](#catalog-v1alpha0-GetProductPriceResponse) | GetProductPrice returns the price of a product |
-| ListSuppliers | [ListSuppliersRequest](#catalog-v1alpha0-ListSuppliersRequest) | [ListSuppliersResponse](#catalog-v1alpha0-ListSuppliersResponse) | ListSuppliers returns a List of suppliers for a product |
-| GetSupplier | [GetSupplierRequest](#catalog-v1alpha0-GetSupplierRequest) | [ProductSupplier](#catalog-v1alpha0-ProductSupplier) | GetSupplier returns the supplier of a product |
-| CreateSupplier | [CreateSupplierRequest](#catalog-v1alpha0-CreateSupplierRequest) | [CreateSupplierResponse](#catalog-v1alpha0-CreateSupplierResponse) | CreateSupplier creates a supplier for a product |
-| UpdateSupplier | [UpdateSupplierRequest](#catalog-v1alpha0-UpdateSupplierRequest) | [UpdateSupplierResponse](#catalog-v1alpha0-UpdateSupplierResponse) | UpdateSupplier updates a supplier for a product |
-| SetPrimarySupplier | [SetPrimarySupplierRequest](#catalog-v1alpha0-SetPrimarySupplierRequest) | [SetPrimarySupplierResponse](#catalog-v1alpha0-SetPrimarySupplierResponse) | SetPrimarySupplier sets the primary supplier for a product |
-| ListProductGroups | [ListProductGroupsRequest](#catalog-v1alpha0-ListProductGroupsRequest) | [ListProductGroupsResponse](#catalog-v1alpha0-ListProductGroupsResponse) | ListProductGroups returns a List of product groups |
-| GetProductGroup | [GetProductGroupRequest](#catalog-v1alpha0-GetProductGroupRequest) | [GetProductGroupResponse](#catalog-v1alpha0-GetProductGroupResponse) | GetProductGroup returns a single product group |
-| CreateProductGroup | [CreateGroupRequest](#catalog-v1alpha0-CreateGroupRequest) | [CreateGroupResponse](#catalog-v1alpha0-CreateGroupResponse) | CreateProductGroup creates a product group |
-| UpdateProductGroup | [UpdateGroupRequest](#catalog-v1alpha0-UpdateGroupRequest) | [UpdateGroupResponse](#catalog-v1alpha0-UpdateGroupResponse) | UpdateProductGroup updates a product group |
-| GetProductBySupplier | [GetProductBySupplierRequest](#catalog-v1alpha0-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#catalog-v1alpha0-GetProductBySupplierResponse) | GetProductBySupplier returns a product by supplier identifiers |
+| ListProducts | [ListProductsRequest](#catalog-v1-ListProductsRequest) | [ListProductsResponse](#catalog-v1-ListProductsResponse) | ListProducts returns a List of products |
+| GetProduct | [GetProductRequest](#catalog-v1-GetProductRequest) | [GetProductResponse](#catalog-v1-GetProductResponse) | GetProduct returns a single product |
+| CreateProduct | [CreateProductRequest](#catalog-v1-CreateProductRequest) | [CreateProductResponse](#catalog-v1-CreateProductResponse) | CreateProduct creates a product |
+| UpdateProduct | [UpdateProductRequest](#catalog-v1-UpdateProductRequest) | [UpdateProductResponse](#catalog-v1-UpdateProductResponse) | UpdateProduct updates a product |
+| DeleteProduct | [DeleteProductRequest](#catalog-v1-DeleteProductRequest) | [DeleteProductResponse](#catalog-v1-DeleteProductResponse) | DeleteProduct deletes a product |
+| GetProductPrice | [GetProductPriceRequest](#catalog-v1-GetProductPriceRequest) | [GetProductPriceResponse](#catalog-v1-GetProductPriceResponse) | GetProductPrice returns the price of a product |
+| ListSuppliers | [ListSuppliersRequest](#catalog-v1-ListSuppliersRequest) | [ListSuppliersResponse](#catalog-v1-ListSuppliersResponse) | ListSuppliers returns a List of suppliers for a product |
+| GetSupplier | [GetSupplierRequest](#catalog-v1-GetSupplierRequest) | [GetSupplierResponse](#catalog-v1-GetSupplierResponse) | GetSupplier returns the supplier of a product |
+| CreateSupplier | [CreateSupplierRequest](#catalog-v1-CreateSupplierRequest) | [CreateSupplierResponse](#catalog-v1-CreateSupplierResponse) | CreateSupplier creates a supplier for a product |
+| UpdateSupplier | [UpdateSupplierRequest](#catalog-v1-UpdateSupplierRequest) | [UpdateSupplierResponse](#catalog-v1-UpdateSupplierResponse) | UpdateSupplier updates a supplier for a product |
+| SetPrimarySupplier | [SetPrimarySupplierRequest](#catalog-v1-SetPrimarySupplierRequest) | [SetPrimarySupplierResponse](#catalog-v1-SetPrimarySupplierResponse) | SetPrimarySupplier sets the primary supplier for a product |
+| ListProductGroups | [ListProductGroupsRequest](#catalog-v1-ListProductGroupsRequest) | [ListProductGroupsResponse](#catalog-v1-ListProductGroupsResponse) | ListProductGroups returns a List of product groups |
+| GetProductGroup | [GetProductGroupRequest](#catalog-v1-GetProductGroupRequest) | [GetProductGroupResponse](#catalog-v1-GetProductGroupResponse) | GetProductGroup returns a single product group |
+| CreateProductGroup | [CreateProductGroupRequest](#catalog-v1-CreateProductGroupRequest) | [CreateProductGroupResponse](#catalog-v1-CreateProductGroupResponse) | CreateProductGroup creates a product group |
+| UpdateProductGroup | [UpdateProductGroupRequest](#catalog-v1-UpdateProductGroupRequest) | [UpdateProductGroupResponse](#catalog-v1-UpdateProductGroupResponse) | UpdateProductGroup updates a product group |
+| GetProductBySupplier | [GetProductBySupplierRequest](#catalog-v1-GetProductBySupplierRequest) | [GetProductBySupplierResponse](#catalog-v1-GetProductBySupplierResponse) | GetProductBySupplier returns a product by supplier identifiers |
 
  
 
 
 
-<a name="customer_v1alpha0_customer-proto"></a>
+<a name="customer_v1_customer-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## customer/v1alpha0/customer.proto
+## customer/v1/customer.proto
 
 
 
-<a name="customer-v1alpha0-GetOrdersRequest"></a>
+<a name="customer-v1-GetOrdersRequest"></a>
 
 ### GetOrdersRequest
 
@@ -718,7 +734,7 @@
 
 
 
-<a name="customer-v1alpha0-GetOrdersResponse"></a>
+<a name="customer-v1-GetOrdersResponse"></a>
 
 ### GetOrdersResponse
 
@@ -726,14 +742,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| orders | [GetOrdersResponse.Order](#customer-v1alpha0-GetOrdersResponse-Order) | repeated |  |
+| orders | [GetOrdersResponse.Order](#customer-v1-GetOrdersResponse-Order) | repeated |  |
 
 
 
 
 
 
-<a name="customer-v1alpha0-GetOrdersResponse-Order"></a>
+<a name="customer-v1-GetOrdersResponse-Order"></a>
 
 ### GetOrdersResponse.Order
 
@@ -755,27 +771,27 @@
  
 
 
-<a name="customer-v1alpha0-CustomerService"></a>
+<a name="customer-v1-CustomerService"></a>
 
 ### CustomerService
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetOrders | [GetOrdersRequest](#customer-v1alpha0-GetOrdersRequest) | [GetOrdersResponse](#customer-v1alpha0-GetOrdersResponse) | rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
+| GetOrders | [GetOrdersRequest](#customer-v1-GetOrdersRequest) | [GetOrdersResponse](#customer-v1-GetOrdersResponse) | rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
  
 
 
 
-<a name="inventory_v1alpha0_inventory-proto"></a>
+<a name="inventory_v1_inventory-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## inventory/v1alpha0/inventory.proto
+## inventory/v1/inventory.proto
 
 
 
-<a name="inventory-v1alpha0-AddSupplierRequest"></a>
+<a name="inventory-v1-AddSupplierRequest"></a>
 
 ### AddSupplierRequest
 
@@ -796,7 +812,7 @@
 
 
 
-<a name="inventory-v1alpha0-AddSupplierResponse"></a>
+<a name="inventory-v1-AddSupplierResponse"></a>
 
 ### AddSupplierResponse
 
@@ -806,7 +822,7 @@
 
 
 
-<a name="inventory-v1alpha0-DeleteSupplierRequest"></a>
+<a name="inventory-v1-DeleteSupplierRequest"></a>
 
 ### DeleteSupplierRequest
 
@@ -816,7 +832,7 @@
 
 
 
-<a name="inventory-v1alpha0-DeleteSupplierResponse"></a>
+<a name="inventory-v1-DeleteSupplierResponse"></a>
 
 ### DeleteSupplierResponse
 
@@ -826,7 +842,7 @@
 
 
 
-<a name="inventory-v1alpha0-GetProductStockRequest"></a>
+<a name="inventory-v1-GetProductStockRequest"></a>
 
 ### GetProductStockRequest
 
@@ -841,7 +857,7 @@
 
 
 
-<a name="inventory-v1alpha0-GetProductStockResponse"></a>
+<a name="inventory-v1-GetProductStockResponse"></a>
 
 ### GetProductStockResponse
 
@@ -849,16 +865,16 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_stock | [GetProductStockResponse.productStock](#inventory-v1alpha0-GetProductStockResponse-productStock) | repeated |  |
+| product_stock | [GetProductStockResponse.ProductStock](#inventory-v1-GetProductStockResponse-ProductStock) | repeated |  |
 
 
 
 
 
 
-<a name="inventory-v1alpha0-GetProductStockResponse-productStock"></a>
+<a name="inventory-v1-GetProductStockResponse-ProductStock"></a>
 
-### GetProductStockResponse.productStock
+### GetProductStockResponse.ProductStock
 
 
 
@@ -872,7 +888,7 @@
 
 
 
-<a name="inventory-v1alpha0-GetReceiptByIDRequest"></a>
+<a name="inventory-v1-GetReceiptByIDRequest"></a>
 
 ### GetReceiptByIDRequest
 
@@ -887,7 +903,7 @@
 
 
 
-<a name="inventory-v1alpha0-GetReceiptByIDResponse"></a>
+<a name="inventory-v1-GetReceiptByIDResponse"></a>
 
 ### GetReceiptByIDResponse
 
@@ -896,14 +912,14 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id | [double](#double) |  | Unique ID of receipt |
-| items | [GetReceiptByIDResponse.Item](#inventory-v1alpha0-GetReceiptByIDResponse-Item) | repeated | Items that were received for this receipt |
+| items | [GetReceiptByIDResponse.Item](#inventory-v1-GetReceiptByIDResponse-Item) | repeated | Items that were received for this receipt |
 
 
 
 
 
 
-<a name="inventory-v1alpha0-GetReceiptByIDResponse-Item"></a>
+<a name="inventory-v1-GetReceiptByIDResponse-Item"></a>
 
 ### GetReceiptByIDResponse.Item
 
@@ -922,7 +938,7 @@
 
 
 
-<a name="inventory-v1alpha0-GetReceiptByIDResponse-Item-Order"></a>
+<a name="inventory-v1-GetReceiptByIDResponse-Item-Order"></a>
 
 ### GetReceiptByIDResponse.Item.Order
 
@@ -946,28 +962,28 @@
  
 
 
-<a name="inventory-v1alpha0-InventoryService"></a>
+<a name="inventory-v1-InventoryService"></a>
 
 ### InventoryService
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetProductStock | [GetProductStockRequest](#inventory-v1alpha0-GetProductStockRequest) | [GetProductStockResponse](#inventory-v1alpha0-GetProductStockResponse) | rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse); rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse); |
-| GetReceiptByID | [GetReceiptByIDRequest](#inventory-v1alpha0-GetReceiptByIDRequest) | [GetReceiptByIDResponse](#inventory-v1alpha0-GetReceiptByIDResponse) | GetReceiptByID returns details for a inventory receipt given an identifier. |
+| GetProductStock | [GetProductStockRequest](#inventory-v1-GetProductStockRequest) | [GetProductStockResponse](#inventory-v1-GetProductStockResponse) | rpc AddSupplier(AddSupplierRequest) returns (AddSupplierResponse); rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse); |
+| GetReceiptByID | [GetReceiptByIDRequest](#inventory-v1-GetReceiptByIDRequest) | [GetReceiptByIDResponse](#inventory-v1-GetReceiptByIDResponse) | GetReceiptByID returns details for a inventory receipt given an identifier. |
 
  
 
 
 
-<a name="order_v1alpha0_order-proto"></a>
+<a name="order_v1_order-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## order/v1alpha0/order.proto
+## order/v1/order.proto
 
 
 
-<a name="order-v1alpha0-Address"></a>
+<a name="order-v1-Address"></a>
 
 ### Address
 
@@ -989,7 +1005,7 @@
 
 
 
-<a name="order-v1alpha0-CreateOrderRequest"></a>
+<a name="order-v1-CreateOrderRequest"></a>
 
 ### CreateOrderRequest
 
@@ -999,7 +1015,7 @@
 
 
 
-<a name="order-v1alpha0-CreateOrderResponse"></a>
+<a name="order-v1-CreateOrderResponse"></a>
 
 ### CreateOrderResponse
 
@@ -1009,7 +1025,7 @@
 
 
 
-<a name="order-v1alpha0-Customer"></a>
+<a name="order-v1-Customer"></a>
 
 ### Customer
 
@@ -1027,7 +1043,7 @@
 
 
 
-<a name="order-v1alpha0-CustomerContact"></a>
+<a name="order-v1-CustomerContact"></a>
 
 ### CustomerContact
 
@@ -1046,7 +1062,7 @@
 
 
 
-<a name="order-v1alpha0-GetOrderRequest"></a>
+<a name="order-v1-GetOrderRequest"></a>
 
 ### GetOrderRequest
 
@@ -1061,7 +1077,7 @@
 
 
 
-<a name="order-v1alpha0-GetOrderResponse"></a>
+<a name="order-v1-GetOrderResponse"></a>
 
 ### GetOrderResponse
 
@@ -1070,11 +1086,11 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
-| order_items | [GetOrderResponse.OrderItem](#order-v1alpha0-GetOrderResponse-OrderItem) | repeated |  |
+| order_items | [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem) | repeated |  |
 | status | [string](#string) |  |  |
-| shipping_address | [Address](#order-v1alpha0-Address) |  |  |
-| customer | [Customer](#order-v1alpha0-Customer) |  |  |
-| contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
+| shipping_address | [Address](#order-v1-Address) |  |  |
+| customer | [Customer](#order-v1-Customer) |  |  |
+| contact | [CustomerContact](#order-v1-CustomerContact) |  |  |
 | delivery_instructions | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 | purchase_order | [string](#string) |  |  |
@@ -1084,7 +1100,7 @@
 
 
 
-<a name="order-v1alpha0-GetOrderResponse-OrderItem"></a>
+<a name="order-v1-GetOrderResponse-OrderItem"></a>
 
 ### GetOrderResponse.OrderItem
 
@@ -1105,7 +1121,7 @@
 
 
 
-<a name="order-v1alpha0-GetPickTicketByIdRequest"></a>
+<a name="order-v1-GetPickTicketByIdRequest"></a>
 
 ### GetPickTicketByIdRequest
 
@@ -1120,7 +1136,7 @@
 
 
 
-<a name="order-v1alpha0-GetPickTicketByIdResponse"></a>
+<a name="order-v1-GetPickTicketByIdResponse"></a>
 
 ### GetPickTicketByIdResponse
 
@@ -1131,8 +1147,8 @@
 | id | [double](#double) |  |  |
 | order_id | [string](#string) |  |  |
 | order_purchase_order | [string](#string) |  |  |
-| order_contact | [CustomerContact](#order-v1alpha0-CustomerContact) |  |  |
-| shipping_address | [Address](#order-v1alpha0-Address) |  |  |
+| order_contact | [CustomerContact](#order-v1-CustomerContact) |  |  |
+| shipping_address | [Address](#order-v1-Address) |  |  |
 | delivery_instructions | [string](#string) |  |  |
 
 
@@ -1146,25 +1162,25 @@
  
 
 
-<a name="order-v1alpha0-OrderService"></a>
+<a name="order-v1-OrderService"></a>
 
 ### OrderService
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| CreateOrder | [CreateOrderRequest](#order-v1alpha0-CreateOrderRequest) | [CreateOrderResponse](#order-v1alpha0-CreateOrderResponse) |  |
-| GetOrder | [GetOrderRequest](#order-v1alpha0-GetOrderRequest) | [GetOrderResponse](#order-v1alpha0-GetOrderResponse) |  |
-| GetPickTicketById | [GetPickTicketByIdRequest](#order-v1alpha0-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1alpha0-GetPickTicketByIdResponse) |  |
+| CreateOrder | [CreateOrderRequest](#order-v1-CreateOrderRequest) | [CreateOrderResponse](#order-v1-CreateOrderResponse) |  |
+| GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) |  |
+| GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |
 
  
 
 
 
-<a name="supplier_v1alpha0_supplier-proto"></a>
+<a name="supplier_v1_supplier-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## supplier/v1alpha0/supplier.proto
+## supplier/v1/supplier.proto
 
 
  
@@ -1174,7 +1190,7 @@
  
 
 
-<a name="supplier-v1alpha0-SupplierService"></a>
+<a name="supplier-v1-SupplierService"></a>
 
 ### SupplierService
 
