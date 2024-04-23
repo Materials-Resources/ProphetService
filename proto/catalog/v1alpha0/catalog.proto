@@ -45,40 +45,54 @@ message ProductFilter {
 }
 
 service CatalogService {
-  // List all products
-  rpc ListProduct(ListProductRequest) returns (ListProductResponse);
-  // Get product by GetProductRequest
+  // ListProducts returns a List of products
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+  // GetProduct returns a single product
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  // CreateProduct creates a product
   rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+  // UpdateProduct updates a product
   rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
+  // DeleteProduct deletes a product
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 
+  // GetProductPrice returns the price of a product
   rpc GetProductPrice(GetProductPriceRequest) returns (GetProductPriceResponse);
 
-  // Gets Product supplier
-  rpc GetProductSupplier(GetProductSupplierRequest) returns (ProductSupplier);
-  rpc CreateProductSupplier(CreateProductSupplierRequest) returns (CreateProductSupplierResponse);
-  rpc UpdateProductSupplier(UpdateProductSupplierRequest) returns (UpdateProductSupplierResponse);
-  rpc SetPrimaryProductSupplier(SetPrimaryProductSupplierRequest) returns (SetPrimaryProductSupplierResponse);
+  // ListSuppliers returns a List of suppliers for a product
+  rpc ListSuppliers(ListSuppliersRequest) returns (ListSuppliersResponse);
+  // GetSupplier returns the supplier of a product
+  rpc GetSupplier(GetSupplierRequest) returns (ProductSupplier);
+  // CreateSupplier creates a supplier for a product
+  rpc CreateSupplier(CreateSupplierRequest) returns (CreateSupplierResponse);
+  // UpdateSupplier updates a supplier for a product
+  rpc UpdateSupplier(UpdateSupplierRequest) returns (UpdateSupplierResponse);
+  // SetPrimarySupplier sets the primary supplier for a product
+  rpc SetPrimarySupplier(SetPrimarySupplierRequest) returns (SetPrimarySupplierResponse);
 
-  rpc ListProductGroup(ListGroupRequest) returns (ListGroupResponse);
+  // ListProductGroups returns a List of product groups
+  rpc ListProductGroups(ListProductGroupsRequest) returns (ListProductGroupsResponse);
+  // GetProductGroup returns a single product group
   rpc GetProductGroup(GetProductGroupRequest) returns (GetProductGroupResponse);
+  // CreateProductGroup creates a product group
   rpc CreateProductGroup(CreateGroupRequest) returns (CreateGroupResponse);
+  // UpdateProductGroup updates a product group
   rpc UpdateProductGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
 
+  // GetProductBySupplier returns a product by supplier identifiers
   rpc GetProductBySupplier(GetProductBySupplierRequest) returns (GetProductBySupplierResponse);
 }
 
 
-message GetProductSupplierRequest {
+message GetSupplierRequest {
   string product_id = 1;
   string supplier_id = 2;
 }
 
-message ListProductRequest {
+message ListProductsRequest {
   int32 cursor = 1;
 }
-message ListProductResponse {
+message ListProductsResponse {
   repeated ProductDetail products = 1;
   int32 next_cursor = 2;
 }
@@ -87,26 +101,9 @@ message GetProductRequest {
   int32 id = 1;
 }
 message GetProductResponse {
-
   ProductDetail product = 1;
-
-
-
-  //  //Unique ID of product
-  //  string id = 1;
-  //  //Serialized ID
-  //  string sn = 2; //products item ID usually formatted as MRS-XXX00-123456
-  //  //Name of product
-  //  string name = 3;
-  //  //Description of product
-  //  string description = 4;
-  //  //Product group
-  //  string product_group_id = 5;
-  //  //MSRP price of product
-  //  double msrp_price = 6;
-  //  double available_quantity = 7;
-  //  string available_unit = 8;
 }
+
 
 message CreateProductRequest {
   string id = 1;
@@ -150,12 +147,17 @@ message GetProductPriceResponse {
   repeated ProductPrice product_prices = 1;
 }
 
-message ListGroupRequest {}
-message ListGroupResponse {
+message ListSuppliersRequest {}
+message ListSuppliersResponse {
+  repeated ProductSupplier product_suppliers = 1;
+}
+
+message ListProductGroupsRequest {}
+message ListProductGroupsResponse {
   repeated ProductGroup product_groups = 1;
 }
 
-message CreateProductSupplierRequest {
+message CreateSupplierRequest {
   string product_id = 1;
   string supplier_id = 2;
   string supplier_product_sn = 3;
@@ -163,23 +165,23 @@ message CreateProductSupplierRequest {
   double purchase_price = 5;
 }
 
-message CreateProductSupplierResponse {}
+message CreateSupplierResponse {}
 
-message UpdateProductSupplierRequest {
+message UpdateSupplierRequest {
   ProductSupplier product_supplier = 1;
 
   google.protobuf.FieldMask update_mask = 2;
 
 }
-message UpdateProductSupplierResponse {}
+message UpdateSupplierResponse {}
 
-message SetPrimaryProductSupplierRequest {
+message SetPrimarySupplierRequest {
   int32 product_uid = 1;
   double location_id = 2;
   double supplier_id = 3;
   double division_id = 4;
 }
-message SetPrimaryProductSupplierResponse {}
+message SetPrimarySupplierResponse {}
 
 message GetProductGroupRequest {
   string sn = 1;
