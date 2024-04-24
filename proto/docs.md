@@ -75,6 +75,9 @@
     - [Address](#order-v1-Address)
     - [CreateOrderRequest](#order-v1-CreateOrderRequest)
     - [CreateOrderResponse](#order-v1-CreateOrderResponse)
+    - [CreateQuoteRequest](#order-v1-CreateQuoteRequest)
+    - [CreateQuoteRequest.OrderItem](#order-v1-CreateQuoteRequest-OrderItem)
+    - [CreateQuoteResponse](#order-v1-CreateQuoteResponse)
     - [Customer](#order-v1-Customer)
     - [CustomerContact](#order-v1-CustomerContact)
     - [GetOrderRequest](#order-v1-GetOrderRequest)
@@ -82,6 +85,7 @@
     - [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem)
     - [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest)
     - [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse)
+    - [OrderItem](#order-v1-OrderItem)
   
     - [OrderService](#order-v1-OrderService)
   
@@ -1078,6 +1082,50 @@
 
 
 
+<a name="order-v1-CreateQuoteRequest"></a>
+
+### CreateQuoteRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| order_items | [CreateQuoteRequest.OrderItem](#order-v1-CreateQuoteRequest-OrderItem) | repeated |  |
+| customer_id | [double](#double) |  |  |
+| shipping_address_id | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="order-v1-CreateQuoteRequest-OrderItem"></a>
+
+### CreateQuoteRequest.OrderItem
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_uid | [int32](#int32) |  |  |
+| quantity_ordered | [double](#double) |  |  |
+| required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+
+
+
+
+
+
+<a name="order-v1-CreateQuoteResponse"></a>
+
+### CreateQuoteResponse
+
+
+
+
+
+
+
 <a name="order-v1-Customer"></a>
 
 ### Customer
@@ -1209,6 +1257,23 @@
 
 
 
+
+<a name="order-v1-OrderItem"></a>
+
+### OrderItem
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| product_uid | [int32](#int32) |  |  |
+| quantity_ordered | [double](#double) |  |  |
+| required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+
+
+
+
+
  
 
  
@@ -1225,6 +1290,7 @@
 | ----------- | ------------ | ------------- | ------------|
 | CreateOrder | [CreateOrderRequest](#order-v1-CreateOrderRequest) | [CreateOrderResponse](#order-v1-CreateOrderResponse) |  |
 | GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) |  |
+| CreateQuote | [CreateQuoteRequest](#order-v1-CreateQuoteRequest) | [CreateQuoteResponse](#order-v1-CreateQuoteResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |
 
  

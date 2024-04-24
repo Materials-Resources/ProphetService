@@ -251,6 +251,41 @@ type OeLineModel struct {
 	bun bun.IDB
 }
 
+func (m *OeLineModel) Create(ctx context.Context) error {
+	oeLine := &OeLine{
+		OrderNo:            "12345678",
+		UnitPrice:          sql.NullFloat64{Float64: 1.0, Valid: true},
+		QtyOrdered:         sql.NullFloat64{Float64: 1.0, Valid: true},
+		QtyPerAssembly:     1.0,
+		CompanyNo:          "12345678",
+		DeleteFlag:         "N",
+		ManualPriceOveride: sql.NullString{String: "N", Valid: true},
+		ExtendedPrice:      sql.NullFloat64{Float64: 1.0, Valid: true},
+		SalesTax:           sql.NullFloat64{Float64: 1.0, Valid: true},
+		LineNo:             1.0,
+		Complete:           sql.NullString{String: "N", Valid: true},
+		UnitOfMeasure:      sql.NullString{String: "EA", Valid: true},
+		BaseUtPrice:        sql.NullFloat64{Float64: 1.0, Valid: true},
+		CalcValue:          sql.NullFloat64{Float64: 1.0, Valid: true},
+		Combinable:         sql.NullString{String: "N", Valid: true},
+		Disposition:        sql.NullString{String: "N", Valid: true},
+		ExpediteDate:       sql.NullTime{Time: time.Now(), Valid: true},
+		RequiredDate:       sql.NullTime{Time: time.Now(), Valid: true},
+		SourceLocId:        sql.NullFloat64{Float64: 1001, Valid: true},
+		ShipLocId:          sql.NullFloat64{Float64: 1001, Valid: true},
+		SupplierId:         sql.NullFloat64{Float64: 1.0, Valid: true},
+		ProductGroupId:     sql.NullString{String: "12345678", Valid: true},
+		Assembly:           sql.NullString{String: "N", Valid: true},
+		Scheduled:          sql.NullString{String: "N", Valid: true},
+		LotBill:            "N",
+		ExtendedDesc:       sql.NullString{String: "12345678", Valid: true},
+		UnitSize:           1.0,
+		UnitQuantity:       1.0,
+		CustomerPartNumber: "12345678",
+	}
+	m.Insert(ctx, oeLine)
+	return nil
+}
 func (m *OeLineModel) Insert(ctx context.Context, oeLine *OeLine) error {
 	_, err := m.bun.NewInsert().Model(oeLine).Exec(ctx)
 	return err

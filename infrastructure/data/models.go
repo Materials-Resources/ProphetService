@@ -24,6 +24,7 @@ func (f DeleteFlag) String() string {
 
 type Models struct {
 	Bun                   bun.IDB
+	Address               AddressModel
 	AlternateCode         AlternateCodeModel
 	AssemblyHdr           AssemblyHdrModel
 	AssemblyLine          AssemblyLineModel
@@ -52,11 +53,14 @@ type Models struct {
 	PricePage             PricePageModel
 	PricePageXBook        PricePageXBookModel
 	ProductGroup          ProductGroupModel
+	QuoteHdr              QuoteHdrModel
+	ShipTo                ShipToModel
 }
 
 func NewModels(db bun.IDB) *Models {
 	return &Models{
 		Bun:                   db,
+		Address:               AddressModel{bun: db},
 		AlternateCode:         AlternateCodeModel{bun: db},
 		AssemblyHdr:           AssemblyHdrModel{bun: db},
 		AssemblyLine:          AssemblyLineModel{bun: db},
@@ -85,6 +89,8 @@ func NewModels(db bun.IDB) *Models {
 		PricePage:             PricePageModel{bun: db},
 		PricePageXBook:        PricePageXBookModel{bun: db},
 		ProductGroup:          ProductGroupModel{bun: db},
+		QuoteHdr:              QuoteHdrModel{bun: db},
+		ShipTo:                ShipToModel{bun: db},
 	}
 
 }

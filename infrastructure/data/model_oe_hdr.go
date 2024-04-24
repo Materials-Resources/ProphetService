@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"github.com/uptrace/bun/schema"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -251,20 +252,92 @@ type OeHdr struct {
 	Contact Contacts `bun:"rel:has-one,join:contact_id=id"`
 }
 
+var _ bun.BeforeAppendModelHook = (*OeHdr)(nil)
+
+func (m *OeHdr) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		m.DateCreated = time.Now()
+		m.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		m.DateLastModified = time.Now()
+	}
+	return nil
+}
+
 type OeHdrModel struct {
 	bun bun.IDB
 }
 
+type CreateOeHdrParams struct {
+	CustomerId     float64
+	Ship2Name      string
+	Ship2Add1      string
+	Ship2Add2      string
+	Ship2City      string
+	Ship2State     string
+	Ship2Zip       string
+	Ship2Country   string
+	ShipToPhone    string
+	PoNo           string
+	ProjectedOrder string
+}
+
 // Create creates a new order.
-func (m *OeHdrModel) Create(ctx context.Context, oeHdr *OeHdr) error {
-	err := m.generateOeHdrUid(ctx, *oeHdr)
+func (m *OeHdrModel) Create(
+	ctx context.Context, params CreateOeHdrParams) (*OeHdr, error) {
+	oeHdr := &OeHdr{
+		CustomerId:     params.CustomerId,
+		Ship2Name:      sql.NullString{String: params.Ship2Name, Valid: true},
+		Ship2Add1:      sql.NullString{String: params.Ship2Add1, Valid: true},
+		Ship2Add2:      sql.NullString{String: params.Ship2Add2, Valid: true},
+		Ship2City:      sql.NullString{String: params.Ship2City, Valid: true},
+		Ship2State:     sql.NullString{String: params.Ship2State, Valid: true},
+		Ship2Zip:       sql.NullString{String: params.Ship2Zip, Valid: true},
+		Ship2Country:   sql.NullString{String: params.Ship2Country, Valid: true},
+		ProjectedOrder: sql.NullString{String: params.ProjectedOrder, Valid: true},
+		PoNo:           sql.NullString{String: params.PoNo, Valid: true},
+		ShipToPhone:    sql.NullString{String: params.ShipToPhone, Valid: true},
+		ContactId:      sql.NullString{String: "2563", Valid: true},
+		Taker:          sql.NullString{String: "admin", Valid: true},
+
+		PromiseDate:           sql.NullTime{Time: time.Now(), Valid: true},
+		OrderDate:             sql.NullTime{Time: time.Now(), Valid: true},
+		RequestedDate:         sql.NullTime{Time: time.Now(), Valid: true},
+		ValidationStatus:      sql.NullString{String: "OK", Valid: true},
+		Terms:                 sql.NullString{String: "30", Valid: true},
+		DeleteFlag:            "N",
+		SourceCodeNo:          920,
+		Completed:             sql.NullString{String: "N", Valid: true},
+		CompanyId:             sql.NullString{String: "MRS", Valid: true},
+		LocationId:            sql.NullFloat64{Float64: 1001, Valid: true},
+		CarrierId:             sql.NullFloat64{Float64: 100008, Valid: true},
+		AddressId:             sql.NullFloat64{Float64: 1001, Valid: true},
+		FobFlag:               sql.NullString{String: "F", Valid: true},
+		RmaFlag:               sql.NullString{String: "N", Valid: true},
+		ThirdPartyBillingFlag: sql.NullString{String: "S", Valid: true},
+		Approved:              sql.NullString{String: "N", Valid: true},
+		SourceLocationId:      sql.NullFloat64{Float64: 1001, Valid: true},
+		PackingBasis:          sql.NullString{String: "Partial", Valid: true},
+		DeliveryInstructions:  sql.NullString{String: "Leave on porch", Valid: true},
+		PickTicketType:        sql.NullString{String: "UT", Valid: true},
+		CancelFlag:            sql.NullString{String: "N", Valid: true},
+		FrontCounter:          sql.NullString{String: "N", Valid: true},
+	}
+
+	err := m.generateOeHdrUid(ctx, &oeHdr.OeHdrUid)
+	err = m.generateOrderNo(ctx, &oeHdr.OrderNo)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	_, err = m.bun.NewInsert().Model(oeHdr).Exec(ctx)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	return oeHdr, nil
+}
+
+func (m *OeHdrModel) Insert(ctx context.Context, oeHdr *OeHdr) error {
 	return nil
 }
 
@@ -305,19 +378,27 @@ func (m *OeHdrModel) GetByCustomerId(ctx context.Context, customerId float64) ([
 }
 
 // generateOeHdrUid generates a new OeJdrUid for oeHdr.
-func (m *OeHdrModel) generateOeHdrUid(ctx context.Context, oeHdr OeHdr) error {
+func (m *OeHdrModel) generateOeHdrUid(ctx context.Context, uid *int32) error {
 
-	var uid int32
+	query := `DECLARE @uid int
+			EXEC @uid = p21_get_counter 'oe_hdr', 1
+			SELECT @uid`
 
-	query := `DECLARE @order_no int
-			EXEC @order_no = p21_get_counter 'oe_hdr', 1
-			SELECT @order_no`
-
-	err := m.bun.QueryRowContext(ctx, query).Scan(&uid)
+	err := m.bun.QueryRowContext(ctx, query).Scan(uid)
 	if err != nil {
 		return err
 	}
+	return nil
+}
 
-	oeHdr.OeHdrUid = uid
+func (m *OeHdrModel) generateOrderNo(ctx context.Context, orderNo *string) error {
+	query := `DECLARE @id varchar(8)
+			EXEC @id = p21_get_counter 'WO', 1
+			SELECT @id`
+
+	err := m.bun.QueryRowContext(ctx, query).Scan(orderNo)
+	if err != nil {
+		return err
+	}
 	return nil
 }

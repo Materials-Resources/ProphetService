@@ -2,6 +2,8 @@ syntax = 'proto3';
 
 package order.v1;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/order_v1alpha0";
 
 message Address {
@@ -29,9 +31,17 @@ message CustomerContact {
   string title = 6;
 }
 
+message OrderItem {
+  int32 product_uid = 1;
+  double quantity_ordered = 2;
+  google.protobuf.Timestamp required_date = 3;
+}
+
 service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+
+  rpc CreateQuote(CreateQuoteRequest) returns (CreateQuoteResponse);
 
   rpc GetPickTicketById(GetPickTicketByIdRequest) returns (GetPickTicketByIdResponse);
 }
@@ -67,6 +77,18 @@ message GetOrderResponse {
   string taker = 12;
   string purchase_order = 13;
 }
+
+message CreateQuoteRequest {
+  message OrderItem {
+    int32 product_uid = 1;
+    double quantity_ordered = 2;
+    google.protobuf.Timestamp required_date = 3;
+  }
+  repeated OrderItem order_items = 1;
+  double customer_id = 2;
+  double shipping_address_id = 3;
+}
+message CreateQuoteResponse {}
 
 message GetPickTicketByIdRequest {
   double id = 1;

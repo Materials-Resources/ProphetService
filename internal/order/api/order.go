@@ -16,6 +16,19 @@ type OrderApi struct {
 	service service.Service
 }
 
+func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteRequest) (*rpc.CreateQuoteResponse, error) {
+	s.service.CreateQuote(
+		ctx, &domain.Order{
+			ShippingAddress: domain.Address{
+				Id: 100023,
+			},
+			Customer: domain.Customer{
+				Id: 100023,
+			},
+		})
+	return &rpc.CreateQuoteResponse{}, nil
+}
+
 func (s OrderApi) CreateOrder(ctx context.Context, request *rpc.CreateOrderRequest) (
 	*rpc.CreateOrderResponse,
 	error,

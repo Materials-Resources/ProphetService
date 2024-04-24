@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	OrderService_CreateOrder_FullMethodName       = "/order.v1.OrderService/CreateOrder"
 	OrderService_GetOrder_FullMethodName          = "/order.v1.OrderService/GetOrder"
+	OrderService_CreateQuote_FullMethodName       = "/order.v1.OrderService/CreateQuote"
 	OrderService_GetPickTicketById_FullMethodName = "/order.v1.OrderService/GetPickTicketById"
 )
 
@@ -30,6 +31,7 @@ const (
 type OrderServiceClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error)
 	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
+	CreateQuote(ctx context.Context, in *CreateQuoteRequest, opts ...grpc.CallOption) (*CreateQuoteResponse, error)
 	GetPickTicketById(ctx context.Context, in *GetPickTicketByIdRequest, opts ...grpc.CallOption) (*GetPickTicketByIdResponse, error)
 }
 
@@ -59,6 +61,15 @@ func (c *orderServiceClient) GetOrder(ctx context.Context, in *GetOrderRequest, 
 	return out, nil
 }
 
+func (c *orderServiceClient) CreateQuote(ctx context.Context, in *CreateQuoteRequest, opts ...grpc.CallOption) (*CreateQuoteResponse, error) {
+	out := new(CreateQuoteResponse)
+	err := c.cc.Invoke(ctx, OrderService_CreateQuote_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *orderServiceClient) GetPickTicketById(ctx context.Context, in *GetPickTicketByIdRequest, opts ...grpc.CallOption) (*GetPickTicketByIdResponse, error) {
 	out := new(GetPickTicketByIdResponse)
 	err := c.cc.Invoke(ctx, OrderService_GetPickTicketById_FullMethodName, in, out, opts...)
@@ -74,6 +85,7 @@ func (c *orderServiceClient) GetPickTicketById(ctx context.Context, in *GetPickT
 type OrderServiceServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
 	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
+	CreateQuote(context.Context, *CreateQuoteRequest) (*CreateQuoteResponse, error)
 	GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error)
 }
 
@@ -86,6 +98,9 @@ func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrder
 }
 func (UnimplementedOrderServiceServer) GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) CreateQuote(context.Context, *CreateQuoteRequest) (*CreateQuoteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateQuote not implemented")
 }
 func (UnimplementedOrderServiceServer) GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPickTicketById not implemented")
@@ -138,6 +153,24 @@ func _OrderService_GetOrder_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_CreateQuote_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateQuoteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).CreateQuote(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_CreateQuote_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).CreateQuote(ctx, req.(*CreateQuoteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _OrderService_GetPickTicketById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPickTicketByIdRequest)
 	if err := dec(in); err != nil {
@@ -170,6 +203,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrder",
 			Handler:    _OrderService_GetOrder_Handler,
+		},
+		{
+			MethodName: "CreateQuote",
+			Handler:    _OrderService_CreateQuote_Handler,
 		},
 		{
 			MethodName: "GetPickTicketById",

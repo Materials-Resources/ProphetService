@@ -16,6 +16,47 @@ type OrderService struct {
 	models data.Models
 }
 
+func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) error {
+
+	address, err := s.models.Address.Get(ctx, order.ShippingAddress.Id)
+	if err != nil {
+		return err
+	}
+	oeHdrParams := data.CreateOeHdrParams{
+		CustomerId:   order.Customer.Id,
+		Ship2Name:    address.Name,
+		Ship2Add1:    address.MailAddress1.String,
+		Ship2Add2:    address.MailAddress2.String,
+		Ship2City:    address.MailCity.String,
+		Ship2State:   address.MailState.String,
+		Ship2Zip:     address.MailPostalCode.String,
+		Ship2Country: address.MailCountry.String,
+		PoNo:         order.PurchaseOrder,
+	}
+	oeHdr, err := s.models.OeHdr.Create(ctx, oeHdrParams)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(oeHdr.OrderNo)
+	return err
+}
+
+func (s *OrderService) CreateOrder(ctx context.Context, order *domain.Order) error {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (s *OrderService) UpdateOrder(ctx context.Context, order *domain.Order) error {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (s *OrderService) DeleteOrder(ctx context.Context, s2 string) error {
+	// TODO implement me
+	panic("implement me")
+}
+
 func (s *OrderService) GetPickTicketById(ctx context.Context, id float64) (domain.PickTicket, error) {
 
 	oePickTicket, err := s.models.OePickTicket.Get(ctx, id)
