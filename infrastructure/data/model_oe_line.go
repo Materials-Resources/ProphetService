@@ -3,6 +3,8 @@ package data
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"github.com/uptrace/bun/schema"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -243,52 +245,120 @@ type OeLine struct {
 	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 }
 
-func (ol *OeLine) setDefaults() {
+var _ bun.BeforeAppendModelHook = (*OeLine)(nil)
 
+func (m *OeLine) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		m.DateCreated = time.Now()
+		m.DateLastModified = time.Now()
+	case *bun.UpdateQuery:
+		m.DateLastModified = time.Now()
+	}
+	return nil
 }
 
 type OeLineModel struct {
 	bun bun.IDB
 }
 
-func (m *OeLineModel) Create(ctx context.Context) error {
-	oeLine := &OeLine{
-		OrderNo:            "12345678",
-		UnitPrice:          sql.NullFloat64{Float64: 1.0, Valid: true},
-		QtyOrdered:         sql.NullFloat64{Float64: 1.0, Valid: true},
-		QtyPerAssembly:     1.0,
-		CompanyNo:          "12345678",
-		DeleteFlag:         "N",
-		ManualPriceOveride: sql.NullString{String: "N", Valid: true},
-		ExtendedPrice:      sql.NullFloat64{Float64: 1.0, Valid: true},
-		SalesTax:           sql.NullFloat64{Float64: 1.0, Valid: true},
-		LineNo:             1.0,
-		Complete:           sql.NullString{String: "N", Valid: true},
-		UnitOfMeasure:      sql.NullString{String: "EA", Valid: true},
-		BaseUtPrice:        sql.NullFloat64{Float64: 1.0, Valid: true},
-		CalcValue:          sql.NullFloat64{Float64: 1.0, Valid: true},
-		Combinable:         sql.NullString{String: "N", Valid: true},
-		Disposition:        sql.NullString{String: "N", Valid: true},
-		ExpediteDate:       sql.NullTime{Time: time.Now(), Valid: true},
-		RequiredDate:       sql.NullTime{Time: time.Now(), Valid: true},
-		SourceLocId:        sql.NullFloat64{Float64: 1001, Valid: true},
-		ShipLocId:          sql.NullFloat64{Float64: 1001, Valid: true},
-		SupplierId:         sql.NullFloat64{Float64: 1.0, Valid: true},
-		ProductGroupId:     sql.NullString{String: "12345678", Valid: true},
-		Assembly:           sql.NullString{String: "N", Valid: true},
-		Scheduled:          sql.NullString{String: "N", Valid: true},
-		LotBill:            "N",
-		ExtendedDesc:       sql.NullString{String: "12345678", Valid: true},
-		UnitSize:           1.0,
-		UnitQuantity:       1.0,
-		CustomerPartNumber: "12345678",
+type CreateOeLineParams struct {
+	OrderNo              string
+	UnitPrice            float64
+	QtyOrdered           float64
+	BaseUtPrice          float64
+	CalcValue            float64
+	SourceLocId          float64
+	ShipLocId            float64
+	SupplierId           float64
+	ProductGroupId       string
+	ExtendedDesc         string
+	CustomerPartNumber   string
+	CommissionCost       float64
+	OeHdrUid             int32
+	InvMastUid           int32
+	SalesDiscountGroupId string
+	UnitQuantity         float64
+	UnitSize             float64
+}
+
+func (m *OeLineModel) Create(ctx context.Context, params CreateOeLineParams) (*OeLine, error) {
+	lineSeqNo, err := m.GetLineSeqNo(ctx, params.OrderNo)
+	if err != nil {
+		switch {
+		case errors.Is(err, ErrRecordNotFound):
+			lineSeqNo = 1
+		default:
+			return nil, err
+		}
 	}
-	m.Insert(ctx, oeLine)
-	return nil
+
+	lineSeqNo++
+
+	oeLine := &OeLine{
+		OrderNo:              params.OrderNo,
+		UnitPrice:            sql.NullFloat64{Float64: params.UnitPrice, Valid: true},
+		QtyPerAssembly:       0,
+		LineNo:               float64(lineSeqNo),
+		CompanyNo:            "MRS", // TODO set from config
+		DeleteFlag:           "N",
+		ManualPriceOveride:   sql.NullString{String: "N", Valid: true},
+		ExtendedPrice:        sql.NullFloat64{Float64: 0, Valid: true},
+		SalesTax:             sql.NullFloat64{Float64: 0, Valid: true},
+		LineSeqNo:            sql.NullInt32{Int32: lineSeqNo, Valid: true},
+		Complete:             sql.NullString{String: "N", Valid: true},
+		UnitOfMeasure:        sql.NullString{String: "EA", Valid: true},
+		BaseUtPrice:          sql.NullFloat64{Float64: params.BaseUtPrice, Valid: true},
+		CalcValue:            sql.NullFloat64{Float64: params.CalcValue, Valid: true},
+		Combinable:           sql.NullString{String: "N", Valid: true},
+		Disposition:          sql.NullString{String: "N", Valid: true},
+		ExpediteDate:         sql.NullTime{Time: time.Now(), Valid: true},
+		RequiredDate:         sql.NullTime{Time: time.Now(), Valid: true},
+		SourceLocId:          sql.NullFloat64{Float64: params.SourceLocId, Valid: true},
+		ShipLocId:            sql.NullFloat64{Float64: params.ShipLocId, Valid: true},
+		SupplierId:           sql.NullFloat64{Float64: params.SupplierId, Valid: true},
+		ProductGroupId:       sql.NullString{String: params.ProductGroupId, Valid: true},
+		Assembly:             sql.NullString{String: "N", Valid: true},
+		Scheduled:            sql.NullString{String: "N", Valid: true},
+		LotBill:              "N",
+		ExtendedDesc:         sql.NullString{String: params.ExtendedDesc, Valid: true},
+		UnitSize:             params.UnitSize,
+		UnitQuantity:         params.UnitQuantity,
+		CustomerPartNumber:   params.CustomerPartNumber,
+		CommissionCost:       sql.NullFloat64{Float64: params.CommissionCost, Valid: true},
+		OeHdrUid:             params.OeHdrUid,
+		InvMastUid:           params.InvMastUid,
+		SalesDiscountGroupId: sql.NullString{String: params.SalesDiscountGroupId, Valid: true},
+	}
+
+	err = m.generateOeLineUid(ctx, &oeLine.OeLineUid)
+
+	err = m.Insert(ctx, oeLine)
+	if err != nil {
+		return nil, err
+	}
+	return oeLine, err
 }
 func (m *OeLineModel) Insert(ctx context.Context, oeLine *OeLine) error {
 	_, err := m.bun.NewInsert().Model(oeLine).Exec(ctx)
 	return err
+}
+
+func (m *OeLineModel) GetLineSeqNo(ctx context.Context, orderNo string) (int32, error) {
+	query := `SELECT MAX(line_seq_no) FROM oe_line WHERE order_no = ?`
+	var lineSeqNo sql.NullInt32
+	err := m.bun.QueryRowContext(ctx, query, orderNo).Scan(&lineSeqNo)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return 0, ErrRecordNotFound
+		}
+		return 0, err
+	}
+	if lineSeqNo.Valid {
+		return lineSeqNo.Int32, nil
+	}
+	return 0, nil
 }
 
 func (m *OeLineModel) CountByInvMastUid(ctx context.Context, invMastUid int32) (int32, error) {
@@ -302,15 +372,14 @@ func (m *OeLineModel) CountByInvMastUid(ctx context.Context, invMastUid int32) (
 }
 
 // generateOeLineUid returns a newly generated value for oe_line_uid
-func (m *OeLineModel) generateOeLineUid(ctx context.Context) (int32, error) {
+func (m *OeLineModel) generateOeLineUid(ctx context.Context, uid *int32) error {
 	q := `
 		DECLARE @oe_line_uid int
 		EXEC @oe_line_uid = p21_get_counter 'oe_line', 1
 		SELECT @oe_line_uid`
-	var id int32
-	err := m.bun.QueryRowContext(ctx, q).Scan(&id)
+	err := m.bun.QueryRowContext(ctx, q).Scan(uid)
 	if err != nil {
-		return 0, nil
+		return err
 	}
-	return id, nil
+	return nil
 }

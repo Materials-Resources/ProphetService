@@ -270,17 +270,24 @@ type OeHdrModel struct {
 }
 
 type CreateOeHdrParams struct {
-	CustomerId     float64
-	Ship2Name      string
-	Ship2Add1      string
-	Ship2Add2      string
-	Ship2City      string
-	Ship2State     string
-	Ship2Zip       string
-	Ship2Country   string
-	ShipToPhone    string
-	PoNo           string
-	ProjectedOrder string
+	CustomerId           float64
+	AddressId            float64
+	ContactId            string
+	Ship2Name            string
+	Ship2Add1            string
+	Ship2Add2            string
+	Ship2City            string
+	Ship2State           string
+	Ship2Zip             string
+	Ship2Country         string
+	ShipToPhone          string
+	PoNo                 string
+	ProjectedOrder       string
+	DeliveryInstructions string
+	PackingBasis         string
+	PickTicketType       string
+	CarrierId            float64
+	Terms                string
 }
 
 // Create creates a new order.
@@ -298,29 +305,30 @@ func (m *OeHdrModel) Create(
 		ProjectedOrder: sql.NullString{String: params.ProjectedOrder, Valid: true},
 		PoNo:           sql.NullString{String: params.PoNo, Valid: true},
 		ShipToPhone:    sql.NullString{String: params.ShipToPhone, Valid: true},
-		ContactId:      sql.NullString{String: "2563", Valid: true},
-		Taker:          sql.NullString{String: "admin", Valid: true},
+		ContactId:      sql.NullString{String: params.ContactId, Valid: true},
+		Taker:          sql.NullString{String: "CMS", Valid: true},
 
-		PromiseDate:           sql.NullTime{Time: time.Now(), Valid: true},
-		OrderDate:             sql.NullTime{Time: time.Now(), Valid: true},
-		RequestedDate:         sql.NullTime{Time: time.Now(), Valid: true},
+		PromiseDate:           sql.NullTime{Time: time.Now().AddDate(0, 0, 01), Valid: true}, // TODO set from config
+		OrderDate:             sql.NullTime{Time: time.Now(), Valid: true},                   // TODO set from config
+		RequestedDate:         sql.NullTime{Time: time.Now(), Valid: true},                   // TODO set from config
 		ValidationStatus:      sql.NullString{String: "OK", Valid: true},
-		Terms:                 sql.NullString{String: "30", Valid: true},
+		Terms:                 sql.NullString{String: params.Terms, Valid: true},
 		DeleteFlag:            "N",
-		SourceCodeNo:          920,
+		SourceCodeNo:          920, // TODO set from param
+		OrderType:             sql.NullInt32{Int32: 706, Valid: true},
 		Completed:             sql.NullString{String: "N", Valid: true},
 		CompanyId:             sql.NullString{String: "MRS", Valid: true},
 		LocationId:            sql.NullFloat64{Float64: 1001, Valid: true},
-		CarrierId:             sql.NullFloat64{Float64: 100008, Valid: true},
-		AddressId:             sql.NullFloat64{Float64: 1001, Valid: true},
+		CarrierId:             sql.NullFloat64{Float64: params.CarrierId, Valid: true},
+		AddressId:             sql.NullFloat64{Float64: params.AddressId, Valid: true},
 		FobFlag:               sql.NullString{String: "F", Valid: true},
 		RmaFlag:               sql.NullString{String: "N", Valid: true},
 		ThirdPartyBillingFlag: sql.NullString{String: "S", Valid: true},
 		Approved:              sql.NullString{String: "N", Valid: true},
 		SourceLocationId:      sql.NullFloat64{Float64: 1001, Valid: true},
-		PackingBasis:          sql.NullString{String: "Partial", Valid: true},
-		DeliveryInstructions:  sql.NullString{String: "Leave on porch", Valid: true},
-		PickTicketType:        sql.NullString{String: "UT", Valid: true},
+		PackingBasis:          sql.NullString{String: params.PackingBasis, Valid: true},
+		DeliveryInstructions:  sql.NullString{String: params.DeliveryInstructions, Valid: true},
+		PickTicketType:        sql.NullString{String: params.PickTicketType, Valid: true},
 		CancelFlag:            sql.NullString{String: "N", Valid: true},
 		FrontCounter:          sql.NullString{String: "N", Valid: true},
 	}

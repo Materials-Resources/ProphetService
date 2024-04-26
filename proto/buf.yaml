@@ -3,6 +3,8 @@ name: "buf.build/materials-resources/s-prophet"
 breaking:
   use:
     - FILE
+  except:
+    - FILE_NO_DELETE
 lint:
   use:
     - DEFAULT

@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -136,6 +137,24 @@ func (m *InventorySupplierModel) GetBySupplierIdDivisionIdInvMastUid(
 		return nil, err
 	}
 	return inventorySupplier, nil
+}
+
+func (m *InventorySupplierModel) GetPrimarySupplierByLocation(
+	ctx context.Context, locationId float64, invMastUid int32) (*InventorySupplier, error) {
+	var inventorySupplier InventorySupplier
+	err := m.bun.NewSelect().Model(&inventorySupplier).Join(
+		"JOIN inventory_supplier_x_loc on inventory_supplier_x_loc."+
+			"inventory_supplier_uid = inventory_supplier.inventory_supplier_uid").Where(
+		"inventory_supplier_x_loc.location_id = ? AND inv_mast_uid = ?", locationId, invMastUid).Scan(ctx)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		}
+		return nil, err
+	}
+	return &inventorySupplier, nil
+
 }
 
 func (m *InventorySupplierModel) GetByInvMastUid(

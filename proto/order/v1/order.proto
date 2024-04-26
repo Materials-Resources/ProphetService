@@ -87,6 +87,8 @@ message CreateQuoteRequest {
   repeated OrderItem order_items = 1;
   double customer_id = 2;
   double shipping_address_id = 3;
+  string contact_id = 4;
+
 }
 message CreateQuoteResponse {}
 

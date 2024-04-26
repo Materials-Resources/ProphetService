@@ -1,7 +1,9 @@
 package data
 
 import (
+	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -326,4 +328,22 @@ type Customer struct {
 	FcReceiptDefaultUnpriced             string          `bun:"fc_receipt_default_unpriced,type:char,default:('N')"`
 	FcReceiptDefaultSkinny               string          `bun:"fc_receipt_default_skinny,type:char,default:('N')"`
 	LegalName                            sql.NullString  `bun:"legal_name,type:varchar(255),nullzero"`
+}
+
+type CustomerModel struct {
+	bun bun.IDB
+}
+
+func (m *CustomerModel) Get(ctx context.Context, customerId float64, companyId string) (*Customer, error) {
+	var customer Customer
+	err := m.bun.NewSelect().Model(&customer).Where(
+		"customer_id = ? AND company_id = ?", customerId, companyId).Scan(ctx)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		}
+		return nil, err
+	}
+	return &customer, nil
 }

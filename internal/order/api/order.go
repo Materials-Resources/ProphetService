@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/materials-resources/s_prophet/internal/order/domain"
 	"github.com/materials-resources/s_prophet/internal/order/service"
 
@@ -17,16 +18,32 @@ type OrderApi struct {
 }
 
 func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteRequest) (*rpc.CreateQuoteResponse, error) {
-	s.service.CreateQuote(
-		ctx, &domain.Order{
-			ShippingAddress: domain.Address{
-				Id: 100023,
-			},
-			Customer: domain.Customer{
-				Id: 100023,
-			},
-		})
-	return &rpc.CreateQuoteResponse{}, nil
+	order := &domain.Order{
+		Contact: domain.Contact{
+			Id: request.GetContactId(),
+		},
+		ShippingAddress: domain.Address{
+			Id: request.GetShippingAddressId(),
+		},
+		Customer: domain.Customer{
+			Id: request.GetCustomerId(),
+		},
+	}
+
+	order.Items = make([]domain.OrderItem, 0, len(request.GetOrderItems()))
+	for _, item := range request.GetOrderItems() {
+		order.Items = append(
+			order.Items, domain.OrderItem{
+				ProductUid:      item.GetProductUid(),
+				QuantityOrdered: item.GetQuantityOrdered(),
+			})
+
+	}
+	err := s.service.CreateQuote(
+		ctx, order)
+
+	fmt.Println(order.Id)
+	return &rpc.CreateQuoteResponse{}, err
 }
 
 func (s OrderApi) CreateOrder(ctx context.Context, request *rpc.CreateOrderRequest) (

@@ -21,7 +21,7 @@ func ValidateOrder(v *validator.Validator, order *Order) {
 }
 
 type OrderItem struct {
-	ID              string
+	ProductUid      int32
 	SN              string
 	Name            string
 	QuantityOrdered float64

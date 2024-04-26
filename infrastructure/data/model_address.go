@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/uptrace/bun"
 	"time"
 )
@@ -128,6 +129,10 @@ func (m *AddressModel) Get(ctx context.Context, id float64) (*Address, error) {
 	address := new(Address)
 	err := m.bun.NewSelect().Model(address).Where("id = ?", id).Scan(ctx)
 	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		}
 		return nil, err
 	}
 	return address, nil

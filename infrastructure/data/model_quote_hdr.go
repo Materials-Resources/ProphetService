@@ -45,8 +45,8 @@ type CreateQuoteHdrParams struct {
 
 func (m *QuoteHdrModel) Create(ctx context.Context, params CreateQuoteHdrParams) (*QuoteHdr, error) {
 	quoteHdr := &QuoteHdr{
-		OeHdrUid:       params.OeHdrUid,
-		ExpirationDate: sql.NullTime{Time: params.ExpirationDate},
+		OeHdrUid:         params.OeHdrUid,
+		LastMaintainedBy: "admin",
 	}
 
 	err := m.generateQuoteHdrUid(ctx, &quoteHdr.QuoteHdrUid)

@@ -30,6 +30,7 @@ type Models struct {
 	AssemblyLine          AssemblyLineModel
 	AverageInventoryValue AverageInventoryValueModel
 	Contacts              ContactsModel
+	Customer              CustomerModel
 	InvBin                InvBinModel
 	InvMast               InvMastModel
 	InvLoc                InvLocModel
@@ -48,6 +49,7 @@ type Models struct {
 	ItemConversion        ItemConversionModel
 	ItemCategoryXInvMast  ItemCategoryXInvMastModel
 	OeHdr                 OeHdrModel
+	OeHdrSalesrep         OeHdrSalesrepModel
 	OeLine                OeLineModel
 	OePickTicket          OePickTicketModel
 	PricePage             PricePageModel
@@ -66,6 +68,7 @@ func NewModels(db bun.IDB) *Models {
 		AssemblyLine:          AssemblyLineModel{bun: db},
 		AverageInventoryValue: AverageInventoryValueModel{bun: db},
 		Contacts:              ContactsModel{bun: db},
+		Customer:              CustomerModel{bun: db},
 		InvBin:                InvBinModel{bun: db},
 		InvMast:               InvMastModel{bun: db},
 		InvLoc:                InvLocModel{bun: db},
@@ -84,6 +87,7 @@ func NewModels(db bun.IDB) *Models {
 		ItemConversion:        ItemConversionModel{bun: db},
 		ItemCategoryXInvMast:  ItemCategoryXInvMastModel{bun: db},
 		OeHdr:                 OeHdrModel{bun: db},
+		OeHdrSalesrep:         OeHdrSalesrepModel{bun: db},
 		OeLine:                OeLineModel{bun: db},
 		OePickTicket:          OePickTicketModel{bun: db},
 		PricePage:             PricePageModel{bun: db},

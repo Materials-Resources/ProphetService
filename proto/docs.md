@@ -1093,6 +1093,7 @@
 | order_items | [CreateQuoteRequest.OrderItem](#order-v1-CreateQuoteRequest-OrderItem) | repeated |  |
 | customer_id | [double](#double) |  |  |
 | shipping_address_id | [double](#double) |  |  |
+| contact_id | [string](#string) |  |  |
 
 
 

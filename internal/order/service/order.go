@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/materials-resources/s_prophet/infrastructure/data"
 	"github.com/materials-resources/s_prophet/internal/order/domain"
+	"strconv"
 )
 
 func NewOrderService(models data.Models) *OrderService {
@@ -18,27 +19,118 @@ type OrderService struct {
 
 func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) error {
 
+	customer, err := s.models.Customer.Get(ctx, order.Customer.Id, "MRS")
+	if err != nil {
+		return err
+	}
 	address, err := s.models.Address.Get(ctx, order.ShippingAddress.Id)
 	if err != nil {
 		return err
 	}
+
+	if customer.CustomerId != address.CorpAddressId.Float64 {
+		return errors.New("customer and address do not match")
+	}
+
+	contact, err := s.models.Contacts.Get(ctx, order.Contact.Id)
+	if err != nil {
+		return err
+	}
+
+	if contact.AddressId != address.Id {
+		return errors.New("contact and address do not match")
+
+	}
+
+	// create the order
 	oeHdrParams := data.CreateOeHdrParams{
-		CustomerId:   order.Customer.Id,
-		Ship2Name:    address.Name,
-		Ship2Add1:    address.MailAddress1.String,
-		Ship2Add2:    address.MailAddress2.String,
-		Ship2City:    address.MailCity.String,
-		Ship2State:   address.MailState.String,
-		Ship2Zip:     address.MailPostalCode.String,
-		Ship2Country: address.MailCountry.String,
-		PoNo:         order.PurchaseOrder,
+		CustomerId:           order.Customer.Id,
+		AddressId:            address.Id,
+		ContactId:            contact.Id,
+		Ship2Name:            address.Name,
+		Ship2Add1:            address.MailAddress1.String,
+		Ship2Add2:            address.MailAddress2.String,
+		Ship2City:            address.MailCity.String,
+		Ship2State:           address.MailState.String,
+		Ship2Zip:             address.MailPostalCode.String,
+		Ship2Country:         address.MailCountry.String,
+		ShipToPhone:          contact.DirectPhone.String,
+		PoNo:                 order.PurchaseOrder,
+		ProjectedOrder:       "Y",
+		DeliveryInstructions: address.DeliveryInstructions1.String,
+		PackingBasis:         address.ShipToPackingBasis.String,
+		PickTicketType:       customer.PickTicketType.String,
+		Terms:                customer.TermsId,
+	}
+
+	oeHdrParams.CarrierId, err = strconv.ParseFloat(address.CarrierId.String, 64)
+	if err != nil {
+		return err
 	}
 	oeHdr, err := s.models.OeHdr.Create(ctx, oeHdrParams)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(oeHdr.OrderNo)
+	// add the salesrep to the order
+	_, err = s.models.OeHdrSalesrep.Create(
+		ctx, data.OeHdrSalesrepParams{
+			OrderNumber:     oeHdr.OrderNo,
+			SalesrepId:      customer.SalesrepId.String,
+			CommissionSplit: 100,
+			PrimarySalesrep: "Y",
+		})
+
+	// create the quote record
+	_, err = s.models.QuoteHdr.Create(
+		ctx, data.CreateQuoteHdrParams{
+			OeHdrUid: oeHdr.OeHdrUid,
+		})
+
+	for _, item := range order.Items {
+		invLoc, err := s.models.InvLoc.Get(ctx, 1001, "MRS", item.ProductUid)
+		if err != nil {
+			switch {
+			case errors.Is(err, data.ErrRecordNotFound):
+				return fmt.Errorf("product with uid %d not found", item.ProductUid)
+			default:
+				return err
+			}
+
+		}
+		inventorySupplier, err := s.models.InventorySupplier.GetPrimarySupplierByLocation(
+			ctx, invLoc.LocationId,
+			invLoc.InvMastUid)
+		if err != nil {
+			return err
+		}
+
+		_, err = s.models.OeLine.Create(
+			ctx, data.CreateOeLineParams{
+				OrderNo:              oeHdr.OrderNo,
+				UnitPrice:            0,
+				QtyOrdered:           item.QuantityOrdered,
+				BaseUtPrice:          0,
+				CalcValue:            0,
+				SourceLocId:          1001,
+				ShipLocId:            1001,
+				SupplierId:           inventorySupplier.SupplierId,
+				ProductGroupId:       invLoc.ProductGroupId.String,
+				ExtendedDesc:         invLoc.InvMast.ExtendedDesc.String,
+				CustomerPartNumber:   invLoc.InvMast.ItemId,
+				CommissionCost:       0,
+				OeHdrUid:             oeHdr.OeHdrUid,
+				InvMastUid:           invLoc.InvMastUid,
+				SalesDiscountGroupId: invLoc.SalesDiscountGroup.String,
+				UnitQuantity:         item.QuantityOrdered,
+				UnitSize:             1,
+			})
+		if err != nil {
+			return err
+		}
+
+	}
+	order.Id = oeHdr.OrderNo
 	return err
 }
 

@@ -189,8 +189,25 @@ type InvLocModel struct {
 	bun bun.IDB
 }
 
+func (m *InvLocModel) Get(ctx context.Context, locationId float64, companyId string, invMastUid int32) (
+	*InvLoc, error) {
+	var invLoc InvLoc
+	err := m.bun.NewSelect().Model(&invLoc).Relation("InvMast").Where(
+		"inv_loc.location_id = ? AND inv_loc.company_id = ? AND inv_loc.inv_mast_uid = ? ", locationId, companyId,
+		invMastUid).Scan(ctx)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+	return &invLoc, nil
+}
+
 // GetByProductGroupId selects InvLoc by product_group_id and returns records
-func (m InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId string) ([]InvLoc, error) {
+func (m *InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId string) ([]InvLoc, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
@@ -208,7 +225,7 @@ func (m InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId str
 }
 
 // GetByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
-func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64, uid int32) (
+func (m *InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64, uid int32) (
 	[]InvLoc,
 	error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -228,7 +245,7 @@ func (m InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64,
 }
 
 // GetByInvMastUids selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
-func (m InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32) ([]*InvLoc, error) {
+func (m *InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32) ([]*InvLoc, error) {
 	var invLocs []*InvLoc
 
 	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
@@ -240,7 +257,7 @@ func (m InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32) 
 }
 
 // GetAll selects all records from inv_loc table
-func (m InvLocModel) GetAll(
+func (m *InvLocModel) GetAll(
 	ctx context.Context, locationId float64, deleteFlag DeleteFlag, filter Filters) (
 	[]InvLoc, Metadata, error,
 ) {
@@ -260,7 +277,7 @@ func (m InvLocModel) GetAll(
 }
 
 // Update updates record with provided invLoc if matching version is found
-func (m InvLocModel) Update(ctx context.Context, invLoc *InvLoc) error {
+func (m *InvLocModel) Update(ctx context.Context, invLoc *InvLoc) error {
 	_, err := m.bun.NewUpdate().Model(invLoc).WherePK().Exec(ctx)
 	if err != nil {
 		switch {
@@ -275,7 +292,7 @@ func (m InvLocModel) Update(ctx context.Context, invLoc *InvLoc) error {
 
 }
 
-func (m InvLocModel) Delete(ctx context.Context, invLoc *InvLoc) error {
+func (m *InvLocModel) Delete(ctx context.Context, invLoc *InvLoc) error {
 	_, err := m.bun.NewDelete().Model(invLoc).WherePK().Exec(ctx)
 	if err != nil {
 		return err
