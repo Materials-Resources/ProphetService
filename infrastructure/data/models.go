@@ -30,6 +30,7 @@ type Models struct {
 	AssemblyLine          AssemblyLineModel
 	AverageInventoryValue AverageInventoryValueModel
 	Contacts              ContactsModel
+	ContactsXShipTo       ContactsXShipToModel
 	Customer              CustomerModel
 	InvBin                InvBinModel
 	InvMast               InvMastModel
@@ -56,7 +57,9 @@ type Models struct {
 	PricePageXBook        PricePageXBookModel
 	ProductGroup          ProductGroupModel
 	QuoteHdr              QuoteHdrModel
+	QuoteLine             QuoteLineModel
 	ShipTo                ShipToModel
+	ShipToSalesrep        ShipToSalesrepModel
 }
 
 func NewModels(db bun.IDB) *Models {
@@ -68,6 +71,7 @@ func NewModels(db bun.IDB) *Models {
 		AssemblyLine:          AssemblyLineModel{bun: db},
 		AverageInventoryValue: AverageInventoryValueModel{bun: db},
 		Contacts:              ContactsModel{bun: db},
+		ContactsXShipTo:       ContactsXShipToModel{bun: db},
 		Customer:              CustomerModel{bun: db},
 		InvBin:                InvBinModel{bun: db},
 		InvMast:               InvMastModel{bun: db},
@@ -94,7 +98,9 @@ func NewModels(db bun.IDB) *Models {
 		PricePageXBook:        PricePageXBookModel{bun: db},
 		ProductGroup:          ProductGroupModel{bun: db},
 		QuoteHdr:              QuoteHdrModel{bun: db},
+		QuoteLine:             QuoteLineModel{bun: db},
 		ShipTo:                ShipToModel{bun: db},
+		ShipToSalesrep:        ShipToSalesrepModel{bun: db},
 	}
 
 }
