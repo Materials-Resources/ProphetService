@@ -267,12 +267,12 @@ func (m *InvLocModel) GetAll(
 	var invLocs []InvLoc
 	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
 		"inv_loc.inv_mast_uid > ?", filter.cursor()).Where(
-		"location_id = ?", locationId).Limit(filter.limit()).Order("inv_loc.inv_mast_uid ASC").Scan(ctx)
+		"location_id = ?", locationId).Limit(int(filter.limit())).Order("inv_loc.inv_mast_uid ASC").Scan(ctx)
 	if err != nil {
 		return nil, Metadata{}, err
 	}
 
-	metadata := calculateMetadata(1, int(invLocs[len(invLocs)-1].InvMastUid), filter.cursor())
+	metadata := calculateMetadata(1, invLocs[len(invLocs)-1].InvMastUid, filter.cursor())
 	return invLocs, metadata, nil
 }
 

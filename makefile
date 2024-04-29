@@ -23,10 +23,13 @@ dev/metrics/up:
 dev/metrics/down:
 	podman play kube --down deployment/dev/metrics.yml
 
-.PHONY: generate/proto
-## generate/proto: Generate packages from proto files using the buf cli tool
-generate/proto:
+.PHONY: proto/generate
+## proto/generate: Generate packages from proto files using the buf cli tool
+proto/generate:
 	buf generate proto
+
+.PHONY: proto/breaking
+## proto/breaking: Check for breaking changes in the proto files
 proto/breaking:
 	buf breaking proto --against '.git#branch=main'
 
