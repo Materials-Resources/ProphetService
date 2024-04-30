@@ -1,6 +1,17 @@
 package domain
 
-import "github.com/materials-resources/s_prophet/internal/validator"
+import (
+	"github.com/materials-resources/s_prophet/internal/validator"
+	"time"
+)
+
+type OrderType int
+
+const (
+	OrderTypeUnknown OrderType = iota
+	OrderTypeQuote
+	OrderTypeOrder
+)
 
 type Order struct {
 	Id                   string
@@ -12,6 +23,15 @@ type Order struct {
 	Items                []OrderItem
 	PurchaseOrder        string
 	DeliveryInstructions string
+	Taker                string
+	Status               OrderStatus
+	RequestedDate        time.Time
+	OrderType            OrderType
+}
+
+type OrderStatus struct {
+	Approved  bool
+	Cancelled bool
 }
 
 func ValidateOrder(v *validator.Validator, order *Order) {

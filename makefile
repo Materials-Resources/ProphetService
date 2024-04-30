@@ -23,12 +23,32 @@ dev/metrics/up:
 dev/metrics/down:
 	podman play kube --down deployment/dev/metrics.yml
 
-.PHONY: generate/proto
-## generate/proto: Generate packages from proto files using the buf cli tool
-generate/proto:
-	buf generate proto
+.PHONY: dev/validate
+## dev/validate: Validate the application
+dev/validate:
+	go fmt ./...
+	go vet ./...
+
+
+.PHONY: proto/breaking
+## proto/breaking: Check for breaking changes in the proto files
 proto/breaking:
-	buf breaking proto --against '.git#branch=main'
+	buf breaking proto --against 'https://github.com/Materials-Resources/s_prophet.git#branch=main,ref=HEAD~0'
+
+.PHONY: proto/validate
+## proto/validate: Validate the proto files
+proto/validate: proto/breaking
+	buf lint proto
+
+.PHONY: proto/check
+## proto/check: Check the proto files
+proto/check: proto/validate proto/breaking
+
+.PHONY: proto/generate
+## proto/generate: Generate packages from proto files using the buf cli tool
+proto/generate: proto/check
+	buf generate proto
+
 
 .PHONY: dev/app/run
 ## dev/app/run: Run the application

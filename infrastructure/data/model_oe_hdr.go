@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/uptrace/bun/schema"
+	"sort"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -288,6 +289,7 @@ type CreateOeHdrParams struct {
 	PickTicketType       string
 	CarrierId            float64
 	Terms                string
+	RequestedDate        time.Time
 }
 
 // Create creates a new order.
@@ -309,8 +311,7 @@ func (m *OeHdrModel) Create(
 		Taker:          sql.NullString{String: "CMS", Valid: true},
 
 		PromiseDate:           sql.NullTime{Time: time.Now().AddDate(0, 0, 01), Valid: true}, // TODO set from config
-		OrderDate:             sql.NullTime{Time: time.Now(), Valid: true},                   // TODO set from config
-		RequestedDate:         sql.NullTime{Time: time.Now(), Valid: true},                   // TODO set from config
+		RequestedDate:         sql.NullTime{Time: params.RequestedDate, Valid: true},         // TODO set from config
 		ValidationStatus:      sql.NullString{String: "OK", Valid: true},
 		Terms:                 sql.NullString{String: params.Terms, Valid: true},
 		DeleteFlag:            "N",
@@ -347,6 +348,45 @@ func (m *OeHdrModel) Create(
 
 func (m *OeHdrModel) Insert(ctx context.Context, oeHdr *OeHdr) error {
 	return nil
+}
+
+func (m *OeHdrModel) SelectByCustomerId(ctx context.Context, customerId float64, filters Filters) (
+	[]*OeHdr,
+	Metadata, error) {
+	var oeHdrs []*OeHdr
+	q := m.bun.NewSelect().Model(&oeHdrs).Where("customer_id = ?", customerId)
+
+	if filters.Direction == PageDirectionNext {
+		q.Where("oe_hdr_uid > (?)", filters.Cursor).Order("oe_hdr_uid ASC")
+	}
+	if filters.Direction == PageDirectionPrevious {
+		q.Where("oe_hdr_uid < (?)", filters.Cursor).Order("oe_hdr_uid DESC")
+	}
+
+	err := q.Limit(int(filters.Limit)).Scan(ctx)
+
+	if filters.Direction == PageDirectionPrevious {
+		sort.Slice(
+			oeHdrs, func(i, j int) bool {
+				return oeHdrs[i].OeHdrUid < oeHdrs[j].OeHdrUid
+			})
+	}
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := m.calculateMetadata(oeHdrs)
+	return oeHdrs, metadata, nil
+}
+
+func (*OeHdrModel) calculateMetadata(oeHdrs []*OeHdr) Metadata {
+	if len(oeHdrs) == 0 {
+		return Metadata{}
+	}
+	return Metadata{
+		NextCursor:     int(oeHdrs[len(oeHdrs)-1].OeHdrUid),
+		PreviousCursor: int(oeHdrs[0].OeHdrUid),
+	}
 }
 
 // Get returns the order by the given order number.

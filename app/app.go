@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"net"
 	"sync"
 
@@ -46,7 +47,7 @@ func (a *App) Start() {
 	ctx := context.Background()
 
 	if err := onStart.Run(ctx, a); err != nil {
-		fmt.Errorf("%v", err)
+		log.Err(err)
 		return
 	}
 
@@ -68,17 +69,19 @@ func (a *App) Stop() {
 }
 
 func (a *App) GetServer() *grpc.Server {
-	a.serverOnce.Do(func() {
-		a.server = newGrpcServer()
-	},
+	a.serverOnce.Do(
+		func() {
+			a.server = newGrpcServer()
+		},
 	)
 	return a.server
 }
 func (a *App) GetDB() *bun.DB {
 
-	a.dbOnce.Do(func() {
-		a.db = a.newBunDB()
-	},
+	a.dbOnce.Do(
+		func() {
+			a.db = a.newBunDB()
+		},
 	)
 
 	return a.db

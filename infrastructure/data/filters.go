@@ -2,7 +2,16 @@ package data
 
 import "github.com/materials-resources/s_prophet/internal/validator"
 
+type PageDirection int32
+
+const (
+	PageDirectionUnknown PageDirection = iota
+	PageDirectionPrevious
+	PageDirectionNext
+)
+
 type Filters struct {
+	Direction    PageDirection
 	Limit        int
 	Cursor       int
 	Sort         string
@@ -23,18 +32,18 @@ func (f Filters) limit() int {
 }
 
 type Metadata struct {
-	CurrentCursor int
-	NextCursor    int
-	TotalRecords  int
+	NextCursor     int
+	PreviousCursor int
+	TotalRecords   int
 }
 
-func calculateMetadata(totalRecords, lastRecordCursor, currentRecordCursor int) Metadata {
+func calculateMetadata(totalRecords, nextCursor, previousCursor int) Metadata {
 	if totalRecords == 0 {
 		return Metadata{}
 	}
 	return Metadata{
-		TotalRecords:  totalRecords,
-		CurrentCursor: currentRecordCursor,
-		NextCursor:    lastRecordCursor,
+		TotalRecords:   totalRecords,
+		PreviousCursor: nextCursor,
+		NextCursor:     previousCursor,
 	}
 }
