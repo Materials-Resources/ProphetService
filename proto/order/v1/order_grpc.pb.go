@@ -33,6 +33,7 @@ const (
 type OrderServiceClient interface {
 	ListOrdersByCustomer(ctx context.Context, in *ListOrdersByCustomerRequest, opts ...grpc.CallOption) (*ListOrdersByCustomerResponse, error)
 	ListOrdersByTaker(ctx context.Context, in *ListOrdersByTakerRequest, opts ...grpc.CallOption) (*ListOrdersByTakerResponse, error)
+	// GetOrder returns the order details for a given order id
 	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error)
 	CreateQuote(ctx context.Context, in *CreateQuoteRequest, opts ...grpc.CallOption) (*CreateQuoteResponse, error)
@@ -107,6 +108,7 @@ func (c *orderServiceClient) GetPickTicketById(ctx context.Context, in *GetPickT
 type OrderServiceServer interface {
 	ListOrdersByCustomer(context.Context, *ListOrdersByCustomerRequest) (*ListOrdersByCustomerResponse, error)
 	ListOrdersByTaker(context.Context, *ListOrdersByTakerRequest) (*ListOrdersByTakerResponse, error)
+	// GetOrder returns the order details for a given order id
 	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
 	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
 	CreateQuote(context.Context, *CreateQuoteRequest) (*CreateQuoteResponse, error)

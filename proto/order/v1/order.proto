@@ -72,6 +72,7 @@ message Filters {
 service OrderService {
   rpc ListOrdersByCustomer(ListOrdersByCustomerRequest) returns (ListOrdersByCustomerResponse);
   rpc ListOrdersByTaker(ListOrdersByTakerRequest) returns (ListOrdersByTakerResponse);
+  //GetOrder returns the order details for a given order id
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
   rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
 

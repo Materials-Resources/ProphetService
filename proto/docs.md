@@ -50,6 +50,8 @@
     - [CatalogService](#catalog-v1-CatalogService)
   
 - [customer/v1/customer.proto](#customer_v1_customer-proto)
+    - [GetCustomerRequest](#customer-v1-GetCustomerRequest)
+    - [GetCustomerResponse](#customer-v1-GetCustomerResponse)
     - [GetOrdersRequest](#customer-v1-GetOrdersRequest)
     - [GetOrdersResponse](#customer-v1-GetOrdersResponse)
     - [GetOrdersResponse.Order](#customer-v1-GetOrdersResponse-Order)
@@ -786,6 +788,31 @@
 
 
 
+<a name="customer-v1-GetCustomerRequest"></a>
+
+### GetCustomerRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| customer_id | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="customer-v1-GetCustomerResponse"></a>
+
+### GetCustomerResponse
+
+
+
+
+
+
+
 <a name="customer-v1-GetOrdersRequest"></a>
 
 ### GetOrdersRequest
@@ -845,7 +872,10 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetOrders | [GetOrdersRequest](#customer-v1-GetOrdersRequest) | [GetOrdersResponse](#customer-v1-GetOrdersResponse) | rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
+| GetOrders | [GetOrdersRequest](#customer-v1-GetOrdersRequest) | [GetOrdersResponse](#customer-v1-GetOrdersResponse) |  |
+| GetCustomer | [GetCustomerRequest](#customer-v1-GetCustomerRequest) | [GetCustomerResponse](#customer-v1-GetCustomerResponse) | GetCustomer returns the customer information
+
+rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
  
 
@@ -1454,7 +1484,7 @@
 | ----------- | ------------ | ------------- | ------------|
 | ListOrdersByCustomer | [ListOrdersByCustomerRequest](#order-v1-ListOrdersByCustomerRequest) | [ListOrdersByCustomerResponse](#order-v1-ListOrdersByCustomerResponse) |  |
 | ListOrdersByTaker | [ListOrdersByTakerRequest](#order-v1-ListOrdersByTakerRequest) | [ListOrdersByTakerResponse](#order-v1-ListOrdersByTakerResponse) |  |
-| GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) |  |
+| GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) | GetOrder returns the order details for a given order id |
 | CreateOrder | [CreateOrderRequest](#order-v1-CreateOrderRequest) | [CreateOrderResponse](#order-v1-CreateOrderResponse) |  |
 | CreateQuote | [CreateQuoteRequest](#order-v1-CreateQuoteRequest) | [CreateQuoteResponse](#order-v1-CreateQuoteResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |

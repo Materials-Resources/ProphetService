@@ -6,6 +6,7 @@ option go_package = "github.com/materials-resources/s_prophet/internal/core/mode
 
 service CustomerService {
   rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
+  // GetCustomer returns the customer information
   rpc GetCustomer(GetCustomerRequest) returns (GetCustomerResponse);
   //  rpc GetQuotes() returns ();
   //  rpc GetInvoices() returns ();
