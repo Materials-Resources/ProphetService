@@ -1,7 +1,7 @@
 package domain
 
 type Metadata struct {
-	NextCursor     int32
-	PreviousCursor int32
-	TotalRecords   int32
+	NextCursor     int
+	PreviousCursor int
+	TotalRecords   int
 }

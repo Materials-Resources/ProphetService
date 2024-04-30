@@ -272,7 +272,7 @@ func (m *InvLocModel) GetAll(
 		return nil, Metadata{}, err
 	}
 
-	metadata := calculateMetadata(1, invLocs[len(invLocs)-1].InvMastUid, filter.cursor())
+	metadata := calculateMetadata(1, int(invLocs[len(invLocs)-1].InvMastUid), filter.cursor())
 	return invLocs, metadata, nil
 }
 

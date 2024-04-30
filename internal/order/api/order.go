@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/materials-resources/s_prophet/internal/order/domain"
 	"github.com/materials-resources/s_prophet/internal/order/service"
 
@@ -18,11 +19,10 @@ type OrderApi struct {
 
 func (s OrderApi) ListOrdersByCustomer(
 	ctx context.Context, request *rpc.ListOrdersByCustomerRequest) (*rpc.ListOrdersByCustomerResponse, error) {
-
 	orders, metadata, err := s.service.ListOrdersByCustomer(
 		ctx, request.GetCustomerId(), domain.Filters{
 			Direction: domain.PageDirection(request.GetFilters().GetDirection()),
-			Cursor:    request.GetFilters().GetCursor(),
+			Cursor:    int(request.GetFilters().GetCursor()),
 		})
 	if err != nil {
 		return nil, err
@@ -32,8 +32,8 @@ func (s OrderApi) ListOrdersByCustomer(
 	res := &rpc.ListOrdersByCustomerResponse{
 		Orders: make([]*rpc.BasicOrder, 0, len(orders)),
 		Metadata: &rpc.PageMetadata{
-			NextCursor: metadata.NextCursor,
-			PrevCursor: metadata.PreviousCursor,
+			NextCursor: int32(metadata.NextCursor),
+			PrevCursor: int32(metadata.PreviousCursor),
 		},
 	}
 
@@ -64,7 +64,9 @@ func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteReque
 		ShippingAddress: domain.Address{
 			Id: request.GetShippingAddressId(),
 		},
-		RequestedDate: request.GetRequestedDate().AsTime(),
+		Customer: domain.Customer{
+			Id: request.GetCustomerId(),
+		},
 	}
 
 	order.Items = make([]domain.OrderItem, 0, len(request.GetOrderItems()))
@@ -79,6 +81,7 @@ func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteReque
 	err := s.service.CreateQuote(
 		ctx, order)
 
+	fmt.Println(order.Id)
 	return &rpc.CreateQuoteResponse{
 		Id: order.Id,
 	}, err

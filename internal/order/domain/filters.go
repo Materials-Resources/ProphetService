@@ -1,13 +1,14 @@
 package domain
 
 type Filters struct {
-	Limit     int32
-	Cursor    int32
+	Limit     int
+	Cursor    int
 	Direction PageDirection
 }
-type PageDirection int32
+type PageDirection int
 
 const (
-	Next PageDirection = iota
-	Previous
+	PageDirectionUnknown PageDirection = iota
+	PageDirectionNext
+	PageDirectionPrevious
 )

@@ -26,7 +26,7 @@ func (s *OrderService) ListOrdersByCustomer(
 		ctx, customerId, data.Filters{
 			Limit:        100,
 			Cursor:       filters.Cursor,
-			Direction:    data.Direction(filters.Direction),
+			Direction:    data.PageDirection(filters.Direction),
 			Sort:         "",
 			SortSafeList: nil,
 		})
@@ -64,7 +64,6 @@ func (s *OrderService) ListOrdersByCustomer(
 	return orderList, domain.Metadata{
 		NextCursor:     metadata.NextCursor,
 		PreviousCursor: metadata.PreviousCursor,
-		TotalRecords:   0,
 	}, nil
 }
 

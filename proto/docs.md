@@ -1435,8 +1435,9 @@
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| NEXT | 0 |  |
-| PREVIOUS | 1 |  |
+| PAGE_DIRECTION_UNSPECIFIED | 0 |  |
+| PAGE_DIRECTION_NEXT | 1 |  |
+| PAGE_DIRECTION_PREVIOUS | 2 |  |
 
 
  

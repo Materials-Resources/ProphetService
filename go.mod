@@ -1,10 +1,11 @@
 module github.com/materials-resources/s_prophet
 
-go 1.21.6
+go 1.22.1
 
 require (
 	github.com/denisenkom/go-mssqldb v0.12.3
-	github.com/hamba/avro/v2 v2.20.1
+	github.com/hamba/avro/v2 v2.21.0
+	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 	github.com/twmb/franz-go v1.16.1
 	github.com/twmb/franz-go/pkg/sr v0.0.0-20240412162337-6a58760afaa7
@@ -18,7 +19,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.23.1
 	go.opentelemetry.io/otel/sdk/metric v1.23.1
 	go.opentelemetry.io/otel/trace v1.24.0
-	golang.org/x/net v0.20.0
+	golang.org/x/net v0.21.0
 	golang.org/x/sync v0.6.0
 	google.golang.org/grpc v1.61.0
 	google.golang.org/protobuf v1.33.0
@@ -36,7 +37,9 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/klauspost/compress v1.17.8 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -51,9 +54,9 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.23.0 // indirect
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/mod v0.16.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240108191215-35c7eff3a6b1 // indirect

@@ -356,16 +356,16 @@ func (m *OeHdrModel) SelectByCustomerId(ctx context.Context, customerId float64,
 	var oeHdrs []*OeHdr
 	q := m.bun.NewSelect().Model(&oeHdrs).Where("customer_id = ?", customerId)
 
-	if filters.Direction == Next {
+	if filters.Direction == PageDirectionNext {
 		q.Where("oe_hdr_uid > (?)", filters.Cursor).Order("oe_hdr_uid ASC")
 	}
-	if filters.Direction == Previous {
+	if filters.Direction == PageDirectionPrevious {
 		q.Where("oe_hdr_uid < (?)", filters.Cursor).Order("oe_hdr_uid DESC")
 	}
 
 	err := q.Limit(int(filters.Limit)).Scan(ctx)
 
-	if filters.Direction == Previous {
+	if filters.Direction == PageDirectionPrevious {
 		sort.Slice(
 			oeHdrs, func(i, j int) bool {
 				return oeHdrs[i].OeHdrUid < oeHdrs[j].OeHdrUid
@@ -384,8 +384,8 @@ func (*OeHdrModel) calculateMetadata(oeHdrs []*OeHdr) Metadata {
 		return Metadata{}
 	}
 	return Metadata{
-		NextCursor:     oeHdrs[len(oeHdrs)-1].OeHdrUid,
-		PreviousCursor: oeHdrs[0].OeHdrUid,
+		NextCursor:     int(oeHdrs[len(oeHdrs)-1].OeHdrUid),
+		PreviousCursor: int(oeHdrs[0].OeHdrUid),
 	}
 }
 
