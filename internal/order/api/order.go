@@ -100,12 +100,23 @@ func (s OrderApi) GetOrder(ctx context.Context, request *rpc.GetOrderRequest) (*
 		return nil, err
 	}
 
-	return &rpc.GetOrderResponse{
+	res := &rpc.GetOrderResponse{
 		Id:                   order.Id,
 		ShippingAddress:      mapAddressToRpcAddress(order.ShippingAddress),
 		Contact:              mapContactToRpcContact(order.Contact),
 		DeliveryInstructions: order.DeliveryInstructions,
-	}, nil
+	}
+
+	res.OrderItems = make([]*rpc.GetOrderResponse_OrderItem, 0, len(order.Items))
+	for _, item := range order.Items {
+		res.OrderItems = append(
+			res.OrderItems, &rpc.GetOrderResponse_OrderItem{
+				ProductUid:      item.ProductUid,
+				QuantityOrdered: item.QuantityOrdered,
+			})
+	}
+
+	return res, nil
 }
 
 func (s OrderApi) GetPickTicketById(
