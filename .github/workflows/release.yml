@@ -12,6 +12,6 @@ jobs:
       - uses: bufbuild/buf-setup-action@v1
       - name: "push release name to BSR"
         run:
-          "buf push --tag ${{ github.ref_name }}"
+          "buf push proto --tag ${{ github.ref_name }}"
         env:
           BUF_TOKEN: "${{ secrets.BUF_REGISTRY_TOKEN }}"
