@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/uptrace/bun/schema"
 	"sort"
 	"time"
@@ -379,68 +380,6 @@ func (m *OeHdrModel) SelectByCustomerId(ctx context.Context, customerId float64,
 	return oeHdrs, metadata, nil
 }
 
-func (m *OeHdrModel) SelectByCustomerBranchId(
-	ctx context.Context, customerBranchId float64, projectedOrder []string, filters Filters) (
-	[]*OeHdr,
-	Metadata, error) {
-	var oeHdrs []*OeHdr
-	q := m.bun.NewSelect().Model(&oeHdrs).Where("address_id = ?", customerBranchId).Where(
-		"projected_order in (?)", bun.In(projectedOrder)).Order("date_created DESC")
-
-	if filters.Direction == PageDirectionNext {
-		q.Where("oe_hdr_uid > (?)", filters.Cursor).Order("oe_hdr_uid ASC")
-	}
-	if filters.Direction == PageDirectionPrevious {
-		q.Where("oe_hdr_uid < (?)", filters.Cursor).Order("oe_hdr_uid DESC")
-	}
-
-	err := q.Limit(filters.Limit).Scan(ctx)
-
-	if filters.Direction == PageDirectionPrevious {
-		sort.Slice(
-			oeHdrs, func(i, j int) bool {
-				return oeHdrs[i].OeHdrUid < oeHdrs[j].OeHdrUid
-			})
-	}
-	if err != nil {
-		return nil, Metadata{}, err
-	}
-
-	metadata := m.calculateMetadata(oeHdrs)
-	return oeHdrs, metadata, nil
-}
-
-func (*OeHdrModel) calculateMetadata(oeHdrs []*OeHdr) Metadata {
-	if len(oeHdrs) == 0 {
-		return Metadata{}
-	}
-	return Metadata{
-		NextCursor:     int(oeHdrs[len(oeHdrs)-1].OeHdrUid),
-		PreviousCursor: int(oeHdrs[0].OeHdrUid),
-	}
-}
-
-// Get returns the order by the given order number.
-func (m *OeHdrModel) Get(ctx context.Context, orderNo string) (*OeHdr, error) {
-	var oeHdr OeHdr
-	err := m.bun.NewSelect().Model(&oeHdr).Relation("OeLines").Where("order_no = ?", orderNo).Scan(ctx)
-	if err != nil {
-		return nil, err
-
-	}
-	return &oeHdr, nil
-}
-
-// Update updates the given order.
-func (m *OeHdrModel) Update(ctx context.Context, oeHdr *OeHdr) error {
-	return nil
-}
-
-// Delete soft deletes the order by the given order number.
-func (m *OeHdrModel) Delete(ctx context.Context, orderNo string) error {
-	return nil
-}
-
 // GetByCustomerId returns all orders for a given customer Id.
 func (m *OeHdrModel) GetByCustomerId(ctx context.Context, customerId float64) ([]*OeHdr, error) {
 	var oeHdrs []*OeHdr
@@ -454,6 +393,84 @@ func (m *OeHdrModel) GetByCustomerId(ctx context.Context, customerId float64) ([
 	}
 
 	return oeHdrs, nil
+}
+
+func (m *OeHdrModel) SelectByCustomerBranchId(
+	ctx context.Context, customerBranchId float64, projectedOrder []string, filters Filters) (
+	[]*OeHdr,
+	Metadata, error) {
+
+	fields := map[string]interface{}{
+		"address_id":      customerBranchId,
+		"projected_order": "N",
+	}
+
+	return m.selectByField(
+		ctx, fields, "date_created",
+		filters)
+}
+
+// Get returns the order by the given order number.
+func (m *OeHdrModel) Get(ctx context.Context, orderNo string) (*OeHdr, error) {
+	var oeHdr OeHdr
+	err := m.bun.NewSelect().Model(&oeHdr).Relation("OeLines").Where("order_no = ?", orderNo).Scan(ctx)
+	if err != nil {
+		return nil, err
+
+	}
+	return &oeHdr, nil
+}
+
+func (*OeHdrModel) calculateMetadata(oeHdrs []*OeHdr) Metadata {
+	if len(oeHdrs) == 0 {
+		return Metadata{}
+	}
+	return Metadata{
+		NextCursor:     int(oeHdrs[len(oeHdrs)-1].OeHdrUid),
+		PreviousCursor: int(oeHdrs[0].OeHdrUid),
+	}
+}
+
+func (m *OeHdrModel) selectByField(
+	ctx context.Context, fields map[string]interface{}, orderBy string, filters Filters) (
+	[]*OeHdr, Metadata, error) {
+	var oeHdrs []*OeHdr
+	q := m.bun.NewSelect().Model(&oeHdrs)
+
+	for field, value := range fields {
+		q.Where(fmt.Sprintf("%s = ?", field), value)
+
+	}
+
+	q.Order(fmt.Sprintf("%s DESC", orderBy))
+	if filters.Direction == PageDirectionNext {
+		q.Where("oe_hdr_uid > (?)", filters.Cursor).Order("oe_hdr_uid ASC")
+	}
+	if filters.Direction == PageDirectionPrevious {
+		q.Where("oe_hdr_uid < (?)", filters.Cursor).Order("oe_hdr_uid DESC")
+	}
+
+	err := q.Limit(int(filters.Limit)).Scan(ctx)
+
+	if filters.Direction == PageDirectionPrevious {
+		sort.Slice(oeHdrs, func(i, j int) bool { return oeHdrs[i].OeHdrUid < oeHdrs[j].OeHdrUid })
+	}
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := m.calculateMetadata(oeHdrs)
+	return oeHdrs, metadata, nil
+}
+
+// Update updates the given order.
+func (m *OeHdrModel) Update(ctx context.Context, oeHdr *OeHdr) error {
+	return nil
+}
+
+// Delete soft deletes the order by the given order number.
+func (m *OeHdrModel) Delete(ctx context.Context, orderNo string) error {
+	return nil
 }
 
 // generateOeHdrUid generates a new OeJdrUid for oeHdr.
