@@ -1,25 +1,17 @@
-name: buf-push
+name: "Release"
 on:
   push:
-    branches:
-      - main
     tags:
       - '*'
 jobs:
-  build:
+  buf:
+    name: "Push BSR tag"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: bufbuild/buf-setup-action@v1
-      - uses: bufbuild/buf-lint-action@v1
-        with:
-          input: "proto"
-      - uses: bufbuild/buf-breaking-action@v1
-        with:
-          input: "proto"
-          # The 'main' branch of the GitHub repository that defines the module.
-          against: "https://github.com/${GITHUB_REPOSITORY}.git#branch=main,ref=HEAD~1"
-      - uses: bufbuild/buf-push-action@v1
-        with:
-          input: "proto"
-          buf_token: ${{ secrets.BUF_TOKEN }}
+      - name: "push release name to BSR"
+        run:
+          "buf push --tag ${{ github.ref_name }}"
+        env:
+          BUF_TOKEN: "${{ secrets.BUF_REGISTRY_TOKEN }}"
