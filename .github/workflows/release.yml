@@ -14,4 +14,4 @@ jobs:
         run:
           "buf push proto --tag ${{ github.ref_name }}"
         env:
-          BUF_TOKEN: "${{ secrets.BUF_REGISTRY_TOKEN }}"
+          BUF_TOKEN: "${{ secrets.BUF_TOKEN }}"
