@@ -36,6 +36,9 @@ message BasicOrder {
   string status = 2;
   string taker = 3;
   string purchase_order = 4;
+  google.protobuf.Timestamp order_date = 5;
+  google.protobuf.Timestamp requested_date = 6;
+  bool completed = 7;
 }
 
 message OrderDetails {
@@ -70,6 +73,7 @@ message Filters {
   PageDirection direction = 2;
 }
 service OrderService {
+  rpc ListOrdersByCustomerBranch(ListOrdersByCustomerBranchRequest) returns (ListOrdersByCustomerBranchResponse);
   rpc ListOrdersByCustomer(ListOrdersByCustomerRequest) returns (ListOrdersByCustomerResponse);
   rpc ListOrdersByTaker(ListOrdersByTakerRequest) returns (ListOrdersByTakerResponse);
   //GetOrder returns the order details for a given order id
@@ -79,6 +83,16 @@ service OrderService {
   rpc CreateQuote(CreateQuoteRequest) returns (CreateQuoteResponse);
 
   rpc GetPickTicketById(GetPickTicketByIdRequest) returns (GetPickTicketByIdResponse);
+}
+
+message ListOrdersByCustomerBranchRequest {
+  double customer_branch_id = 1;
+  Filters filters = 2;
+}
+
+message ListOrdersByCustomerBranchResponse {
+  repeated BasicOrder orders = 1;
+  PageMetadata metadata = 2;
 }
 
 message CreateOrderRequest {}
@@ -134,18 +148,31 @@ message GetOrderResponse {
 
 message CreateQuoteRequest {
   message OrderItem {
+    // unique identifier for the product
     int32 product_uid = 1;
+    // quantity of the product to be quoted
     double quantity_ordered = 2;
     google.protobuf.Timestamp required_date = 3 [deprecated = true];
   }
   repeated OrderItem order_items = 1;
+  // Deprecated: customer_id is pulled from the customer_branch_id
   double customer_id = 2 [deprecated = true];
-  double shipping_address_id= 3;
+  // Deprecated: use company_branch_id
+  double shipping_address_id= 3 [deprecated = true ];
+  // customer accounts contact_id
   string contact_id = 4;
+  // date the customer requested the quote to be completed
   google.protobuf.Timestamp requested_date = 5;
+  // represents ship_to in prophet and is used as a sub location of a customer record
+  double customer_branch_id = 6;
+  // instructions pertaining to the delivery of the order
+  string delivery_instructions = 7;
+  // customer generated purchase order number for this quote
+  string purchase_order = 8;
 
 }
 message CreateQuoteResponse {
+  // id of the created quote
   string id =1;
 }
 

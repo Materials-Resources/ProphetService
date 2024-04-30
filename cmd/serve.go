@@ -6,6 +6,7 @@ import (
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/materials-resources/s_prophet/app"
 	_ "github.com/materials-resources/s_prophet/internal/catalog"
+	_ "github.com/materials-resources/s_prophet/internal/customer"
 	_ "github.com/materials-resources/s_prophet/internal/inventory"
 	_ "github.com/materials-resources/s_prophet/internal/order"
 	"github.com/spf13/cobra"

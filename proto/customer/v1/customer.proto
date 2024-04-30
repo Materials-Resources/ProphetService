@@ -4,12 +4,18 @@ package customer.v1;
 
 option go_package = "github.com/materials-resources/s_prophet/internal/core/model/customer_v1alpha0";
 
+message CustomerBranch {
+  double id = 1;
+  string name = 2;
+}
+
 service CustomerService {
   rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
   // GetCustomer returns the customer information
   rpc GetCustomer(GetCustomerRequest) returns (GetCustomerResponse);
   //  rpc GetQuotes() returns ();
   //  rpc GetInvoices() returns ();
+  rpc GetContactById(GetContactByIdRequest) returns (GetContactByIdResponse);
 }
 
 message GetOrdersRequest {
@@ -29,4 +35,22 @@ message GetCustomerRequest {
 
 message GetCustomerResponse {
 
+}
+
+message GetContactByIdRequest {
+  string id = 1;
+}
+
+message GetContactByIdResponse {
+
+  message Contact {
+    string id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string phone = 5;
+
+  }
+  Contact contact = 1;
+  repeated CustomerBranch branches = 2;
 }

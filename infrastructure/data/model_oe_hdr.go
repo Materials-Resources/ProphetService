@@ -379,6 +379,37 @@ func (m *OeHdrModel) SelectByCustomerId(ctx context.Context, customerId float64,
 	return oeHdrs, metadata, nil
 }
 
+func (m *OeHdrModel) SelectByCustomerBranchId(
+	ctx context.Context, customerBranchId float64, projectedOrder []string, filters Filters) (
+	[]*OeHdr,
+	Metadata, error) {
+	var oeHdrs []*OeHdr
+	q := m.bun.NewSelect().Model(&oeHdrs).Where("address_id = ?", customerBranchId).Where(
+		"projected_order in (?)", bun.In(projectedOrder)).Order("date_created DESC")
+
+	if filters.Direction == PageDirectionNext {
+		q.Where("oe_hdr_uid > (?)", filters.Cursor).Order("oe_hdr_uid ASC")
+	}
+	if filters.Direction == PageDirectionPrevious {
+		q.Where("oe_hdr_uid < (?)", filters.Cursor).Order("oe_hdr_uid DESC")
+	}
+
+	err := q.Limit(filters.Limit).Scan(ctx)
+
+	if filters.Direction == PageDirectionPrevious {
+		sort.Slice(
+			oeHdrs, func(i, j int) bool {
+				return oeHdrs[i].OeHdrUid < oeHdrs[j].OeHdrUid
+			})
+	}
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := m.calculateMetadata(oeHdrs)
+	return oeHdrs, metadata, nil
+}
+
 func (*OeHdrModel) calculateMetadata(oeHdrs []*OeHdr) Metadata {
 	if len(oeHdrs) == 0 {
 		return Metadata{}
