@@ -6,6 +6,7 @@ option go_package = "github.com/materials-resources/s_prophet/internal/core/mode
 
 service CustomerService {
   rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
+  rpc GetCustomer(GetCustomerRequest) returns (GetCustomerResponse);
   //  rpc GetQuotes() returns ();
   //  rpc GetInvoices() returns ();
 }
@@ -19,4 +20,12 @@ message GetOrdersResponse {
     string status = 2;
   }
   repeated Order orders = 1;
+}
+
+message GetCustomerRequest {
+  double customer_id = 1;
+}
+
+message GetCustomerResponse {
+
 }
