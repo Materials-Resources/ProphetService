@@ -1,0 +1,20 @@
+database:
+  host: "localhost"
+  port: 1433
+  username: "root"
+  password: "pa55word"
+  db: "prophet"
+tracing:
+  service: prophet
+  environment: dev
+  id: 1
+app:
+  events:
+    brokers:
+      - localhost:19092
+  defaults:
+    product_group:
+      company_id: "ABC"
+      asset_account_no: "100001"
+      revenue_account_no: "400001"
+      cos_account_no: "500001"
