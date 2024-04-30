@@ -33,7 +33,7 @@ dev/validate:
 .PHONY: proto/breaking
 ## proto/breaking: Check for breaking changes in the proto files
 proto/breaking:
-	buf breaking proto --against '.git#branch=main'
+	buf breaking proto --against 'https://github.com/Materials-Resources/s_prophet.git#branch=main,ref=HEAD~0'
 
 .PHONY: proto/validate
 ## proto/validate: Validate the proto files
