@@ -31,48 +31,15 @@ message CustomerContact {
   string title = 6;
 }
 
-message BasicOrder {
-  string id = 1;
-  string status = 2;
-  string taker = 3;
-  string purchase_order = 4;
-}
-
-message OrderDetails {
-  string id = 1;
-  string status = 2;
-  string taker = 3;
-  string purchase_order = 4;
-  Address shipping_address = 5;
-  Customer customer = 6;
-  CustomerContact contact = 7;
-  string delivery_instructions = 8;
-}
-
 message OrderItem {
   int32 product_uid = 1;
   double quantity_ordered = 2;
-  google.protobuf.Timestamp required_date = 3 [deprecated = true];
+  google.protobuf.Timestamp required_date = 3;
 }
 
-message PageMetadata {
-  int32 prev_cursor = 1;
-  int32 next_cursor = 2;
-}
-
-enum PageDirection {
-  NEXT = 0;
-  PREVIOUS = 1;
-}
-message Filters {
-  int32 cursor = 1;
-  PageDirection direction = 2;
-}
 service OrderService {
-  rpc ListOrdersByCustomer(ListOrdersByCustomerRequest) returns (ListOrdersByCustomerResponse);
-  rpc ListOrdersByTaker(ListOrdersByTakerRequest) returns (ListOrdersByTakerResponse);
-  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
   rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
 
   rpc CreateQuote(CreateQuoteRequest) returns (CreateQuoteResponse);
 
@@ -81,25 +48,6 @@ service OrderService {
 
 message CreateOrderRequest {}
 message CreateOrderResponse {}
-
-message ListOrdersByCustomerRequest {
-  double customer_id = 1;
-  Filters filters = 2;
-
-}
-
-message ListOrdersByCustomerResponse {
-  repeated BasicOrder orders = 1;
-  PageMetadata metadata = 2;
-}
-
-message ListOrdersByTakerRequest {
-  string taker = 1;
-}
-
-message ListOrdersByTakerResponse {
-  repeated BasicOrder orders = 1;
-}
 
 message GetOrderRequest {
   string id = 1;
@@ -134,18 +82,15 @@ message CreateQuoteRequest {
   message OrderItem {
     int32 product_uid = 1;
     double quantity_ordered = 2;
-    google.protobuf.Timestamp required_date = 3 [deprecated = true];
+    google.protobuf.Timestamp required_date = 3;
   }
   repeated OrderItem order_items = 1;
-  double customer_id = 2 [deprecated = true];
-  double shipping_address_id= 3;
+  double customer_id = 2;
+  double shipping_address_id = 3;
   string contact_id = 4;
-  google.protobuf.Timestamp requested_date = 5;
 
 }
-message CreateQuoteResponse {
-  string id =1;
-}
+message CreateQuoteResponse {}
 
 message GetPickTicketByIdRequest {
   double id = 1;

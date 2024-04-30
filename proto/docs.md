@@ -73,7 +73,6 @@
   
 - [order/v1/order.proto](#order_v1_order-proto)
     - [Address](#order-v1-Address)
-    - [BasicOrder](#order-v1-BasicOrder)
     - [CreateOrderRequest](#order-v1-CreateOrderRequest)
     - [CreateOrderResponse](#order-v1-CreateOrderResponse)
     - [CreateQuoteRequest](#order-v1-CreateQuoteRequest)
@@ -81,21 +80,12 @@
     - [CreateQuoteResponse](#order-v1-CreateQuoteResponse)
     - [Customer](#order-v1-Customer)
     - [CustomerContact](#order-v1-CustomerContact)
-    - [Filters](#order-v1-Filters)
     - [GetOrderRequest](#order-v1-GetOrderRequest)
     - [GetOrderResponse](#order-v1-GetOrderResponse)
     - [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem)
     - [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest)
     - [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse)
-    - [ListOrdersByCustomerRequest](#order-v1-ListOrdersByCustomerRequest)
-    - [ListOrdersByCustomerResponse](#order-v1-ListOrdersByCustomerResponse)
-    - [ListOrdersByTakerRequest](#order-v1-ListOrdersByTakerRequest)
-    - [ListOrdersByTakerResponse](#order-v1-ListOrdersByTakerResponse)
-    - [OrderDetails](#order-v1-OrderDetails)
     - [OrderItem](#order-v1-OrderItem)
-    - [PageMetadata](#order-v1-PageMetadata)
-  
-    - [PageDirection](#order-v1-PageDirection)
   
     - [OrderService](#order-v1-OrderService)
   
@@ -1072,24 +1062,6 @@
 
 
 
-<a name="order-v1-BasicOrder"></a>
-
-### BasicOrder
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| status | [string](#string) |  |  |
-| taker | [string](#string) |  |  |
-| purchase_order | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="order-v1-CreateOrderRequest"></a>
 
 ### CreateOrderRequest
@@ -1119,10 +1091,9 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | order_items | [CreateQuoteRequest.OrderItem](#order-v1-CreateQuoteRequest-OrderItem) | repeated |  |
-| customer_id | [double](#double) |  | **Deprecated.**  |
+| customer_id | [double](#double) |  |  |
 | shipping_address_id | [double](#double) |  |  |
 | contact_id | [string](#string) |  |  |
-| requested_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 
 
 
@@ -1139,7 +1110,7 @@
 | ----- | ---- | ----- | ----------- |
 | product_uid | [int32](#int32) |  |  |
 | quantity_ordered | [double](#double) |  |  |
-| required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | **Deprecated.**  |
+| required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 
 
 
@@ -1150,11 +1121,6 @@
 
 ### CreateQuoteResponse
 
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
 
 
 
@@ -1192,22 +1158,6 @@
 | phone_number | [string](#string) |  |  |
 | email | [string](#string) |  |  |
 | title | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="order-v1-Filters"></a>
-
-### Filters
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| cursor | [int32](#int32) |  |  |
-| direction | [PageDirection](#order-v1-PageDirection) |  |  |
 
 
 
@@ -1309,90 +1259,6 @@
 
 
 
-<a name="order-v1-ListOrdersByCustomerRequest"></a>
-
-### ListOrdersByCustomerRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| customer_id | [double](#double) |  |  |
-| filters | [Filters](#order-v1-Filters) |  |  |
-
-
-
-
-
-
-<a name="order-v1-ListOrdersByCustomerResponse"></a>
-
-### ListOrdersByCustomerResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| orders | [BasicOrder](#order-v1-BasicOrder) | repeated |  |
-| metadata | [PageMetadata](#order-v1-PageMetadata) |  |  |
-
-
-
-
-
-
-<a name="order-v1-ListOrdersByTakerRequest"></a>
-
-### ListOrdersByTakerRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| taker | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="order-v1-ListOrdersByTakerResponse"></a>
-
-### ListOrdersByTakerResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| orders | [BasicOrder](#order-v1-BasicOrder) | repeated |  |
-
-
-
-
-
-
-<a name="order-v1-OrderDetails"></a>
-
-### OrderDetails
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| status | [string](#string) |  |  |
-| taker | [string](#string) |  |  |
-| purchase_order | [string](#string) |  |  |
-| shipping_address | [Address](#order-v1-Address) |  |  |
-| customer | [Customer](#order-v1-Customer) |  |  |
-| contact | [CustomerContact](#order-v1-CustomerContact) |  |  |
-| delivery_instructions | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="order-v1-OrderItem"></a>
 
 ### OrderItem
@@ -1403,41 +1269,13 @@
 | ----- | ---- | ----- | ----------- |
 | product_uid | [int32](#int32) |  |  |
 | quantity_ordered | [double](#double) |  |  |
-| required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | **Deprecated.**  |
-
-
-
-
-
-
-<a name="order-v1-PageMetadata"></a>
-
-### PageMetadata
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| prev_cursor | [int32](#int32) |  |  |
-| next_cursor | [int32](#int32) |  |  |
+| required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 
 
 
 
 
  
-
-
-<a name="order-v1-PageDirection"></a>
-
-### PageDirection
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| NEXT | 0 |  |
-| PREVIOUS | 1 |  |
-
 
  
 
@@ -1451,10 +1289,8 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| ListOrdersByCustomer | [ListOrdersByCustomerRequest](#order-v1-ListOrdersByCustomerRequest) | [ListOrdersByCustomerResponse](#order-v1-ListOrdersByCustomerResponse) |  |
-| ListOrdersByTaker | [ListOrdersByTakerRequest](#order-v1-ListOrdersByTakerRequest) | [ListOrdersByTakerResponse](#order-v1-ListOrdersByTakerResponse) |  |
-| GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) |  |
 | CreateOrder | [CreateOrderRequest](#order-v1-CreateOrderRequest) | [CreateOrderResponse](#order-v1-CreateOrderResponse) |  |
+| GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) |  |
 | CreateQuote | [CreateQuoteRequest](#order-v1-CreateQuoteRequest) | [CreateQuoteResponse](#order-v1-CreateQuoteResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |
 

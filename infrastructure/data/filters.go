@@ -2,17 +2,9 @@ package data
 
 import "github.com/materials-resources/s_prophet/internal/validator"
 
-type Direction int32
-
-const (
-	Next Direction = iota
-	Previous
-)
-
 type Filters struct {
-	Direction    Direction
-	Limit        int32
-	Cursor       int32
+	Limit        int
+	Cursor       int
 	Sort         string
 	SortSafeList []string
 }
@@ -22,27 +14,27 @@ func ValidateFilters(v *validator.Validator, f Filters) {
 	v.Check(f.Cursor >= 0, "cursor", "must be greater than or equal to zero")
 }
 
-func (f Filters) cursor() int32 {
+func (f Filters) cursor() int {
 	return f.Cursor
 }
 
-func (f Filters) limit() int32 {
+func (f Filters) limit() int {
 	return f.Limit
 }
 
 type Metadata struct {
-	NextCursor     int32
-	PreviousCursor int32
-	TotalRecords   int32
+	CurrentCursor int
+	NextCursor    int
+	TotalRecords  int
 }
 
-func calculateMetadata(totalRecords, nextCursor, previousCursor int32) Metadata {
+func calculateMetadata(totalRecords, lastRecordCursor, currentRecordCursor int) Metadata {
 	if totalRecords == 0 {
 		return Metadata{}
 	}
 	return Metadata{
-		TotalRecords:   totalRecords,
-		PreviousCursor: nextCursor,
-		NextCursor:     previousCursor,
+		TotalRecords:  totalRecords,
+		CurrentCursor: currentRecordCursor,
+		NextCursor:    lastRecordCursor,
 	}
 }

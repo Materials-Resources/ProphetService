@@ -402,7 +402,7 @@ func (c Catalog) GetProductBySupplierPartNumber(
 }
 
 func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*domain.Product, error) {
-	dbFilter := &data.Filters{Cursor: int32(filter.Cursor), Limit: int32(filter.Limit)}
+	dbFilter := &data.Filters{Cursor: filter.Cursor, Limit: filter.Limit}
 
 	invLocs, _, err := c.models.InvLoc.GetAll(ctx, 1001, data.DeleteFlagNo, *dbFilter)
 	if err != nil {

@@ -7,7 +7,6 @@ import (
 
 type Service interface {
 	GetOrderById(context.Context, string) (domain.Order, error)
-	ListOrdersByCustomer(context.Context, float64, domain.Filters) ([]*domain.Order, domain.Metadata, error)
 	CreateOrder(context.Context, *domain.Order) error
 	UpdateOrder(context.Context, *domain.Order) error
 	DeleteOrder(context.Context, string) error

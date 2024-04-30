@@ -17,125 +17,53 @@ type OrderService struct {
 	models data.Models
 }
 
-func (s *OrderService) ListOrdersByCustomer(
-	ctx context.Context, customerId float64,
-	filters domain.Filters) (
-	[]*domain.Order, domain.Metadata,
-	error) {
-	oeHdrs, metadata, err := s.models.OeHdr.SelectByCustomerId(
-		ctx, customerId, data.Filters{
-			Limit:        100,
-			Cursor:       filters.Cursor,
-			Direction:    data.Direction(filters.Direction),
-			Sort:         "",
-			SortSafeList: nil,
-		})
-	if err != nil {
-		return nil, domain.Metadata{}, err
-	}
-	orderList := make([]*domain.Order, 0, len(oeHdrs))
-	for _, oeHdr := range oeHdrs {
-		orderList = append(
-			orderList, &domain.Order{
-				Id: oeHdr.OrderNo,
-				ShippingAddress: domain.Address{
-					Id:         oeHdr.AddressId.Float64,
-					Name:       oeHdr.Ship2Name.String,
-					LineOne:    oeHdr.Ship2Add1.String,
-					LineTwo:    oeHdr.Ship2Add2.String,
-					City:       oeHdr.Ship2City.String,
-					State:      oeHdr.Ship2State.String,
-					PostalCode: oeHdr.Ship2Zip.String,
-				},
-				Customer: domain.Customer{
-					Id: oeHdr.CustomerId,
-				},
-				Taker:                oeHdr.Taker.String,
-				DeliveryInstructions: oeHdr.DeliveryInstructions.String,
-				PurchaseOrder:        oeHdr.PoNo.String,
-				Status: domain.OrderStatus{
-					Approved:  oeHdr.Approved.String == "Y",
-					Cancelled: oeHdr.CancelFlag.String == "Y",
-				},
-			})
-
-	}
-
-	return orderList, domain.Metadata{
-		NextCursor:     metadata.NextCursor,
-		PreviousCursor: metadata.PreviousCursor,
-		TotalRecords:   0,
-	}, nil
-}
-
 func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) error {
-	contactRec, err := s.models.Contacts.Get(ctx, order.Contact.Id)
+
+	customer, err := s.models.Customer.Get(ctx, order.Customer.Id, "MRS")
+	if err != nil {
+		return err
+	}
+	address, err := s.models.Address.Get(ctx, order.ShippingAddress.Id)
 	if err != nil {
 		return err
 	}
 
-	contactsXShipToRecs, err := s.models.ContactsXShipTo.GetByContactId(ctx, "MRS", order.Contact.Id)
+	if customer.CustomerId != address.CorpAddressId.Float64 {
+		return errors.New("customer and address do not match")
+	}
+
+	contact, err := s.models.Contacts.Get(ctx, order.Contact.Id)
 	if err != nil {
 		return err
 	}
 
-	contactExistsOnShipTo := false
-	// check to see if order.ShippingAddress.Id is in the slice of contactsXShipToRecs
-	for _, rec := range contactsXShipToRecs {
-		if rec.ShipToId == order.ShippingAddress.Id {
-			contactExistsOnShipTo = true
-			break
-		}
-	}
+	if contact.AddressId != address.Id {
+		return errors.New("contact and address do not match")
 
-	if !contactExistsOnShipTo {
-		return errors.New("provided shipping address is not associated with contact")
-
-	}
-
-	shipToRec, err := s.models.ShipTo.Get(ctx, "MRS", order.ShippingAddress.Id)
-	if err != nil {
-		return err
-	}
-
-	customerRec, err := s.models.Customer.Get(ctx, shipToRec.CustomerId, "MRS")
-	if err != nil {
-		return err
-	}
-
-	addressRec, err := s.models.Address.Get(ctx, shipToRec.ShipToId)
-	if err != nil {
-		return err
-	}
-
-	shipToSalesrepRecs, err := s.models.ShipToSalesrep.GetByShipToId(ctx, "MRS", shipToRec.ShipToId, true)
-	if err != nil {
-		return err
 	}
 
 	// create the order
 	oeHdrParams := data.CreateOeHdrParams{
-		CustomerId:           customerRec.CustomerId,
-		AddressId:            addressRec.Id,
-		ContactId:            contactRec.Id,
-		Ship2Name:            addressRec.Name,
-		Ship2Add1:            addressRec.MailAddress1.String,
-		Ship2Add2:            addressRec.MailAddress2.String,
-		Ship2City:            addressRec.MailCity.String,
-		Ship2State:           addressRec.MailState.String,
-		Ship2Zip:             addressRec.MailPostalCode.String,
-		Ship2Country:         addressRec.MailCountry.String,
-		ShipToPhone:          contactRec.DirectPhone.String,
+		CustomerId:           order.Customer.Id,
+		AddressId:            address.Id,
+		ContactId:            contact.Id,
+		Ship2Name:            address.Name,
+		Ship2Add1:            address.MailAddress1.String,
+		Ship2Add2:            address.MailAddress2.String,
+		Ship2City:            address.MailCity.String,
+		Ship2State:           address.MailState.String,
+		Ship2Zip:             address.MailPostalCode.String,
+		Ship2Country:         address.MailCountry.String,
+		ShipToPhone:          contact.DirectPhone.String,
 		PoNo:                 order.PurchaseOrder,
 		ProjectedOrder:       "Y",
-		DeliveryInstructions: addressRec.DeliveryInstructions1.String,
-		PackingBasis:         addressRec.ShipToPackingBasis.String,
-		PickTicketType:       customerRec.PickTicketType.String,
-		Terms:                customerRec.TermsId,
-		RequestedDate:        order.RequestedDate,
+		DeliveryInstructions: address.DeliveryInstructions1.String,
+		PackingBasis:         address.ShipToPackingBasis.String,
+		PickTicketType:       customer.PickTicketType.String,
+		Terms:                customer.TermsId,
 	}
 
-	oeHdrParams.CarrierId, err = strconv.ParseFloat(addressRec.CarrierId.String, 64)
+	oeHdrParams.CarrierId, err = strconv.ParseFloat(address.CarrierId.String, 64)
 	if err != nil {
 		return err
 	}
@@ -148,9 +76,9 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 	_, err = s.models.OeHdrSalesrep.Create(
 		ctx, data.OeHdrSalesrepParams{
 			OrderNumber:     oeHdr.OrderNo,
-			SalesrepId:      shipToSalesrepRecs[0].SalesrepId,
-			CommissionSplit: shipToSalesrepRecs[0].CommissionPercentage,
-			PrimarySalesrep: shipToSalesrepRecs[0].PrimarySalesrep.String,
+			SalesrepId:      customer.SalesrepId.String,
+			CommissionSplit: 100,
+			PrimarySalesrep: "Y",
 		})
 
 	// create the quote record
@@ -177,7 +105,7 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 			return err
 		}
 
-		oeLineRec, err := s.models.OeLine.Create(
+		_, err = s.models.OeLine.Create(
 			ctx, data.CreateOeLineParams{
 				OrderNo:              oeHdr.OrderNo,
 				UnitPrice:            0,
@@ -196,15 +124,6 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 				SalesDiscountGroupId: invLoc.SalesDiscountGroup.String,
 				UnitQuantity:         item.QuantityOrdered,
 				UnitSize:             1,
-			})
-		if err != nil {
-			return err
-		}
-		_, err = s.models.QuoteLine.Create(
-			ctx, data.CreateQuoteLineParams{
-				OeLineUid:    oeLineRec.OeLineUid,
-				QtyConverted: 0,
-				UomConverted: oeLineRec.UnitOfMeasure.String,
 			})
 		if err != nil {
 			return err

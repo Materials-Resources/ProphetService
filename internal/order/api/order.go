@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/materials-resources/s_prophet/internal/order/domain"
 	"github.com/materials-resources/s_prophet/internal/order/service"
 
@@ -16,46 +17,6 @@ type OrderApi struct {
 	service service.Service
 }
 
-func (s OrderApi) ListOrdersByCustomer(
-	ctx context.Context, request *rpc.ListOrdersByCustomerRequest) (*rpc.ListOrdersByCustomerResponse, error) {
-
-	orders, metadata, err := s.service.ListOrdersByCustomer(
-		ctx, request.GetCustomerId(), domain.Filters{
-			Direction: domain.PageDirection(request.GetFilters().GetDirection()),
-			Cursor:    request.GetFilters().GetCursor(),
-		})
-	if err != nil {
-		return nil, err
-
-	}
-
-	res := &rpc.ListOrdersByCustomerResponse{
-		Orders: make([]*rpc.BasicOrder, 0, len(orders)),
-		Metadata: &rpc.PageMetadata{
-			NextCursor: metadata.NextCursor,
-			PrevCursor: metadata.PreviousCursor,
-		},
-	}
-
-	for _, order := range orders {
-		res.Orders = append(
-			res.Orders, &rpc.BasicOrder{
-				Id:            order.Id,
-				Taker:         order.Taker,
-				PurchaseOrder: order.PurchaseOrder,
-			})
-
-	}
-
-	return res, nil
-}
-
-func (s OrderApi) ListOrdersByTaker(
-	ctx context.Context, request *rpc.ListOrdersByTakerRequest) (*rpc.ListOrdersByTakerResponse, error) {
-	// TODO implement me
-	panic("implement me")
-}
-
 func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteRequest) (*rpc.CreateQuoteResponse, error) {
 	order := &domain.Order{
 		Contact: domain.Contact{
@@ -64,7 +25,9 @@ func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteReque
 		ShippingAddress: domain.Address{
 			Id: request.GetShippingAddressId(),
 		},
-		RequestedDate: request.GetRequestedDate().AsTime(),
+		Customer: domain.Customer{
+			Id: request.GetCustomerId(),
+		},
 	}
 
 	order.Items = make([]domain.OrderItem, 0, len(request.GetOrderItems()))
@@ -79,9 +42,8 @@ func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteReque
 	err := s.service.CreateQuote(
 		ctx, order)
 
-	return &rpc.CreateQuoteResponse{
-		Id: order.Id,
-	}, err
+	fmt.Println(order.Id)
+	return &rpc.CreateQuoteResponse{}, err
 }
 
 func (s OrderApi) CreateOrder(ctx context.Context, request *rpc.CreateOrderRequest) (
