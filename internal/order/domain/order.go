@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/materials-resources/s_prophet/internal/validator"
+	"github.com/materials-resources/s-prophet/internal/validator"
 	"time"
 )
 

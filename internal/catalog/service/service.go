@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/materials-resources/s_prophet/internal/catalog/domain"
+	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 )
 
 type CatalogService interface {

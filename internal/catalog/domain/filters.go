@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/materials-resources/s_prophet/internal/validator"
+import "github.com/materials-resources/s-prophet/internal/validator"
 
 type Filter struct {
 	Limit  int

@@ -1,16 +1,14 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	_ "github.com/denisenkom/go-mssqldb"
-	"github.com/materials-resources/s_prophet/app"
-	_ "github.com/materials-resources/s_prophet/internal/catalog"
-	_ "github.com/materials-resources/s_prophet/internal/customer"
-	_ "github.com/materials-resources/s_prophet/internal/inventory"
-	_ "github.com/materials-resources/s_prophet/internal/order"
+	"github.com/materials-resources/s-prophet/app"
+	_ "github.com/materials-resources/s-prophet/internal/catalog"
+	_ "github.com/materials-resources/s-prophet/internal/inventory"
+	_ "github.com/materials-resources/s-prophet/internal/order"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc/reflection"
 )
 
 var serveCmd = &cobra.Command{
@@ -18,17 +16,15 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cPath := rootCmd.PersistentFlags().Lookup("config").Value
 
-		c, err := app.NewConfigFromPath(cPath.String())
+		c := app.NewConfig(cPath.String())
 
 		a, err := app.NewApp(c)
 		if err != nil {
-			fmt.Println(err)
+			log.Fatalf("failed to intialize app: %v", err)
 		}
 
-		// Enable GRPC Reflection for clients
-		reflection.Register(a.GetServer())
-
 		a.Start()
+		defer a.Stop()
 	},
 }
 

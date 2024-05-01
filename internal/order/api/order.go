@@ -3,11 +3,11 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s_prophet/internal/order/domain"
-	"github.com/materials-resources/s_prophet/internal/order/service"
+	"github.com/materials-resources/s-prophet/internal/order/domain"
+	"github.com/materials-resources/s-prophet/internal/order/service"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	rpc "github.com/materials-resources/s_prophet/proto/order/v1"
+	rpc "github.com/materials-resources/s-prophet/proto/order/v1"
 )
 
 func NewOrderApi(service service.Service) OrderApi {

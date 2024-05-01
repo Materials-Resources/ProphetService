@@ -2,9 +2,9 @@ package api
 
 import (
 	"context"
-	"github.com/materials-resources/s_prophet/internal/inventory/service"
+	"github.com/materials-resources/s-prophet/internal/inventory/service"
 
-	rpc "github.com/materials-resources/s_prophet/proto/inventory/v1"
+	rpc "github.com/materials-resources/s-prophet/proto/inventory/v1"
 )
 
 func NewInventoryApi(service service.Service) InventoryApi {

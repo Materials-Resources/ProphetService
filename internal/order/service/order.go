@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/materials-resources/s_prophet/infrastructure/data"
-	"github.com/materials-resources/s_prophet/internal/order/domain"
+	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"strconv"
 )
 

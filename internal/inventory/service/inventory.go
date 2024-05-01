@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s_prophet/infrastructure/data"
-	"github.com/materials-resources/s_prophet/internal/inventory/domain"
+	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/materials-resources/s-prophet/internal/inventory/domain"
 )
 
 type InventoryService struct {

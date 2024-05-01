@@ -2,9 +2,8 @@ package app
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"github.com/rs/zerolog/log"
+	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/rs/zerolog"
 	"net"
 	"sync"
 
@@ -18,79 +17,91 @@ import (
 type App struct {
 	Config *Config
 
-	db     *bun.DB
-	dbOnce sync.Once
-
 	server     *grpc.Server
 	serverOnce sync.Once
 
 	tp *tracesdk.TracerProvider
 	mp *metric.MeterProvider
+
+	bunOnce sync.Once
+	bun     *bun.DB
+
+	log *zerolog.Logger
 }
 
 func NewApp(config *Config) (*App, error) {
 
-	tp, err := newTraceProvider(config.Tracing.Service, config.Tracing.Environment)
-	if err != nil {
-		return nil, errors.New("could not create tracing provider")
+	a := &App{
+		Config: config,
 	}
 
-	otel.SetTracerProvider(tp)
+	a.tp = a.newTracer()
 
-	return &App{
-		Config: config,
-		tp:     tp,
-	}, nil
+	a.newLogger()
+
+	otel.SetTracerProvider(a.tp)
+
+	return a, nil
 }
 
 func (a *App) Start() {
 	ctx := context.Background()
 
 	if err := onStart.Run(ctx, a); err != nil {
-		log.Err(err)
-		return
+		a.Logger().Fatal().Err(err).Msg("failed to run onStart hooks")
 	}
 
-	listener, err := net.Listen(
+	lis, err := net.Listen(
 		"tcp",
 		"0.0.0.0:50058",
 	)
-
-	err = a.server.Serve(listener)
 	if err != nil {
-		fmt.Println(err)
-		return
+		a.Logger().Fatal().Err(err).Msg("failed to create listener")
+
+	}
+
+	err = a.GetGrpcServer().Serve(lis)
+	if err != nil {
+		a.Logger().Fatal().Err(err).Msg("failed to start server")
 	}
 
 }
 
+// Stop stops the application.
 func (a *App) Stop() {
-
+	a.GetGrpcServer().Stop()
 }
 
-func (a *App) GetServer() *grpc.Server {
+func (a *App) GetGrpcServer() *grpc.Server {
 	a.serverOnce.Do(
 		func() {
-			a.server = newGrpcServer()
+			a.server = a.newGrpcServer()
 		},
 	)
 	return a.server
 }
+
+// GetDB returns an initialized instance of  bun.DB.
 func (a *App) GetDB() *bun.DB {
 
-	a.dbOnce.Do(
+	a.bunOnce.Do(
 		func() {
-			a.db = a.newBunDB()
-		},
-	)
+			a.newBun()
+		})
 
-	return a.db
+	return a.bun
 }
 
+// GetTP returns initialized instance of tracesdk.TracerProvider.
 func (a *App) GetTP() *tracesdk.TracerProvider {
 	return a.tp
 }
 
+// GetModels returns an initialized instance of data.Models.
+func (a *App) GetModels() data.Models {
+
+	return *data.NewModels(a.GetDB())
+}
 func (a *App) GetMP() *metric.MeterProvider {
 	return a.mp
 }

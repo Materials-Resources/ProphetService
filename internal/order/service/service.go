@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/materials-resources/s_prophet/internal/order/domain"
+	"github.com/materials-resources/s-prophet/internal/order/domain"
 )
 
 type Service interface {
