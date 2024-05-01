@@ -55,6 +55,11 @@ func (a *App) Start() {
 		"tcp",
 		"0.0.0.0:50058",
 	)
+	if err != nil {
+		log.Err(err).Msg("failed to create listener")
+		return
+
+	}
 
 	err = a.server.Serve(listener)
 	if err != nil {

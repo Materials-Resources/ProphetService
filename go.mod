@@ -1,4 +1,4 @@
-module github.com/materials-resources/s_prophet
+module github.com/materials-resources/s-prophet
 
 go 1.22.1
 

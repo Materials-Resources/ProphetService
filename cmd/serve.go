@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	_ "github.com/denisenkom/go-mssqldb"
-	"github.com/materials-resources/s_prophet/app"
-	_ "github.com/materials-resources/s_prophet/internal/catalog"
-	_ "github.com/materials-resources/s_prophet/internal/inventory"
-	_ "github.com/materials-resources/s_prophet/internal/order"
+	"github.com/materials-resources/s-prophet/app"
+	_ "github.com/materials-resources/s-prophet/internal/catalog"
+	_ "github.com/materials-resources/s-prophet/internal/inventory"
+	_ "github.com/materials-resources/s-prophet/internal/order"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc/reflection"
 )

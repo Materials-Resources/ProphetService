@@ -3,12 +3,12 @@ package catalog
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s_prophet/app"
-	"github.com/materials-resources/s_prophet/infrastructure/data"
-	"github.com/materials-resources/s_prophet/internal/catalog/api"
-	"github.com/materials-resources/s_prophet/internal/catalog/service"
-	"github.com/materials-resources/s_prophet/pkg/kafka"
-	svc "github.com/materials-resources/s_prophet/proto/catalog/v1"
+	"github.com/materials-resources/s-prophet/app"
+	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/materials-resources/s-prophet/internal/catalog/api"
+	"github.com/materials-resources/s-prophet/internal/catalog/service"
+	"github.com/materials-resources/s-prophet/pkg/kafka"
+	svc "github.com/materials-resources/s-prophet/proto/catalog/v1"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
 )

@@ -1,6 +1,6 @@
 package data
 
-import "github.com/materials-resources/s_prophet/internal/validator"
+import "github.com/materials-resources/s-prophet/internal/validator"
 
 type PageDirection int32
 

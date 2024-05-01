@@ -59,6 +59,9 @@ type InventorySupplierXLocModel struct {
 func (m InventorySupplierXLocModel) New(
 	ctx context.Context, inventorySupplierUid int32, locationId float64) (*InventorySupplierXLoc, error) {
 	inventorySupplierXLocUid, err := m.generateInventorySupplierXLocUid(ctx)
+	if err != nil {
+		return nil, err
+	}
 	inventorySupplierXLoc := &InventorySupplierXLoc{
 		InventorySupplierXLocUid: inventorySupplierXLocUid,
 		InventorySupplierUid:     inventorySupplierUid,

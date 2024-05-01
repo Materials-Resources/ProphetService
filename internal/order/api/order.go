@@ -3,10 +3,10 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s_prophet/internal/order/domain"
-	"github.com/materials-resources/s_prophet/internal/order/service"
+	"github.com/materials-resources/s-prophet/internal/order/domain"
+	"github.com/materials-resources/s-prophet/internal/order/service"
 
-	rpc "github.com/materials-resources/s_prophet/proto/order/v1"
+	rpc "github.com/materials-resources/s-prophet/proto/order/v1"
 )
 
 func NewOrderApi(service service.Service) OrderApi {

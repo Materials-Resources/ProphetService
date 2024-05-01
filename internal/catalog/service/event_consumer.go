@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s_prophet/internal/catalog/domain"
+	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
 	"time"

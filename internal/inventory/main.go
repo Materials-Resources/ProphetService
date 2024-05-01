@@ -2,11 +2,11 @@ package inventory
 
 import (
 	"context"
-	"github.com/materials-resources/s_prophet/app"
-	"github.com/materials-resources/s_prophet/infrastructure/data"
-	"github.com/materials-resources/s_prophet/internal/inventory/api"
-	"github.com/materials-resources/s_prophet/internal/inventory/service"
-	svc "github.com/materials-resources/s_prophet/proto/inventory/v1"
+	"github.com/materials-resources/s-prophet/app"
+	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/materials-resources/s-prophet/internal/inventory/api"
+	"github.com/materials-resources/s-prophet/internal/inventory/service"
+	svc "github.com/materials-resources/s-prophet/proto/inventory/v1"
 )
 
 func init() {
