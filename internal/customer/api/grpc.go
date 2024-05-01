@@ -2,8 +2,8 @@ package api
 
 import (
 	"context"
-	"github.com/materials-resources/s_prophet/internal/customer/service"
-	rpc "github.com/materials-resources/s_prophet/proto/customer/v1"
+	"github.com/materials-resources/s-prophet/internal/customer/service"
+	rpc "github.com/materials-resources/s-prophet/proto/customer/v1"
 )
 
 type CustomerServer struct {
