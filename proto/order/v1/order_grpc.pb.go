@@ -19,18 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OrderService_ListOrdersByCustomer_FullMethodName = "/order.v1.OrderService/ListOrdersByCustomer"
-	OrderService_ListOrdersByTaker_FullMethodName    = "/order.v1.OrderService/ListOrdersByTaker"
-	OrderService_GetOrder_FullMethodName             = "/order.v1.OrderService/GetOrder"
-	OrderService_CreateOrder_FullMethodName          = "/order.v1.OrderService/CreateOrder"
-	OrderService_CreateQuote_FullMethodName          = "/order.v1.OrderService/CreateQuote"
-	OrderService_GetPickTicketById_FullMethodName    = "/order.v1.OrderService/GetPickTicketById"
+	OrderService_ListOrdersByCustomerBranch_FullMethodName = "/order.v1.OrderService/ListOrdersByCustomerBranch"
+	OrderService_ListOrdersByCustomer_FullMethodName       = "/order.v1.OrderService/ListOrdersByCustomer"
+	OrderService_ListOrdersByTaker_FullMethodName          = "/order.v1.OrderService/ListOrdersByTaker"
+	OrderService_GetOrder_FullMethodName                   = "/order.v1.OrderService/GetOrder"
+	OrderService_CreateOrder_FullMethodName                = "/order.v1.OrderService/CreateOrder"
+	OrderService_CreateQuote_FullMethodName                = "/order.v1.OrderService/CreateQuote"
+	OrderService_GetPickTicketById_FullMethodName          = "/order.v1.OrderService/GetPickTicketById"
 )
 
 // OrderServiceClient is the client API for OrderService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderServiceClient interface {
+	ListOrdersByCustomerBranch(ctx context.Context, in *ListOrdersByCustomerBranchRequest, opts ...grpc.CallOption) (*ListOrdersByCustomerBranchResponse, error)
 	ListOrdersByCustomer(ctx context.Context, in *ListOrdersByCustomerRequest, opts ...grpc.CallOption) (*ListOrdersByCustomerResponse, error)
 	ListOrdersByTaker(ctx context.Context, in *ListOrdersByTakerRequest, opts ...grpc.CallOption) (*ListOrdersByTakerResponse, error)
 	// GetOrder returns the order details for a given order id
@@ -46,6 +48,15 @@ type orderServiceClient struct {
 
 func NewOrderServiceClient(cc grpc.ClientConnInterface) OrderServiceClient {
 	return &orderServiceClient{cc}
+}
+
+func (c *orderServiceClient) ListOrdersByCustomerBranch(ctx context.Context, in *ListOrdersByCustomerBranchRequest, opts ...grpc.CallOption) (*ListOrdersByCustomerBranchResponse, error) {
+	out := new(ListOrdersByCustomerBranchResponse)
+	err := c.cc.Invoke(ctx, OrderService_ListOrdersByCustomerBranch_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *orderServiceClient) ListOrdersByCustomer(ctx context.Context, in *ListOrdersByCustomerRequest, opts ...grpc.CallOption) (*ListOrdersByCustomerResponse, error) {
@@ -106,6 +117,7 @@ func (c *orderServiceClient) GetPickTicketById(ctx context.Context, in *GetPickT
 // All implementations should embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
+	ListOrdersByCustomerBranch(context.Context, *ListOrdersByCustomerBranchRequest) (*ListOrdersByCustomerBranchResponse, error)
 	ListOrdersByCustomer(context.Context, *ListOrdersByCustomerRequest) (*ListOrdersByCustomerResponse, error)
 	ListOrdersByTaker(context.Context, *ListOrdersByTakerRequest) (*ListOrdersByTakerResponse, error)
 	// GetOrder returns the order details for a given order id
@@ -119,6 +131,9 @@ type OrderServiceServer interface {
 type UnimplementedOrderServiceServer struct {
 }
 
+func (UnimplementedOrderServiceServer) ListOrdersByCustomerBranch(context.Context, *ListOrdersByCustomerBranchRequest) (*ListOrdersByCustomerBranchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrdersByCustomerBranch not implemented")
+}
 func (UnimplementedOrderServiceServer) ListOrdersByCustomer(context.Context, *ListOrdersByCustomerRequest) (*ListOrdersByCustomerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrdersByCustomer not implemented")
 }
@@ -147,6 +162,24 @@ type UnsafeOrderServiceServer interface {
 
 func RegisterOrderServiceServer(s grpc.ServiceRegistrar, srv OrderServiceServer) {
 	s.RegisterService(&OrderService_ServiceDesc, srv)
+}
+
+func _OrderService_ListOrdersByCustomerBranch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrdersByCustomerBranchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).ListOrdersByCustomerBranch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_ListOrdersByCustomerBranch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).ListOrdersByCustomerBranch(ctx, req.(*ListOrdersByCustomerBranchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _OrderService_ListOrdersByCustomer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -264,6 +297,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "order.v1.OrderService",
 	HandlerType: (*OrderServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListOrdersByCustomerBranch",
+			Handler:    _OrderService_ListOrdersByCustomerBranch_Handler,
+		},
 		{
 			MethodName: "ListOrdersByCustomer",
 			Handler:    _OrderService_ListOrdersByCustomer_Handler,

@@ -17,6 +17,56 @@ type OrderService struct {
 	models data.Models
 }
 
+func (s *OrderService) ListOrdersByCustomerBranch(
+	ctx context.Context, customerBranchId float64, filters domain.Filters) ([]*domain.Order, domain.Metadata, error) {
+	oeHdrs, metadata, err := s.models.OeHdr.SelectByCustomerBranchId(
+		ctx, customerBranchId, []string{"N"}, data.Filters{
+			Limit:        100,
+			Cursor:       filters.Cursor,
+			Direction:    data.PageDirection(filters.Direction),
+			Sort:         "",
+			SortSafeList: nil,
+		})
+
+	if err != nil {
+		return nil, domain.Metadata{}, err
+	}
+	orderList := make([]*domain.Order, len(oeHdrs))
+	for i, oeHdr := range oeHdrs {
+		orderList[i] = &domain.Order{
+			OrderDate:     oeHdr.OrderDate.Time,
+			RequestedDate: oeHdr.RequestedDate.Time,
+			Id:            oeHdr.OrderNo,
+			ShippingAddress: domain.Address{
+				Id:         oeHdr.AddressId.Float64,
+				Name:       oeHdr.Ship2Name.String,
+				LineOne:    oeHdr.Ship2Add1.String,
+				LineTwo:    oeHdr.Ship2Add2.String,
+				City:       oeHdr.Ship2City.String,
+				State:      oeHdr.Ship2State.String,
+				PostalCode: oeHdr.Ship2Zip.String,
+			},
+			Customer: domain.Customer{
+				Id: oeHdr.CustomerId,
+			},
+			Taker:                oeHdr.Taker.String,
+			DeliveryInstructions: oeHdr.DeliveryInstructions.String,
+			PurchaseOrder:        oeHdr.PoNo.String,
+			Status: domain.OrderStatus{
+				Approved:  oeHdr.Approved.String == "Y",
+				Cancelled: oeHdr.CancelFlag.String == "Y",
+			},
+			Completed: oeHdr.Completed.String == "Y",
+		}
+
+	}
+
+	return orderList, domain.Metadata{
+		NextCursor:     metadata.NextCursor,
+		PreviousCursor: metadata.PreviousCursor,
+	}, nil
+}
+
 func (s *OrderService) ListOrdersByCustomer(
 	ctx context.Context, customerId float64,
 	filters domain.Filters) (

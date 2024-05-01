@@ -18,6 +18,7 @@ type Order struct {
 	ShippingAddress      Address
 	Contact              Contact
 	Customer             Customer
+	CustomerBranchId     float64 // This is ship_to_id in the database
 	AddressId            float64
 	CustomerName         string
 	Items                []OrderItem
@@ -25,8 +26,10 @@ type Order struct {
 	DeliveryInstructions string
 	Taker                string
 	Status               OrderStatus
+	OrderDate            time.Time
 	RequestedDate        time.Time
 	OrderType            OrderType
+	Completed            bool
 }
 
 type OrderStatus struct {

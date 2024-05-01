@@ -50,6 +50,10 @@
     - [CatalogService](#catalog-v1-CatalogService)
   
 - [customer/v1/customer.proto](#customer_v1_customer-proto)
+    - [CustomerBranch](#customer-v1-CustomerBranch)
+    - [GetContactByIdRequest](#customer-v1-GetContactByIdRequest)
+    - [GetContactByIdResponse](#customer-v1-GetContactByIdResponse)
+    - [GetContactByIdResponse.Contact](#customer-v1-GetContactByIdResponse-Contact)
     - [GetCustomerRequest](#customer-v1-GetCustomerRequest)
     - [GetCustomerResponse](#customer-v1-GetCustomerResponse)
     - [GetOrdersRequest](#customer-v1-GetOrdersRequest)
@@ -89,6 +93,8 @@
     - [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem)
     - [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest)
     - [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse)
+    - [ListOrdersByCustomerBranchRequest](#order-v1-ListOrdersByCustomerBranchRequest)
+    - [ListOrdersByCustomerBranchResponse](#order-v1-ListOrdersByCustomerBranchResponse)
     - [ListOrdersByCustomerRequest](#order-v1-ListOrdersByCustomerRequest)
     - [ListOrdersByCustomerResponse](#order-v1-ListOrdersByCustomerResponse)
     - [ListOrdersByTakerRequest](#order-v1-ListOrdersByTakerRequest)
@@ -788,6 +794,72 @@
 
 
 
+<a name="customer-v1-CustomerBranch"></a>
+
+### CustomerBranch
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [double](#double) |  |  |
+| name | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="customer-v1-GetContactByIdRequest"></a>
+
+### GetContactByIdRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="customer-v1-GetContactByIdResponse"></a>
+
+### GetContactByIdResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| contact | [GetContactByIdResponse.Contact](#customer-v1-GetContactByIdResponse-Contact) |  |  |
+| branches | [CustomerBranch](#customer-v1-CustomerBranch) | repeated |  |
+
+
+
+
+
+
+<a name="customer-v1-GetContactByIdResponse-Contact"></a>
+
+### GetContactByIdResponse.Contact
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| first_name | [string](#string) |  |  |
+| last_name | [string](#string) |  |  |
+| email | [string](#string) |  |  |
+| phone | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="customer-v1-GetCustomerRequest"></a>
 
 ### GetCustomerRequest
@@ -873,9 +945,8 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetOrders | [GetOrdersRequest](#customer-v1-GetOrdersRequest) | [GetOrdersResponse](#customer-v1-GetOrdersResponse) |  |
-| GetCustomer | [GetCustomerRequest](#customer-v1-GetCustomerRequest) | [GetCustomerResponse](#customer-v1-GetCustomerResponse) | GetCustomer returns the customer information
-
-rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
+| GetCustomer | [GetCustomerRequest](#customer-v1-GetCustomerRequest) | [GetCustomerResponse](#customer-v1-GetCustomerResponse) | GetCustomer returns the customer information |
+| GetContactById | [GetContactByIdRequest](#customer-v1-GetContactByIdRequest) | [GetContactByIdResponse](#customer-v1-GetContactByIdResponse) | rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
  
 
@@ -1114,6 +1185,9 @@ rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 | status | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 | purchase_order | [string](#string) |  |  |
+| order_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+| requested_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+| completed | [bool](#bool) |  |  |
 
 
 
@@ -1149,10 +1223,13 @@ rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | order_items | [CreateQuoteRequest.OrderItem](#order-v1-CreateQuoteRequest-OrderItem) | repeated |  |
-| customer_id | [double](#double) |  | **Deprecated.**  |
-| shipping_address_id | [double](#double) |  |  |
-| contact_id | [string](#string) |  |  |
-| requested_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+| customer_id | [double](#double) |  | **Deprecated.** Deprecated: customer_id is pulled from the customer_branch_id |
+| shipping_address_id | [double](#double) |  | **Deprecated.** Deprecated: use company_branch_id |
+| contact_id | [string](#string) |  | customer accounts contact_id |
+| requested_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | date the customer requested the quote to be completed |
+| customer_branch_id | [double](#double) |  | represents ship_to in prophet and is used as a sub location of a customer record |
+| delivery_instructions | [string](#string) |  | instructions pertaining to the delivery of the order |
+| purchase_order | [string](#string) |  | customer generated purchase order number for this quote |
 
 
 
@@ -1167,8 +1244,8 @@ rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_uid | [int32](#int32) |  |  |
-| quantity_ordered | [double](#double) |  |  |
+| product_uid | [int32](#int32) |  | unique identifier for the product |
+| quantity_ordered | [double](#double) |  | quantity of the product to be quoted |
 | required_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | **Deprecated.**  |
 
 
@@ -1184,7 +1261,7 @@ rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
+| id | [string](#string) |  | id of the created quote |
 
 
 
@@ -1339,6 +1416,38 @@ rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
 
 
+<a name="order-v1-ListOrdersByCustomerBranchRequest"></a>
+
+### ListOrdersByCustomerBranchRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| customer_branch_id | [double](#double) |  |  |
+| filters | [Filters](#order-v1-Filters) |  |  |
+
+
+
+
+
+
+<a name="order-v1-ListOrdersByCustomerBranchResponse"></a>
+
+### ListOrdersByCustomerBranchResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| orders | [BasicOrder](#order-v1-BasicOrder) | repeated |  |
+| metadata | [PageMetadata](#order-v1-PageMetadata) |  |  |
+
+
+
+
+
+
 <a name="order-v1-ListOrdersByCustomerRequest"></a>
 
 ### ListOrdersByCustomerRequest
@@ -1482,6 +1591,7 @@ rpc GetQuotes() returns (); rpc GetInvoices() returns (); |
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| ListOrdersByCustomerBranch | [ListOrdersByCustomerBranchRequest](#order-v1-ListOrdersByCustomerBranchRequest) | [ListOrdersByCustomerBranchResponse](#order-v1-ListOrdersByCustomerBranchResponse) |  |
 | ListOrdersByCustomer | [ListOrdersByCustomerRequest](#order-v1-ListOrdersByCustomerRequest) | [ListOrdersByCustomerResponse](#order-v1-ListOrdersByCustomerResponse) |  |
 | ListOrdersByTaker | [ListOrdersByTakerRequest](#order-v1-ListOrdersByTakerRequest) | [ListOrdersByTakerResponse](#order-v1-ListOrdersByTakerResponse) |  |
 | GetOrder | [GetOrderRequest](#order-v1-GetOrderRequest) | [GetOrderResponse](#order-v1-GetOrderResponse) | GetOrder returns the order details for a given order id |

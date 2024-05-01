@@ -48,7 +48,7 @@ package api
 //			CustomerContact: struct {
 //				Id          string
 //				Name        string
-//				PhoneNumber string
+//				Phone string
 //				Email       string
 //			}{},
 //			Items: []entities.ValidatedOrderItem{{OrderItem: entities.OrderItem{
@@ -93,7 +93,7 @@ package api
 //					}, CustomerContact: &pb.CustomerContact{
 //						Id:          "",
 //						Name:        "",
-//						PhoneNumber: "",
+//						Phone: "",
 //						Email:       "",
 //						Title:       "",
 //					},
@@ -130,7 +130,7 @@ package api
 //			CustomerContact: struct {
 //				Id          string
 //				Name        string
-//				PhoneNumber string
+//				Phone string
 //				Email       string
 //			}{},
 //			Items:         nil,

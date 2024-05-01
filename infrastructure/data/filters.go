@@ -6,8 +6,8 @@ type PageDirection int32
 
 const (
 	PageDirectionUnknown PageDirection = iota
-	PageDirectionPrevious
 	PageDirectionNext
+	PageDirectionPrevious
 )
 
 type Filters struct {

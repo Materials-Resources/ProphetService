@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"github.com/materials-resources/s-prophet/internal/order/service"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	rpc "github.com/materials-resources/s-prophet/proto/order/v1"
 )
@@ -15,6 +16,54 @@ func NewOrderApi(service service.Service) OrderApi {
 
 type OrderApi struct {
 	service service.Service
+}
+
+func (s OrderApi) ListOrdersByCustomerBranch(
+	ctx context.Context, request *rpc.ListOrdersByCustomerBranchRequest) (
+	*rpc.ListOrdersByCustomerBranchResponse, error) {
+	orders, metadata, err := s.service.ListOrdersByCustomerBranch(
+		ctx, request.GetCustomerBranchId(), domain.Filters{
+			Direction: mapRpcPageDirectionToDomain(request.GetFilters().GetDirection()),
+			Cursor:    int(request.GetFilters().GetCursor()),
+		})
+	if err != nil {
+		return nil, err
+
+	}
+
+	res := &rpc.ListOrdersByCustomerBranchResponse{
+		Orders: make([]*rpc.BasicOrder, len(orders)),
+		Metadata: &rpc.PageMetadata{
+			NextCursor: int32(metadata.NextCursor),
+			PrevCursor: int32(metadata.PreviousCursor),
+		},
+	}
+
+	for i, order := range orders {
+		res.Orders[i] = &rpc.BasicOrder{
+			Id:            order.Id,
+			Status:        "",
+			Completed:     order.Completed,
+			Taker:         order.Taker,
+			PurchaseOrder: order.PurchaseOrder,
+			OrderDate:     timestamppb.New(order.RequestedDate),
+			RequestedDate: timestamppb.New(order.RequestedDate),
+		}
+	}
+
+	return res, nil
+
+}
+
+func mapRpcPageDirectionToDomain(direction rpc.PageDirection) domain.PageDirection {
+	switch direction {
+	case rpc.PageDirection_PAGE_DIRECTION_NEXT:
+		return domain.PageDirectionNext
+	case rpc.PageDirection_PAGE_DIRECTION_PREVIOUS:
+		return domain.PageDirectionPrevious
+	default:
+		return domain.PageDirectionUnknown
+	}
 }
 
 func (s OrderApi) ListOrdersByCustomer(
@@ -57,16 +106,15 @@ func (s OrderApi) ListOrdersByTaker(
 }
 
 func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteRequest) (*rpc.CreateQuoteResponse, error) {
+	// TODO: get contact id from grpc request context if customer is calling this
 	order := &domain.Order{
 		Contact: domain.Contact{
 			Id: request.GetContactId(),
 		},
-		ShippingAddress: domain.Address{
-			Id: request.GetShippingAddressId(),
-		},
-		Customer: domain.Customer{
-			Id: request.GetCustomerId(),
-		},
+		CustomerBranchId: request.GetCustomerBranchId(),
+		OrderType:        domain.OrderTypeQuote,
+		RequestedDate:    request.GetRequestedDate().AsTime(),
+		PurchaseOrder:    request.GetPurchaseOrder(),
 	}
 
 	order.Items = make([]domain.OrderItem, 0, len(request.GetOrderItems()))
