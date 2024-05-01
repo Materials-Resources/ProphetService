@@ -3,8 +3,15 @@ package app
 import (
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
-func newGrpcServer() *grpc.Server {
-	return grpc.NewServer(grpc.StatsHandler(otelgrpc.NewServerHandler()))
+func (a *App) newGrpcServer() *grpc.Server {
+	handler := grpc.StatsHandler(otelgrpc.NewServerHandler(otelgrpc.WithTracerProvider(a.tp)))
+
+	s := grpc.NewServer(handler)
+	if a.Config.App.Environment == EnvironmentDevelopment {
+		reflection.Register(s)
+	}
+	return s
 }

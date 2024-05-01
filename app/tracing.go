@@ -12,19 +12,17 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
 )
 
-type Tracer struct {
-	tp *tracesdk.TracerProvider
-}
+// newTracer creates a new tracer provider and sets it on the App.
+func (a *App) newTracer() *tracesdk.TracerProvider {
 
-func newTraceProvider(svcName, env string) (provider *tracesdk.TracerProvider, err error) {
-	// Create the GRPC exporter
 	ctx := context.Background()
 
 	exp, err := otlptracegrpc.New(ctx, otlptracegrpc.WithInsecure(), otlptracegrpc.WithEndpoint("localhost:4317"))
 
 	if err != nil {
-		return nil, err
+		a.Logger().Err(err).Msg("could not create tracing exporter")
 	}
+
 	tp := tracesdk.NewTracerProvider(
 		// Always be sure to batch in production.
 		tracesdk.WithBatcher(exp),
@@ -32,16 +30,19 @@ func newTraceProvider(svcName, env string) (provider *tracesdk.TracerProvider, e
 		tracesdk.WithResource(
 			resource.NewWithAttributes(
 				semconv.SchemaURL,
-				semconv.ServiceNameKey.String(svcName),
-				attribute.String("environment", env),
+				semconv.ServiceNameKey.String(a.Config.Tracing.Service),
+				attribute.String("environment", a.Config.App.Environment),
 			),
 		),
 	)
+
 	otel.SetTextMapPropagator(
 		propagation.NewCompositeTextMapPropagator(
 			propagation.TraceContext{},
 			propagation.Baggage{},
 		),
 	)
-	return tp, nil
+
+	return tp
+
 }

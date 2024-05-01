@@ -3,7 +3,8 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"github.com/uptrace/bun/extra/bundebug"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	"net/url"
 
 	"github.com/uptrace/bun"
@@ -11,7 +12,7 @@ import (
 	"github.com/uptrace/bun/extra/bunotel"
 )
 
-func (a *App) newBunDB() *bun.DB {
+func (a *App) newBun() {
 	query := url.Values{}
 	query.Add("database", a.Config.Database.DB)
 	u := &url.URL{
@@ -27,24 +28,34 @@ func (a *App) newBunDB() *bun.DB {
 	)
 
 	if err != nil {
-
-		fmt.Println(err)
-		fmt.Println("could not connect to db")
+		a.Logger().Fatal().Err(err).Msg("could not connect to database")
 	}
 
-	bundb := bun.NewDB(
+	if err := db.Ping(); err != nil {
+		a.Logger().Fatal().Err(err).Msg("could not ping database")
+	}
+
+	bunDb := bun.NewDB(
 		db,
 		mssqldialect.New(),
 	)
 
-	bundb.AddQueryHook(
+	a.Logger().Info().Str("db", query.Get("database")).Str("host", u.Hostname()).Msg("connected to database")
+
+	registerBunOtelTracer(bunDb, a.GetTP())
+
+	if a.Config.App.Environment == EnvironmentDevelopment {
+		a.Logger().Info().Msg("registering bun debug hooks")
+		bunDb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+	}
+
+	a.bun = bunDb
+}
+
+func registerBunOtelTracer(bunDb *bun.DB, tp *tracesdk.TracerProvider) {
+	bunDb.AddQueryHook(
 		bunotel.NewQueryHook(
-			bunotel.WithTracerProvider(a.GetTP()),
-			bunotel.WithDBName(a.Config.Database.DB),
+			bunotel.WithTracerProvider(tp),
 		),
 	)
-
-	log.Printf("connected to database %s on %s", query.Get("database"), u.Hostname())
-
-	return bundb
 }
