@@ -12,6 +12,8 @@ help:
 .PHONY: dev/setup
 ## dev/setup: Setup the development environment
 dev/setup: dev/tools dev/redpanda/up dev/metrics/up
+	@echo "Install linter"
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.57.2
 
 .PHONY: dev/clean
 ## dev/clean: Clean the development environment
@@ -77,7 +79,7 @@ qc/proto:
 qc/app:
 	go fmt ./...
 	go vet ./...
-	staticcheck ./...
+	golangci-lint run ./...
 
 
 # ==================================================================================== #
