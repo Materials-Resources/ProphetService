@@ -241,8 +241,6 @@ type OeLine struct {
 	LinkedChargeScaleQtyFlag    sql.NullString  `bun:"linked_charge_scale_qty_flag,type:char,nullzero"`
 	SourceQuoteOeLineUid        sql.NullInt32   `bun:"source_quote_oe_line_uid,type:int,nullzero"`
 	RestrictedClassUid          sql.NullInt32   `bun:"restricted_class_uid,type:int,nullzero"`
-
-	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 }
 
 var _ bun.BeforeAppendModelHook = (*OeLine)(nil)

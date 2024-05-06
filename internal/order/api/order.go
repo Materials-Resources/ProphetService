@@ -149,9 +149,12 @@ func (s OrderApi) GetOrder(ctx context.Context, request *rpc.GetOrderRequest) (*
 	}
 
 	res := &rpc.GetOrderResponse{
-		Id:                   order.Id,
-		ShippingAddress:      mapAddressToRpcAddress(order.ShippingAddress),
-		Contact:              mapContactToRpcContact(order.Contact),
+		Id:              order.Id,
+		ShippingAddress: mapAddressToRpcAddress(order.ShippingAddress),
+		Contact:         mapContactToRpcContact(order.Contact),
+		Customer: &rpc.Customer{
+			Id: order.Customer.Id,
+		},
 		DeliveryInstructions: order.DeliveryInstructions,
 	}
 

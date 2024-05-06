@@ -45,8 +45,6 @@ func ValidateOrder(v *validator.Validator, order *Order) {
 
 type OrderItem struct {
 	ProductUid      int32
-	SN              string
-	Name            string
 	QuantityOrdered float64
 }
 

@@ -11,7 +11,7 @@ import (
 func init() {
 	app.OnStart(
 		"InventoryService.init", func(ctx context.Context, a *app.App) error {
-			a.Logger().Log().Msg("Initializing Inventory Service")
+			a.Logger().Info().Msg("Initializing Inventory Service")
 			svc.RegisterInventoryServiceServer(
 				a.GetGrpcServer(),
 				api.NewInventoryApi(service.NewInventoryService(a.GetModels())),

@@ -101,6 +101,6 @@ app/build: qc
 
 .PHONY: app/serve
 ## app/serve: Run the application
-app/serve: qc
+app/serve:
 	set OTEL_EXPORTER_OTLP_INSECURE=true
 	go run . serve -c config.yml

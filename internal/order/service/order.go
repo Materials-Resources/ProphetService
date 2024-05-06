@@ -348,8 +348,16 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 			Id: oeHdr.CustomerId,
 		},
 		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
-		Items:                nil,
+		Items:                make([]domain.OrderItem, len(oeHdr.OeLines)),
 		PurchaseOrder:        oeHdr.PoNo.String,
+	}
+
+	for i, oeLine := range oeHdr.OeLines {
+		order.Items[i] = domain.OrderItem{
+			ProductUid:      oeLine.InvMastUid,
+			QuantityOrdered: oeLine.UnitQuantity,
+		}
+
 	}
 
 	if oeHdr.ContactId.Valid {
