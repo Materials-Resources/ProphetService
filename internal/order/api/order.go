@@ -156,6 +156,7 @@ func (s OrderApi) GetOrder(ctx context.Context, request *rpc.GetOrderRequest) (*
 			Id: order.Customer.Id,
 		},
 		DeliveryInstructions: order.DeliveryInstructions,
+		DatePlaced:           timestamppb.New(order.OrderDate),
 	}
 
 	res.OrderItems = make([]*rpc.GetOrderResponse_OrderItem, 0, len(order.Items))

@@ -1353,6 +1353,7 @@
 | delivery_instructions | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 | purchase_order | [string](#string) |  |  |
+| date_placed | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 
 
 

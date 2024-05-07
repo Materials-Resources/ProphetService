@@ -144,6 +144,7 @@ message GetOrderResponse {
   string delivery_instructions = 10;
   string taker = 12;
   string purchase_order = 13;
+  google.protobuf.Timestamp date_placed = 14;
 }
 
 message CreateQuoteRequest {
