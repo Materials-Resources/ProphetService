@@ -123,14 +123,19 @@ message GetOrderRequest {
 
 message GetOrderResponse {
   message OrderItem {
-    string id = 1;
-    string sn = 2;
+    int32 product_uid = 8;
     string name = 3;
+    string sn = 2;
+    string id = 1 [deprecated = true];
+    string customer_product_sn =10;
+
     double quantity_ordered = 4;
     string quantity_unit = 5;
     double cost_per_unit = 6;
+    string cost_unit = 9;
+
+
     double total_price = 7;
-    int32 product_uid = 8;
   }
 
   string id = 1;

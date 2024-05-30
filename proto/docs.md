@@ -1368,14 +1368,16 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [string](#string) |  |  |
-| sn | [string](#string) |  |  |
+| product_uid | [int32](#int32) |  |  |
 | name | [string](#string) |  |  |
+| sn | [string](#string) |  |  |
+| id | [string](#string) |  | **Deprecated.**  |
+| customer_product_sn | [string](#string) |  |  |
 | quantity_ordered | [double](#double) |  |  |
 | quantity_unit | [string](#string) |  |  |
 | cost_per_unit | [double](#double) |  |  |
+| cost_unit | [string](#string) |  |  |
 | total_price | [double](#double) |  |  |
-| product_uid | [int32](#int32) |  |  |
 
 
 

@@ -19,6 +19,10 @@ type EventService struct {
 	Consumer *EventConsumer
 }
 
+var (
+	ErrorResourceNotFound = errors.New("resource not found")
+)
+
 func NewCatalogService(
 	models data.Models, tracer trace.Tracer, cli *kgo.Client,
 	serde *sr.Serde) Catalog {
@@ -322,7 +326,7 @@ func (c Catalog) DeleteProduct(ctx context.Context, uid int32) error {
 				return err
 			}
 			for _, invLoc := range invLocs {
-				if err := models.InvLoc.Delete(ctx, &invLoc); err != nil {
+				if err := models.InvLoc.Delete(ctx, invLoc); err != nil {
 					return err
 				}
 			}
@@ -381,7 +385,7 @@ func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, loc
 			invLoc.LastMaintainedBy = "admin"
 			invLoc.ProductGroupId = sql.NullString{String: product.ProductGroupSn, Valid: true}
 		}
-		if err = c.models.InvLoc.Update(ctx, &invLoc); err != nil {
+		if err = c.models.InvLoc.Update(ctx, invLoc); err != nil {
 			return err
 		}
 	}
@@ -422,14 +426,15 @@ func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*doma
 func (c Catalog) GetProduct(ctx context.Context, uid int32) (domain.Product, error) {
 	invLocs, err := c.models.InvLoc.GetByInvMastUid(ctx, []float64{1001}, uid)
 	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			return domain.Product{}, ErrorResourceNotFound
+		}
 		return domain.Product{}, err
 
 	}
-	if len(invLocs) == 0 {
-		return domain.Product{}, errors.New("product not found")
-	}
 	var product domain.Product
-	mapInvLocToProduct(&invLocs[0], &product)
+	mapInvLocToProduct(invLocs[0], &product)
 
 	return product, nil
 }
@@ -440,6 +445,7 @@ func mapInvLocToProduct(invLoc *data.InvLoc, product *domain.Product) {
 	product.Name = invLoc.InvMast.ItemDesc
 	product.Description = invLoc.InvMast.ExtendedDesc.String
 	product.ProductGroupSn = invLoc.ProductGroupId.String
+	product.ListPrice = invLoc.Price1.Float64
 }
 
 func (c Catalog) CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {

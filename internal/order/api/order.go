@@ -117,12 +117,12 @@ func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteReque
 		PurchaseOrder:    request.GetPurchaseOrder(),
 	}
 
-	order.Items = make([]domain.OrderItem, 0, len(request.GetOrderItems()))
+	order.Items = make([]*domain.OrderItem, len(request.GetOrderItems()))
 	for _, item := range request.GetOrderItems() {
 		order.Items = append(
-			order.Items, domain.OrderItem{
-				ProductUid:      item.GetProductUid(),
-				QuantityOrdered: item.GetQuantityOrdered(),
+			order.Items, &domain.OrderItem{
+				ProductUid:    item.GetProductUid(),
+				OrderQuantity: item.GetQuantityOrdered(),
 			})
 
 	}
@@ -159,13 +159,18 @@ func (s OrderApi) GetOrder(ctx context.Context, request *rpc.GetOrderRequest) (*
 		DatePlaced:           timestamppb.New(order.OrderDate),
 	}
 
-	res.OrderItems = make([]*rpc.GetOrderResponse_OrderItem, 0, len(order.Items))
-	for _, item := range order.Items {
-		res.OrderItems = append(
-			res.OrderItems, &rpc.GetOrderResponse_OrderItem{
-				ProductUid:      item.ProductUid,
-				QuantityOrdered: item.QuantityOrdered,
-			})
+	res.OrderItems = make([]*rpc.GetOrderResponse_OrderItem, len(order.Items))
+	for i, item := range order.Items {
+		res.OrderItems[i] = &rpc.GetOrderResponse_OrderItem{
+			ProductUid:        item.ProductUid,
+			Name:              item.ProductName,
+			QuantityOrdered:   item.OrderQuantity,
+			QuantityUnit:      item.OrderQuantityUnit,
+			CostPerUnit:       item.Price,
+			CostUnit:          item.PriceUnit,
+			TotalPrice:        item.TotalPrice,
+			CustomerProductSn: item.CustomerProductSn,
+		}
 	}
 
 	return res, nil

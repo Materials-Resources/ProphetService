@@ -38,7 +38,7 @@ func (s CatalogApi) GetBasicProductDetails(
 	res.BasicProductDetails = make([]*rpc.GetBasicProductDetailsResponse_BasicProductDetail, len(product))
 	for i, p := range product {
 		res.BasicProductDetails[i] = &rpc.GetBasicProductDetailsResponse_BasicProductDetail{
-			ProductUid: p.UID, Name: p.Name, Sn: p.SN,
+			ProductUid: p.UID, Name: p.Name, Sn: p.SN, Description: p.Description,
 		}
 
 	}
@@ -75,7 +75,7 @@ func (s CatalogApi) ListProducts(ctx context.Context, request *rpc.ListProductsR
 		}
 
 	}
-	return &rpc.ListProductsResponse{Products: rpcProducts, NextCursor: 0}, nil
+	return &rpc.ListProductsResponse{Products: rpcProducts, NextCursor: products[len(products)-1].UID}, nil
 }
 
 func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (
@@ -84,7 +84,7 @@ func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductReque
 	product, err := s.service.GetProduct(ctx, request.GetId())
 	if err != nil {
 		switch {
-		case errors.Is(err, data.ErrRecordNotFound):
+		case errors.Is(err, service.ErrorResourceNotFound):
 			return nil, status.Error(codes.NotFound, "product not found")
 		}
 
@@ -198,23 +198,19 @@ func (s CatalogApi) GetProductPrice(
 	ctx context.Context,
 	request *rpc.GetProductPriceRequest,
 ) (*rpc.GetProductPriceResponse, error) {
-	// dPP, err := s.repo.SelectProductPrice(ctx, request.GetProductUid())
-	// if err != nil {
-	// 	return &rpc.GetProductPriceResponse{}, err
-	//
-	// }
-	//
-	// productPrices := make([]*rpc.GetProductPriceResponse_ProductPrice, 0, len(dPP))
-	// for _, pp := range dPP {
-	// 	productPrices = append(
-	// 		productPrices, &rpc.GetProductPriceResponse_ProductPrice{
-	// 			ProductUid: pp.ProductUid, CustomerPrice: pp.CustomerPrice, ListPrice: pp.ListPrice,
-	// 		})
-	//
-	// }
+	dPP, err := s.service.GetProduct(ctx, request.GetProductUid()[0])
+	if err != nil {
+		return &rpc.GetProductPriceResponse{}, err
 
-	// return &rpc.GetProductPriceResponse{ProductPrices: productPrices}, nil
-	return nil, nil
+	}
+
+	productPrices := make([]*rpc.GetProductPriceResponse_ProductPrice, 1)
+	productPrices = append(
+		productPrices, &rpc.GetProductPriceResponse_ProductPrice{
+			ProductUid: dPP.UID, CustomerPrice: 0, ListPrice: dPP.ListPrice,
+		})
+
+	return &rpc.GetProductPriceResponse{ProductPrices: productPrices}, nil
 
 }
 

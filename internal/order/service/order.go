@@ -230,7 +230,7 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 			ctx, data.CreateOeLineParams{
 				OrderNo:              oeHdr.OrderNo,
 				UnitPrice:            0,
-				QtyOrdered:           item.QuantityOrdered,
+				QtyOrdered:           item.OrderQuantity,
 				BaseUtPrice:          0,
 				CalcValue:            0,
 				SourceLocId:          1001,
@@ -243,7 +243,7 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 				OeHdrUid:             oeHdr.OeHdrUid,
 				InvMastUid:           invLoc.InvMastUid,
 				SalesDiscountGroupId: invLoc.SalesDiscountGroup.String,
-				UnitQuantity:         item.QuantityOrdered,
+				UnitQuantity:         item.OrderQuantity,
 				UnitSize:             1,
 			})
 		if err != nil {
@@ -347,15 +347,23 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 		Customer: domain.Customer{
 			Id: oeHdr.CustomerId,
 		},
+		OrderDate:            oeHdr.OrderDate.Time,
 		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
-		Items:                make([]domain.OrderItem, len(oeHdr.OeLines)),
+		Items:                make([]*domain.OrderItem, len(oeHdr.OeLines)),
 		PurchaseOrder:        oeHdr.PoNo.String,
 	}
 
 	for i, oeLine := range oeHdr.OeLines {
-		order.Items[i] = domain.OrderItem{
-			ProductUid:      oeLine.InvMastUid,
-			QuantityOrdered: oeLine.UnitQuantity,
+		order.Items[i] = &domain.OrderItem{
+			ProductUid:        oeLine.InvMastUid,
+			ProductSn:         "",
+			ProductName:       "",
+			CustomerProductSn: oeLine.CustomerPartNumber,
+			OrderQuantity:     oeLine.UnitQuantity,
+			OrderQuantityUnit: oeLine.UnitOfMeasure.String,
+			PriceUnit:         oeLine.PricingUnit.String,
+			Price:             oeLine.UnitPrice.Float64,
+			TotalPrice:        oeLine.ExtendedPrice.Float64,
 		}
 
 	}

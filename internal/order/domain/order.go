@@ -21,7 +21,6 @@ type Order struct {
 	CustomerBranchId     float64 // This is ship_to_id in the database
 	AddressId            float64
 	CustomerName         string
-	Items                []OrderItem
 	PurchaseOrder        string
 	DeliveryInstructions string
 	Taker                string
@@ -30,6 +29,7 @@ type Order struct {
 	RequestedDate        time.Time
 	OrderType            OrderType
 	Completed            bool
+	Items                []*OrderItem
 }
 
 type OrderStatus struct {
@@ -44,8 +44,15 @@ func ValidateOrder(v *validator.Validator, order *Order) {
 }
 
 type OrderItem struct {
-	ProductUid      int32
-	QuantityOrdered float64
+	ProductUid        int32
+	ProductSn         string
+	ProductName       string
+	CustomerProductSn string
+	OrderQuantity     float64
+	OrderQuantityUnit string
+	PriceUnit         string
+	Price             float64
+	TotalPrice        float64
 }
 
 type Contact struct {

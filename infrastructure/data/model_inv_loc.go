@@ -226,15 +226,19 @@ func (m *InvLocModel) GetByProductGroupId(ctx context.Context, productGroupId st
 
 // GetByInvMastUid selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
 func (m *InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64, uid int32) (
-	[]InvLoc,
+	[]*InvLoc,
 	error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	var invLocs []InvLoc
+	var invLocs []*InvLoc
 	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
 		"inv_loc.inv_mast_uid = ?",
 		uid).Where("inv_loc.location_id IN (?)", bun.In(locationIds)).Scan(ctx)
+	if invLocs == nil {
+		return nil, ErrRecordNotFound
+
+	}
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrRecordNotFound
@@ -252,6 +256,9 @@ func (m *InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32)
 		"inv_loc.inv_mast_uid IN (?)", bun.In(invMastUids)).Scan(ctx)
 	if err != nil {
 		return nil, err
+	}
+	if invLocs == nil {
+		return nil, ErrRecordNotFound
 	}
 	return invLocs, nil
 }
