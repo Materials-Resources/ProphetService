@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/uptrace/bun/schema"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -250,8 +251,9 @@ type OeHdr struct {
 	GlDimensionProjectNo           sql.NullString  `bun:"gl_dimension_project_no,type:varchar(255),nullzero"`
 	RentalStartDate                sql.NullTime    `bun:"rental_start_date,type:datetime,nullzero"`
 
-	OeLines []OeLine `bun:"rel:has-many,join:order_no=order_no"`
-	Contact Contacts `bun:"rel:has-one,join:contact_id=id"`
+	OeLines  []OeLine  `bun:"rel:has-many,join:order_no=order_no"`
+	Contact  *Contacts `bun:"rel:has-one,join:contact_id=id"`
+	Customer *Customer `bun:"rel:has-one,join:customer_id=customer_id,join:company_id=company_id"`
 }
 
 var _ bun.BeforeAppendModelHook = (*OeHdr)(nil)
@@ -291,6 +293,13 @@ type CreateOeHdrParams struct {
 	CarrierId            float64
 	Terms                string
 	RequestedDate        time.Time
+}
+
+var OeHdrStandardColumns = []string{
+	"oe_hdr.order_no",
+	"oe_hdr.customer_id", "oe_hdr.order_date", "oe_hdr.customer_id", "oe_hdr.contact_id", "oe_hdr.po_no",
+	"oe_hdr.delivery_instructions", "oe_hdr.taker", "oe_hdr.order_date", "oe_hdr.address_id", "oe_hdr.ship2_name",
+	"oe_hdr.ship2_add1", "oe_hdr.ship2_add2", "oe_hdr.ship2_city", "oe_hdr.ship2_state", "oe_hdr.ship2_zip",
 }
 
 // Create creates a new order.
@@ -383,7 +392,7 @@ func (m *OeHdrModel) SelectByCustomerId(ctx context.Context, customerId float64,
 // GetByCustomerId returns all orders for a given customer Id.
 func (m *OeHdrModel) GetByCustomerId(ctx context.Context, customerId float64) ([]*OeHdr, error) {
 	var oeHdrs []*OeHdr
-	count, err := m.bun.NewSelect().Model(&oeHdrs).Relation("OeLines").Where(
+	count, err := m.bun.NewSelect().Model(&oeHdrs).Where(
 		"customer_id = ?", customerId).ScanAndCount(ctx)
 	if err != nil {
 		return nil, err
@@ -411,9 +420,23 @@ func (m *OeHdrModel) SelectByCustomerBranchId(
 }
 
 // Get returns the order by the given order number.
-func (m *OeHdrModel) Get(ctx context.Context, orderNo string) (*OeHdr, error) {
+func (m *OeHdrModel) Get(ctx context.Context, selectedColumns []string, orderNo string, includeOeLines bool, includeContact bool, includeCustomer bool) (*OeHdr, error) {
 	var oeHdr OeHdr
-	err := m.bun.NewSelect().Model(&oeHdr).Relation("OeLines").Where("order_no = ?", orderNo).Scan(ctx)
+	q := m.bun.NewSelect().Model(&oeHdr).ColumnExpr(strings.Join(selectedColumns, ", ")).Where("order_no = ?", orderNo)
+
+	if includeOeLines {
+		q = q.Relation("OeLines")
+	}
+	if includeContact {
+		q = q.Relation("Contact")
+
+	}
+	if includeCustomer {
+		q = q.Relation("Customer")
+
+	}
+
+	err := q.Scan(ctx)
 	if err != nil {
 		return nil, err
 

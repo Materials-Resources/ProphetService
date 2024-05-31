@@ -140,16 +140,26 @@ message GetOrderResponse {
 
   string id = 1;
   repeated OrderItem order_items = 2;
-  string status = 3;
+
+  string customer_id = 7;
+  string customer_name = 8;
+  string contact_id = 9;
+  string contact_name = 11;
 
   Address shipping_address = 4;
-  Customer customer = 5;
-  CustomerContact contact = 6;
-
   string delivery_instructions = 10;
   string taker = 12;
   string purchase_order = 13;
+
+  double sub_total = 15;
+  double tax = 16;
+  double total = 17;
+
   google.protobuf.Timestamp date_placed = 14;
+
+  string status = 3 [deprecated = true];
+  Customer customer = 5 [deprecated = true];
+  CustomerContact contact = 6 [deprecated = true];
 }
 
 message CreateQuoteRequest {

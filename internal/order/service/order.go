@@ -7,6 +7,7 @@ import (
 	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"strconv"
+	"time"
 )
 
 func NewOrderService(models data.Models) *OrderService {
@@ -83,7 +84,7 @@ func (s *OrderService) ListOrdersByCustomer(
 	if err != nil {
 		return nil, domain.Metadata{}, err
 	}
-	orderList := make([]*domain.Order, 0, len(oeHdrs))
+	orderList := make([]*domain.Order, len(oeHdrs))
 	for _, oeHdr := range oeHdrs {
 		orderList = append(
 			orderList, &domain.Order{
@@ -325,7 +326,7 @@ func (s *OrderService) GetPickTicketById(ctx context.Context, id float64) (domai
 }
 
 func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Order, error) {
-	oeHdr, err := s.models.OeHdr.Get(ctx, id)
+	oeHdr, err := s.models.OeHdr.Get(ctx, data.OeHdrStandardColumns, id, true, true, true)
 	if err != nil {
 		return domain.Order{}, err
 	}
@@ -333,7 +334,20 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 	var order domain.Order
 
 	order = domain.Order{
-		Id: oeHdr.OrderNo,
+		Id:                   oeHdr.OrderNo,
+		CustomerBranchId:     0,
+		CustomerId:           fmt.Sprintf("%0.f", oeHdr.CustomerId),
+		CustomerName:         oeHdr.Customer.CustomerName.String,
+		ContactId:            oeHdr.ContactId.String,
+		ContactName:          fmt.Sprintf("%s %s", oeHdr.Contact.FirstName, oeHdr.Contact.LastName),
+		AddressId:            0,
+		PurchaseOrder:        oeHdr.PoNo.String,
+		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
+		Taker:                oeHdr.Taker.String,
+		OrderDate:            oeHdr.OrderDate.Time,
+		RequestedDate:        time.Time{},
+		OrderType:            0,
+		Completed:            false,
 		ShippingAddress: domain.Address{
 			Id:         oeHdr.AddressId.Float64,
 			Name:       oeHdr.Ship2Name.String,
@@ -343,14 +357,7 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 			State:      oeHdr.Ship2State.String,
 			PostalCode: oeHdr.Ship2Zip.String,
 		},
-
-		Customer: domain.Customer{
-			Id: oeHdr.CustomerId,
-		},
-		OrderDate:            oeHdr.OrderDate.Time,
-		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
-		Items:                make([]*domain.OrderItem, len(oeHdr.OeLines)),
-		PurchaseOrder:        oeHdr.PoNo.String,
+		Items: make([]*domain.OrderItem, len(oeHdr.OeLines)),
 	}
 
 	for i, oeLine := range oeHdr.OeLines {
@@ -366,24 +373,6 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 			TotalPrice:        oeLine.ExtendedPrice.Float64,
 		}
 
-	}
-
-	if oeHdr.ContactId.Valid {
-		contactData, err := s.models.Contacts.Get(ctx, oeHdr.ContactId.String)
-		if err != nil {
-			switch {
-			case errors.Is(err, data.ErrRecordNotFound):
-
-			default:
-				return domain.Order{}, err
-			}
-
-		}
-		order.Contact = domain.Contact{
-			Id:    oeHdr.ContactId.String,
-			Name:  fmt.Sprintf("%s %s", contactData.FirstName, contactData.LastName),
-			Title: contactData.Title.String,
-		}
 	}
 
 	return order, nil

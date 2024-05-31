@@ -19,8 +19,11 @@ type Order struct {
 	Contact              Contact
 	Customer             Customer
 	CustomerBranchId     float64 // This is ship_to_id in the database
-	AddressId            float64
+	CustomerId           string
 	CustomerName         string
+	ContactId            string
+	ContactName          string
+	AddressId            float64
 	PurchaseOrder        string
 	DeliveryInstructions string
 	Taker                string

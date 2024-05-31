@@ -1346,14 +1346,21 @@
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
 | order_items | [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem) | repeated |  |
-| status | [string](#string) |  |  |
+| customer_id | [string](#string) |  |  |
+| customer_name | [string](#string) |  |  |
+| contact_id | [string](#string) |  |  |
+| contact_name | [string](#string) |  |  |
 | shipping_address | [Address](#order-v1-Address) |  |  |
-| customer | [Customer](#order-v1-Customer) |  |  |
-| contact | [CustomerContact](#order-v1-CustomerContact) |  |  |
 | delivery_instructions | [string](#string) |  |  |
 | taker | [string](#string) |  |  |
 | purchase_order | [string](#string) |  |  |
+| sub_total | [double](#double) |  |  |
+| tax | [double](#double) |  |  |
+| total | [double](#double) |  |  |
 | date_placed | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+| status | [string](#string) |  | **Deprecated.**  |
+| customer | [Customer](#order-v1-Customer) |  | **Deprecated.**  |
+| contact | [CustomerContact](#order-v1-CustomerContact) |  | **Deprecated.**  |
 
 
 
