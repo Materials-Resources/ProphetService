@@ -171,6 +171,7 @@
 | status | [string](#string) |  |  |
 | created_at | [string](#string) |  |  |
 | total | [double](#double) |  |  |
+| amount_paid | [double](#double) |  |  |
 
 
 

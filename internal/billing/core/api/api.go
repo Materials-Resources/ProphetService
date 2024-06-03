@@ -24,10 +24,11 @@ func (a *BillingAdapter) GetInvoicesByOrderID(orderID string) ([]*domain.Invoice
 	invoices := make([]*domain.Invoice, len(invoiceHdrRecords))
 	for i, record := range invoiceHdrRecords {
 		invoices[i] = &domain.Invoice{
-			Id:        record.InvoiceNo,
-			OrderId:   record.OrderNo.String,
-			Total:     record.TotalAmount,
-			CreatedAt: record.DateCreated,
+			Id:         record.InvoiceNo,
+			OrderId:    record.OrderNo.String,
+			Total:      record.TotalAmount,
+			CreatedAt:  record.DateCreated,
+			AmountPaid: record.AmountPaid,
 		}
 	}
 	return invoices, nil

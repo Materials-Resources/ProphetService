@@ -24,10 +24,11 @@ func (s *BillingService) GetInvoicesByOrder(ctx context.Context, request *billin
 	billingInvoices := make([]*billingV1.SimplifiedInvoice, len(invoices))
 	for i, invoice := range invoices {
 		billingInvoices[i] = &billingV1.SimplifiedInvoice{
-			Id:        invoice.Id,
-			OrderId:   invoice.OrderId,
-			Total:     invoice.Total,
-			CreatedAt: invoice.CreatedAt.String(),
+			Id:         invoice.Id,
+			OrderId:    invoice.OrderId,
+			Total:      invoice.Total,
+			AmountPaid: invoice.AmountPaid,
+			CreatedAt:  invoice.CreatedAt.String(),
 		}
 
 	}
