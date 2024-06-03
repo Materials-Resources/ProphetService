@@ -367,16 +367,21 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 	}
 
 	for i, oeLine := range oeHdr.OeLines {
+		// calculate the back ordered quantity
+		backOrderedQuantity := oeLine.QtyOrdered.Float64 - oeLine.QtyInvoiced.Float64
+
 		order.Items[i] = &domain.OrderItem{
-			ProductUid:        oeLine.InvMastUid,
-			ProductSn:         "",
-			ProductName:       "",
-			CustomerProductSn: oeLine.CustomerPartNumber,
-			OrderQuantity:     oeLine.UnitQuantity,
-			OrderQuantityUnit: oeLine.UnitOfMeasure.String,
-			PriceUnit:         oeLine.PricingUnit.String,
-			Price:             oeLine.UnitPrice.Float64,
-			TotalPrice:        oeLine.ExtendedPrice.Float64,
+			ProductUid:          oeLine.InvMastUid,
+			ProductSn:           "",
+			ProductName:         "",
+			CustomerProductSn:   oeLine.CustomerPartNumber,
+			OrderQuantity:       oeLine.UnitQuantity,
+			OrderQuantityUnit:   oeLine.UnitOfMeasure.String,
+			PriceUnit:           oeLine.PricingUnit.String,
+			Price:               oeLine.UnitPrice.Float64,
+			TotalPrice:          oeLine.ExtendedPrice.Float64,
+			ShippedQuantity:     oeLine.QtyInvoiced.Float64,
+			BackOrderedQuantity: backOrderedQuantity,
 		}
 
 	}

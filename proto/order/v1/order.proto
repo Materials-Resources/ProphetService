@@ -136,6 +136,8 @@ message GetOrderResponse {
 
 
     double total_price = 7;
+    double shipped_quantity = 11;
+    double back_ordered_quantity = 12;
   }
 
   string id = 1;

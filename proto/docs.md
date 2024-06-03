@@ -1468,6 +1468,8 @@
 | cost_per_unit | [double](#double) |  |  |
 | cost_unit | [string](#string) |  |  |
 | total_price | [double](#double) |  |  |
+| shipped_quantity | [double](#double) |  |  |
+| back_ordered_quantity | [double](#double) |  |  |
 
 
 

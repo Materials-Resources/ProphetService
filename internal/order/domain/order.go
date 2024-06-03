@@ -47,15 +47,17 @@ func ValidateOrder(v *validator.Validator, order *Order) {
 }
 
 type OrderItem struct {
-	ProductUid        int32
-	ProductSn         string
-	ProductName       string
-	CustomerProductSn string
-	OrderQuantity     float64
-	OrderQuantityUnit string
-	PriceUnit         string
-	Price             float64
-	TotalPrice        float64
+	ProductUid          int32
+	ProductSn           string
+	ProductName         string
+	CustomerProductSn   string
+	OrderQuantity       float64
+	OrderQuantityUnit   string
+	PriceUnit           string
+	Price               float64
+	TotalPrice          float64
+	ShippedQuantity     float64
+	BackOrderedQuantity float64
 }
 
 type Contact struct {
