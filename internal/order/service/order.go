@@ -337,9 +337,7 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 		Id:                   oeHdr.OrderNo,
 		CustomerBranchId:     0,
 		CustomerId:           fmt.Sprintf("%0.f", oeHdr.CustomerId),
-		CustomerName:         oeHdr.Customer.CustomerName.String,
 		ContactId:            oeHdr.ContactId.String,
-		ContactName:          fmt.Sprintf("%s %s", oeHdr.Contact.FirstName, oeHdr.Contact.LastName),
 		AddressId:            0,
 		PurchaseOrder:        oeHdr.PoNo.String,
 		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
@@ -358,6 +356,14 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 			PostalCode: oeHdr.Ship2Zip.String,
 		},
 		Items: make([]*domain.OrderItem, len(oeHdr.OeLines)),
+	}
+
+	if oeHdr.Customer != nil {
+		order.CustomerName = oeHdr.Customer.CustomerName.String
+	}
+
+	if oeHdr.Contact != nil {
+		order.ContactName = fmt.Sprintf("%s %s", oeHdr.Contact.FirstName, oeHdr.Contact.LastName)
 	}
 
 	for i, oeLine := range oeHdr.OeLines {

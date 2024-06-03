@@ -3,6 +3,13 @@
 
 ## Table of Contents
 
+- [billing/v1/billing.proto](#billing_v1_billing-proto)
+    - [GetInvoicesByOrderRequest](#billing-v1-GetInvoicesByOrderRequest)
+    - [GetInvoicesByOrderResponse](#billing-v1-GetInvoicesByOrderResponse)
+    - [SimplifiedInvoice](#billing-v1-SimplifiedInvoice)
+  
+    - [BillingService](#billing-v1-BillingService)
+  
 - [catalog/v1/catalog.proto](#catalog_v1_catalog-proto)
     - [CreateProductGroupRequest](#catalog-v1-CreateProductGroupRequest)
     - [CreateProductGroupResponse](#catalog-v1-CreateProductGroupResponse)
@@ -111,6 +118,81 @@
     - [SupplierService](#supplier-v1-SupplierService)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="billing_v1_billing-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## billing/v1/billing.proto
+
+
+
+<a name="billing-v1-GetInvoicesByOrderRequest"></a>
+
+### GetInvoicesByOrderRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| order_id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="billing-v1-GetInvoicesByOrderResponse"></a>
+
+### GetInvoicesByOrderResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| invoices | [SimplifiedInvoice](#billing-v1-SimplifiedInvoice) | repeated |  |
+
+
+
+
+
+
+<a name="billing-v1-SimplifiedInvoice"></a>
+
+### SimplifiedInvoice
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| order_id | [string](#string) |  |  |
+| status | [string](#string) |  |  |
+| created_at | [string](#string) |  |  |
+| total | [double](#double) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="billing-v1-BillingService"></a>
+
+### BillingService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetInvoicesByOrder | [GetInvoicesByOrderRequest](#billing-v1-GetInvoicesByOrderRequest) | [GetInvoicesByOrderResponse](#billing-v1-GetInvoicesByOrderResponse) | GetInvoicesByOrder returns all invoices for a given order |
+
+ 
 
 
 
