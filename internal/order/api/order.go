@@ -167,14 +167,18 @@ func (s OrderApi) GetOrder(ctx context.Context, request *rpc.GetOrderRequest) (*
 	res.OrderItems = make([]*rpc.GetOrderResponse_OrderItem, len(order.Items))
 	for i, item := range order.Items {
 		res.OrderItems[i] = &rpc.GetOrderResponse_OrderItem{
-			ProductUid:        item.ProductUid,
-			Name:              item.ProductName,
-			QuantityOrdered:   item.OrderQuantity,
-			QuantityUnit:      item.OrderQuantityUnit,
-			CostPerUnit:       item.Price,
-			CostUnit:          item.PriceUnit,
-			TotalPrice:        item.TotalPrice,
-			CustomerProductSn: item.CustomerProductSn,
+			ProductUid:          item.ProductUid,
+			Name:                item.ProductName,
+			Sn:                  "",
+			Id:                  "",
+			CustomerProductSn:   item.CustomerProductSn,
+			QuantityOrdered:     item.OrderQuantity,
+			QuantityUnit:        item.OrderQuantityUnit,
+			CostPerUnit:         item.Price,
+			CostUnit:            item.PriceUnit,
+			TotalPrice:          item.TotalPrice,
+			ShippedQuantity:     item.ShippedQuantity,
+			BackOrderedQuantity: item.BackOrderedQuantity,
 		}
 	}
 

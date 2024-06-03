@@ -28,7 +28,7 @@ func (s *BillingService) GetInvoicesByOrder(ctx context.Context, request *billin
 			OrderId:    invoice.OrderId,
 			Total:      invoice.Total,
 			AmountPaid: invoice.AmountPaid,
-			CreatedAt:  invoice.CreatedAt.String(),
+			CreatedAt:  invoice.CreatedAt.Format("2006-01-02 15:04:05"),
 		}
 
 	}
