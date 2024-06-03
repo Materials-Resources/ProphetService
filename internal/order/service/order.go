@@ -18,6 +18,27 @@ type OrderService struct {
 	models data.Models
 }
 
+func (s *OrderService) GetShipmentsByOrder(ctx context.Context, orderId string) ([]*domain.Shipment, error) {
+	oePickTicketRecords, err := s.models.OePickTicket.GetAll(ctx, data.OePickTicketGetAllParams{OrderNo: &[]string{orderId}})
+	if err != nil {
+		return nil, err
+
+	}
+	shipments := make([]*domain.Shipment, len(oePickTicketRecords))
+	for i, record := range oePickTicketRecords {
+		shipments[i] = &domain.Shipment{
+			Id:              fmt.Sprintf("%.0f", record.PickTicketNo),
+			OrderId:         record.OrderNo,
+			InvoiceId:       fmt.Sprintf("%.0f", record.InvoiceNo.Float64),
+			CarrierId:       fmt.Sprintf("%.0f", record.CarrierId.Float64),
+			CarrierName:     record.Carrier.Name,
+			CarrierTracking: record.TrackingNo.String,
+		}
+
+	}
+	return shipments, nil
+}
+
 func (s *OrderService) ListOrdersByCustomerBranch(
 	ctx context.Context, customerBranchId float64, filters domain.Filters) ([]*domain.Order, domain.Metadata, error) {
 	oeHdrs, metadata, err := s.models.OeHdr.SelectByCustomerBranchId(

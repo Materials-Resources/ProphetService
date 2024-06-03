@@ -20,4 +20,5 @@ type Service interface {
 	CreateQuote(context.Context, *domain.Order) error
 
 	GetPickTicketById(context.Context, float64) (domain.PickTicket, error)
+	GetShipmentsByOrder(context.Context, string) ([]*domain.Shipment, error)
 }

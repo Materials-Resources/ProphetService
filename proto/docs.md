@@ -100,6 +100,8 @@
     - [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem)
     - [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest)
     - [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse)
+    - [GetShipmentsByOrderRequest](#order-v1-GetShipmentsByOrderRequest)
+    - [GetShipmentsByOrderResponse](#order-v1-GetShipmentsByOrderResponse)
     - [ListOrdersByCustomerBranchRequest](#order-v1-ListOrdersByCustomerBranchRequest)
     - [ListOrdersByCustomerBranchResponse](#order-v1-ListOrdersByCustomerBranchResponse)
     - [ListOrdersByCustomerRequest](#order-v1-ListOrdersByCustomerRequest)
@@ -109,6 +111,7 @@
     - [OrderDetails](#order-v1-OrderDetails)
     - [OrderItem](#order-v1-OrderItem)
     - [PageMetadata](#order-v1-PageMetadata)
+    - [SimplifiedShipment](#order-v1-SimplifiedShipment)
   
     - [PageDirection](#order-v1-PageDirection)
   
@@ -1511,6 +1514,36 @@
 
 
 
+<a name="order-v1-GetShipmentsByOrderRequest"></a>
+
+### GetShipmentsByOrderRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| order_id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1-GetShipmentsByOrderResponse"></a>
+
+### GetShipmentsByOrderResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| shipments | [SimplifiedShipment](#order-v1-SimplifiedShipment) | repeated |  |
+
+
+
+
+
+
 <a name="order-v1-ListOrdersByCustomerBranchRequest"></a>
 
 ### ListOrdersByCustomerBranchRequest
@@ -1659,6 +1692,25 @@
 
 
 
+
+<a name="order-v1-SimplifiedShipment"></a>
+
+### SimplifiedShipment
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| order_id | [string](#string) |  |  |
+| invoice_id | [string](#string) |  |  |
+| carrier_name | [string](#string) |  |  |
+| carrier_tracking | [string](#string) |  |  |
+
+
+
+
+
  
 
 
@@ -1693,6 +1745,7 @@
 | CreateOrder | [CreateOrderRequest](#order-v1-CreateOrderRequest) | [CreateOrderResponse](#order-v1-CreateOrderResponse) |  |
 | CreateQuote | [CreateQuoteRequest](#order-v1-CreateQuoteRequest) | [CreateQuoteResponse](#order-v1-CreateQuoteResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |
+| GetShipmentsByOrder | [GetShipmentsByOrderRequest](#order-v1-GetShipmentsByOrderRequest) | [GetShipmentsByOrderResponse](#order-v1-GetShipmentsByOrderResponse) | GetShipmentsByOrder returns a list of shipment transactionss for a given order id |
 
  
 

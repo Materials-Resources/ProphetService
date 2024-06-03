@@ -89,7 +89,8 @@ type OePickTicket struct {
 	RfnavStopNo              sql.NullInt32   `bun:"rfnav_stop_no,type:int,nullzero"`
 	RfnavPickStatusCd        sql.NullInt32   `bun:"rfnav_pick_status_cd,type:int,nullzero"`
 
-	OeHdr *OeHdr `bun:"rel:belongs-to,join:order_no=order_no"`
+	OeHdr   *OeHdr   `bun:"rel:belongs-to,join:order_no=order_no"`
+	Carrier *Address `bun:"rel:has-one,join:carrier_id=id,join_on:carrier_flag='Y'"`
 }
 
 type OePickTicketModel struct {
@@ -109,4 +110,31 @@ func (m OePickTicketModel) Get(ctx context.Context, pickTicketNo float64) (*OePi
 		return nil, err
 	}
 	return &pickTicket, nil
+}
+
+type OePickTicketGetAllParams struct {
+	OrderNo *[]string
+}
+
+func (m OePickTicketModel) GetAll(ctx context.Context, params OePickTicketGetAllParams) ([]*OePickTicket, error) {
+	var pickTickets []*OePickTicket
+	query := m.bun.NewSelect().Model(&pickTickets)
+
+	m.applyCarrierRelation(query)
+
+	if params.OrderNo != nil {
+		query.Where("order_no IN (?)", bun.In(*params.OrderNo))
+	}
+	err := query.Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return pickTickets, nil
+}
+
+func (m OePickTicketModel) applyCarrierRelation(q *bun.SelectQuery) {
+	q.Relation("Carrier", func(q *bun.SelectQuery) *bun.SelectQuery {
+		return q.Column("name")
+	})
+
 }

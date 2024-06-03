@@ -18,6 +18,28 @@ type OrderApi struct {
 	service service.Service
 }
 
+func (s OrderApi) GetShipmentsByOrder(ctx context.Context, request *rpc.GetShipmentsByOrderRequest) (*rpc.GetShipmentsByOrderResponse, error) {
+	shipments, err := s.service.GetShipmentsByOrder(ctx, request.GetOrderId())
+	if err != nil {
+		return nil, err
+	}
+
+	orderShipments := make([]*rpc.SimplifiedShipment, len(shipments))
+
+	for i, shipment := range shipments {
+		orderShipments[i] = &rpc.SimplifiedShipment{
+			Id:              shipment.Id,
+			OrderId:         shipment.OrderId,
+			InvoiceId:       shipment.InvoiceId,
+			CarrierName:     shipment.CarrierName,
+			CarrierTracking: shipment.CarrierTracking,
+		}
+
+	}
+	return &rpc.GetShipmentsByOrderResponse{Shipments: orderShipments}, nil
+
+}
+
 func (s OrderApi) ListOrdersByCustomerBranch(
 	ctx context.Context, request *rpc.ListOrdersByCustomerBranchRequest) (
 	*rpc.ListOrdersByCustomerBranchResponse, error) {

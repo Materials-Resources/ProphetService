@@ -26,6 +26,7 @@ const (
 	OrderService_CreateOrder_FullMethodName                = "/order.v1.OrderService/CreateOrder"
 	OrderService_CreateQuote_FullMethodName                = "/order.v1.OrderService/CreateQuote"
 	OrderService_GetPickTicketById_FullMethodName          = "/order.v1.OrderService/GetPickTicketById"
+	OrderService_GetShipmentsByOrder_FullMethodName        = "/order.v1.OrderService/GetShipmentsByOrder"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -40,6 +41,8 @@ type OrderServiceClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error)
 	CreateQuote(ctx context.Context, in *CreateQuoteRequest, opts ...grpc.CallOption) (*CreateQuoteResponse, error)
 	GetPickTicketById(ctx context.Context, in *GetPickTicketByIdRequest, opts ...grpc.CallOption) (*GetPickTicketByIdResponse, error)
+	// GetShipmentsByOrder returns a list of shipment transactionss for a given order id
+	GetShipmentsByOrder(ctx context.Context, in *GetShipmentsByOrderRequest, opts ...grpc.CallOption) (*GetShipmentsByOrderResponse, error)
 }
 
 type orderServiceClient struct {
@@ -120,6 +123,16 @@ func (c *orderServiceClient) GetPickTicketById(ctx context.Context, in *GetPickT
 	return out, nil
 }
 
+func (c *orderServiceClient) GetShipmentsByOrder(ctx context.Context, in *GetShipmentsByOrderRequest, opts ...grpc.CallOption) (*GetShipmentsByOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetShipmentsByOrderResponse)
+	err := c.cc.Invoke(ctx, OrderService_GetShipmentsByOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations should embed UnimplementedOrderServiceServer
 // for forward compatibility
@@ -132,6 +145,8 @@ type OrderServiceServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
 	CreateQuote(context.Context, *CreateQuoteRequest) (*CreateQuoteResponse, error)
 	GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error)
+	// GetShipmentsByOrder returns a list of shipment transactionss for a given order id
+	GetShipmentsByOrder(context.Context, *GetShipmentsByOrderRequest) (*GetShipmentsByOrderResponse, error)
 }
 
 // UnimplementedOrderServiceServer should be embedded to have forward compatible implementations.
@@ -158,6 +173,9 @@ func (UnimplementedOrderServiceServer) CreateQuote(context.Context, *CreateQuote
 }
 func (UnimplementedOrderServiceServer) GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPickTicketById not implemented")
+}
+func (UnimplementedOrderServiceServer) GetShipmentsByOrder(context.Context, *GetShipmentsByOrderRequest) (*GetShipmentsByOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShipmentsByOrder not implemented")
 }
 
 // UnsafeOrderServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -297,6 +315,24 @@ func _OrderService_GetPickTicketById_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_GetShipmentsByOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetShipmentsByOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).GetShipmentsByOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_GetShipmentsByOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).GetShipmentsByOrder(ctx, req.(*GetShipmentsByOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -331,6 +367,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPickTicketById",
 			Handler:    _OrderService_GetPickTicketById_Handler,
+		},
+		{
+			MethodName: "GetShipmentsByOrder",
+			Handler:    _OrderService_GetShipmentsByOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

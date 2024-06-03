@@ -31,6 +31,14 @@ message CustomerContact {
   string title = 6;
 }
 
+message SimplifiedShipment {
+  string id = 1;
+  string order_id = 2;
+  string invoice_id = 3;
+  string carrier_name = 4;
+  string carrier_tracking = 5;
+}
+
 message BasicOrder {
   string id = 1;
   string status = 2;
@@ -83,6 +91,16 @@ service OrderService {
   rpc CreateQuote(CreateQuoteRequest) returns (CreateQuoteResponse);
 
   rpc GetPickTicketById(GetPickTicketByIdRequest) returns (GetPickTicketByIdResponse);
+  // GetShipmentsByOrder returns a list of shipment transactions for a given order id
+  rpc GetShipmentsByOrder(GetShipmentsByOrderRequest) returns (GetShipmentsByOrderResponse);
+}
+
+message GetShipmentsByOrderRequest {
+  string order_id = 1;
+}
+
+message GetShipmentsByOrderResponse {
+  repeated SimplifiedShipment shipments = 1;
 }
 
 message ListOrdersByCustomerBranchRequest {
