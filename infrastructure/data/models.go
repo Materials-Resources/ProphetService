@@ -47,6 +47,7 @@ type Models struct {
 	InventorySupplierXUom InventorySupplierXUomModel
 	InventoryReceiptsHdr  InventoryReceiptsHdrModel
 	InventoryReceiptsLine InventoryReceiptsLineModel
+	InvoiceHdr            InvoiceHdrModel
 	ItemConversion        ItemConversionModel
 	ItemCategoryXInvMast  ItemCategoryXInvMastModel
 	OeHdr                 OeHdrModel
@@ -88,6 +89,7 @@ func NewModels(db bun.IDB) *Models {
 		InventorySupplierXUom: InventorySupplierXUomModel{bun: db},
 		InventoryReceiptsHdr:  InventoryReceiptsHdrModel{bun: db},
 		InventoryReceiptsLine: InventoryReceiptsLineModel{bun: db},
+		InvoiceHdr:            InvoiceHdrModel{bun: db},
 		ItemConversion:        ItemConversionModel{bun: db},
 		ItemCategoryXInvMast:  ItemCategoryXInvMastModel{bun: db},
 		OeHdr:                 OeHdrModel{bun: db},
