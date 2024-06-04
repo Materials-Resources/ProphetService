@@ -32,7 +32,7 @@ func init() {
 				fmt.Println(err)
 			}
 
-			cs := service.NewCatalogService(a.GetModels(), a.GetTP().Tracer("CatalogApi"), client, &serde)
+			cs := service.NewCatalogService(a.GetModels(), a.GetTP().Tracer("CatalogApi"), client, &serde, a)
 
 			cs.RegisterWorkers()
 

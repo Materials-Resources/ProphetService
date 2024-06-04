@@ -41,7 +41,7 @@ type OrderServiceClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error)
 	CreateQuote(ctx context.Context, in *CreateQuoteRequest, opts ...grpc.CallOption) (*CreateQuoteResponse, error)
 	GetPickTicketById(ctx context.Context, in *GetPickTicketByIdRequest, opts ...grpc.CallOption) (*GetPickTicketByIdResponse, error)
-	// GetShipmentsByOrder returns a list of shipment transactionss for a given order id
+	// GetShipmentsByOrder returns a list of shipment transactions for a given order id
 	GetShipmentsByOrder(ctx context.Context, in *GetShipmentsByOrderRequest, opts ...grpc.CallOption) (*GetShipmentsByOrderResponse, error)
 }
 
@@ -145,7 +145,7 @@ type OrderServiceServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
 	CreateQuote(context.Context, *CreateQuoteRequest) (*CreateQuoteResponse, error)
 	GetPickTicketById(context.Context, *GetPickTicketByIdRequest) (*GetPickTicketByIdResponse, error)
-	// GetShipmentsByOrder returns a list of shipment transactionss for a given order id
+	// GetShipmentsByOrder returns a list of shipment transactions for a given order id
 	GetShipmentsByOrder(context.Context, *GetShipmentsByOrderRequest) (*GetShipmentsByOrderResponse, error)
 }
 

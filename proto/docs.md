@@ -383,7 +383,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_uid | [int32](#int32) |  |  |
+| product_uid | [int32](#int32) |  | **Deprecated.**  |
+| uid | [string](#string) |  |  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
@@ -480,7 +481,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_prices | [GetProductPriceResponse.ProductPrice](#catalog-v1-GetProductPriceResponse-ProductPrice) | repeated |  |
+| product_prices | [GetProductPriceResponse.ProductPrice](#catalog-v1-GetProductPriceResponse-ProductPrice) | repeated | **Deprecated.**  |
 
 
 
@@ -495,7 +496,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product_uid | [int32](#int32) |  |  |
+| product_uid | [int32](#int32) |  | **Deprecated.**  |
 | list_price | [double](#double) |  |  |
 | customer_price | [double](#double) |  |  |
 
@@ -512,7 +513,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
+| id | [int32](#int32) |  | **Deprecated.**  |
+| uid | [string](#string) |  |  |
 
 
 
@@ -527,7 +529,13 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| product | [ProductDetail](#catalog-v1-ProductDetail) |  |  |
+| product | [ProductDetail](#catalog-v1-ProductDetail) |  | **Deprecated.**  |
+| uid | [string](#string) |  |  |
+| sn | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| description | [string](#string) |  |  |
+| product_group_id | [string](#string) |  |  |
+| product_group_name | [string](#string) |  |  |
 
 
 
@@ -654,7 +662,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| id | [int32](#int32) |  |  |
+| uid | [string](#string) |  |  |
+| id | [int32](#int32) |  | **Deprecated.**  |
 | sn | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
@@ -1745,7 +1754,7 @@
 | CreateOrder | [CreateOrderRequest](#order-v1-CreateOrderRequest) | [CreateOrderResponse](#order-v1-CreateOrderResponse) |  |
 | CreateQuote | [CreateQuoteRequest](#order-v1-CreateQuoteRequest) | [CreateQuoteResponse](#order-v1-CreateQuoteResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |
-| GetShipmentsByOrder | [GetShipmentsByOrderRequest](#order-v1-GetShipmentsByOrderRequest) | [GetShipmentsByOrderResponse](#order-v1-GetShipmentsByOrderResponse) | GetShipmentsByOrder returns a list of shipment transactionss for a given order id |
+| GetShipmentsByOrder | [GetShipmentsByOrderRequest](#order-v1-GetShipmentsByOrderRequest) | [GetShipmentsByOrderResponse](#order-v1-GetShipmentsByOrderResponse) | GetShipmentsByOrder returns a list of shipment transactions for a given order id |
 
  
 

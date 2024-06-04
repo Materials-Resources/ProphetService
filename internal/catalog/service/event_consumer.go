@@ -17,7 +17,7 @@ type EventConsumer struct {
 func (c *EventConsumer) ConsumeDeleteProduct(
 	ctx context.Context, rec *kgo.Record, deleteProduct func(
 		ctx context.Context,
-		uid int32) error) error {
+		uid string) error) error {
 	var productRecord ProductRecord
 	err := c.serde.Decode(rec.Value, &productRecord)
 	if err != nil {
@@ -91,10 +91,10 @@ func (w UpdateProductWorker) ConsumeRecord(rec *kgo.Record) error {
 
 	err = w.service.UpdateProduct(
 		context.Background(), &domain.Product{
-			UID:            productRecord.Uid,
+			Uid:            productRecord.Uid,
 			Name:           productRecord.Name,
 			Description:    productRecord.Description,
-			ProductGroupSn: productRecord.ProductGroupSn,
+			ProductGroupId: productRecord.ProductGroupSn,
 		}, []float64{1001})
 	if err != nil {
 		return err

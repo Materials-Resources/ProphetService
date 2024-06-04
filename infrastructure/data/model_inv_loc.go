@@ -169,7 +169,8 @@ type InvLoc struct {
 	CritMinSafetyStockDays          sql.NullFloat64 `bun:"crit_min_safety_stock_days,type:decimal(19,9),nullzero"`
 	CritMaxSafetyStockDays          sql.NullFloat64 `bun:"crit_max_safety_stock_days,type:decimal(19,9),nullzero"`
 
-	InvMast InvMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+	InvMast      InvMast       `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+	ProductGroup *ProductGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
 }
 
 var _ bun.BeforeAppendModelHook = (*InvLoc)(nil)
@@ -192,7 +193,7 @@ type InvLocModel struct {
 func (m *InvLocModel) Get(ctx context.Context, locationId float64, companyId string, invMastUid int32) (
 	*InvLoc, error) {
 	var invLoc InvLoc
-	err := m.bun.NewSelect().Model(&invLoc).Relation("InvMast").Where(
+	err := m.bun.NewSelect().Model(&invLoc).Relation("InvMast").Relation("ProductGroup").Where(
 		"inv_loc.location_id = ? AND inv_loc.company_id = ? AND inv_loc.inv_mast_uid = ? ", locationId, companyId,
 		invMastUid).Scan(ctx)
 	if err != nil {
@@ -248,6 +249,44 @@ func (m *InvLocModel) GetByInvMastUid(ctx context.Context, locationIds []float64
 	return invLocs, nil
 }
 
+type InvLocGetAllParams struct {
+	CompanyId  *[]string
+	LocationId *[]float64
+	InvMastUid *[]int32
+	DeleteFlag *[]string
+}
+
+func (m *InvLocModel) GetAll(ctx context.Context, params InvLocGetAllParams) ([]*InvLoc, error) {
+
+	var records []*InvLoc
+	q := m.bun.NewSelect().Model(&records).Relation("InvMast")
+
+	if params.CompanyId != nil {
+		q.Where("inv_loc.company_id IN (?)", bun.In(*params.CompanyId))
+	}
+
+	if params.LocationId != nil {
+		q.Where("inv_loc.location_id IN (?)", bun.In(*params.LocationId))
+
+	}
+	if params.InvMastUid != nil {
+		q.Where("inv_loc.inv_mast_uid IN (?)", bun.In(*params.InvMastUid))
+	}
+	if params.DeleteFlag != nil {
+		q.Where("inv_loc.delete_flag IN (?)", bun.In(*params.DeleteFlag))
+
+	}
+
+	err := q.Scan(ctx)
+	if err != nil {
+		return nil, err
+
+	}
+
+	return records, nil
+
+}
+
 // GetByInvMastUids selects InvLoc by inv_mast_uid and returns associated InvMast and ProductGroup
 func (m *InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32) ([]*InvLoc, error) {
 	var invLocs []*InvLoc
@@ -261,26 +300,6 @@ func (m *InvLocModel) GetByInvMastUids(ctx context.Context, invMastUids []int32)
 		return nil, ErrRecordNotFound
 	}
 	return invLocs, nil
-}
-
-// GetAll selects all records from inv_loc table
-func (m *InvLocModel) GetAll(
-	ctx context.Context, locationId float64, deleteFlag DeleteFlag, filter Filters) (
-	[]InvLoc, Metadata, error,
-) {
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
-	defer cancel()
-
-	var invLocs []InvLoc
-	err := m.bun.NewSelect().Model(&invLocs).Relation("InvMast").Where(
-		"inv_loc.inv_mast_uid > ?", filter.cursor()).Where(
-		"location_id = ?", locationId).Limit(int(filter.limit())).Order("inv_loc.inv_mast_uid ASC").Scan(ctx)
-	if err != nil {
-		return nil, Metadata{}, err
-	}
-
-	metadata := calculateMetadata(1, int(invLocs[len(invLocs)-1].InvMastUid), filter.cursor())
-	return invLocs, metadata, nil
 }
 
 // Update updates record with provided invLoc if matching version is found

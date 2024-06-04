@@ -38,7 +38,7 @@ func (s CatalogApi) GetBasicProductDetails(
 	res.BasicProductDetails = make([]*rpc.GetBasicProductDetailsResponse_BasicProductDetail, len(product))
 	for i, p := range product {
 		res.BasicProductDetails[i] = &rpc.GetBasicProductDetailsResponse_BasicProductDetail{
-			ProductUid: p.UID, Name: p.Name, Sn: p.SN, Description: p.Description,
+			Uid: p.Uid, Name: p.Name, Sn: p.Sn, Description: p.Description,
 		}
 
 	}
@@ -66,22 +66,22 @@ func (s CatalogApi) ListProducts(ctx context.Context, request *rpc.ListProductsR
 
 	for i, p := range products {
 		rpcProducts[i] = &rpc.ProductDetail{
-			Id:             p.UID,
-			Sn:             p.SN,
+			Uid:            p.Uid,
+			Sn:             p.Sn,
 			Name:           p.Name,
 			Description:    p.Description,
 			StockQty:       p.StockQuantity,
-			ProductGroupSn: p.ProductGroupSn,
+			ProductGroupSn: p.ProductGroupId,
 		}
 
 	}
-	return &rpc.ListProductsResponse{Products: rpcProducts, NextCursor: products[len(products)-1].UID}, nil
+	return &rpc.ListProductsResponse{Products: rpcProducts}, nil
 }
 
 func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductRequest) (
 	*rpc.GetProductResponse, error,
 ) {
-	product, err := s.service.GetProduct(ctx, request.GetId())
+	product, err := s.service.GetProduct(ctx, request.GetUid())
 	if err != nil {
 		switch {
 		case errors.Is(err, service.ErrorResourceNotFound):
@@ -90,13 +90,13 @@ func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductReque
 
 	}
 	return &rpc.GetProductResponse{
-		Product: &rpc.ProductDetail{
-			Id:             product.UID,
-			Sn:             product.SN,
-			Name:           product.Name,
-			Description:    product.Description,
-			ProductGroupSn: product.ProductGroupSn,
-		},
+
+		Uid:              product.Uid,
+		Sn:               product.Sn,
+		Name:             product.Name,
+		Description:      product.Description,
+		ProductGroupId:   product.ProductGroupId,
+		ProductGroupName: product.ProductGroupName,
 	}, nil
 }
 
@@ -198,19 +198,13 @@ func (s CatalogApi) GetProductPrice(
 	ctx context.Context,
 	request *rpc.GetProductPriceRequest,
 ) (*rpc.GetProductPriceResponse, error) {
-	dPP, err := s.service.GetProduct(ctx, request.GetProductUid()[0])
+	_, err := s.service.GetProduct(ctx, string(request.GetProductUid()[0]))
 	if err != nil {
 		return &rpc.GetProductPriceResponse{}, err
 
 	}
 
-	productPrices := make([]*rpc.GetProductPriceResponse_ProductPrice, 1)
-	productPrices = append(
-		productPrices, &rpc.GetProductPriceResponse_ProductPrice{
-			ProductUid: dPP.UID, CustomerPrice: 0, ListPrice: dPP.ListPrice,
-		})
-
-	return &rpc.GetProductPriceResponse{ProductPrices: productPrices}, nil
+	return &rpc.GetProductPriceResponse{}, nil
 
 }
 
@@ -240,10 +234,9 @@ func (s CatalogApi) UpdateProduct(
 ) (*rpc.UpdateProductResponse, error) {
 
 	product := &domain.Product{
-		UID:            request.GetProduct().GetId(),
 		Name:           request.GetProduct().GetName(),
 		Description:    request.GetProduct().GetDescription(),
-		ProductGroupSn: request.GetProduct().GetProductGroupSn(),
+		ProductGroupId: request.GetProduct().GetProductGroupSn(),
 	}
 
 	s.producer.PublishUpdateProduct(ctx, product)
@@ -347,7 +340,7 @@ func (s CatalogApi) DeleteProduct(
 	ctx, span := s.tracer.Start(ctx, "DeleteProduct", trace.WithSpanKind(trace.SpanKindServer))
 	span.SetAttributes(attribute.String("request.id", request.String()))
 	defer span.End()
-	err := s.service.RequestDeleteProduct(ctx, request.GetUid())
+	err := s.service.RequestDeleteProduct(ctx, string(request.GetUid()))
 	if err != nil {
 		return &rpc.DeleteProductResponse{}, err
 	}
@@ -367,6 +360,6 @@ func (s CatalogApi) GetProductBySupplier(
 	}
 
 	return &rpc.GetProductBySupplierResponse{
-		Sn: product.SN,
+		Sn: product.Sn,
 	}, nil
 }

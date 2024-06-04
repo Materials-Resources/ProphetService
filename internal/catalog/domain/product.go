@@ -5,13 +5,14 @@ import (
 )
 
 type Product struct {
-	UID            int32
-	SN             string
-	Name           string
-	Description    string
-	ProductGroupSn string
-	ListPrice      float64
-	StockQuantity  float64
+	Uid              string
+	Sn               string
+	Name             string
+	Description      string
+	ProductGroupId   string
+	ProductGroupName string
+	ListPrice        float64
+	StockQuantity    float64
 }
 
 type ProductPatch struct {

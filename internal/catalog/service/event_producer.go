@@ -20,19 +20,19 @@ type KafkaProducer struct {
 }
 
 type ProductRecord struct {
-	Uid            int32  `avro:"uid"`
+	Uid            string `avro:"uid"`
 	Name           string `avro:"name"`
 	Description    string `avro:"description"`
 	ProductGroupSn string `avro:"product_group_sn"`
 }
 
 type UpdateProductDlqRecord struct {
-	Uid   int32     `avro:"uid"`
+	Uid   string    `avro:"uid"`
 	Error string    `avro:"error"`
 	Time  time.Time `avro:"time"`
 }
 
-func (p *EventProducer) PublishDeleteProduct(ctx context.Context, invMastUid int32) error {
+func (p *EventProducer) PublishDeleteProduct(ctx context.Context, invMastUid string) error {
 
 	p.client.Produce(
 		context.Background(), &kgo.Record{
@@ -56,10 +56,10 @@ func (p *KafkaProducer) PublishUpdateProduct(ctx context.Context, product *domai
 			Topic: UpdateProductTopic,
 			Value: p.Serde.MustEncode(
 				ProductRecord{
-					Uid:            product.UID,
+					Uid:            product.Uid,
 					Name:           product.Name,
 					Description:    product.Description,
-					ProductGroupSn: product.ProductGroupSn,
+					ProductGroupSn: product.ProductGroupId,
 				}),
 		}, func(record *kgo.Record, err error) {
 			if err != nil {

@@ -7,7 +7,7 @@ import (
 
 type CatalogService interface {
 	// GetProduct returns a Product by the given UID
-	GetProduct(ctx context.Context, uid int32) (domain.Product, error)
+	GetProduct(ctx context.Context, uid string) (domain.Product, error)
 	// GetProductBySupplierPartNumber returns a Product by the given part number and supplier
 	GetProductBySupplierPartNumber(ctx context.Context, partNumber string, supplier float64) (domain.Product, error)
 	// ListProduct returns a list of Product
@@ -15,7 +15,7 @@ type CatalogService interface {
 	// UpdateProduct updates a Product for specified locations
 	UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error
 	// DeleteProduct deletes a Product
-	DeleteProduct(ctx context.Context, uid int32) error
+	DeleteProduct(ctx context.Context, uid string) error
 	// GetBasicProductDetails returns a list of Product with basic details
 	GetBasicProductDetails(ctx context.Context, uids []int32) ([]domain.Product, error)
 
@@ -25,7 +25,7 @@ type CatalogService interface {
 	SetPrimaryProductSupplier(ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error
 
 	// RequestDeleteProduct adds a request to deletes a Product
-	RequestDeleteProduct(ctx context.Context, uid int32) error
+	RequestDeleteProduct(ctx context.Context, uid string) error
 
 	// ListProductGroup returns a list of ProductGroup
 	ListProductGroup(ctx context.Context) ([]*domain.ProductGroup, error)
