@@ -10,8 +10,6 @@ func (a *App) newGrpcServer() *grpc.Server {
 	handler := grpc.StatsHandler(otelgrpc.NewServerHandler(otelgrpc.WithTracerProvider(a.tp)))
 
 	s := grpc.NewServer(handler)
-	if a.Config.App.Environment == EnvironmentDevelopment {
-		reflection.Register(s)
-	}
+	reflection.Register(s)
 	return s
 }

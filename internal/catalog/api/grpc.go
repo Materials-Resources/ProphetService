@@ -3,15 +3,13 @@ package api
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/materials-resources/s-prophet/infrastructure/data"
-	"github.com/materials-resources/s-prophet/internal/catalog/service"
-	"github.com/materials-resources/s-prophet/internal/validator"
+	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	rpc "github.com/materials-resources/microservices-proto/golang/catalog"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
-	rpc "github.com/materials-resources/s-prophet/proto/catalog/v1"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -26,6 +24,60 @@ type CatalogApi struct {
 	service  service.CatalogService
 	tracer   trace.Tracer
 	producer service.Producer
+}
+
+func (s CatalogApi) ClerkListGroups(ctx context.Context, request *rpc.ClerkListGroupRequest) (*rpc.ClerkListGroupResponse, error) {
+	productGroup, err := s.service.ClerkListGroups(ctx)
+	if err != nil {
+		return nil, err
+
+	}
+
+	return CreateClerkListGroupsResponse(productGroup), nil
+
+}
+
+func (s CatalogApi) ClerkCreateGroup(ctx context.Context, request *rpc.ClerkCreateGroupRequest) (*rpc.ClerkCreateGroupResponse, error) {
+	productGroup := ConvertClerkCreateGroupRequestToDomain(request)
+	err := s.service.ClerkCreateGroup(ctx, productGroup)
+	if err != nil {
+		return nil, err
+
+	}
+	return &rpc.ClerkCreateGroupResponse{}, nil
+}
+
+func (s CatalogApi) ClerkReadGroup(ctx context.Context, request *rpc.ClerkReadGroupRequest) (*rpc.ClerkReadGroupResponse, error) {
+	productGroup, err := s.service.ClerkReadGroup(ctx, request.GetSn())
+	if err != nil {
+		return nil, err
+
+	}
+
+	return CreateClerkReadGroupResponse(productGroup), nil
+}
+
+func (s CatalogApi) ClerkUpdateGroup(ctx context.Context, request *rpc.ClerkUpdateGroupRequest) (*rpc.ClerkUpdateGroupResponse, error) {
+	productGroup := ConvertClerkUpdateGroupRequestToDomain(request)
+	err := s.service.ClerkUpdateGroup(ctx, productGroup)
+	if err != nil {
+		return nil, err
+
+	}
+	return &rpc.ClerkUpdateGroupResponse{}, nil
+}
+
+func (s CatalogApi) ClerkDeleteGroup(ctx context.Context, request *rpc.ClerkDeleteGroupRequest) (*rpc.ClerkDeleteGroupResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s CatalogApi) CustomerGetProduct(ctx context.Context, request *rpc.CustomerGetProductRequest) (*rpc.CustomerGetProductResponse, error) {
+	product, err := s.service.CustomerGetProduct(ctx, request.GetProductUid())
+	if err != nil {
+		return nil, err
+	}
+	return CreateCustomerGetProductResponse(product), nil
 }
 
 func (s CatalogApi) GetBasicProductDetails(
@@ -98,114 +150,6 @@ func (s CatalogApi) GetProduct(ctx context.Context, request *rpc.GetProductReque
 		ProductGroupId:   product.ProductGroupId,
 		ProductGroupName: product.ProductGroupName,
 	}, nil
-}
-
-func (s CatalogApi) ListProductGroups(ctx context.Context, request *rpc.ListProductGroupsRequest) (
-	*rpc.ListProductGroupsResponse, error,
-) {
-	_, span := s.tracer.Start(ctx, "ListGroup")
-	defer span.End()
-	productGroups, err := s.service.ListProductGroup(ctx)
-
-	if err != nil {
-		return &rpc.ListProductGroupsResponse{}, err
-	}
-
-	res := domainToProductGroups(productGroups)
-	return &rpc.ListProductGroupsResponse{ProductGroups: res}, nil
-}
-
-func domainToProductGroups(productGroups []*domain.ProductGroup) []*rpc.ProductGroup {
-	res := make([]*rpc.ProductGroup, len(productGroups))
-
-	for i, pg := range productGroups {
-		res[i] = &rpc.ProductGroup{
-			Sn:   pg.SN,
-			Name: pg.Name,
-		}
-
-	}
-	return res
-}
-
-func (s CatalogApi) GetProductGroup(
-	ctx context.Context, request *rpc.GetProductGroupRequest,
-) (*rpc.GetProductGroupResponse, error) {
-	productGroup, productUids, err := s.service.GetProductGroup(ctx, request.GetSn())
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	res := &rpc.GetProductGroupResponse{
-		ProductGroup: &rpc.ProductGroup{
-			Sn: productGroup.SN, Name: productGroup.Name, Uid: productGroup.UID,
-		},
-		ProductUids: productUids,
-	}
-	return res, nil
-}
-
-func (s CatalogApi) CreateProductGroup(
-	ctx context.Context, request *rpc.CreateProductGroupRequest,
-) (*rpc.CreateProductGroupResponse, error) {
-	_, span := s.tracer.Start(ctx, "CreateGroup")
-	defer span.End()
-
-	productGroup := domain.ProductGroup{SN: request.GetProductGroup().GetSn(), Name: request.ProductGroup.GetName()}
-
-	v := validator.New()
-
-	domain.ValidateProductGroup(v, productGroup)
-
-	if !v.Valid() {
-
-		var validationErrors []*rpc.ValidationError
-		for key, msg := range v.Errors {
-			validationErrors = append(validationErrors, &rpc.ValidationError{Field: key, Message: msg})
-		}
-		return &rpc.CreateProductGroupResponse{ValidationErrors: validationErrors}, status.Error(
-			codes.InvalidArgument,
-			"validation error")
-	}
-	err := s.service.CreateProductGroup(ctx, &productGroup)
-	if err != nil {
-		return &rpc.CreateProductGroupResponse{}, err
-	}
-	return &rpc.CreateProductGroupResponse{}, nil
-}
-
-func (s CatalogApi) UpdateProductGroup(
-	ctx context.Context,
-	request *rpc.UpdateProductGroupRequest) (*rpc.UpdateProductGroupResponse, error) {
-	productGroup := &domain.ProductGroup{
-		SN: request.GetProductGroup().GetSn(), Name: request.GetProductGroup().GetName(),
-	}
-	v := validator.New()
-	domain.ValidateProductGroup(v, *productGroup)
-
-	if !v.Valid() {
-		return nil, status.Error(codes.InvalidArgument, "validation error")
-
-	}
-	err := s.service.UpdateProductGroup(ctx, productGroup)
-	if err != nil {
-		return nil, err
-	}
-	return &rpc.UpdateProductGroupResponse{}, nil
-}
-
-func (s CatalogApi) GetProductPrice(
-	ctx context.Context,
-	request *rpc.GetProductPriceRequest,
-) (*rpc.GetProductPriceResponse, error) {
-	_, err := s.service.GetProduct(ctx, string(request.GetProductUid()[0]))
-	if err != nil {
-		return &rpc.GetProductPriceResponse{}, err
-
-	}
-
-	return &rpc.GetProductPriceResponse{}, nil
-
 }
 
 func (s CatalogApi) GetSupplier(

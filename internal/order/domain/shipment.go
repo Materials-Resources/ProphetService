@@ -10,10 +10,20 @@ type PickTicket struct {
 }
 
 type Shipment struct {
-	Id              string
-	OrderId         string
-	InvoiceId       string
-	CarrierId       string
-	CarrierName     string
-	CarrierTracking string
+	Id                        string
+	CarrierName               string
+	CarrierTracking           string
+	ShippingAddressId         string
+	ShippingAddressName       string
+	ShippingAddressLineOne    string
+	ShippingAddressLineTwo    string
+	ShippingAddressCity       string
+	ShippingAddressState      string
+	ShippingAddressPostalCode string
+	ShippingAddressCountry    string
+	DeliveryInstructions      string
+	ContactId                 string
+	ContactName               string
+	OrderId                   string
+	OrderPurchaseOrder        string
 }

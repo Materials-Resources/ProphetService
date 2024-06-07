@@ -15,12 +15,6 @@ func mapInvLocToProduct(invLoc *data.InvLoc, product *domain.Product) {
 	product.ListPrice = invLoc.Price1.Float64
 }
 
-func CreateProductGroupFromRecord(productGroup *data.ProductGroup) *domain.ProductGroup {
-	return &domain.ProductGroup{
-		SN:   productGroup.ProductGroupId,
-		Name: productGroup.ProductGroupDesc,
-	}
-}
 func CreateProductFromRecord(invLoc *data.InvLoc) *domain.Product {
 	product := &domain.Product{
 		Uid:              strconv.Itoa(int(invLoc.InvMastUid)),

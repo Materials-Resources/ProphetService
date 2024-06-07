@@ -251,9 +251,8 @@ type OeHdr struct {
 	GlDimensionProjectNo           sql.NullString  `bun:"gl_dimension_project_no,type:varchar(255),nullzero"`
 	RentalStartDate                sql.NullTime    `bun:"rental_start_date,type:datetime,nullzero"`
 
-	OeLines  []OeLine  `bun:"rel:has-many,join:order_no=order_no"`
-	Contact  *Contacts `bun:"rel:has-one,join:contact_id=id"`
-	Customer *Customer `bun:"rel:has-one,join:customer_id=customer_id,join:company_id=company_id"`
+	OeLines []OeLine  `bun:"rel:has-many,join:order_no=order_no"`
+	Contact *Contacts `bun:"rel:has-one,join:contact_id=id"`
 }
 
 var _ bun.BeforeAppendModelHook = (*OeHdr)(nil)

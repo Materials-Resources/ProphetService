@@ -95,6 +95,9 @@
     - [Customer](#order-v1-Customer)
     - [CustomerContact](#order-v1-CustomerContact)
     - [Filters](#order-v1-Filters)
+    - [GetOrderCustomerRequest](#order-v1-GetOrderCustomerRequest)
+    - [GetOrderCustomerResponse](#order-v1-GetOrderCustomerResponse)
+    - [GetOrderCustomerResponse.Items](#order-v1-GetOrderCustomerResponse-Items)
     - [GetOrderRequest](#order-v1-GetOrderRequest)
     - [GetOrderResponse](#order-v1-GetOrderResponse)
     - [GetOrderResponse.OrderItem](#order-v1-GetOrderResponse-OrderItem)
@@ -1416,6 +1419,77 @@
 
 
 
+<a name="order-v1-GetOrderCustomerRequest"></a>
+
+### GetOrderCustomerRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1-GetOrderCustomerResponse"></a>
+
+### GetOrderCustomerResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| items | [GetOrderCustomerResponse.Items](#order-v1-GetOrderCustomerResponse-Items) | repeated |  |
+| purchase_order | [string](#string) |  |  |
+| shipping_address_id | [string](#string) |  |  |
+| shipping_address_name | [string](#string) |  |  |
+| shipping_address_line_one | [string](#string) |  |  |
+| shipping_address_line_two | [string](#string) |  |  |
+| shipping_address_city | [string](#string) |  |  |
+| shipping_address_state | [string](#string) |  |  |
+| shipping_address_postal_code | [string](#string) |  |  |
+| shipping_address_country | [string](#string) |  |  |
+| delivery_instructions | [string](#string) |  |  |
+| date_placed | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+| taker | [string](#string) |  |  |
+| customer_id | [string](#string) |  |  |
+| customer_name | [string](#string) |  |  |
+| contact_id | [string](#string) |  |  |
+| contact_name | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="order-v1-GetOrderCustomerResponse-Items"></a>
+
+### GetOrderCustomerResponse.Items
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| product_uid | [string](#string) |  |  |
+| product_sn | [string](#string) |  |  |
+| product_name | [string](#string) |  |  |
+| ordered_as_sn | [string](#string) |  |  |
+| quantity_ordered | [double](#double) |  |  |
+| quantity_unit | [string](#string) |  |  |
+| total_price | [double](#double) |  |  |
+| shipped_quantity | [double](#double) |  |  |
+| back_ordered_quantity | [double](#double) |  |  |
+
+
+
+
+
+
 <a name="order-v1-GetOrderRequest"></a>
 
 ### GetOrderRequest
@@ -1755,6 +1829,7 @@
 | CreateQuote | [CreateQuoteRequest](#order-v1-CreateQuoteRequest) | [CreateQuoteResponse](#order-v1-CreateQuoteResponse) |  |
 | GetPickTicketById | [GetPickTicketByIdRequest](#order-v1-GetPickTicketByIdRequest) | [GetPickTicketByIdResponse](#order-v1-GetPickTicketByIdResponse) |  |
 | GetShipmentsByOrder | [GetShipmentsByOrderRequest](#order-v1-GetShipmentsByOrderRequest) | [GetShipmentsByOrderResponse](#order-v1-GetShipmentsByOrderResponse) | GetShipmentsByOrder returns a list of shipment transactions for a given order id |
+| GetOrderCustomer | [GetOrderCustomerRequest](#order-v1-GetOrderCustomerRequest) | [GetOrderCustomerResponse](#order-v1-GetOrderCustomerResponse) |  |
 
  
 

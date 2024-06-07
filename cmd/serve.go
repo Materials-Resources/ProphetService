@@ -8,7 +8,6 @@ import (
 	_ "github.com/materials-resources/s-prophet/internal/billing"
 	_ "github.com/materials-resources/s-prophet/internal/catalog"
 	_ "github.com/materials-resources/s-prophet/internal/customer"
-	_ "github.com/materials-resources/s-prophet/internal/inventory"
 	_ "github.com/materials-resources/s-prophet/internal/order"
 	"github.com/spf13/cobra"
 )

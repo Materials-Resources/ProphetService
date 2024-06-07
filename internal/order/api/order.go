@@ -5,145 +5,52 @@ import (
 	"fmt"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"github.com/materials-resources/s-prophet/internal/order/service"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"strconv"
 
-	rpc "github.com/materials-resources/s-prophet/proto/order/v1"
+	rpc "github.com/materials-resources/microservices-proto/golang/order"
 )
 
-func NewOrderApi(service service.Service) OrderApi {
-	return OrderApi{service: service}
+func NewOrderApi(service service.Service, controller service.OrderController) OrderApi {
+	return OrderApi{service: service, controller: controller}
 }
 
 type OrderApi struct {
-	service service.Service
+	service    service.Service
+	controller service.OrderController
 }
 
-func (s OrderApi) GetShipmentsByOrder(ctx context.Context, request *rpc.GetShipmentsByOrderRequest) (*rpc.GetShipmentsByOrderResponse, error) {
-	shipments, err := s.service.GetShipmentsByOrder(ctx, request.GetOrderId())
-	if err != nil {
-		return nil, err
-	}
-
-	orderShipments := make([]*rpc.SimplifiedShipment, len(shipments))
-
-	for i, shipment := range shipments {
-		orderShipments[i] = &rpc.SimplifiedShipment{
-			Id:              shipment.Id,
-			OrderId:         shipment.OrderId,
-			InvoiceId:       shipment.InvoiceId,
-			CarrierName:     shipment.CarrierName,
-			CarrierTracking: shipment.CarrierTracking,
-		}
-
-	}
-	return &rpc.GetShipmentsByOrderResponse{Shipments: orderShipments}, nil
-
-}
-
-func (s OrderApi) ListOrdersByCustomerBranch(
-	ctx context.Context, request *rpc.ListOrdersByCustomerBranchRequest) (
-	*rpc.ListOrdersByCustomerBranchResponse, error) {
-	orders, metadata, err := s.service.ListOrdersByCustomerBranch(
-		ctx, request.GetCustomerBranchId(), domain.Filters{
-			Direction: mapRpcPageDirectionToDomain(request.GetFilters().GetDirection()),
-			Cursor:    int(request.GetFilters().GetCursor()),
-		})
-	if err != nil {
-		return nil, err
-
-	}
-
-	res := &rpc.ListOrdersByCustomerBranchResponse{
-		Orders: make([]*rpc.BasicOrder, len(orders)),
-		Metadata: &rpc.PageMetadata{
-			NextCursor: int32(metadata.NextCursor),
-			PrevCursor: int32(metadata.PreviousCursor),
-		},
-	}
-
-	for i, order := range orders {
-		res.Orders[i] = &rpc.BasicOrder{
-			Id:            order.Id,
-			Status:        "",
-			Completed:     order.Completed,
-			Taker:         order.Taker,
-			PurchaseOrder: order.PurchaseOrder,
-			OrderDate:     timestamppb.New(order.RequestedDate),
-			RequestedDate: timestamppb.New(order.RequestedDate),
-		}
-	}
-
-	return res, nil
-
-}
-
-func mapRpcPageDirectionToDomain(direction rpc.PageDirection) domain.PageDirection {
-	switch direction {
-	case rpc.PageDirection_PAGE_DIRECTION_NEXT:
-		return domain.PageDirectionNext
-	case rpc.PageDirection_PAGE_DIRECTION_PREVIOUS:
-		return domain.PageDirectionPrevious
-	default:
-		return domain.PageDirectionUnknown
-	}
-}
-
-func (s OrderApi) ListOrdersByCustomer(
-	ctx context.Context, request *rpc.ListOrdersByCustomerRequest) (*rpc.ListOrdersByCustomerResponse, error) {
-	orders, metadata, err := s.service.ListOrdersByCustomer(
-		ctx, request.GetCustomerId(), domain.Filters{
-			Direction: domain.PageDirection(request.GetFilters().GetDirection()),
-			Cursor:    int(request.GetFilters().GetCursor()),
-		})
-	if err != nil {
-		return nil, err
-
-	}
-
-	res := &rpc.ListOrdersByCustomerResponse{
-		Orders: make([]*rpc.BasicOrder, 0, len(orders)),
-		Metadata: &rpc.PageMetadata{
-			NextCursor: int32(metadata.NextCursor),
-			PrevCursor: int32(metadata.PreviousCursor),
-		},
-	}
-
-	for _, order := range orders {
-		res.Orders = append(
-			res.Orders, &rpc.BasicOrder{
-				Id:            order.Id,
-				Taker:         order.Taker,
-				PurchaseOrder: order.PurchaseOrder,
-			})
-
-	}
-
-	return res, nil
-}
-
-func (s OrderApi) ListOrdersByTaker(
-	ctx context.Context, request *rpc.ListOrdersByTakerRequest) (*rpc.ListOrdersByTakerResponse, error) {
-	// TODO implement me
+func (s OrderApi) ClerkGetShipmentsForOrder(ctx context.Context, request *rpc.ClerkGetShipmentsForOrderRequest) (*rpc.ClerkGetShipmentsForOrderResponse, error) {
 	panic("implement me")
 }
 
-func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteRequest) (*rpc.CreateQuoteResponse, error) {
+func (s OrderApi) ClerkGetOrder(ctx context.Context, request *rpc.ClerkGetOrderRequest) (*rpc.ClerkGetOrderResponse, error) {
+	order, err := s.controller.ClerkGetOrder(ctx, request.GetId())
+
+	if err != nil {
+		return nil, err
+
+	}
+	return CreateClerkGetOrderResponse(order), nil
+
+}
+
+func (s OrderApi) ClerkCreateOrder(ctx context.Context, request *rpc.ClerkCreateOrderRequest) (*rpc.ClerkCreateOrderResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s OrderApi) ClerkCreateQuote(ctx context.Context, request *rpc.ClerkCreateQuoteRequest) (*rpc.ClerkCreateQuoteResponse, error) {
 	// TODO: get contact id from grpc request context if customer is calling this
 	order := &domain.Order{
-		Contact: domain.Contact{
-			Id: request.GetContactId(),
-		},
-		CustomerBranchId: request.GetCustomerBranchId(),
-		OrderType:        domain.OrderTypeQuote,
-		RequestedDate:    request.GetRequestedDate().AsTime(),
-		PurchaseOrder:    request.GetPurchaseOrder(),
+		//CustomerBranchId: request.GetCustomerBranchId(),
+		PurchaseOrder: request.GetPurchaseOrder(),
 	}
 
 	order.Items = make([]*domain.OrderItem, len(request.GetOrderItems()))
 	for _, item := range request.GetOrderItems() {
 		order.Items = append(
 			order.Items, &domain.OrderItem{
-				ProductUid:    item.GetProductUid(),
+				ProductUid:    strconv.Itoa(int(item.GetProductUid())),
 				OrderQuantity: item.GetQuantityOrdered(),
 			})
 
@@ -152,98 +59,50 @@ func (s OrderApi) CreateQuote(ctx context.Context, request *rpc.CreateQuoteReque
 		ctx, order)
 
 	fmt.Println(order.Id)
-	return &rpc.CreateQuoteResponse{
+	return &rpc.ClerkCreateQuoteResponse{
 		Id: order.Id,
 	}, err
 }
 
-func (s OrderApi) CreateOrder(ctx context.Context, request *rpc.CreateOrderRequest) (
-	*rpc.CreateOrderResponse,
-	error,
-) {
-	return nil, nil
-}
-
-func (s OrderApi) GetOrder(ctx context.Context, request *rpc.GetOrderRequest) (*rpc.GetOrderResponse, error) {
-	order, err := s.service.GetOrderById(ctx, request.GetId())
+func (s OrderApi) ClerkGetShipment(ctx context.Context, request *rpc.ClerkGetShipmentRequest) (*rpc.ClerkGetShipmentResponse, error) {
+	shipment, err := s.controller.ClerkGetShipment(ctx, request.GetId())
 	if err != nil {
 		return nil, err
 	}
 
-	res := &rpc.GetOrderResponse{
-		Id:                   order.Id,
-		CustomerId:           order.CustomerId,
-		CustomerName:         order.CustomerName,
-		ContactId:            order.ContactId,
-		ContactName:          order.ContactName,
-		ShippingAddress:      mapAddressToRpcAddress(order.ShippingAddress),
-		DeliveryInstructions: order.DeliveryInstructions,
-		Taker:                order.Taker,
-		PurchaseOrder:        order.PurchaseOrder,
-		SubTotal:             0,
-		Tax:                  0,
-		Total:                0,
-		DatePlaced:           timestamppb.New(order.OrderDate),
-	}
-
-	res.OrderItems = make([]*rpc.GetOrderResponse_OrderItem, len(order.Items))
-	for i, item := range order.Items {
-		res.OrderItems[i] = &rpc.GetOrderResponse_OrderItem{
-			ProductUid:          item.ProductUid,
-			Name:                item.ProductName,
-			Sn:                  "",
-			Id:                  "",
-			CustomerProductSn:   item.CustomerProductSn,
-			QuantityOrdered:     item.OrderQuantity,
-			QuantityUnit:        item.OrderQuantityUnit,
-			CostPerUnit:         item.Price,
-			CostUnit:            item.PriceUnit,
-			TotalPrice:          item.TotalPrice,
-			ShippedQuantity:     item.ShippedQuantity,
-			BackOrderedQuantity: item.BackOrderedQuantity,
-		}
-	}
-
-	return res, nil
+	return CreateClerkGetShipmentResponse(shipment), nil
 }
 
-func (s OrderApi) GetPickTicketById(
-	ctx context.Context, request *rpc.GetPickTicketByIdRequest,
-) (*rpc.GetPickTicketByIdResponse, error) {
-
-	pickTicket, err := s.service.GetPickTicketById(ctx, request.GetId())
+func (s OrderApi) CustomerGetShipmentsForOrder(ctx context.Context, request *rpc.CustomerGetShipmentsForOrderRequest) (*rpc.CustomerGetShipmentsForOrderResponse, error) {
+	shipments, err := s.controller.GetShipmentsByOrder(ctx, request.GetOrderId())
 	if err != nil {
 		return nil, err
 	}
 
-	res := &rpc.GetPickTicketByIdResponse{
-		Id:                   pickTicket.Id,
-		OrderId:              pickTicket.OrderId,
-		DeliveryInstructions: pickTicket.DeliveryInstructions,
-		OrderPurchaseOrder:   pickTicket.OrderPurchaseOrder,
-		OrderContact:         mapContactToRpcContact(pickTicket.OrderContact),
-		ShippingAddress:      mapAddressToRpcAddress(pickTicket.ShippingAddress),
-	}
-
-	return res, nil
+	return CreateCustomerGetShipmentsForOrderResponse(shipments), nil
 }
 
-func mapAddressToRpcAddress(address domain.Address) *rpc.Address {
-	return &rpc.Address{
-		Id:         address.Id,
-		Name:       address.Name,
-		LineOne:    address.LineOne,
-		LineTwo:    address.LineTwo,
-		City:       address.City,
-		State:      address.State,
-		PostalCode: address.PostalCode,
+func (s OrderApi) CustomerGetOrder(ctx context.Context, request *rpc.CustomerGetOrderRequest) (*rpc.CustomerGetOrderResponse, error) {
+	order, err := s.controller.GetOrderCustomer(ctx, request.GetId())
+	if err != nil {
+		return nil, err
+
 	}
+
+	return CreateCustomerGetOrderResponse(order), nil
 }
 
-func mapContactToRpcContact(contact domain.Contact) *rpc.CustomerContact {
-	return &rpc.CustomerContact{
-		Id:    contact.Id,
-		Name:  contact.Name,
-		Title: contact.Title,
+func (s OrderApi) CustomerGetQuote(ctx context.Context, request *rpc.CustomerGetQuoteRequest) (*rpc.CustomerGetQuoteResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s OrderApi) CustomerListOrders(ctx context.Context, request *rpc.CustomerListOrdersRequest) (*rpc.CustomerListOrdersResponse, error) {
+	orders, err := s.controller.CustomerListOrders(ctx, request.GetCustomerBranchId())
+	if err != nil {
+		return nil, err
+
 	}
+
+	return CreateCustomerListOrdersResponse(orders), nil
 }

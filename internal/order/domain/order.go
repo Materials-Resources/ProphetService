@@ -15,24 +15,25 @@ const (
 
 type Order struct {
 	Id                   string
-	ShippingAddress      Address
-	Contact              Contact
-	Customer             Customer
-	CustomerBranchId     float64 // This is ship_to_id in the database
+	CustomerBranchId     string
 	CustomerId           string
 	CustomerName         string
 	ContactId            string
 	ContactName          string
-	AddressId            float64
 	PurchaseOrder        string
 	DeliveryInstructions string
 	Taker                string
-	Status               OrderStatus
 	OrderDate            time.Time
-	RequestedDate        time.Time
-	OrderType            OrderType
-	Completed            bool
 	Items                []*OrderItem
+
+	ShippingAddressId         string
+	ShippingAddressName       string
+	ShippingAddressLineOne    string
+	ShippingAddressLineTwo    string
+	ShippingAddressCity       string
+	ShippingAddressState      string
+	ShippingAddressPostalCode string
+	ShippingAddressCountry    string
 }
 
 type OrderStatus struct {
@@ -41,13 +42,14 @@ type OrderStatus struct {
 }
 
 func ValidateOrder(v *validator.Validator, order *Order) {
-	v.Check(order.Customer.Id != 0, "customer.id", "must be set")
-	v.Check(order.AddressId != 0, "address_id", "must be set")
+	v.Check(order.CustomerId != "", "customer.id", "must be set")
+	v.Check(order.CustomerBranchId != "", "address_id", "must be set")
 	v.Check(len(order.PurchaseOrder) <= 50, "purchase_order", "must be less than 50 characters")
 }
 
 type OrderItem struct {
-	ProductUid          int32
+	Id                  string
+	ProductUid          string
 	ProductSn           string
 	ProductName         string
 	CustomerProductSn   string

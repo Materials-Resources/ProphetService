@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"github.com/materials-resources/s-prophet/app"
 	"github.com/materials-resources/s-prophet/infrastructure/data"
+	data2 "github.com/materials-resources/s-prophet/internal/catalog/core/data"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
+	"github.com/materials-resources/s-prophet/internal/validator"
 	"github.com/materials-resources/s-prophet/pkg/consumer"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
@@ -30,17 +32,60 @@ func NewCatalogService(
 	serde *sr.Serde, a *app.App) Catalog {
 
 	return Catalog{
-		models: models, tracer: tracer, event: EventService{
+		localModel: data2.NewModels(a.GetDB()),
+		models:     models, tracer: tracer, event: EventService{
 			Producer: &EventProducer{client: cli, serde: serde}, Consumer: &EventConsumer{client: cli, serde: serde},
 		}, app: a,
 	}
 }
 
 type Catalog struct {
-	app    *app.App
-	models data.Models
-	tracer trace.Tracer
-	event  EventService
+	app        *app.App
+	models     data.Models
+	tracer     trace.Tracer
+	event      EventService
+	localModel *data2.Models
+}
+
+func (c Catalog) ClerkCreateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
+	v := validator.New()
+
+	domain.ValidateProductGroupCreate(v, *productGroup)
+
+	if !v.Valid() {
+		return errors.New(fmt.Sprintf("%s", v.Errors))
+	}
+
+	return c.localModel.ProductGroup.Create(ctx, productGroup)
+}
+
+func (c Catalog) ClerkListGroups(ctx context.Context) ([]*domain.ProductGroup, error) {
+	opts := &data2.ProductGroupListOptions{}
+	return c.localModel.ProductGroup.List(ctx, opts)
+}
+
+func (c Catalog) ClerkReadGroup(ctx context.Context, sn string) (*domain.ProductGroup, error) {
+	return c.localModel.ProductGroup.Get(ctx, sn)
+
+}
+
+func (c Catalog) ClerkUpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
+
+	v := validator.New()
+	domain.ValidateProductGroupUpdate(v, *productGroup)
+
+	valid := v.Valid()
+	if !valid {
+		return errors.New(fmt.Sprintf("%s", v.Errors))
+
+	}
+
+	return c.localModel.ProductGroup.Update(ctx, productGroup)
+
+}
+
+func (c Catalog) CustomerGetProduct(ctx context.Context, uid string) (*domain.Product, error) {
+	return c.localModel.InvLoc.Get(ctx, uid)
 }
 
 func (c Catalog) GetBasicProductDetails(ctx context.Context, uids []int32) ([]domain.Product, error) {
@@ -469,15 +514,13 @@ func (c Catalog) GetProduct(ctx context.Context, uid string) (domain.Product, er
 func (c Catalog) CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 
 	dbProductGroup := &data.ProductGroup{
-		ProductGroupDesc: productGroup.Name, ProductGroupId: productGroup.SN,
+		ProductGroupDesc: *productGroup.Name, ProductGroupId: productGroup.Sn,
 	}
 
 	err := c.models.ProductGroup.Insert(ctx, dbProductGroup)
 	if err != nil {
 		return err
 	}
-
-	productGroup.UID = dbProductGroup.ProductGroupUid
 
 	return nil
 }
@@ -497,18 +540,18 @@ func (c Catalog) GetProductGroup(ctx context.Context, sn string) (domain.Product
 	}
 
 	return domain.ProductGroup{
-		UID: dbProductGroup.ProductGroupUid, SN: dbProductGroup.ProductGroupId, Name: dbProductGroup.ProductGroupDesc,
+		Sn: dbProductGroup.ProductGroupId, Name: &dbProductGroup.ProductGroupDesc,
 	}, productUids, nil
 }
 
 func (c Catalog) UpdateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 	// select existing product group
-	dbProductGroup, err := c.models.ProductGroup.GetById(ctx, productGroup.SN)
+	dbProductGroup, err := c.models.ProductGroup.GetById(ctx, productGroup.Sn)
 	if err != nil {
 		return err
 	}
 	// update product group
-	dbProductGroup.ProductGroupDesc = productGroup.Name
+	dbProductGroup.ProductGroupDesc = *productGroup.Name
 
 	// save updated product group
 	err = c.models.ProductGroup.Update(ctx, dbProductGroup)
@@ -527,8 +570,8 @@ func (c Catalog) ListProductGroup(ctx context.Context) ([]*domain.ProductGroup, 
 	productGroups := make([]*domain.ProductGroup, len(dbProductGroups))
 	for i, dbProductGroup := range dbProductGroups {
 		productGroups[i] = &domain.ProductGroup{
-			SN:   dbProductGroup.ProductGroupId,
-			Name: dbProductGroup.ProductGroupDesc,
+			Sn:   dbProductGroup.ProductGroupId,
+			Name: &dbProductGroup.ProductGroupDesc,
 		}
 	}
 	return productGroups, nil

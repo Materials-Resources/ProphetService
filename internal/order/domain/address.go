@@ -1,7 +1,7 @@
 package domain
 
 type Address struct {
-	Id         float64
+	Id         string
 	Name       string
 	LineOne    string
 	LineTwo    string

@@ -7,7 +7,6 @@ import (
 	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"strconv"
-	"time"
 )
 
 func NewOrderService(models data.Models) *OrderService {
@@ -18,30 +17,9 @@ type OrderService struct {
 	models data.Models
 }
 
-func (s *OrderService) GetShipmentsByOrder(ctx context.Context, orderId string) ([]*domain.Shipment, error) {
-	oePickTicketRecords, err := s.models.OePickTicket.GetAll(ctx, data.OePickTicketGetAllParams{OrderNo: &[]string{orderId}})
-	if err != nil {
-		return nil, err
-
-	}
-	shipments := make([]*domain.Shipment, len(oePickTicketRecords))
-	for i, record := range oePickTicketRecords {
-		shipments[i] = &domain.Shipment{
-			Id:              fmt.Sprintf("%.0f", record.PickTicketNo),
-			OrderId:         record.OrderNo,
-			InvoiceId:       fmt.Sprintf("%.0f", record.InvoiceNo.Float64),
-			CarrierId:       fmt.Sprintf("%.0f", record.CarrierId.Float64),
-			CarrierName:     record.Carrier.Name,
-			CarrierTracking: record.TrackingNo.String,
-		}
-
-	}
-	return shipments, nil
-}
-
 func (s *OrderService) ListOrdersByCustomerBranch(
 	ctx context.Context, customerBranchId float64, filters domain.Filters) ([]*domain.Order, domain.Metadata, error) {
-	oeHdrs, metadata, err := s.models.OeHdr.SelectByCustomerBranchId(
+	_, metadata, err := s.models.OeHdr.SelectByCustomerBranchId(
 		ctx, customerBranchId, []string{"N"}, data.Filters{
 			Limit:        100,
 			Cursor:       filters.Cursor,
@@ -53,37 +31,30 @@ func (s *OrderService) ListOrdersByCustomerBranch(
 	if err != nil {
 		return nil, domain.Metadata{}, err
 	}
-	orderList := make([]*domain.Order, len(oeHdrs))
-	for i, oeHdr := range oeHdrs {
-		orderList[i] = &domain.Order{
-			OrderDate:     oeHdr.OrderDate.Time,
-			RequestedDate: oeHdr.RequestedDate.Time,
-			Id:            oeHdr.OrderNo,
-			ShippingAddress: domain.Address{
-				Id:         oeHdr.AddressId.Float64,
-				Name:       oeHdr.Ship2Name.String,
-				LineOne:    oeHdr.Ship2Add1.String,
-				LineTwo:    oeHdr.Ship2Add2.String,
-				City:       oeHdr.Ship2City.String,
-				State:      oeHdr.Ship2State.String,
-				PostalCode: oeHdr.Ship2Zip.String,
-			},
-			Customer: domain.Customer{
-				Id: oeHdr.CustomerId,
-			},
-			Taker:                oeHdr.Taker.String,
-			DeliveryInstructions: oeHdr.DeliveryInstructions.String,
-			PurchaseOrder:        oeHdr.PoNo.String,
-			Status: domain.OrderStatus{
-				Approved:  oeHdr.Approved.String == "Y",
-				Cancelled: oeHdr.CancelFlag.String == "Y",
-			},
-			Completed: oeHdr.Completed.String == "Y",
-		}
+	//orderList := make([]*domain.Order, len(oeHdrs))
+	//for i, oeHdr := range oeHdrs {
+	//	orderList[i] = &domain.Order{
+	//		OrderDate:     oeHdr.OrderDate.Time,
+	//		Id:            oeHdr.OrderNo,
+	//		ShippingAddress: domain.Address{
+	//			Id:         oeHdr.AddressId.Float64,
+	//			Name:       oeHdr.Ship2Name.String,
+	//			LineOne:    oeHdr.Ship2Add1.String,
+	//			LineTwo:    oeHdr.Ship2Add2.String,
+	//			City:       oeHdr.Ship2City.String,
+	//			State:      oeHdr.Ship2State.String,
+	//			PostalCode: oeHdr.Ship2Zip.String,
+	//		},
+	//		Taker:                oeHdr.Taker.String,
+	//		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
+	//		PurchaseOrder:        oeHdr.PoNo.String,Cancelled: oeHdr.CancelFlag.String == "Y",
+	//		},
+	//		Completed: oeHdr.Completed.String == "Y",
+	//	}
+	//
+	//}
 
-	}
-
-	return orderList, domain.Metadata{
+	return nil, domain.Metadata{
 		NextCursor:     metadata.NextCursor,
 		PreviousCursor: metadata.PreviousCursor,
 	}, nil
@@ -109,26 +80,10 @@ func (s *OrderService) ListOrdersByCustomer(
 	for _, oeHdr := range oeHdrs {
 		orderList = append(
 			orderList, &domain.Order{
-				Id: oeHdr.OrderNo,
-				ShippingAddress: domain.Address{
-					Id:         oeHdr.AddressId.Float64,
-					Name:       oeHdr.Ship2Name.String,
-					LineOne:    oeHdr.Ship2Add1.String,
-					LineTwo:    oeHdr.Ship2Add2.String,
-					City:       oeHdr.Ship2City.String,
-					State:      oeHdr.Ship2State.String,
-					PostalCode: oeHdr.Ship2Zip.String,
-				},
-				Customer: domain.Customer{
-					Id: oeHdr.CustomerId,
-				},
+				Id:                   oeHdr.OrderNo,
 				Taker:                oeHdr.Taker.String,
 				DeliveryInstructions: oeHdr.DeliveryInstructions.String,
 				PurchaseOrder:        oeHdr.PoNo.String,
-				Status: domain.OrderStatus{
-					Approved:  oeHdr.Approved.String == "Y",
-					Cancelled: oeHdr.CancelFlag.String == "Y",
-				},
 			})
 
 	}
@@ -140,31 +95,31 @@ func (s *OrderService) ListOrdersByCustomer(
 }
 
 func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) error {
-	contactRec, err := s.models.Contacts.Get(ctx, order.Contact.Id)
+	contactRec, err := s.models.Contacts.Get(ctx, order.ContactId)
 	if err != nil {
 		return err
 	}
 
-	contactsXShipToRecs, err := s.models.ContactsXShipTo.GetByContactId(ctx, "MRS", order.Contact.Id)
+	_, err = s.models.ContactsXShipTo.GetByContactId(ctx, "MRS", order.ContactId)
 	if err != nil {
 		return err
 	}
 
 	contactExistsOnShipTo := false
 	// check to see if order.ShippingAddress.Id is in the slice of contactsXShipToRecs
-	for _, rec := range contactsXShipToRecs {
-		if rec.ShipToId == order.ShippingAddress.Id {
-			contactExistsOnShipTo = true
-			break
-		}
-	}
+	//for _, rec := range contactsXShipToRecs {
+	//	if rec.ShipToId == order.CustomerBranchId {
+	//		contactExistsOnShipTo = true
+	//		break
+	//	}
+	//}
 
 	if !contactExistsOnShipTo {
 		return errors.New("provided shipping address is not associated with contact")
 
 	}
 
-	shipToRec, err := s.models.ShipTo.Get(ctx, "MRS", order.ShippingAddress.Id)
+	shipToRec, err := s.models.ShipTo.Get(ctx, "MRS", 0)
 	if err != nil {
 		return err
 	}
@@ -203,7 +158,6 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 		PackingBasis:         addressRec.ShipToPackingBasis.String,
 		PickTicketType:       customerRec.PickTicketType.String,
 		Terms:                customerRec.TermsId,
-		RequestedDate:        order.RequestedDate,
 	}
 
 	oeHdrParams.CarrierId, err = strconv.ParseFloat(addressRec.CarrierId.String, 64)
@@ -231,7 +185,11 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 		})
 
 	for _, item := range order.Items {
-		invLoc, err := s.models.InvLoc.Get(ctx, 1001, "MRS", item.ProductUid)
+		invMastUid, err := strconv.Atoi(item.ProductUid)
+		if err != nil {
+			return err
+		}
+		invLoc, err := s.models.InvLoc.Get(ctx, 1001, "MRS", int32(invMastUid))
 		if err != nil {
 			switch {
 			case errors.Is(err, data.ErrRecordNotFound):
@@ -286,21 +244,6 @@ func (s *OrderService) CreateQuote(ctx context.Context, order *domain.Order) err
 	return err
 }
 
-func (s *OrderService) CreateOrder(ctx context.Context, order *domain.Order) error {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (s *OrderService) UpdateOrder(ctx context.Context, order *domain.Order) error {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (s *OrderService) DeleteOrder(ctx context.Context, s2 string) error {
-	// TODO implement me
-	panic("implement me")
-}
-
 func (s *OrderService) GetPickTicketById(ctx context.Context, id float64) (domain.PickTicket, error) {
 
 	oePickTicket, err := s.models.OePickTicket.Get(ctx, id)
@@ -314,7 +257,7 @@ func (s *OrderService) GetPickTicketById(ctx context.Context, id float64) (domai
 		OrderId:              oePickTicket.OrderNo,
 		DeliveryInstructions: oePickTicket.OeHdr.DeliveryInstructions.String,
 		ShippingAddress: domain.Address{
-			Id:         oePickTicket.OeHdr.AddressId.Float64,
+			Id:         fmt.Sprintf("%.0f", oePickTicket.OeHdr.AddressId.Float64),
 			Name:       oePickTicket.OeHdr.Ship2Name.String,
 			LineOne:    oePickTicket.OeHdr.Ship2Add1.String,
 			LineTwo:    oePickTicket.OeHdr.Ship2Add2.String,
@@ -355,32 +298,18 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 	var order domain.Order
 
 	order = domain.Order{
-		Id:                   oeHdr.OrderNo,
-		CustomerBranchId:     0,
-		CustomerId:           fmt.Sprintf("%0.f", oeHdr.CustomerId),
-		ContactId:            oeHdr.ContactId.String,
-		AddressId:            0,
+		Id:               oeHdr.OrderNo,
+		CustomerBranchId: "",
+		CustomerId:       fmt.Sprintf("%0.f", oeHdr.CustomerId),
+		CustomerName:     "",
+		ContactId:        oeHdr.ContactId.String,
+		ContactName:      "",
+
 		PurchaseOrder:        oeHdr.PoNo.String,
 		DeliveryInstructions: oeHdr.DeliveryInstructions.String,
 		Taker:                oeHdr.Taker.String,
 		OrderDate:            oeHdr.OrderDate.Time,
-		RequestedDate:        time.Time{},
-		OrderType:            0,
-		Completed:            false,
-		ShippingAddress: domain.Address{
-			Id:         oeHdr.AddressId.Float64,
-			Name:       oeHdr.Ship2Name.String,
-			LineOne:    oeHdr.Ship2Add1.String,
-			LineTwo:    oeHdr.Ship2Add2.String,
-			City:       oeHdr.Ship2City.String,
-			State:      oeHdr.Ship2State.String,
-			PostalCode: oeHdr.Ship2Zip.String,
-		},
-		Items: make([]*domain.OrderItem, len(oeHdr.OeLines)),
-	}
-
-	if oeHdr.Customer != nil {
-		order.CustomerName = oeHdr.Customer.CustomerName.String
+		Items:                make([]*domain.OrderItem, len(oeHdr.OeLines)),
 	}
 
 	if oeHdr.Contact != nil {
@@ -392,7 +321,7 @@ func (s *OrderService) GetOrderById(ctx context.Context, id string) (domain.Orde
 		backOrderedQuantity := oeLine.QtyOrdered.Float64 - oeLine.QtyInvoiced.Float64
 
 		order.Items[i] = &domain.OrderItem{
-			ProductUid:          oeLine.InvMastUid,
+			ProductUid:          strconv.Itoa(int(oeLine.InvMastUid)),
 			ProductSn:           "",
 			ProductName:         "",
 			CustomerProductSn:   oeLine.CustomerPartNumber,

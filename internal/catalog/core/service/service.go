@@ -6,6 +6,13 @@ import (
 )
 
 type CatalogService interface {
+	CustomerGetProduct(ctx context.Context, uid string) (*domain.Product, error)
+
+	ClerkCreateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+	ClerkReadGroup(ctx context.Context, sn string) (*domain.ProductGroup, error)
+
+	ClerkListGroups(ctx context.Context) ([]*domain.ProductGroup, error)
+	ClerkUpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
 	// GetProduct returns a Product by the given UID
 	GetProduct(ctx context.Context, uid string) (domain.Product, error)
 	// GetProductBySupplierPartNumber returns a Product by the given part number and supplier

@@ -3,12 +3,12 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"github.com/uptrace/bun/extra/bundebug"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	"net/url"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mssqldialect"
+	"github.com/uptrace/bun/extra/bundebug"
 	"github.com/uptrace/bun/extra/bunotel"
 )
 

@@ -3,11 +3,11 @@ package catalog
 import (
 	"context"
 	"fmt"
+	rpc "github.com/materials-resources/microservices-proto/golang/catalog"
 	"github.com/materials-resources/s-prophet/app"
 	"github.com/materials-resources/s-prophet/internal/catalog/api"
-	"github.com/materials-resources/s-prophet/internal/catalog/service"
+	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
 	"github.com/materials-resources/s-prophet/pkg/kafka"
-	svc "github.com/materials-resources/s-prophet/proto/catalog/v1"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
 )
@@ -36,7 +36,7 @@ func init() {
 
 			cs.RegisterWorkers()
 
-			svc.RegisterCatalogServiceServer(
+			rpc.RegisterCatalogServiceServer(
 				a.GetGrpcServer(), api.NewCatalogApi(
 					cs, a.GetTP().Tracer("CatalogApi"), &service.KafkaProducer{Client: client, Serde: &serde}),
 			)
