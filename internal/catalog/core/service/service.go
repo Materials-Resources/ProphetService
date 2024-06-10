@@ -20,14 +20,10 @@ type CatalogService interface {
 
 	// GetProductBySupplierPartNumber returns a Product by the given part number and supplier
 	GetProductBySupplierPartNumber(ctx context.Context, partNumber string, supplier float64) (domain.Product, error)
-	// ListProduct returns a list of Product
-	ListProduct(ctx context.Context, filter domain.Filter) ([]*domain.Product, error)
 	// UpdateProduct updates a Product for specified locations
 	UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error
 	// DeleteProduct deletes a Product
 	DeleteProduct(ctx context.Context, uid string) error
-	// GetBasicProductDetails returns a list of Product with basic details
-	GetBasicProductDetails(ctx context.Context, uids []int32) ([]domain.Product, error)
 
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 

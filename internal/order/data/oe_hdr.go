@@ -3,18 +3,18 @@ package data
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/uptrace/bun"
 	"strconv"
 	"time"
 )
 
 type oeHdr struct {
-	data.OeHdr `bun:",extend"`
-	Customer   *customer `bun:"rel:has-one,join:customer_id=customer_id,join:company_id=company_id"`
-	Contact    *contacts `bun:"rel:has-one,join:contact_id=id"`
-	Lines      []*oeLine `bun:"rel:has-many,join:order_no=order_no"`
+	models.OeHdr `bun:",extend"`
+	Customer     *customer `bun:"rel:has-one,join:customer_id=customer_id,join:company_id=company_id"`
+	Contact      *contacts `bun:"rel:has-one,join:contact_id=id"`
+	Lines        []*oeLine `bun:"rel:has-many,join:order_no=order_no"`
 }
 
 type OeHdrModel struct {

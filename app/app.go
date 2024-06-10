@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/rs/zerolog"
 	"net"
 	"sync"
@@ -98,9 +98,9 @@ func (a *App) GetTP() *tracesdk.TracerProvider {
 }
 
 // GetModels returns an initialized instance of data.Models.
-func (a *App) GetModels() data.Models {
+func (a *App) GetModels() models.Models {
 
-	return *data.NewModels(a.GetDB())
+	return *models.NewModels(a.GetDB())
 }
 func (a *App) GetMP() *metric.MeterProvider {
 	return a.mp

@@ -2,12 +2,12 @@ package data
 
 import (
 	"context"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/uptrace/bun"
 )
 
 type invMast struct {
-	data.InvMast `bun:",extend"`
+	models.InvMast `bun:",extend"`
 }
 
 type InvMastModel struct {

@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 	"errors"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -12,10 +12,9 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func NewCatalogApi(
-	service service.CatalogService, tracer trace.Tracer, producer service.Producer,
+func NewCatalogApi(tracer trace.Tracer, producer service.Producer,
 ) CatalogApi {
-	return CatalogApi{service: service, tracer: tracer, producer: producer}
+	return CatalogApi{tracer: tracer, producer: producer}
 }
 
 type CatalogApi struct {
@@ -152,7 +151,7 @@ func (s CatalogApi) GetProductBySupplier(
 	product, err := s.service.GetProductBySupplierPartNumber(ctx, request.GetSupplierPartNo(), request.GetSupplierId())
 	if err != nil {
 		switch {
-		case errors.Is(err, data.ErrRecordNotFound):
+		case errors.Is(err, models.ErrRecordNotFound):
 			return nil, status.Error(codes.NotFound, "product not found")
 		}
 

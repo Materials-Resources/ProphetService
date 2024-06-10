@@ -10,12 +10,11 @@ import (
 	rpc "github.com/materials-resources/microservices-proto/golang/order"
 )
 
-func NewOrderApi(service service.Service, controller service.OrderController) OrderApi {
-	return OrderApi{service: service, controller: controller}
+func NewOrderApi(controller service.OrderController) OrderApi {
+	return OrderApi{controller: controller}
 }
 
 type OrderApi struct {
-	service    service.Service
 	controller service.OrderController
 }
 
@@ -55,13 +54,13 @@ func (s OrderApi) ClerkCreateQuote(ctx context.Context, request *rpc.ClerkCreate
 			})
 
 	}
-	err := s.service.CreateQuote(
-		ctx, order)
+
+	//err := s.controller.ClerkCreateQuote(ctx, order)
 
 	fmt.Println(order.Id)
 	return &rpc.ClerkCreateQuoteResponse{
 		Id: order.Id,
-	}, err
+	}, nil
 }
 
 func (s OrderApi) ClerkGetShipment(ctx context.Context, request *rpc.ClerkGetShipmentRequest) (*rpc.ClerkGetShipmentResponse, error) {

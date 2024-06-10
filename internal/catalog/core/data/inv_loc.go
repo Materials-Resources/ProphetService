@@ -3,8 +3,8 @@ package data
 import (
 	"context"
 	"errors"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/uptrace/bun"
 	"sort"
 	"strconv"
@@ -13,9 +13,9 @@ import (
 )
 
 type invLoc struct {
-	data.InvLoc  `bun:",extend"`
-	InvMast      *invMast      `bun:"rel:belongs-to,join:inv_mast_uid=inv_mast_uid"`
-	ProductGroup *productGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
+	models.InvLoc `bun:",extend"`
+	InvMast       *invMast      `bun:"rel:belongs-to,join:inv_mast_uid=inv_mast_uid"`
+	ProductGroup  *productGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
 }
 
 var _ bun.BeforeAppendModelHook = (*invLoc)(nil)
@@ -72,17 +72,14 @@ func (m *InvLocModel) Get(ctx context.Context, uid string) (*domain.Product, err
 		// TODO return not found error
 		return nil, err
 	}
-	var invLocRec invLoc
-	err = m.bun.NewSelect().Model(&invLocRec).
-		Relation("InvMast").
-		Where("inv_loc.company_id = ? and inv_loc.location_id = ?", m.defaultValues.CompanyId, m.defaultValues.LocationId).
-		Where("inv_loc.inv_mast_uid = ?", uidInt).Scan(ctx)
+
+	rec, err := m.get(ctx, int32(uidInt))
 	if err != nil {
 		return nil, err
 	}
 
 	productDomain := &domain.Product{}
-	invLocRec.toProductDomain(productDomain)
+	rec.toProductDomain(productDomain)
 
 	return productDomain, nil
 }
@@ -98,23 +95,30 @@ func (m *InvLocModel) List(ctx context.Context, opts *InvLocListOptions, paginat
 	q := m.bun.NewSelect().Model(&invLocRecs).
 		Relation("InvMast").Relation("ProductGroup").Limit(int(pagination.Size))
 
-	// TODO create a persistent var of q for the count query
 	var wg sync.WaitGroup
 
 	q, err := m.listFilterQuery(q, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	countQ := *q
 
 	go func() {
 		wg.Add(1)
 		defer wg.Done()
-		c, err := q.Count(ctx)
+		c, err := countQ.Count(ctx)
 		if err != nil {
 			// TODO handle error
-			return
 		}
 		totalCount = c
 	}()
 
 	q, err = m.listPaginationQuery(q, pagination)
+	if err != nil {
+		return nil, nil, err
+
+	}
 
 	err = q.Scan(ctx)
 	if err != nil {

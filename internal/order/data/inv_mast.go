@@ -1,7 +1,7 @@
 package data
 
-import "github.com/materials-resources/s-prophet/infrastructure/data"
+import "github.com/materials-resources/s-prophet/pkg/models"
 
 type invMast struct {
-	data.InvMast `bun:",extend"`
+	models.InvMast `bun:",extend"`
 }

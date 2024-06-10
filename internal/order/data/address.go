@@ -1,7 +1,7 @@
 package data
 
-import "github.com/materials-resources/s-prophet/infrastructure/data"
+import "github.com/materials-resources/s-prophet/pkg/models"
 
 type address struct {
-	data.Address `bun:",extend"`
+	models.Address `bun:",extend"`
 }

@@ -3,15 +3,15 @@ package data
 import (
 	"context"
 	"database/sql"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/schema"
 	"time"
 )
 
 type productGroup struct {
-	data.ProductGroup `bun:",extend"`
+	models.ProductGroup `bun:",extend"`
 }
 
 func (m *productGroup) BeforeAppendModel(ctx context.Context, query schema.Query) error {
@@ -90,7 +90,7 @@ func (m *ProductGroupModel) List(ctx context.Context, opts *ProductGroupListOpti
 
 func (m *ProductGroupModel) Create(ctx context.Context, pg *domain.ProductGroup) error {
 	pgData := productGroup{
-		ProductGroup: data.ProductGroup{
+		ProductGroup: models.ProductGroup{
 			ProductGroupId:   pg.Sn,
 			ProductGroupDesc: *pg.Name,
 			CompanyId:        m.defaultValues.CompanyId,

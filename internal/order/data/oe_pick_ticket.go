@@ -3,15 +3,15 @@ package data
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
+	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/uptrace/bun"
 )
 
 type oePickTicket struct {
-	data.OePickTicket `bun:",extend"`
-	OeHdr             *oeHdr   `bun:"rel:has-one,join:order_no=order_no"`
-	Carrier           *address `bun:"rel:has-one,join:carrier_id=id,join_on:carrier_flag='Y'"`
+	models.OePickTicket `bun:",extend"`
+	OeHdr               *oeHdr   `bun:"rel:has-one,join:order_no=order_no"`
+	Carrier             *address `bun:"rel:has-one,join:carrier_id=id,join_on:carrier_flag='Y'"`
 }
 
 type OePickTicketModel struct {

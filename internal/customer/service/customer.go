@@ -2,30 +2,30 @@ package service
 
 import (
 	"context"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/customer/domain"
+	"github.com/materials-resources/s-prophet/pkg/models"
 )
 
 type Customer struct {
-	models data.Models
+	m models.Models
 }
 
-func NewCustomerService(models *data.Models) *Customer {
+func NewCustomerService(models *models.Models) *Customer {
 	return &Customer{
-		models: *models,
+		m: *models,
 	}
 }
 
 func (c Customer) GetContactById(ctx context.Context, id string) (domain.Contact, error) {
 
 	// get contact record
-	contactRec, err := c.models.Contacts.Get(ctx, id)
+	contactRec, err := c.m.Contacts.Get(ctx, id)
 	if err != nil {
 		return domain.Contact{}, err
 	}
 
 	// get ship to records for contact
-	contactsXShipToRec, err := c.models.ContactsXShipTo.GetByContactId(ctx, "MRS", id)
+	contactsXShipToRec, err := c.m.ContactsXShipTo.GetByContactId(ctx, "MRS", id)
 	if err != nil {
 		return domain.Contact{}, err
 
@@ -42,7 +42,7 @@ func (c Customer) GetContactById(ctx context.Context, id string) (domain.Contact
 
 	for _, r := range contactsXShipToRec {
 		// get address info for customer branch
-		addressRec, err := c.models.Address.Get(ctx, r.ShipToId)
+		addressRec, err := c.m.Address.Get(ctx, r.ShipToId)
 		if err != nil {
 			return domain.Contact{}, err
 

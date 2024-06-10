@@ -38,7 +38,7 @@ func init() {
 
 			rpc.RegisterCatalogServiceServer(
 				a.GetGrpcServer(), api.NewCatalogApi(
-					cs, a.GetTP().Tracer("CatalogApi"), &service.KafkaProducer{Client: client, Serde: &serde}),
+					a.GetTP().Tracer("CatalogApi"), &service.KafkaProducer{Client: client, Serde: &serde}),
 			)
 
 			return nil

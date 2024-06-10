@@ -14,7 +14,7 @@ func init() {
 		"OrderService.init", func(ctx context.Context, a *app.App) error {
 			rpc.RegisterOrderServiceServer(
 				a.GetGrpcServer(),
-				api.NewOrderApi(service.NewOrderService(a.GetModels()), *service.NewOrderController(data.NewModels(a.GetDB()))))
+				api.NewOrderApi(*service.NewOrderController(data.NewModels(a.GetDB()))))
 			return nil
 		},
 	)

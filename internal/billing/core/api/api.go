@@ -2,22 +2,22 @@ package api
 
 import (
 	"context"
-	"github.com/materials-resources/s-prophet/infrastructure/data"
 	"github.com/materials-resources/s-prophet/internal/billing/core/domain"
+	"github.com/materials-resources/s-prophet/pkg/models"
 )
 
 type BillingAdapter struct {
-	models *data.Models
+	m *models.Models
 }
 
-func NewBillingAdapter(models data.Models) *BillingAdapter {
+func NewBillingAdapter(models models.Models) *BillingAdapter {
 	return &BillingAdapter{
-		models: &models,
+		m: &models,
 	}
 }
 
 func (a *BillingAdapter) GetInvoicesByOrderID(orderID string) ([]*domain.Invoice, error) {
-	invoiceHdrRecords, err := a.models.InvoiceHdr.GetAll(context.Background(), data.InvoiceHdrGetAllParams{OrderNo: &[]string{orderID}})
+	invoiceHdrRecords, err := a.m.InvoiceHdr.GetAll(context.Background(), models.InvoiceHdrGetAllParams{OrderNo: &[]string{orderID}})
 	if err != nil {
 		return nil, err
 	}

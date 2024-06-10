@@ -32,3 +32,7 @@ func (c *OrderController) CustomerListOrders(ctx context.Context, id string) ([]
 	}
 	return c.models.OeHdr.List(ctx, opts)
 }
+
+func (c *OrderController) ClerkCreateQuote(ctx context.Context, id string) ([]*domain.Order, error) {
+	return nil, nil
+}
