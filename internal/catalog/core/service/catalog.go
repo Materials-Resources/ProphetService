@@ -47,6 +47,29 @@ type Catalog struct {
 	localModel *data2.Models
 }
 
+func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product) error {
+	v := validator.New()
+
+	domain.ValidateProductUpdate(v, *product)
+
+	if !v.Valid() {
+		return errors.New(fmt.Sprintf("%s", v.Errors))
+
+	}
+
+	return c.localModel.InvLoc.Update(ctx, product)
+}
+
+func (c Catalog) ClerkDeleteProduct(ctx context.Context, uid string, deleteMode domain.DeleteMode) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c Catalog) ClerkListProducts(ctx context.Context, pagination domain.Pagination) ([]*domain.Product, *domain.PaginationMetadata, error) {
+	opts := &data2.InvLocListOptions{}
+	return c.localModel.InvLoc.List(ctx, opts, pagination)
+}
+
 func (c Catalog) ClerkCreateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 	v := validator.New()
 
@@ -84,8 +107,22 @@ func (c Catalog) ClerkUpdateGroup(ctx context.Context, productGroup *domain.Prod
 
 }
 
+func (c Catalog) ClerkGetProduct(ctx context.Context, uid string) (*domain.Product, error) {
+	return c.getProduct(ctx, uid)
+}
+
 func (c Catalog) CustomerGetProduct(ctx context.Context, uid string) (*domain.Product, error) {
-	return c.localModel.InvLoc.Get(ctx, uid)
+	return c.getProduct(ctx, uid)
+}
+
+func (c Catalog) getProduct(ctx context.Context, uid string) (*domain.Product, error) {
+
+	product, err := c.localModel.InvLoc.Get(ctx, uid)
+	if err != nil {
+		return nil, err
+
+	}
+	return product, nil
 }
 
 func (c Catalog) GetBasicProductDetails(ctx context.Context, uids []int32) ([]domain.Product, error) {
@@ -413,6 +450,14 @@ func (c Catalog) UpdateProductSupplier(ctx context.Context, productSupplier *dom
 }
 
 func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, locations []float64) error {
+
+	v := validator.New()
+	domain.ValidateProductUpdate(v, *product)
+	if !v.Valid() {
+		return errors.New(fmt.Sprintf("%s", v.Errors))
+
+	}
+
 	invMastUid, err := strconv.Atoi(product.Uid)
 
 	ctx, span := c.tracer.Start(con, "UpdateProduct")
@@ -427,11 +472,11 @@ func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, loc
 		return err
 	}
 
-	if product.Name != "" {
-		invMast.ItemDesc = product.Name
+	if product.Name != nil {
+		invMast.ItemDesc = *product.Name
 	}
-	if product.Description != "" {
-		invMast.ExtendedDesc = sql.NullString{String: product.Description, Valid: true}
+	if product.Description != nil {
+		invMast.ExtendedDesc = sql.NullString{String: *product.Description, Valid: true}
 	}
 
 	if err = c.models.InvMast.Update(ctx, invMast); err != nil {
@@ -442,9 +487,9 @@ func (c Catalog) UpdateProduct(con context.Context, product *domain.Product, loc
 		return err
 	}
 	for _, invLoc := range invLocs {
-		if product.ProductGroupId != "" {
+		if product.ProductGroupSn != nil {
 			invLoc.LastMaintainedBy = "admin"
-			invLoc.ProductGroupId = sql.NullString{String: product.ProductGroupId, Valid: true}
+			invLoc.ProductGroupId = sql.NullString{String: *product.ProductGroupSn, Valid: true}
 		}
 		if err = c.models.InvLoc.Update(ctx, invLoc); err != nil {
 			return err
@@ -462,7 +507,7 @@ func (c Catalog) GetProductBySupplierPartNumber(
 		return domain.Product{}, err
 	}
 	return domain.Product{
-		Uid: strconv.Itoa(int(invMast.InvMastUid)), Sn: invMast.ItemId, Name: invMast.ItemDesc,
+		Uid: strconv.Itoa(int(invMast.InvMastUid)), Sn: &invMast.ItemId, Name: &invMast.ItemDesc,
 	}, nil
 }
 
@@ -486,29 +531,6 @@ func (c Catalog) ListProduct(ctx context.Context, filter domain.Filter) ([]*doma
 	}
 
 	return products, nil
-}
-
-func (c Catalog) GetProduct(ctx context.Context, uid string) (domain.Product, error) {
-
-	invMastUid, err := strconv.Atoi(uid)
-	if err != nil {
-		return domain.Product{}, err
-
-	}
-
-	c.app.Logger().Info().Str("invMastUid", strconv.Itoa(invMastUid))
-
-	invLocRecord, err := c.models.InvLoc.Get(ctx, 1001, "MRS", int32(invMastUid))
-	if err != nil {
-		switch {
-		case errors.Is(err, data.ErrRecordNotFound):
-			return domain.Product{}, ErrorResourceNotFound
-		}
-		return domain.Product{}, err
-
-	}
-
-	return *CreateProductFromRecord(invLocRecord), nil
 }
 
 func (c Catalog) CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error {

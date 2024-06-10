@@ -92,9 +92,9 @@ func (w UpdateProductWorker) ConsumeRecord(rec *kgo.Record) error {
 	err = w.service.UpdateProduct(
 		context.Background(), &domain.Product{
 			Uid:            productRecord.Uid,
-			Name:           productRecord.Name,
-			Description:    productRecord.Description,
-			ProductGroupId: productRecord.ProductGroupSn,
+			Name:           &productRecord.Name,
+			Description:    &productRecord.Description,
+			ProductGroupSn: &productRecord.ProductGroupSn,
 		}, []float64{1001})
 	if err != nil {
 		return err

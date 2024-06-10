@@ -57,9 +57,9 @@ func (p *KafkaProducer) PublishUpdateProduct(ctx context.Context, product *domai
 			Value: p.Serde.MustEncode(
 				ProductRecord{
 					Uid:            product.Uid,
-					Name:           product.Name,
-					Description:    product.Description,
-					ProductGroupSn: product.ProductGroupId,
+					Name:           *product.Name,
+					Description:    *product.Description,
+					ProductGroupSn: *product.ProductGroupSn,
 				}),
 		}, func(record *kgo.Record, err error) {
 			if err != nil {
