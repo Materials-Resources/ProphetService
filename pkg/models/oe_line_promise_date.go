@@ -23,4 +23,5 @@ type OeLinePromiseDate struct {
 	Alert                           sql.NullString `bun:"alert,type:varchar,nullzero"`
 	PreviousPromiseDate             sql.NullTime   `bun:"previous_promise_date,type:datetime,nullzero"`
 	InsufficientDataToCalculateFlag sql.NullString `bun:"insufficient_data_to_calculate_flag,type:char,nullzero"`
+	Edi855sResendPromiseDate        sql.NullTime   `bun:"edi855s_resend_promise_date,type:datetime,nullzero"`
 }
