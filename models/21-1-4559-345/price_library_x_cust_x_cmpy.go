@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PriceLibraryXCustXCmpy struct {
 	bun.BaseModel         `bun:"table:price_library_x_cust_x_cmpy"`
 	PriceLibXCustXCmpyUid int32     `bun:"price_lib_x_cust_x_cmpy_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeHdrRma struct {
 	bun.BaseModel          `bun:"table:oe_hdr_rma"`
 	OeHdrRmaUid            int32     `bun:"oe_hdr_rma_uid,type:int,pk"`

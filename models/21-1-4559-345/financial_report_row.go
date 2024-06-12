@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FinancialReportRow struct {
 	bun.BaseModel         `bun:"table:financial_report_row"`
 	FinancialReportRowUid int32     `bun:"financial_report_row_uid,type:int,pk"`

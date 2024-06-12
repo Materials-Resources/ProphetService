@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type EvaSkillSecurity struct {
 	bun.BaseModel       `bun:"table:eva_skill_security"`
 	EvaSkillSecurityUid int32     `bun:"eva_skill_security_uid,type:int,pk,identity"`

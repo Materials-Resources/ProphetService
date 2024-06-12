@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type InvLocStockStatus struct {
 	bun.BaseModel        `bun:"table:inv_loc_stock_status"`
 	InvLocStockStatusUid int32   `bun:"inv_loc_stock_status_uid,type:int,pk,identity"`

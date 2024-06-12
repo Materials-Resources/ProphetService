@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type GlSystemParameters struct {
 	bun.BaseModel            `bun:"table:gl_system_parameters"`
 	JournalEntryApproval     string    `bun:"journal_entry_approval,type:char"`
@@ -13,5 +18,5 @@ type GlSystemParameters struct {
 	DisplayJobId             string    `bun:"display_job_id,type:char,nullzero"`
 	TrackEncumbrances        string    `bun:"track_encumbrances,type:char"`
 	EncumbrancesBudgetColumn float64   `bun:"encumbrances_budget_column,type:decimal(1,0),nullzero"`
-	GlSystemParameterUid     `bun:"gl_system_parameter_uid,type:numeric,pk"`
+	GlSystemParameterUid     string    `bun:"gl_system_parameter_uid,type:numeric,pk"`
 }

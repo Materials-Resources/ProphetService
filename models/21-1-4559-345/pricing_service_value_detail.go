@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricingServiceValueDetail struct {
 	bun.BaseModel    `bun:"table:pricing_service_value_detail"`
 	ValueId          float64   `bun:"value_id,type:decimal(19,0),pk"`

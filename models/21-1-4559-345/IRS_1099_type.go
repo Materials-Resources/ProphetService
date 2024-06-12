@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Irs1099Type struct {
 	bun.BaseModel         `bun:"table:IRS_1099_type"`
 	Irs1099TypeUid        int32     `bun:"IRS_1099_type_uid,type:int,pk"`

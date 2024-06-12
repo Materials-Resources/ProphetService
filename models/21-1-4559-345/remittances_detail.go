@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type RemittancesDetail struct {
 	bun.BaseModel           `bun:"table:remittances_detail"`
 	RemittanceNumber        float64   `bun:"remittance_number,type:decimal(19,0),pk"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type P21DatabaseChanges struct {
 	bun.BaseModel         `bun:"table:p21_database_changes"`
 	P21DatabaseChangesUid int32  `bun:"p21_database_changes_uid,type:int,identity"`

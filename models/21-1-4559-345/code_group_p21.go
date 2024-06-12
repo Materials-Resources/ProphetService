@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CodeGroupP21 struct {
 	bun.BaseModel        `bun:"table:code_group_p21"`
 	CodeGroupUid         int32     `bun:"code_group_uid,type:int,pk"`

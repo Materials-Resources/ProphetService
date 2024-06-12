@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AlertQueuedMail struct {
 	bun.BaseModel      `bun:"table:alert_queued_mail"`
 	AlertQueuedMailUid int32     `bun:"alert_queued_mail_uid,type:int,pk"`

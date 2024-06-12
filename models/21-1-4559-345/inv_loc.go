@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvLoc struct {
 	bun.BaseModel                   `bun:"table:inv_loc"`
 	LocationId                      float64   `bun:"location_id,type:decimal(19,0),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProdOrderLine struct {
 	bun.BaseModel                `bun:"table:prod_order_line"`
 	ProdOrderNumber              float64   `bun:"prod_order_number,type:decimal(19,0),pk"`

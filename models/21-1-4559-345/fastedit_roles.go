@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FasteditRoles struct {
 	bun.BaseModel    `bun:"table:fastedit_roles"`
 	FasteditRolesUid int32     `bun:"fastedit_roles_uid,type:int,pk,identity"`

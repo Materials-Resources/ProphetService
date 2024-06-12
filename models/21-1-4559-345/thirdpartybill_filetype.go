@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ThirdpartybillFiletype struct {
 	bun.BaseModel             `bun:"table:thirdpartybill_filetype"`
 	ThirdpartybillFiletypeUid int32     `bun:"thirdpartybill_filetype_uid,type:int,pk,identity"`

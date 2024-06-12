@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DrillSecurity struct {
 	bun.BaseModel    `bun:"table:drill_security"`
 	UsersId          string    `bun:"users_id,type:varchar(30)"`

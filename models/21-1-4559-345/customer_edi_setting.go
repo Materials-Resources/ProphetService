@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustomerEdiSetting struct {
 	bun.BaseModel             `bun:"table:customer_edi_setting"`
 	CustomerEdiSettingUid     int32     `bun:"customer_edi_setting_uid,type:int,pk,identity"`

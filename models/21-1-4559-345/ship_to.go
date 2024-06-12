@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ShipTo struct {
 	bun.BaseModel                 `bun:"table:ship_to"`
 	CompanyId                     string    `bun:"company_id,type:varchar(8),pk"`

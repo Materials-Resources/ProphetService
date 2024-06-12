@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type EpaymentResponseCodeInfo struct {
 	bun.BaseModel             `bun:"table:epayment_response_code_info"`
 	EpymntResponseCodeInfoUid int32     `bun:"epymnt_response_code_info_uid,type:int,pk,identity"`

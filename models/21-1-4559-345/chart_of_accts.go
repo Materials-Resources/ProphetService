@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ChartOfAccts struct {
 	bun.BaseModel              `bun:"table:chart_of_accts"`
 	AccountNo                  string    `bun:"account_no,type:varchar(32),pk"`

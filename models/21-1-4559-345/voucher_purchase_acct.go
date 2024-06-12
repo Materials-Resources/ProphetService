@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type VoucherPurchaseAcct struct {
 	bun.BaseModel          `bun:"table:voucher_purchase_acct"`
 	VoucherPurchaseAcctUid int32     `bun:"voucher_purchase_acct_uid,type:int,pk"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type WzdPrcsStatusP21 struct {
 	bun.BaseModel    `bun:"table:wzd_prcs_status_p21"`
 	WizardStatusCode string `bun:"wizard_status_code,type:char,pk"`

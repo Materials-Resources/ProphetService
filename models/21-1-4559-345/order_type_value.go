@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OrderTypeValue struct {
 	bun.BaseModel     `bun:"table:order_type_value"`
 	OrderTypeValueUid int32     `bun:"order_type_value_uid,type:int,pk,identity"`

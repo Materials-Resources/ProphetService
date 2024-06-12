@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PlGroupDef struct {
 	bun.BaseModel `bun:"table:pl_group_def"`
 	GroupSkey     int32     `bun:"group_skey,type:int,pk"`

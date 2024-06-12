@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DimAcctReportDef struct {
 	bun.BaseModel       `bun:"table:dim_acct_report_def"`
 	DimAcctReportDefUid int32     `bun:"dim_acct_report_def_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PaymentTypes struct {
 	bun.BaseModel            `bun:"table:payment_types"`
 	CompanyId                string    `bun:"company_id,type:varchar(8)"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type RibbonTab struct {
 	bun.BaseModel    `bun:"table:ribbon_tab"`
 	RibbonTabUid     int32     `bun:"ribbon_tab_uid,type:int,pk,identity"`

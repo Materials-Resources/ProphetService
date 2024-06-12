@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SerialNumber struct {
 	bun.BaseModel               `bun:"table:serial_number"`
 	CompanyNo                   string    `bun:"company_no,type:varchar(8),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ApplicationSecurity struct {
 	bun.BaseModel          `bun:"table:application_security"`
 	ApplicationSecurityUid int32     `bun:"application_security_uid,type:int,pk,identity"`

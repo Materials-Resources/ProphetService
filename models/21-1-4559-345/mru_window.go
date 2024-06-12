@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type MruWindow struct {
 	bun.BaseModel    `bun:"table:mru_window"`
 	MruWindowUid     int32     `bun:"mru_window_uid,type:int,pk"`

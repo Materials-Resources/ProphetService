@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Datastream struct {
 	bun.BaseModel    `bun:"table:datastream"`
 	DatastreamUid    int32     `bun:"datastream_uid,type:int,pk,identity"`

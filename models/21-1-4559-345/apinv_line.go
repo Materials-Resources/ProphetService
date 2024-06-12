@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ApinvLine struct {
 	bun.BaseModel         `bun:"table:apinv_line"`
 	VoucherNo             string    `bun:"voucher_no,type:varchar(10)"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type TempDefaultRedo struct {
 	bun.BaseModel  `bun:"table:temp_default_redo"`
 	DefaultId      int32  `bun:"default_id,type:int,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InventoryissuestestXRebuild struct {
 	bun.BaseModel    `bun:"table:inventoryissuestest_x_rebuild"`
 	Testuid          int32     `bun:"testuid,type:int"`

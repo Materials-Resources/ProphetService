@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvoiceHdrSalesrep struct {
 	bun.BaseModel              `bun:"table:invoice_hdr_salesrep"`
 	InvoiceNumber              string    `bun:"invoice_number,type:varchar(10)"`

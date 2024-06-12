@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SalesrepCommission struct {
 	bun.BaseModel             `bun:"table:salesrep_commission"`
 	CompanyId                 string    `bun:"company_id,type:varchar(8)"`

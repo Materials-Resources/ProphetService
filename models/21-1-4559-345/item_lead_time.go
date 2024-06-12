@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ItemLeadTime struct {
 	bun.BaseModel       `bun:"table:item_lead_time"`
 	ItemLeadTimeKey     int32     `bun:"item_lead_time_key,type:int,pk"`

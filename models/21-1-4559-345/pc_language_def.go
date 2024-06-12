@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PcLanguageDef struct {
 	bun.BaseModel   `bun:"table:pc_language_def"`
 	LanguageSkey    int32     `bun:"language_skey,type:int,pk"`

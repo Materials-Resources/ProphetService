@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type LabelDefinitionXShipTo struct {
 	bun.BaseModel             `bun:"table:label_definition_x_ship_to"`
 	LabelDefinitionXShipToUid int32     `bun:"label_definition_x_ship_to_uid,type:int,pk"`

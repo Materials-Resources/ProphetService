@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DocumentLinkEntityReq struct {
 	bun.BaseModel               `bun:"table:document_link_entity_req"`
 	DocumentLinkEntityReqUid    int32     `bun:"document_link_entity_req_uid,type:int,pk"`

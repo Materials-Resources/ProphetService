@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ExtensibilityWindow struct {
 	bun.BaseModel          `bun:"table:extensibility_window"`
 	ExtensibilityWindowUid int32     `bun:"extensibility_window_uid,type:int,pk,identity"`

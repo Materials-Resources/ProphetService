@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ShippingRoute struct {
 	bun.BaseModel            `bun:"table:shipping_route"`
 	ShippingRouteUid         int32     `bun:"shipping_route_uid,type:int,pk"`

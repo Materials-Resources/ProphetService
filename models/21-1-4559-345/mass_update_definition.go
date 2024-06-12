@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type MassUpdateDefinition struct {
 	bun.BaseModel           `bun:"table:mass_update_definition"`
 	MassUpdateDefinitionUid int32     `bun:"mass_update_definition_uid,type:int,pk,identity"`

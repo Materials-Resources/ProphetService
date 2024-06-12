@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TpcxTradingPartner struct {
 	bun.BaseModel         `bun:"table:tpcx_trading_partner"`
 	TpcxTradingPartnerUid int32     `bun:"tpcx_trading_partner_uid,type:int,pk"`

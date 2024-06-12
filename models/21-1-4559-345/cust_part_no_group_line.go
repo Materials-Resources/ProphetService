@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustPartNoGroupLine struct {
 	bun.BaseModel          `bun:"table:cust_part_no_group_line"`
 	CustPartNoGroupLineUid int32     `bun:"cust_part_no_group_line_uid,type:int,pk"`

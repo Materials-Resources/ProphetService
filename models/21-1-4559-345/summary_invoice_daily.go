@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SummaryInvoiceDaily struct {
 	bun.BaseModel          `bun:"table:summary_invoice_daily"`
 	SummaryInvoiceDailyUid int32     `bun:"summary_invoice_daily_uid,type:int,pk,identity"`

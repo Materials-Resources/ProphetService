@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type LibertyImportTemp struct {
 	bun.BaseModel `bun:"table:liberty_import_temp"`
 	SupplierPart  string  `bun:"Supplier Part,type:varchar,nullzero"`

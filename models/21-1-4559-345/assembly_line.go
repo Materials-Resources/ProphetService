@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AssemblyLine struct {
 	bun.BaseModel            `bun:"table:assembly_line"`
 	Quantity                 float64   `bun:"quantity,type:decimal(19,9)"`

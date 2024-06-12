@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PopupColumn struct {
 	bun.BaseModel               `bun:"table:popup_column"`
 	PopupColumnUid              int32     `bun:"popup_column_uid,type:int,pk,identity"`

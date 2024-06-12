@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CopyTableDataXProcess struct {
 	bun.BaseModel            `bun:"table:copy_table_data_x_process"`
 	CopyTableDataXProcessUid int32     `bun:"copy_table_data_x_process_uid,type:int,pk,identity"`

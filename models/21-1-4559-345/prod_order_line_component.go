@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProdOrderLineComponent struct {
 	bun.BaseModel             `bun:"table:prod_order_line_component"`
 	ProdOrderLineComponentUid int32     `bun:"prod_order_line_component_uid,type:int,pk,default:(0)"`

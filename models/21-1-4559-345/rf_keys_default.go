@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type RfKeysDefault struct {
 	bun.BaseModel    `bun:"table:rf_keys_default"`
 	KeyhelpUid       int32     `bun:"keyhelp_uid,type:int,pk,identity"`

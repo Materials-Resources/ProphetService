@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type XmlDocumentElement struct {
 	bun.BaseModel          `bun:"table:xml_document_element"`
 	XmlDocumentElementUid  int32     `bun:"xml_document_element_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PcMessageDetail struct {
 	bun.BaseModel `bun:"table:pc_message_detail"`
 	MessageSkey   int32     `bun:"message_skey,type:int,pk"`

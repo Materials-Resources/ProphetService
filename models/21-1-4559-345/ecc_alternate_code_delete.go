@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type EccAlternateCodeDelete struct {
 	bun.BaseModel             `bun:"table:ecc_alternate_code_delete"`
 	EccAlternateCodeDeleteUid int32  `bun:"ecc_alternate_code_delete_uid,type:int,pk,identity"`

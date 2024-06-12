@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type XmlDataobject struct {
 	bun.BaseModel      `bun:"table:xml_dataobject"`
 	XmlDataobjectUid   int32     `bun:"xml_dataobject_uid,type:int,pk"`

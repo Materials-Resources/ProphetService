@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CrmRun struct {
 	bun.BaseModel              `bun:"table:crm_run"`
 	RunNumber                  int32     `bun:"run_number,type:int,pk"`

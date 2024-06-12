@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type LinkQuantity struct {
 	bun.BaseModel    `bun:"table:link_quantity"`
 	LinkQuantityUid  int32     `bun:"link_quantity_uid,type:int,pk,identity"`

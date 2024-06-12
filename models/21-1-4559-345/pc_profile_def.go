@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PcProfileDef struct {
 	bun.BaseModel `bun:"table:pc_profile_def"`
 	ProfileSkey   int32     `bun:"profile_skey,type:int,pk"`

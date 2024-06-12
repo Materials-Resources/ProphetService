@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustomObjects struct {
 	bun.BaseModel    `bun:"table:custom_objects"`
 	CustomObjectsUid int32     `bun:"custom_objects_uid,type:int,pk"`

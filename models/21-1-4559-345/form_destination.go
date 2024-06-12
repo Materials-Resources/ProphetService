@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FormDestination struct {
 	bun.BaseModel      `bun:"table:form_destination"`
 	FormDestinationUid int32     `bun:"form_destination_uid,type:int,pk"`

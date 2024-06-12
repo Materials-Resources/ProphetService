@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PurchasePriceLibrary struct {
 	bun.BaseModel            `bun:"table:purchase_price_library"`
 	CompanyId                string    `bun:"company_id,type:varchar(8),pk"`

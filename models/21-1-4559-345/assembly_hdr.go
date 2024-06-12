@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AssemblyHdr struct {
 	bun.BaseModel                `bun:"table:assembly_hdr"`
 	Backflush                    string    `bun:"backflush,type:char"`

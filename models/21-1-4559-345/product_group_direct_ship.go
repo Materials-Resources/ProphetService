@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProductGroupDirectShip struct {
 	bun.BaseModel             `bun:"table:product_group_direct_ship"`
 	ProductGroupDirectShipUid int32     `bun:"product_group_direct_ship_uid,type:int,pk"`

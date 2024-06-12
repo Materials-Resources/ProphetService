@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TransactionSet struct {
 	bun.BaseModel      `bun:"table:transaction_set"`
 	TransactionSetUid  int32     `bun:"transaction_set_uid,type:int,pk"`

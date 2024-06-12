@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ApSystemParameters struct {
 	bun.BaseModel              `bun:"table:ap_system_parameters"`
 	VoucherEntryByItemApproval string    `bun:"voucher_entry_by_item_approval,type:char"`

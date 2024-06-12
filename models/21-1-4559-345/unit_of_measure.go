@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type UnitOfMeasure struct {
 	bun.BaseModel         `bun:"table:unit_of_measure"`
 	UnitId                string    `bun:"unit_id,type:varchar(8),pk"`

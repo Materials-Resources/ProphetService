@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TagHoldClass struct {
 	bun.BaseModel    `bun:"table:tag_hold_class"`
 	TagHoldClassUid  int32     `bun:"tag_hold_class_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ApinvHdrXInventoryReceipts struct {
 	bun.BaseModel           `bun:"table:apinv_hdr_x_inventory_receipts"`
 	ApinvHdrXInvReceiptsUid int32     `bun:"apinv_hdr_x_inv_receipts_uid,type:int,pk"`

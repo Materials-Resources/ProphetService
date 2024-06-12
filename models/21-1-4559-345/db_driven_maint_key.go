@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DbDrivenMaintKey struct {
 	bun.BaseModel       `bun:"table:db_driven_maint_key"`
 	DbDrivenMaintKeyUid int32     `bun:"db_driven_maint_key_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DwobjectDependency struct {
 	bun.BaseModel         `bun:"table:dwobject_dependency"`
 	DwobjectDependencyUid int32     `bun:"dwobject_dependency_uid,type:int,pk,identity"`

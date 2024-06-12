@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Journal struct {
 	bun.BaseModel      `bun:"table:journal"`
 	JournalId          string    `bun:"journal_id,type:varchar(2),pk"`

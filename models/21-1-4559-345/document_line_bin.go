@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DocumentLineBin struct {
 	bun.BaseModel         `bun:"table:document_line_bin"`
 	DocumentNo            float64   `bun:"document_no,type:decimal(19,0)"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type WzdPrcsSesnStateP21 struct {
 	bun.BaseModel   `bun:"table:wzd_prcs_sesn_state_p21"`
 	WizardStateCode string `bun:"wizard_state_code,type:char,pk"`

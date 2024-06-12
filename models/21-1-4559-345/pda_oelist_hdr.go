@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PdaOelistHdr struct {
 	bun.BaseModel         `bun:"table:pda_oelist_hdr"`
 	PdaOelistHdrUid       int32     `bun:"pda_oelist_hdr_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CellDefinition struct {
 	bun.BaseModel    `bun:"table:cell_definition"`
 	FinReportId      string    `bun:"fin_report_id,type:varchar(15),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type HelpAccess struct {
 	bun.BaseModel       `bun:"table:help_access"`
 	HelpLevel           string    `bun:"help_level,type:varchar(25)"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProcessSystemParameters struct {
 	bun.BaseModel              `bun:"table:process_system_parameters"`
 	ProcessSystemParametersUid int16     `bun:"process_system_parameters_uid,type:tinyint,pk"`

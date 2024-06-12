@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProductGroupEffectiveDays struct {
 	bun.BaseModel             `bun:"table:product_group_effective_days"`
 	ProdGroupEffectiveDaysUid int32     `bun:"prod_group_effective_days_uid,type:int,pk"`

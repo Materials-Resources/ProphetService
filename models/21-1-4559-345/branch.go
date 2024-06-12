@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Branch struct {
 	bun.BaseModel             `bun:"table:branch"`
 	CompanyId                 string    `bun:"company_id,type:varchar(8),pk"`

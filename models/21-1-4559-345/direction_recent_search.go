@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DirectionRecentSearch struct {
 	bun.BaseModel            `bun:"table:direction_recent_search"`
 	DirectionRecentSearchUid int32     `bun:"direction_recent_search_uid,type:int,pk,identity"`

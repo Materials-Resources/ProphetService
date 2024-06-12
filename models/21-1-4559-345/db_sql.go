@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DbSql struct {
 	bun.BaseModel   `bun:"table:db_sql"`
 	LastSqlExecuted string    `bun:"last_sql_executed,type:varchar(50)"`

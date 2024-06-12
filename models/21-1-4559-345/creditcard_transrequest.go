@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CreditcardTransrequest struct {
 	bun.BaseModel             `bun:"table:creditcard_transrequest"`
 	CreditcardTransrequestUid int32     `bun:"creditcard_transrequest_uid,type:int,pk"`

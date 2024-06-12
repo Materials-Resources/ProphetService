@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type NavigationIndex struct {
 	bun.BaseModel      `bun:"table:navigation_index"`
 	NavigationIndexUid int32     `bun:"navigation_index_uid,type:int,pk,identity"`

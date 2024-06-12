@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type WzdProcessExtP21 struct {
 	bun.BaseModel   `bun:"table:wzd_process_ext_p21"`
 	WizardProcessNo int16  `bun:"wizard_process_no,type:smallint,pk"`

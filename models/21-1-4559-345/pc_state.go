@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type PcState struct {
 	bun.BaseModel `bun:"table:pc_state"`
 	StateSkey     int32  `bun:"state_skey,type:int,pk"`

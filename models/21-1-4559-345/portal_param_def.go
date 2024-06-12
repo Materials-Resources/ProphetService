@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PortalParamDef struct {
 	bun.BaseModel     `bun:"table:portal_param_def"`
 	PortalParamDefUid int32     `bun:"portal_param_def_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricingTemplateKeyField struct {
 	bun.BaseModel              `bun:"table:pricing_template_key_field"`
 	PricingTemplateKeyFieldUid int32     `bun:"pricing_template_key_field_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DwSyntaxCacheWindow struct {
 	bun.BaseModel          `bun:"table:dw_syntax_cache_window"`
 	DwSyntaxCacheWindowUid int32     `bun:"dw_syntax_cache_window_uid,type:int,pk,identity"`

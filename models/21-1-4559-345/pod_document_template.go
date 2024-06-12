@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PodDocumentTemplate struct {
 	bun.BaseModel          `bun:"table:pod_document_template"`
 	PodDocumentTemplateUid int32     `bun:"pod_document_template_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Dynachange struct {
 	bun.BaseModel     `bun:"table:dynachange"`
 	DynachangeId      float64   `bun:"dynachange_id,type:decimal(6,0),pk"`

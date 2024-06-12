@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ImportSuspenseLine struct {
 	bun.BaseModel         `bun:"table:import_suspense_line"`
 	ImportSuspenseLineUid int32     `bun:"import_suspense_line_uid,type:int,pk"`

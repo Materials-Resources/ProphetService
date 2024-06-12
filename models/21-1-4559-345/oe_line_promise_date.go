@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeLinePromiseDate struct {
 	bun.BaseModel                   `bun:"table:oe_line_promise_date"`
 	OeLineUid                       int32     `bun:"oe_line_uid,type:int"`

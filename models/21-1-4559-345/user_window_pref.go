@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type UserWindowPref struct {
 	bun.BaseModel     `bun:"table:user_window_pref"`
 	UserWindowPrefUid int32     `bun:"user_window_pref_uid,type:int,pk,identity"`

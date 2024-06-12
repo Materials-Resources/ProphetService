@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvMast struct {
 	bun.BaseModel                 `bun:"table:inv_mast"`
 	InvMastUid                    int32     `bun:"inv_mast_uid,type:int,pk"`
@@ -67,7 +72,7 @@ type InvMast struct {
 	TpcxStatus                    int32     `bun:"tpcx_status,type:int,nullzero"`
 	DefaultTransferUnit           string    `bun:"default_transfer_unit,type:varchar(8),nullzero"`
 	Keywords                      string    `bun:"keywords,type:text(2147483647),nullzero"`
-	FulltextTimestamp             []byte    `bun:"fulltext_timestamp,type:timestamp,nullzero"`
+	FulltextTimestamp             string    `bun:"fulltext_timestamp,type:timestamp,nullzero"`
 	VendorConsigned               string    `bun:"vendor_consigned,type:char,default:('N')"`
 	CreatedBy                     string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	Disposition                   string    `bun:"disposition,type:char,default:('N')"`

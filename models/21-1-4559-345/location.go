@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Location struct {
 	bun.BaseModel                  `bun:"table:location"`
 	CompanyId                      string    `bun:"company_id,type:varchar(8)"`
@@ -116,11 +121,11 @@ type Location struct {
 	PriorityLocationId             float64   `bun:"priority_location_id,type:decimal(19,0),nullzero"`
 	ExtTaxFreightBkupTaxExempt     string    `bun:"ext_tax_freight_bkup_tax_exempt,type:char,default:('N')"`
 	SporadicItemThresholdPeriods   int32     `bun:"sporadic_item_threshold_periods,type:int,nullzero"`
-	RfnavigatorUrl                 `bun:"rfnavigator_url,type:nvarchar(500),nullzero"`
-	RfnavigatorUserName            string `bun:"rfnavigator_user_name,type:varchar(255),nullzero"`
-	RfnavigatorPassword            string `bun:"rfnavigator_password,type:varchar(255),nullzero"`
-	UpdateVelocitySettings         string `bun:"update_velocity_settings,type:varchar,default:('N')"`
-	TrackaboutLocationTid          int32  `bun:"trackabout_location_tid,type:int,nullzero"`
-	RfnavigatorDropLocation        string `bun:"rfnavigator_drop_location,type:varchar(8),nullzero"`
-	RfnavigatorStartUnitNo         int32  `bun:"rfnavigator_start_unit_no,type:int,nullzero"`
+	RfnavigatorUrl                 string    `bun:"rfnavigator_url,type:nvarchar(500),nullzero"`
+	RfnavigatorUserName            string    `bun:"rfnavigator_user_name,type:varchar(255),nullzero"`
+	RfnavigatorPassword            string    `bun:"rfnavigator_password,type:varchar(255),nullzero"`
+	UpdateVelocitySettings         string    `bun:"update_velocity_settings,type:varchar,default:('N')"`
+	TrackaboutLocationTid          int32     `bun:"trackabout_location_tid,type:int,nullzero"`
+	RfnavigatorDropLocation        string    `bun:"rfnavigator_drop_location,type:varchar(8),nullzero"`
+	RfnavigatorStartUnitNo         int32     `bun:"rfnavigator_start_unit_no,type:int,nullzero"`
 }

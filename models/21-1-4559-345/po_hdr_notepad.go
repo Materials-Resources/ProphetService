@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PoHdrNotepad struct {
 	bun.BaseModel    `bun:"table:po_hdr_notepad"`
 	PoNo             float64   `bun:"po_no,type:decimal(19,0)"`

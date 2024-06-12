@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InventoryReturnHdrNotepad struct {
 	bun.BaseModel                `bun:"table:inventory_return_hdr_notepad"`
 	InventoryReturnHdrNotepadUid int32     `bun:"inventory_return_hdr_notepad_uid,type:int,pk"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type InvBinDeletionInvBinHdr struct {
 	bun.BaseModel `bun:"table:inv_bin_deletion_inv_bin_hdr"`
 	InvMastUid    int32  `bun:"inv_mast_uid,type:int"`

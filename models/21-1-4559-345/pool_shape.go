@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PoolShape struct {
 	bun.BaseModel    `bun:"table:pool_shape"`
 	PoolShapeUid     int32     `bun:"pool_shape_uid,type:int,pk,identity"`

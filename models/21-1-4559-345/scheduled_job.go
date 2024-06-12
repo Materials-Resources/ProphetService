@@ -1,12 +1,17 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ScheduledJob struct {
 	bun.BaseModel              `bun:"table:scheduled_job"`
-	CompanyId                  string `bun:"company_id,type:varchar(8),nullzero"`
-	Name                       string `bun:"name,type:varchar(255)"`
-	Description                string `bun:"description,type:varchar(255)"`
-	Type                       string `bun:"type,type:varchar(255)"`
-	JobConfig                  `bun:"job_config,type:nvarchar,nullzero"`
+	CompanyId                  string    `bun:"company_id,type:varchar(8),nullzero"`
+	Name                       string    `bun:"name,type:varchar(255)"`
+	Description                string    `bun:"description,type:varchar(255)"`
+	Type                       string    `bun:"type,type:varchar(255)"`
+	JobConfig                  string    `bun:"job_config,type:nvarchar,nullzero"`
 	StartDate                  time.Time `bun:"start_date,type:datetime"`
 	EndDate                    time.Time `bun:"end_date,type:datetime,nullzero"`
 	ScheduledIntervalInminutes int32     `bun:"scheduled_interval_inminutes,type:int"`
@@ -23,7 +28,7 @@ type ScheduledJob struct {
 	RepeatDays                 string    `bun:"repeat_days,type:char(15),nullzero"`
 	LastRunStatus              string    `bun:"last_run_status,type:varchar(50),nullzero"`
 	ScheduledJobUid            int32     `bun:"scheduled_job_uid,type:int,pk"`
-	SchedulerIdentifier        `bun:"scheduler_identifier,type:uniqueidentifier,nullzero"`
+	SchedulerIdentifier        string    `bun:"scheduler_identifier,type:uniqueidentifier,nullzero"`
 	LastPingDate               time.Time `bun:"last_ping_date,type:datetime,nullzero"`
 	FirstRunDate               time.Time `bun:"first_run_date,type:datetime,nullzero"`
 	RecurrenceType             int32     `bun:"recurrence_type,type:int,default:((0))"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ItemMergeAudit struct {
 	bun.BaseModel     `bun:"table:item_merge_audit"`
 	ItemMergeAuditUid int32     `bun:"item_merge_audit_uid,type:int,pk,identity"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type Pbcatvld struct {
 	bun.BaseModel `bun:"table:pbcatvld"`
 	PbvName       string `bun:"pbv_name,type:varchar(30),pk"`

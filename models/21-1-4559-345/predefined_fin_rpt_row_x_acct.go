@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PredefinedFinRptRowXAcct struct {
 	bun.BaseModel           `bun:"table:predefined_fin_rpt_row_x_acct"`
 	PredefFinRptRowXAcctUid int32     `bun:"predef_fin_rpt_row_x_acct_uid,type:int,pk,identity"`

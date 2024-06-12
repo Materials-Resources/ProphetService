@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PcSeqctl struct {
 	bun.BaseModel   `bun:"table:pc_seqctl"`
 	SeqId           string    `bun:"seq_id,type:varchar(18),pk"`

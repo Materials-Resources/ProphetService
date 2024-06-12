@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InventorySupplierXLoc struct {
 	bun.BaseModel              `bun:"table:inventory_supplier_x_loc"`
 	InventorySupplierXLocUid   int32     `bun:"inventory_supplier_x_loc_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DcNavDrillXRoles struct {
 	bun.BaseModel       `bun:"table:dc_nav_drill_x_roles"`
 	DcNavDrillXRolesUid int32     `bun:"dc_nav_drill_x_roles_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CreditcardValidation struct {
 	bun.BaseModel           `bun:"table:creditcard_validation"`
 	CreditcardValidationUid int32     `bun:"creditcard_validation_uid,type:int,pk,identity"`

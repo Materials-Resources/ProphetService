@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ImportTempTableXFile struct {
 	bun.BaseModel             `bun:"table:import_temp_table_x_file"`
 	ImportTempTableXFileUid   int32     `bun:"import_temp_table_x_file_uid,type:int,pk"`

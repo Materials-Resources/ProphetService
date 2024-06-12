@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DbmailInformation struct {
 	bun.BaseModel            `bun:"table:dbmail_information"`
 	DbmailInformationUid     int32     `bun:"dbmail_information_uid,type:int,pk,identity"`

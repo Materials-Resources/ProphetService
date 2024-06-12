@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DatasourceXUsers struct {
 	bun.BaseModel       `bun:"table:datasource_x_users"`
 	DatasourceXUsersUid int32     `bun:"datasource_x_users_uid,type:int,pk,identity"`

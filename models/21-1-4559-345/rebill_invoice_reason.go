@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type RebillInvoiceReason struct {
 	bun.BaseModel          `bun:"table:rebill_invoice_reason"`
 	RebillInvoiceReasonUid int32     `bun:"rebill_invoice_reason_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ReportKeyword struct {
 	bun.BaseModel    `bun:"table:report_keyword"`
 	ReportKeywordUid int32     `bun:"report_keyword_uid,type:int,pk,identity"`

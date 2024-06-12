@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PortalAssignment struct {
 	bun.BaseModel       `bun:"table:portal_assignment"`
 	PortalAssignmentUid int32     `bun:"portal_assignment_uid,type:int,pk"`

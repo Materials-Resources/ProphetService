@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type Area struct {
 	bun.BaseModel              `bun:"table:area"`
 	Area                       string `bun:"area,type:varchar(40),pk"`

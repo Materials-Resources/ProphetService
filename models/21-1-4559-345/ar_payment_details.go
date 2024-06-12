@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ArPaymentDetails struct {
 	bun.BaseModel               `bun:"table:ar_payment_details"`
 	PaymentNumber               float64   `bun:"payment_number,type:decimal(19,0),pk"`

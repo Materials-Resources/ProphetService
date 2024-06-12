@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeLinePo struct {
 	bun.BaseModel           `bun:"table:oe_line_po"`
 	OrderNumber             string    `bun:"order_number,type:varchar(8),pk"`

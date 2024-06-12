@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TempCounterTable struct {
 	bun.BaseModel  `bun:"table:temp_counter_table"`
 	Uid            int32     `bun:"uid,type:int,identity"`

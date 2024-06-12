@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type MarketingCampaignDetail struct {
 	bun.BaseModel              `bun:"table:marketing_campaign_detail"`
 	MarketingCampaignDetailUid int32     `bun:"marketing_campaign_detail_uid,type:int,pk,identity"`

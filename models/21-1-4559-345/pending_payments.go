@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PendingPayments struct {
 	bun.BaseModel          `bun:"table:pending_payments"`
 	PendingPaymentUid      int32     `bun:"pending_payment_uid,type:int,pk"`

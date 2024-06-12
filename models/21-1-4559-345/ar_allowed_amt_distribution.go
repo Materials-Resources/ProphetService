@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ArAllowedAmtDistribution struct {
 	bun.BaseModel       `bun:"table:ar_allowed_amt_distribution"`
 	ArAllowedAmtDistUid int32     `bun:"ar_allowed_amt_dist_uid,type:int,pk"`

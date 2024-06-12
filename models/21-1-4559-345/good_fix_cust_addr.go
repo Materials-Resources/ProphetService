@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type GoodFixCustAddr struct {
 	bun.BaseModel `bun:"table:good_fix_cust_addr"`
 	Col001        string `bun:"Col001,type:varchar(255),nullzero"`

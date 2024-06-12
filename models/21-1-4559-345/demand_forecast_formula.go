@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DemandForecastFormula struct {
 	bun.BaseModel            `bun:"table:demand_forecast_formula"`
 	DemandForecastFormulaUid int32     `bun:"demand_forecast_formula_uid,type:int,pk"`

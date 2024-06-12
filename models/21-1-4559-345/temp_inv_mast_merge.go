@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type TempInvMastMerge struct {
 	bun.BaseModel        `bun:"table:temp_inv_mast_merge"`
 	BadItemId            string `bun:"bad_item_id,type:varchar(40),nullzero"`

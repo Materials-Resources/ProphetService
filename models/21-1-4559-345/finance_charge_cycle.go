@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FinanceChargeCycle struct {
 	bun.BaseModel    `bun:"table:finance_charge_cycle"`
 	FcCycleId        string    `bun:"fc_cycle_id,type:char,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AddressHistory struct {
 	bun.BaseModel     `bun:"table:address_history"`
 	AddressHistoryUid int32     `bun:"address_history_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ScheduledImportMaster struct {
 	bun.BaseModel            `bun:"table:scheduled_import_master"`
 	ScheduledImportMasterUid int32     `bun:"scheduled_import_master_uid,type:int,pk"`

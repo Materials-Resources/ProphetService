@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricingTemplateItemDflt struct {
 	bun.BaseModel              `bun:"table:pricing_template_item_dflt"`
 	PricingTemplateItemDfltUid int32     `bun:"pricing_template_item_dflt_uid,type:int,pk,identity"`

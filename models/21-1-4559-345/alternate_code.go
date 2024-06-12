@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AlternateCode struct {
 	bun.BaseModel      `bun:"table:alternate_code"`
 	AlternateCode      string    `bun:"alternate_code,type:varchar(40),pk"`

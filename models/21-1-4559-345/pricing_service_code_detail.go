@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricingServiceCodeDetail struct {
 	bun.BaseModel    `bun:"table:pricing_service_code_detail"`
 	CodeId           float64   `bun:"code_id,type:decimal(19,0),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type VendorPurchaseAcct struct {
 	bun.BaseModel             `bun:"table:vendor_purchase_acct"`
 	CompanyId                 string    `bun:"company_id,type:varchar(8),pk"`

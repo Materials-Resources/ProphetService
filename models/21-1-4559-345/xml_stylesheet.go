@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type XmlStylesheet struct {
 	bun.BaseModel    `bun:"table:xml_stylesheet"`
 	XmlStylesheetUid int32     `bun:"xml_stylesheet_uid,type:int,pk,identity"`

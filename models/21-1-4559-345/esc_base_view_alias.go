@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type EscBaseViewAlias struct {
 	bun.BaseModel       `bun:"table:esc_base_view_alias"`
 	EscBaseViewAliasUid int32     `bun:"esc_base_view_alias_uid,type:int,pk,identity"`

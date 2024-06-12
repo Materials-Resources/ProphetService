@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type WeboeFile struct {
 	bun.BaseModel     `bun:"table:weboe_file"`
 	WeboeFileUid      int32     `bun:"weboe_file_uid,type:int,identity"`
@@ -7,7 +12,7 @@ type WeboeFile struct {
 	WeboeOldFileName  string    `bun:"weboe_old_file_name,type:varchar(255)"`
 	WeboeFileDesc     string    `bun:"weboe_file_desc,type:varchar(255)"`
 	WeboeLastTransfer time.Time `bun:"weboe_last_transfer,type:datetime"`
-	PartialTransfer   `bun:"partial_transfer,type:bit,nullzero"`
-	TransferOrder     int16  `bun:"transfer_order,type:smallint,nullzero"`
-	FileSql           string `bun:"file_sql,type:varchar(8000)"`
+	PartialTransfer   bool      `bun:"partial_transfer,type:bit,nullzero"`
+	TransferOrder     int16     `bun:"transfer_order,type:smallint,nullzero"`
+	FileSql           string    `bun:"file_sql,type:varchar(8000)"`
 }

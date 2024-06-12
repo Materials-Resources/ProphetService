@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FieldChooserArea struct {
 	bun.BaseModel       `bun:"table:field_chooser_area"`
 	FieldChooserAreaUid int32     `bun:"field_chooser_area_uid,type:int,pk,identity"`

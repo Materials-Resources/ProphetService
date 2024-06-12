@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type EccSbAudit struct {
 	bun.BaseModel          `bun:"table:ecc_sb_audit"`
 	EccSbAuditUid          int32  `bun:"ecc_sb_audit_uid,type:int,pk,identity"`

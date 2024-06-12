@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type WebImages struct {
 	bun.BaseModel `bun:"table:web_images"`
 	InvMastUid    int32  `bun:"inv_mast_uid,type:int,pk"`

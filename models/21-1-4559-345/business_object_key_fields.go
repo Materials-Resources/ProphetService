@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type BusinessObjectKeyFields struct {
 	bun.BaseModel              `bun:"table:business_object_key_fields"`
 	BusinessObjectKeyFieldsUid int32     `bun:"business_object_key_fields_uid,type:int,pk,identity"`

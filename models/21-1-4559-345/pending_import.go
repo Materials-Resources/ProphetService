@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PendingImport struct {
 	bun.BaseModel         `bun:"table:pending_import"`
 	PendingImportUid      int32     `bun:"pending_import_uid,type:int,pk"`

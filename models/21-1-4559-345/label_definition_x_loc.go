@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type LabelDefinitionXLoc struct {
 	bun.BaseModel            `bun:"table:label_definition_x_loc"`
 	LabelDefinitionXLocUid   int32     `bun:"label_definition_x_loc_uid,type:int,pk"`

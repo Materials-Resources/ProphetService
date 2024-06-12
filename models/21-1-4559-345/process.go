@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Process struct {
 	bun.BaseModel           `bun:"table:process"`
 	ProcessUid              int32     `bun:"process_uid,type:int,pk"`

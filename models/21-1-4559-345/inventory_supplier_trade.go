@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InventorySupplierTrade struct {
 	bun.BaseModel               `bun:"table:inventory_supplier_trade"`
 	InventorySupplierTradeUid   int32     `bun:"inventory_supplier_trade_uid,type:int,pk,identity"`

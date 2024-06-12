@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SortDragdrop struct {
 	bun.BaseModel       `bun:"table:sort_dragdrop"`
 	SortDragdropUid     int32     `bun:"sort_dragdrop_uid,type:int,pk,identity"`

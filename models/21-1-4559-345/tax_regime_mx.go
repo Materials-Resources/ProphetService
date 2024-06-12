@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TaxRegimeMx struct {
 	bun.BaseModel     `bun:"table:tax_regime_mx"`
 	TaxRegimeMxUid    int32     `bun:"tax_regime_mx_uid,type:int,pk,identity"`

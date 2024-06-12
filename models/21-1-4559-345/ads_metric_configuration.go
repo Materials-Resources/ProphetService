@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AdsMetricConfiguration struct {
 	bun.BaseModel             `bun:"table:ads_metric_configuration"`
 	AdsMetricConfigurationUid int32     `bun:"ads_metric_configuration_uid,type:int,pk,identity"`

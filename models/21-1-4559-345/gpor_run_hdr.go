@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type GporRunHdr struct {
 	bun.BaseModel            `bun:"table:gpor_run_hdr"`
 	GporRunHdrUid            int32     `bun:"gpor_run_hdr_uid,type:int,pk"`

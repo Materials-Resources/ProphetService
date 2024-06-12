@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AlertImplementationQuery struct {
 	bun.BaseModel               `bun:"table:Alert_implementation_query"`
 	AlertImplementationQueryUid int32     `bun:"alert_implementation_query_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type HelpTopic struct {
 	bun.BaseModel    `bun:"table:help_topic"`
 	Context          string    `bun:"context,type:varchar(50),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProcessPoShipmentHdr struct {
 	bun.BaseModel           `bun:"table:process_po_shipment_hdr"`
 	ProcessPoShipmentHdrUid int32     `bun:"process_po_shipment_hdr_uid,type:int,pk,identity"`

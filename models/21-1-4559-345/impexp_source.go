@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ImpexpSource struct {
 	bun.BaseModel    `bun:"table:impexp_source"`
 	ImpexpSourceUid  int32     `bun:"impexp_source_uid,type:int,pk"`

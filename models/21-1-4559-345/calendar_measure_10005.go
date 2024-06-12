@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CalendarMeasure10005 struct {
 	bun.BaseModel       `bun:"table:calendar_measure_10005"`
 	CalendarMeasureUid  int32     `bun:"calendar_measure_uid,type:int,pk"`

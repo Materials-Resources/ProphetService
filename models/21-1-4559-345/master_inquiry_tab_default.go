@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type MasterInquiryTabDefault struct {
 	bun.BaseModel              `bun:"table:master_inquiry_tab_default"`
 	MasterInquiryTabDefaultUid int32     `bun:"master_inquiry_tab_default_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CcPaymentTypeXProcessor struct {
 	bun.BaseModel          `bun:"table:cc_payment_type_x_processor"`
 	CcPaymentXProcessorUid int32     `bun:"cc_payment_x_processor_uid,type:int,pk"`

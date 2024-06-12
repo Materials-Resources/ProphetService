@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ShippingDocumentTemplate struct {
 	bun.BaseModel               `bun:"table:shipping_document_template"`
 	ShippingDocumentTemplateUid int32     `bun:"shipping_document_template_uid,type:int,pk,identity"`

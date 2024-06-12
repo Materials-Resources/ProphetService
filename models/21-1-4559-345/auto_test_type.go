@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AutoTestType struct {
 	bun.BaseModel    `bun:"table:auto_test_type"`
 	AutoTestTypeUid  int32     `bun:"auto_test_type_uid,type:int,pk,identity"`

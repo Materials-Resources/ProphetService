@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvPeriodUsage struct {
 	bun.BaseModel               `bun:"table:inv_period_usage"`
 	LocationId                  float64   `bun:"location_id,type:decimal(19,0)"`

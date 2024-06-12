@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DynachangeConfig struct {
 	bun.BaseModel    `bun:"table:dynachange_config"`
 	ConfigurationId  int32     `bun:"configuration_id,type:int,pk"`

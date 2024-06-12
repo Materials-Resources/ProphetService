@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ReportParm struct {
 	bun.BaseModel    `bun:"table:report_parm"`
 	ReportParmUid    int32     `bun:"report_parm_uid,type:int,pk,identity"`

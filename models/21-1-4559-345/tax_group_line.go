@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TaxGroupLine struct {
 	bun.BaseModel    `bun:"table:tax_group_line"`
 	TaxGroupId       string    `bun:"tax_group_id,type:varchar(10),pk"`

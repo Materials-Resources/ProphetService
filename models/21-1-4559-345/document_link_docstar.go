@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DocumentLinkDocstar struct {
 	bun.BaseModel          `bun:"table:document_link_docstar"`
 	DocumentLinkDocstarUid int32     `bun:"document_link_docstar_uid,type:int,pk,identity"`

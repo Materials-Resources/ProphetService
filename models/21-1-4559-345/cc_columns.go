@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type CcColumns struct {
 	bun.BaseModel     `bun:"table:cc_columns"`
 	ColumnUid         int32  `bun:"column_uid,type:int,pk"`

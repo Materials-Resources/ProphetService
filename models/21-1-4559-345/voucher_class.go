@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type VoucherClass struct {
 	bun.BaseModel           `bun:"table:voucher_class"`
 	VoucherClass            string    `bun:"voucher_class,type:varchar(8),pk"`

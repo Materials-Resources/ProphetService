@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Gl struct {
 	bun.BaseModel              `bun:"table:gl"`
 	GlUid                      int32     `bun:"gl_uid,type:int,pk"`

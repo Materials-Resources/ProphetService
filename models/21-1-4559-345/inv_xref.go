@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvXref struct {
 	bun.BaseModel             `bun:"table:inv_xref"`
 	CompanyId                 string    `bun:"company_id,type:varchar(8),pk"`

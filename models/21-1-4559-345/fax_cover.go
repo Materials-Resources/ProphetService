@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FaxCover struct {
 	bun.BaseModel    `bun:"table:fax_cover"`
 	FaxCoverUid      int32     `bun:"fax_cover_uid,type:int,pk,identity"`

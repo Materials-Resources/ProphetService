@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type EmailLog struct {
 	bun.BaseModel          `bun:"table:email_log"`
 	EmailLogUid            int32     `bun:"email_log_uid,type:int,pk,identity"`

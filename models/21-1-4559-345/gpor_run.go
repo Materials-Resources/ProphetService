@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type GporRun struct {
 	bun.BaseModel                 `bun:"table:gpor_run"`
 	GporRunUid                    int32     `bun:"gpor_run_uid,type:int,pk,identity"`

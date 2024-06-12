@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ItemUom struct {
 	bun.BaseModel    `bun:"table:item_uom"`
 	UnitOfMeasure    string    `bun:"unit_of_measure,type:varchar(8)"`

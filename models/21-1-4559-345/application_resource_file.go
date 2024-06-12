@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ApplicationResourceFile struct {
 	bun.BaseModel              `bun:"table:application_resource_file"`
 	ApplicationResourceFileUid int32     `bun:"application_resource_file_uid,type:int,pk,identity"`

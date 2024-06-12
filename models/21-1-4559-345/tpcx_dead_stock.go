@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TpcxDeadStock struct {
 	bun.BaseModel         `bun:"table:tpcx_dead_stock"`
 	TpcxDeadStockUid      int32     `bun:"tpcx_dead_stock_uid,type:int,pk"`

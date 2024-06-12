@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PortalXPortalElement struct {
 	bun.BaseModel           `bun:"table:portal_x_portal_element"`
 	PortalXPortalElementUid int32     `bun:"portal_x_portal_element_uid,type:int,pk,identity"`

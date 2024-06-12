@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CopyTableDataXCounter struct {
 	bun.BaseModel            `bun:"table:copy_table_data_x_counter"`
 	CopyTableDataXCounterUid int32     `bun:"copy_table_data_x_counter_uid,type:int,pk,identity"`

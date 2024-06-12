@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type WeboeCode struct {
 	bun.BaseModel `bun:"table:weboe_code"`
 	WeboeCodeUid  int32  `bun:"weboe_code_uid,type:int"`

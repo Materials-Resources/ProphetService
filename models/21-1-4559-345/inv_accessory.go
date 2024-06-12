@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvAccessory struct {
 	bun.BaseModel         `bun:"table:inv_accessory"`
 	InvAccessoryUid       int32     `bun:"inv_accessory_uid,type:int,pk"`

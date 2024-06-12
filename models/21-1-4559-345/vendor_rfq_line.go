@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type VendorRfqLine struct {
 	bun.BaseModel           `bun:"table:vendor_rfq_line"`
 	VendorRfqLineUid        int32     `bun:"vendor_rfq_line_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ItemCategory struct {
 	bun.BaseModel            `bun:"table:item_category"`
 	ItemCategoryUid          int32     `bun:"item_category_uid,type:int,pk"`

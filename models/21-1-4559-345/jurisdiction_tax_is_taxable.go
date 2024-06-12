@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type JurisdictionTaxIsTaxable struct {
 	bun.BaseModel        `bun:"table:jurisdiction_tax_is_taxable"`
 	JurisdictionId       string    `bun:"jurisdiction_id,type:varchar(10),pk"`

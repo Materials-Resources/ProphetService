@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FedexSmartpostHub struct {
 	bun.BaseModel         `bun:"table:fedex_smartpost_hub"`
 	FedexSmartpostHubUid  int32     `bun:"fedex_smartpost_hub_uid,type:int,pk,identity"`

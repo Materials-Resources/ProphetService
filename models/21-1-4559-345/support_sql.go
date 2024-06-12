@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type SupportSql struct {
 	bun.BaseModel        `bun:"table:support_sql"`
 	SupportSqlUid        int32  `bun:"support_sql_uid,type:int,identity"`

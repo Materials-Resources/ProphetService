@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Class struct {
 	bun.BaseModel           `bun:"table:class"`
 	ClassType               string    `bun:"class_type,type:varchar(2),pk"`

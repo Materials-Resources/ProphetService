@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CfdiUsageMx struct {
 	bun.BaseModel     `bun:"table:cfdi_usage_mx"`
 	CfdiUsageMxUid    int32     `bun:"cfdi_usage_mx_uid,type:int,pk,identity"`

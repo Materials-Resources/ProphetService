@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FcDataobjectTable struct {
 	bun.BaseModel        `bun:"table:fc_dataobject_table"`
 	FcDataobjectTableUid int32     `bun:"fc_dataobject_table_uid,type:int,pk"`

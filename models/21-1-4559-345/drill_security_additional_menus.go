@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DrillSecurityAdditionalMenus struct {
 	bun.BaseModel        `bun:"table:drill_security_additional_menus"`
 	DsAdditionalMenusUid int32     `bun:"ds_additional_menus_uid,type:int,identity"`

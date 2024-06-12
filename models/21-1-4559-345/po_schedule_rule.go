@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PoScheduleRule struct {
 	bun.BaseModel    `bun:"table:po_schedule_rule"`
 	PoHdrUid         int32     `bun:"po_hdr_uid,type:int,pk"`

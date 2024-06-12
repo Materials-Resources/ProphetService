@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type InvReclassificationDetail struct {
 	bun.BaseModel              `bun:"table:inv_reclassification_detail"`
 	InvReclassDetailUid        int32   `bun:"inv_reclass_detail_uid,type:int,pk,identity"`

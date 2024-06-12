@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type StageXProcess struct {
 	bun.BaseModel         `bun:"table:stage_x_process"`
 	StageXProcessUid      int32     `bun:"stage_x_process_uid,type:int,pk"`

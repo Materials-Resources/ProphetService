@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PaymentAccount struct {
 	bun.BaseModel        `bun:"table:payment_account"`
 	PaymentAccountUid    int32     `bun:"payment_account_uid,type:int,pk"`

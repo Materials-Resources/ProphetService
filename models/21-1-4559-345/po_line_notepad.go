@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PoLineNotepad struct {
 	bun.BaseModel    `bun:"table:po_line_notepad"`
 	NoteId           float64   `bun:"note_id,type:decimal(19,0),pk"`

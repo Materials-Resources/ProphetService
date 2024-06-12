@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InventoryReceiptsLine struct {
 	bun.BaseModel             `bun:"table:inventory_receipts_line"`
 	ReceiptNumber             float64   `bun:"receipt_number,type:decimal(19,0),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Salutation struct {
 	bun.BaseModel    `bun:"table:salutation"`
 	Salutation       string    `bun:"salutation,type:varchar(4),pk"`

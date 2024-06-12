@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SystemSetting struct {
 	bun.BaseModel    `bun:"table:system_setting"`
 	SystemSettingUid int32     `bun:"system_setting_uid,type:int,pk"`

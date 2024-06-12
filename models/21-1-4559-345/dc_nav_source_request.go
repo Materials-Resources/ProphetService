@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DcNavSourceRequest struct {
 	bun.BaseModel         `bun:"table:dc_nav_source_request"`
 	DcNavSourceRequestUid int32     `bun:"dc_nav_source_request_uid,type:int,pk,identity"`

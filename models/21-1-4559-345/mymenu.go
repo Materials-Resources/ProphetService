@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Mymenu struct {
 	bun.BaseModel    `bun:"table:mymenu"`
 	MymenuUid        int32     `bun:"mymenu_uid,type:int,pk"`

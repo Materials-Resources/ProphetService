@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Stage struct {
 	bun.BaseModel         `bun:"table:stage"`
 	StageUid              int32     `bun:"stage_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DocumentTypes struct {
 	bun.BaseModel           `bun:"table:document_types"`
 	DocumentTypeId          string    `bun:"document_type_id,type:varchar(2),pk"`

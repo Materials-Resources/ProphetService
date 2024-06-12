@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvAdjHdr struct {
 	bun.BaseModel         `bun:"table:inv_adj_hdr"`
 	AdjustmentNumber      float64   `bun:"adjustment_number,type:decimal(19,0),pk"`

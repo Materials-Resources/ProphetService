@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeLineSchedule struct {
 	bun.BaseModel           `bun:"table:oe_line_schedule"`
 	OrderNo                 string    `bun:"order_no,type:varchar(8)"`

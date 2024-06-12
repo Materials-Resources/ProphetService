@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ScheduledJobFeatureType struct {
 	bun.BaseModel               `bun:"table:scheduled_job_feature_type"`
 	ScheduledJobFeatureTypeUid  int32     `bun:"scheduled_job_feature_type_uid,type:int,pk,identity"`

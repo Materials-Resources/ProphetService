@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FcTableJoin struct {
 	bun.BaseModel    `bun:"table:fc_table_join"`
 	FcTableJoinUid   int32     `bun:"fc_table_join_uid,type:int,identity"`

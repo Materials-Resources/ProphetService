@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CompanyWorkDay struct {
 	bun.BaseModel     `bun:"table:company_work_day"`
 	CompanyWorkDayUid int32     `bun:"company_work_day_uid,type:int,pk"`

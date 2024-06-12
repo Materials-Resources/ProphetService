@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DiscountGroup struct {
 	bun.BaseModel            `bun:"table:discount_group"`
 	DiscountGroupId          string    `bun:"discount_group_id,type:varchar(8),pk"`

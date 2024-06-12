@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SystemParameters struct {
 	bun.BaseModel               `bun:"table:system_parameters"`
 	SecurityActive              string    `bun:"security_active,type:char"`
@@ -63,35 +68,35 @@ type SystemParameters struct {
 	KeystrokeForNewLineItem     string    `bun:"keystroke_for_new_line_item,type:varchar(10),nullzero"`
 	MailModuleInstalled         string    `bun:"mail_module_installed,type:char,nullzero"`
 	SecurityMethod              string    `bun:"security_method,type:char"`
-	SystemParameterUid          `bun:"system_parameter_uid,type:numeric,pk"`
-	OePrintQty                  float64 `bun:"oe_print_qty,type:decimal(5,0)"`
-	PickTicketPrintQty          float64 `bun:"pick_ticket_print_qty,type:decimal(5,0)"`
-	InvoicePrintQty             float64 `bun:"invoice_print_qty,type:decimal(5,0)"`
-	PoPrintQty                  float64 `bun:"po_print_qty,type:decimal(5,0)"`
-	TransferPrintQty            float64 `bun:"transfer_print_qty,type:decimal(5,0)"`
-	StatementPrintQty           float64 `bun:"statement_print_qty,type:decimal(5,0)"`
-	QuotePrintQty               float64 `bun:"quote_print_qty,type:decimal(5,0)"`
-	CrystalDirectory            string  `bun:"crystal_directory,type:varchar(255),nullzero"`
-	EnableFax                   string  `bun:"enable_fax,type:char,default:('N')"`
-	FaxFilePath                 string  `bun:"fax_file_path,type:varchar(50),nullzero"`
-	VoucherEntryApprovals       string  `bun:"voucher_entry_approvals,type:char,default:('N')"`
-	CrDrMemoEntryApprovals      string  `bun:"cr_dr_memo_entry_approvals,type:char,default:('N')"`
-	InvoiceEntryApprovals       string  `bun:"invoice_entry_approvals,type:char,default:('N')"`
-	MiscCashReceiptsApprovals   string  `bun:"misc_cash_receipts_approvals,type:char,default:('N')"`
-	CashReceiptsApprovals       string  `bun:"cash_receipts_approvals,type:char,default:('N')"`
-	JournalEntriesApprovals     string  `bun:"journal_entries_approvals,type:char,default:('N')"`
-	InvTransferRecApprovals     string  `bun:"inv_transfer_rec_approvals,type:char,default:('N')"`
-	InvAdjApprovals             string  `bun:"inv_adj_approvals,type:char,default:('N')"`
-	TransferEntryApprovals      string  `bun:"transfer_entry_approvals,type:char,default:('N')"`
-	PhysicalCountApprovals      string  `bun:"physical_count_approvals,type:char,default:('N')"`
-	OrderEntryApprovals         string  `bun:"order_entry_approvals,type:char,default:('N')"`
-	RmaEntryApprovals           string  `bun:"rma_entry_approvals,type:char,default:('N')"`
-	ProdOrderEntryApprovals     string  `bun:"prod_order_entry_approvals,type:char,default:('N')"`
-	ProcessProdOrderApprovals   string  `bun:"process_prod_order_approvals,type:char,default:('N')"`
-	PurchaseOrderEntryApprovals string  `bun:"purchase_order_entry_approvals,type:char,default:('N')"`
-	ConvertPoVoucherApprovals   string  `bun:"convert_po_voucher_approvals,type:char,default:('N')"`
-	RepetitiveJrnEntryApprovals string  `bun:"repetitive_jrn_entry_approvals,type:char,default:('N')"`
-	ConfigurationId             int32   `bun:"configuration_id,type:int,default:((-1))"`
-	MessageLogFilePath          string  `bun:"message_log_file_path,type:varchar(255),default:('c:\\msglog.txt')"`
-	ScriptPath                  string  `bun:"script_path,type:varchar(255),default:(' ')"`
+	SystemParameterUid          string    `bun:"system_parameter_uid,type:numeric,pk"`
+	OePrintQty                  float64   `bun:"oe_print_qty,type:decimal(5,0)"`
+	PickTicketPrintQty          float64   `bun:"pick_ticket_print_qty,type:decimal(5,0)"`
+	InvoicePrintQty             float64   `bun:"invoice_print_qty,type:decimal(5,0)"`
+	PoPrintQty                  float64   `bun:"po_print_qty,type:decimal(5,0)"`
+	TransferPrintQty            float64   `bun:"transfer_print_qty,type:decimal(5,0)"`
+	StatementPrintQty           float64   `bun:"statement_print_qty,type:decimal(5,0)"`
+	QuotePrintQty               float64   `bun:"quote_print_qty,type:decimal(5,0)"`
+	CrystalDirectory            string    `bun:"crystal_directory,type:varchar(255),nullzero"`
+	EnableFax                   string    `bun:"enable_fax,type:char,default:('N')"`
+	FaxFilePath                 string    `bun:"fax_file_path,type:varchar(50),nullzero"`
+	VoucherEntryApprovals       string    `bun:"voucher_entry_approvals,type:char,default:('N')"`
+	CrDrMemoEntryApprovals      string    `bun:"cr_dr_memo_entry_approvals,type:char,default:('N')"`
+	InvoiceEntryApprovals       string    `bun:"invoice_entry_approvals,type:char,default:('N')"`
+	MiscCashReceiptsApprovals   string    `bun:"misc_cash_receipts_approvals,type:char,default:('N')"`
+	CashReceiptsApprovals       string    `bun:"cash_receipts_approvals,type:char,default:('N')"`
+	JournalEntriesApprovals     string    `bun:"journal_entries_approvals,type:char,default:('N')"`
+	InvTransferRecApprovals     string    `bun:"inv_transfer_rec_approvals,type:char,default:('N')"`
+	InvAdjApprovals             string    `bun:"inv_adj_approvals,type:char,default:('N')"`
+	TransferEntryApprovals      string    `bun:"transfer_entry_approvals,type:char,default:('N')"`
+	PhysicalCountApprovals      string    `bun:"physical_count_approvals,type:char,default:('N')"`
+	OrderEntryApprovals         string    `bun:"order_entry_approvals,type:char,default:('N')"`
+	RmaEntryApprovals           string    `bun:"rma_entry_approvals,type:char,default:('N')"`
+	ProdOrderEntryApprovals     string    `bun:"prod_order_entry_approvals,type:char,default:('N')"`
+	ProcessProdOrderApprovals   string    `bun:"process_prod_order_approvals,type:char,default:('N')"`
+	PurchaseOrderEntryApprovals string    `bun:"purchase_order_entry_approvals,type:char,default:('N')"`
+	ConvertPoVoucherApprovals   string    `bun:"convert_po_voucher_approvals,type:char,default:('N')"`
+	RepetitiveJrnEntryApprovals string    `bun:"repetitive_jrn_entry_approvals,type:char,default:('N')"`
+	ConfigurationId             int32     `bun:"configuration_id,type:int,default:((-1))"`
+	MessageLogFilePath          string    `bun:"message_log_file_path,type:varchar(255),default:('c:\\msglog.txt')"`
+	ScriptPath                  string    `bun:"script_path,type:varchar(255),default:(' ')"`
 }

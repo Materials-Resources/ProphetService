@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricePageSecondaryRebate struct {
 	bun.BaseModel               `bun:"table:price_page_secondary_rebate"`
 	PricePageSecondaryRebateUid int32     `bun:"price_page_secondary_rebate_uid,type:int,pk"`

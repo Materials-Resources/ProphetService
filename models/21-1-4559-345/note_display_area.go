@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type NoteDisplayArea struct {
 	bun.BaseModel       `bun:"table:note_display_area"`
 	NoteDisplayAreasUid int32     `bun:"note_display_areas_uid,type:int,pk,identity"`

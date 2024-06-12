@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustDefaults struct {
 	bun.BaseModel              `bun:"table:cust_defaults"`
 	ArAccountNo                string    `bun:"ar_account_no,type:varchar(32)"`

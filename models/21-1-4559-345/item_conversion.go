@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ItemConversion struct {
 	bun.BaseModel          `bun:"table:item_conversion"`
 	FromUom                string    `bun:"from_uom,type:varchar(8),pk"`

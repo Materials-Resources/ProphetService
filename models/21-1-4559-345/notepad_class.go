@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type NotepadClass struct {
 	bun.BaseModel    `bun:"table:notepad_class"`
 	NotepadClassId   string    `bun:"notepad_class_id,type:varchar(8),pk"`

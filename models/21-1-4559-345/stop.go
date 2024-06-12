@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Stop struct {
 	bun.BaseModel      `bun:"table:stop"`
 	StopUid            int32     `bun:"stop_uid,type:int,pk"`

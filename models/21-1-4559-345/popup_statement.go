@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PopupStatement struct {
 	bun.BaseModel           `bun:"table:popup_statement"`
 	PopupStatementUid       int32     `bun:"popup_statement_uid,type:int,pk,identity"`
@@ -20,5 +25,5 @@ type PopupStatement struct {
 	PopupStatementUidParent int32     `bun:"popup_statement_uid_parent,type:int,nullzero"`
 	OverrideOrderBy         string    `bun:"override_order_by,type:char(3),nullzero"`
 	Option                  string    `bun:"option,type:varchar,default:(NULL)"`
-	OverrideOption          `bun:"override_option,type:bit,default:((0))"`
+	OverrideOption          bool      `bun:"override_option,type:bit,default:((0))"`
 }

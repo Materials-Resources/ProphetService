@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ReversePaymentLine struct {
 	bun.BaseModel         `bun:"table:reverse_payment_line"`
 	ReversePaymentLineUid int32     `bun:"reverse_payment_line_uid,type:int,pk"`

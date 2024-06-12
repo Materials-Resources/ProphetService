@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type PcVersion struct {
 	bun.BaseModel  `bun:"table:pc_version"`
 	ProductCode    string `bun:"product_code,type:varchar(10),pk"`

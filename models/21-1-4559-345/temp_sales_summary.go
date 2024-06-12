@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TempSalesSummary struct {
 	bun.BaseModel         `bun:"table:temp_sales_summary"`
 	TolsUid               int32     `bun:"tols_uid,type:int,identity"`
@@ -15,5 +20,5 @@ type TempSalesSummary struct {
 	SummaryOtherCost      float64   `bun:"summary_other_cost,type:decimal(19,4)"`
 	OrderDate             time.Time `bun:"order_date,type:datetime"`
 	Processed             string    `bun:"processed,type:char"`
-	Guid                  `bun:"guid,type:uniqueidentifier,nullzero"`
+	Guid                  string    `bun:"guid,type:uniqueidentifier,nullzero"`
 }

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type RibbonToolXRibbonTabGroup struct {
 	bun.BaseModel                `bun:"table:ribbon_tool_x_ribbon_tab_group"`
 	RibbonToolXRibbonTabGroupUid int32     `bun:"ribbon_tool_x_ribbon_tab_group_uid,type:int,pk,identity"`
@@ -10,6 +15,6 @@ type RibbonToolXRibbonTabGroup struct {
 	CreatedBy                    string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	DateLastModified             time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy             string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
-	EnabledFlag                  `bun:"enabled_flag,type:bit,default:((1))"`
-	EnabledForVersionCd          int32 `bun:"enabled_for_version_cd,type:int,default:((1423))"`
+	EnabledFlag                  bool      `bun:"enabled_flag,type:bit,default:((1))"`
+	EnabledForVersionCd          int32     `bun:"enabled_for_version_cd,type:int,default:((1423))"`
 }

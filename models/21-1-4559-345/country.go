@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Country struct {
 	bun.BaseModel    `bun:"table:country"`
 	CountryUid       int32     `bun:"country_uid,type:int,pk"`

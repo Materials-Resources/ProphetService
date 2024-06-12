@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvAdjLine struct {
 	bun.BaseModel          `bun:"table:inv_adj_line"`
 	AdjustmentNumber       float64   `bun:"adjustment_number,type:decimal(19,0),pk"`

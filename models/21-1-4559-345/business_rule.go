@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type BusinessRule struct {
 	bun.BaseModel              `bun:"table:business_rule"`
 	BusinessRuleUid            int32     `bun:"business_rule_uid,type:int,pk,identity"`

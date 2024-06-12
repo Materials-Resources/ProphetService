@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Preference struct {
 	bun.BaseModel    `bun:"table:preference"`
 	PreferenceUid    int32     `bun:"preference_uid,type:int,pk,identity"`

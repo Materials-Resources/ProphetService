@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProdOrderSystemParameters struct {
 	bun.BaseModel             `bun:"table:prod_order_system_parameters"`
 	AllowMultipleAssemblies   string    `bun:"allow_multiple_assemblies,type:char"`

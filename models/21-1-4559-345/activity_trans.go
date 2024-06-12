@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ActivityTrans struct {
 	bun.BaseModel         `bun:"table:activity_trans"`
 	ActivityTransNo       string    `bun:"activity_trans_no,type:varchar(10),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CreditStatus struct {
 	bun.BaseModel        `bun:"table:credit_status"`
 	CreditStatusId       string    `bun:"credit_status_id,type:varchar(8)"`

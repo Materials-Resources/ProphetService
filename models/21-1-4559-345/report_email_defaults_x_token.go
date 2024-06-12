@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ReportEmailDefaultsXToken struct {
 	bun.BaseModel                `bun:"table:report_email_defaults_x_token"`
 	ReportEmailDefaultsXTokenUid int32     `bun:"report_email_defaults_x_token_uid,type:int,pk,identity"`

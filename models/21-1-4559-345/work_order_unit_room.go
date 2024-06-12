@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type WorkOrderUnitRoom struct {
 	bun.BaseModel    `bun:"table:work_order_unit_room"`
 	WorkOrderRoomUid int32     `bun:"work_order_room_uid,type:int,pk"`

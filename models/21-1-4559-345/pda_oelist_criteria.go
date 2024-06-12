@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PdaOelistCriteria struct {
 	bun.BaseModel         `bun:"table:pda_oelist_criteria"`
 	PdaOelistCriteriaUid  int32     `bun:"pda_oelist_criteria_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type BinType struct {
 	bun.BaseModel    `bun:"table:bin_type"`
 	BinTypeUid       int32     `bun:"bin_type_uid,type:int,pk"`

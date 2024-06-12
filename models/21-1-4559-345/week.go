@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type Week struct {
 	bun.BaseModel `bun:"table:week"`
 	WeekUid       int32 `bun:"week_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type QuoteLine struct {
 	bun.BaseModel    `bun:"table:quote_line"`
 	QuoteLineUid     int32     `bun:"quote_line_uid,type:int,pk"`

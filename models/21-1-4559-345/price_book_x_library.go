@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PriceBookXLibrary struct {
 	bun.BaseModel        `bun:"table:price_book_x_library"`
 	PriceBookXLibraryUid int32     `bun:"price_book_x_library_uid,type:int,pk"`

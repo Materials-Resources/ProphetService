@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FreightquoteClass struct {
 	bun.BaseModel        `bun:"table:freightquote_class"`
 	FreightquoteClassUid int32     `bun:"freightquote_class_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Token struct {
 	bun.BaseModel    `bun:"table:token"`
 	TokenUid         int32     `bun:"token_uid,type:int,pk"`

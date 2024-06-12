@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type JurisdictionAcct struct {
 	bun.BaseModel    `bun:"table:jurisdiction_acct"`
 	CompanyNo        string    `bun:"company_no,type:varchar(8),pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeLinePanel struct {
 	bun.BaseModel      `bun:"table:oe_line_panel"`
 	OeLinePanelUid     int32     `bun:"oe_line_panel_uid,type:int,pk,identity"`

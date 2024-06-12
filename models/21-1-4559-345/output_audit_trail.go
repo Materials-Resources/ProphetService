@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OutputAuditTrail struct {
 	bun.BaseModel       `bun:"table:output_audit_trail"`
 	OutputAuditTrailUid int32     `bun:"output_audit_trail_uid,type:int,pk,identity"`

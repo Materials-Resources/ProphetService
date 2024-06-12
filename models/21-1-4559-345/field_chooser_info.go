@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FieldChooserInfo struct {
 	bun.BaseModel         `bun:"table:field_chooser_info"`
 	FieldChooserInfoUid   int32     `bun:"field_chooser_info_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type UserDefinedColumn struct {
 	bun.BaseModel        `bun:"table:user_defined_column"`
 	UserDefinedColumnUid int32     `bun:"user_defined_column_uid,type:int,pk,identity"`

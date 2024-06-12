@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CarrierPackageType struct {
 	bun.BaseModel          `bun:"table:carrier_package_type"`
 	CarrierPackageTypeUid  int32     `bun:"carrier_package_type_uid,type:int,pk,identity"`

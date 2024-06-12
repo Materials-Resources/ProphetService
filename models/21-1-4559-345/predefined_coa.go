@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PredefinedCoa struct {
 	bun.BaseModel      `bun:"table:predefined_coa"`
 	PredefinedCoaUid   int32     `bun:"predefined_coa_uid,type:int,pk,identity"`

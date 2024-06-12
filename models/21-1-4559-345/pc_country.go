@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type PcCountry struct {
 	bun.BaseModel    `bun:"table:pc_country"`
 	CountrySkey      int32  `bun:"country_skey,type:int,pk"`

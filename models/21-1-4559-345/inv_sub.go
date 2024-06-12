@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvSub struct {
 	bun.BaseModel    `bun:"table:inv_sub"`
 	InvMastUid       int32     `bun:"inv_mast_uid,type:int,pk"`

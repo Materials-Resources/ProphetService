@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeContactsCustomer struct {
 	bun.BaseModel            `bun:"table:oe_contacts_customer"`
 	CompanyId                string    `bun:"company_id,type:varchar(8),pk"`

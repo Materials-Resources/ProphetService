@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ImportSuspenseFkerror struct {
 	bun.BaseModel            `bun:"table:import_suspense_fkerror"`
 	ImportSuspenseFkerrorUid int32     `bun:"import_suspense_fkerror_uid,type:int,pk"`

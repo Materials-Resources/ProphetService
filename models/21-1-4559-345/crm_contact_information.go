@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CrmContactInformation struct {
 	bun.BaseModel            `bun:"table:crm_contact_information"`
 	CrmContactInformationUid int32     `bun:"crm_contact_information_uid,type:int,pk,identity"`

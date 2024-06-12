@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AverageInventoryValue struct {
 	bun.BaseModel            `bun:"table:average_inventory_value"`
 	AverageInventoryValueUid int32     `bun:"average_inventory_value_uid,type:int,pk,identity"`

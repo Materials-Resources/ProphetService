@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type WzdTypeP21 struct {
 	bun.BaseModel `bun:"table:wzd_type_p21"`
 	WizardTypeNo  int16  `bun:"wizard_type_no,type:smallint,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustPartNoGroupHdr struct {
 	bun.BaseModel         `bun:"table:cust_part_no_group_hdr"`
 	CustPartNoGroupHdrUid int32     `bun:"cust_part_no_group_hdr_uid,type:int,pk"`

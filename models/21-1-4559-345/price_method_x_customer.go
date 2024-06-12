@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type PriceMethodXCustomer struct {
 	bun.BaseModel           `bun:"table:price_method_x_customer"`
 	PriceMethodXCustomerUid int64  `bun:"price_method_x_customer_uid,type:bigint,identity"`

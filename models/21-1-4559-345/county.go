@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type County struct {
 	bun.BaseModel    `bun:"table:county"`
 	CountyUid        int32     `bun:"county_uid,type:int,pk"`

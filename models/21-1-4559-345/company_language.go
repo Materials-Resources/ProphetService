@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CompanyLanguage struct {
 	bun.BaseModel      `bun:"table:company_language"`
 	CompanyLanguageUid int32     `bun:"company_language_uid,type:int,pk,identity"`

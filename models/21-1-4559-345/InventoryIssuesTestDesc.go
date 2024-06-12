@@ -1,26 +1,28 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type Inventoryissuestestdesc struct {
 	bun.BaseModel                     `bun:"table:InventoryIssuesTestDesc"`
 	Testuid                           int32  `bun:"TestUID,type:int"`
 	Testtype                          int32  `bun:"TestType,type:int"`
 	Description                       string `bun:"Description,type:varchar(255)"`
-	Enabled                           `bun:"Enabled,type:bit,default:((1))"`
-	Config                            int32 `bun:"Config,type:int,default:((0))"`
-	Bin                               `bun:"bin,type:bit,nullzero"`
-	Lot                               `bun:"Lot,type:bit,nullzero"`
-	LotBinXref                        `bun:"lot_bin_xref,type:bit,nullzero"`
-	Tag                               `bun:"tag,type:bit,nullzero"`
-	Serial                            `bun:"serial,type:bit,nullzero"`
-	Slab                              `bun:"slab,type:bit,nullzero"`
-	Rebuild                           `bun:"rebuild,type:bit,nullzero"`
-	Trans                             `bun:"trans,type:bit,nullzero"`
-	Allocation                        `bun:"allocation,type:bit,nullzero"`
-	OnHand                            `bun:"on_hand,type:bit,nullzero"`
-	Setup                             `bun:"setup,type:bit,nullzero"`
-	CustomTestNumber                  int32 `bun:"custom_test_number,type:int,nullzero"`
-	TotalTestUid                      int32 `bun:"total_test_uid,type:int,identity"`
-	InvLoc                            `bun:"inv_loc,type:bit,default:((0))"`
+	Enabled                           bool   `bun:"Enabled,type:bit,default:((1))"`
+	Config                            int32  `bun:"Config,type:int,default:((0))"`
+	Bin                               bool   `bun:"bin,type:bit,nullzero"`
+	Lot                               bool   `bun:"Lot,type:bit,nullzero"`
+	LotBinXref                        bool   `bun:"lot_bin_xref,type:bit,nullzero"`
+	Tag                               bool   `bun:"tag,type:bit,nullzero"`
+	Serial                            bool   `bun:"serial,type:bit,nullzero"`
+	Slab                              bool   `bun:"slab,type:bit,nullzero"`
+	Rebuild                           bool   `bun:"rebuild,type:bit,nullzero"`
+	Trans                             bool   `bun:"trans,type:bit,nullzero"`
+	Allocation                        bool   `bun:"allocation,type:bit,nullzero"`
+	OnHand                            bool   `bun:"on_hand,type:bit,nullzero"`
+	Setup                             bool   `bun:"setup,type:bit,nullzero"`
+	CustomTestNumber                  int32  `bun:"custom_test_number,type:int,nullzero"`
+	TotalTestUid                      int32  `bun:"total_test_uid,type:int,identity"`
+	InvLoc                            bool   `bun:"inv_loc,type:bit,default:((0))"`
 	DebugSql                          string `bun:"debug_sql,type:varchar,nullzero"`
 	DebugSqlDesc                      string `bun:"debug_sql_desc,type:varchar,nullzero"`
 	DebugSqlToken1                    string `bun:"debug_sql_token1,type:varchar,nullzero"`
@@ -53,5 +55,5 @@ type Inventoryissuestestdesc struct {
 	DebugSqlRebuildCustomReplaceSql   string `bun:"debug_sql_rebuild_custom_replace_sql,type:varchar,nullzero"`
 	DebugSqlP21ItemInfoReplaceSql     string `bun:"debug_sql_p21_item_info_replace_sql,type:varchar,nullzero"`
 	DebugSqlExtendedRebuildReplaceSql string `bun:"debug_sql_extended_rebuild_replace_sql,type:varchar,nullzero"`
-	AtomicLots                        `bun:"atomic_lots,type:bit,nullzero"`
+	AtomicLots                        bool   `bun:"atomic_lots,type:bit,nullzero"`
 }

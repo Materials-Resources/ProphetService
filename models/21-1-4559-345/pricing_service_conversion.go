@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricingServiceConversion struct {
 	bun.BaseModel        `bun:"table:pricing_service_conversion"`
 	LayoutId             float64   `bun:"layout_id,type:decimal(19,0),pk"`

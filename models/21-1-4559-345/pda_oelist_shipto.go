@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PdaOelistShipto struct {
 	bun.BaseModel      `bun:"table:pda_oelist_shipto"`
 	PdaOelistShiptoUid int32     `bun:"pda_oelist_shipto_uid,type:int,pk"`

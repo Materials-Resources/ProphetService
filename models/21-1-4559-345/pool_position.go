@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PoolPosition struct {
 	bun.BaseModel    `bun:"table:pool_position"`
 	PoolPositionUid  int32     `bun:"pool_position_uid,type:int,pk,identity"`

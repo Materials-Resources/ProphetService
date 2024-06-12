@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type CopyItemTable struct {
 	bun.BaseModel `bun:"table:copy_item_table"`
 	SequenceNo    int32  `bun:"sequence_no,type:int,pk"`

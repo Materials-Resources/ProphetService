@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type VendorRfqHdrXPoHdr struct {
 	bun.BaseModel         `bun:"table:vendor_rfq_hdr_x_po_hdr"`
 	VendorRfqHdrXPoHdrUid int32     `bun:"vendor_rfq_hdr_x_po_hdr_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ProcessXTransactionDetail struct {
 	bun.BaseModel          `bun:"table:process_x_transaction_detail"`
 	ProcessXTransDetailUid int32     `bun:"process_x_trans_detail_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SysParamsP21 struct {
 	bun.BaseModel       `bun:"table:sys_params_p21"`
 	SysParamsUid        int32     `bun:"sys_params_uid,type:int,pk"`

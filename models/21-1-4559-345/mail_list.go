@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type MailList struct {
 	bun.BaseModel    `bun:"table:mail_list"`
 	ListId           float64   `bun:"list_id,type:decimal(19,0),pk"`

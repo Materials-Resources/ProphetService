@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type BusinessRuleLog struct {
 	bun.BaseModel      `bun:"table:business_rule_log"`
 	BusinessRuleLogUid int32     `bun:"business_rule_log_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvSystemParameters struct {
 	bun.BaseModel             `bun:"table:inv_system_parameters"`
 	UseBinCapability          string    `bun:"use_bin_capability,type:char"`

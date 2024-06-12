@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DctTransactionTable struct {
 	bun.BaseModel          `bun:"table:dct_transaction_table"`
 	DctTransactionTableUid int32     `bun:"dct_transaction_table_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ScanPack struct {
 	bun.BaseModel            `bun:"table:scan_pack"`
 	ScanPackUid              int32     `bun:"scan_pack_uid,type:int,pk"`

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type Inventoryissuesresults40 struct {
 	bun.BaseModel                      `bun:"table:InventoryIssuesResults40"`
 	Run                                int32   `bun:"run,type:int"`

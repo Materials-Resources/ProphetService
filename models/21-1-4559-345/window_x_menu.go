@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type WindowXMenu struct {
 	bun.BaseModel    `bun:"table:window_x_menu"`
 	WindowXMenuUid   int32     `bun:"window_x_menu_uid,type:int,pk,identity"`

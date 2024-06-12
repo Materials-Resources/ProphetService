@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvoiceBatch struct {
 	bun.BaseModel                  `bun:"table:invoice_batch"`
 	InvoiceBatchUid                int32     `bun:"invoice_batch_uid,type:int,pk"`

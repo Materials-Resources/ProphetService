@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SummaryPoLocDaily struct {
 	bun.BaseModel        `bun:"table:summary_po_loc_daily"`
 	SummaryPoLocDailyUid int32     `bun:"summary_po_loc_daily_uid,type:int,pk,identity"`

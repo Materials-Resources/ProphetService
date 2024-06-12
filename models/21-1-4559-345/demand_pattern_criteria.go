@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DemandPatternCriteria struct {
 	bun.BaseModel             `bun:"table:demand_pattern_criteria"`
 	DemandPatternCriteriaUid  int32     `bun:"demand_pattern_criteria_uid,type:int,pk"`

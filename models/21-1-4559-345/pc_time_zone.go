@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type PcTimeZone struct {
 	bun.BaseModel `bun:"table:pc_time_zone"`
 	TimeZoneSkey  int32   `bun:"time_zone_skey,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ExtensibilityObject struct {
 	bun.BaseModel          `bun:"table:extensibility_object"`
 	ExtensibilityObjectUid int32     `bun:"extensibility_object_uid,type:int,pk,identity"`

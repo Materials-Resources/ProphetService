@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type FaultToleranceAreaCode struct {
 	bun.BaseModel `bun:"table:fault_tolerance_area_code"`
 	FtaUid        int32  `bun:"fta_uid,type:int,pk,identity"`

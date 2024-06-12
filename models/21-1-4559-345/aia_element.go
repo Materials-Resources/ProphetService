@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type AiaElement struct {
 	bun.BaseModel    `bun:"table:aia_element"`
 	AiaElementUid    int32     `bun:"aia_element_uid,type:int,pk,identity"`

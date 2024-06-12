@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FeedbackDataAuditTrail struct {
 	bun.BaseModel             `bun:"table:feedback_data_audit_trail"`
 	FeedbackDataAuditTrailUid int32     `bun:"feedback_data_audit_trail_uid,type:int,pk,identity"`

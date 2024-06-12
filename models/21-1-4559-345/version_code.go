@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type VersionCode struct {
 	bun.BaseModel    `bun:"table:version_code"`
 	VersionCodeUid   int32     `bun:"version_code_uid,type:int,pk"`

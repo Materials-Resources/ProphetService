@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type TpcxOutboundDocument struct {
 	bun.BaseModel             `bun:"table:tpcx_outbound_document"`
 	TpcxOutboundDocumentUid   int32     `bun:"tpcx_outbound_document_uid,type:int,pk,identity"`

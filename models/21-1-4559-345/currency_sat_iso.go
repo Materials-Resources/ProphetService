@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CurrencySatIso struct {
 	bun.BaseModel              `bun:"table:currency_sat_iso"`
 	CurrencySatIsoUid          int32     `bun:"currency_sat_iso_uid,type:int,pk,identity"`

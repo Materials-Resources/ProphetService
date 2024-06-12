@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CopyTableDataXArgument struct {
 	bun.BaseModel             `bun:"table:copy_table_data_x_argument"`
 	CopyTableDataXArgumentUid int32     `bun:"copy_table_data_x_argument_uid,type:int,pk,identity"`

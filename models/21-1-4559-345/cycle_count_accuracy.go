@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CycleCountAccuracy struct {
 	bun.BaseModel         `bun:"table:cycle_count_accuracy"`
 	CycleCountAccuracyUid int32     `bun:"cycle_count_accuracy_uid,type:int,pk"`

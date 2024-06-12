@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PricePageTypeXCompany struct {
 	bun.BaseModel            `bun:"table:price_page_type_x_company"`
 	PricePageTypeXCompanyUid int32     `bun:"price_page_type_x_company_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ShippingIntegrationMsgHandling struct {
 	bun.BaseModel                     `bun:"table:shipping_integration_msg_handling"`
 	ShippingIntegrationMsgHandlingUid int32     `bun:"shipping_integration_msg_handling_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustomerEmailDefaults struct {
 	bun.BaseModel            `bun:"table:customer_email_defaults"`
 	CustomerEmailDefaultsUid int32     `bun:"customer_email_defaults_uid,type:int,pk,identity"`

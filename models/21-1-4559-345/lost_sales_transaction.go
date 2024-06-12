@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type LostSalesTransaction struct {
 	bun.BaseModel           `bun:"table:lost_sales_transaction"`
 	LostSalesTransactionUid int32     `bun:"lost_sales_transaction_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ArSystemParameters struct {
 	bun.BaseModel               `bun:"table:ar_system_parameters"`
 	InvoiceEntryApproval        string    `bun:"invoice_entry_approval,type:char"`

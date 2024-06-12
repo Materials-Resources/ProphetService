@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type RmaReceiptLine struct {
 	bun.BaseModel      `bun:"table:rma_receipt_line"`
 	RmaReceiptLineUid  int32     `bun:"rma_receipt_line_uid,type:int,pk"`

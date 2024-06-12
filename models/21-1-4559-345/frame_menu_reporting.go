@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FrameMenuReporting struct {
 	bun.BaseModel         `bun:"table:frame_menu_reporting"`
 	FrameMenuReportingUid int32     `bun:"frame_menu_reporting_uid,type:int,pk,identity"`

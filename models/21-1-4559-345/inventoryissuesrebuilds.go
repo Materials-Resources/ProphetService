@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type Inventoryissuesrebuilds struct {
 	bun.BaseModel    `bun:"table:inventoryissuesrebuilds"`
 	Rebuilduid       int32     `bun:"rebuilduid,type:int,pk,identity"`
@@ -8,5 +13,5 @@ type Inventoryissuesrebuilds struct {
 	CreatedBy        string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
-	RebuildEnabled   `bun:"rebuild_enabled,type:bit,nullzero"`
+	RebuildEnabled   bool      `bun:"rebuild_enabled,type:bit,nullzero"`
 }

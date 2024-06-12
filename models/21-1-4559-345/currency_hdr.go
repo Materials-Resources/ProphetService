@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CurrencyHdr struct {
 	bun.BaseModel              `bun:"table:currency_hdr"`
 	CurrencyId                 float64   `bun:"currency_id,type:decimal(19,0),pk"`

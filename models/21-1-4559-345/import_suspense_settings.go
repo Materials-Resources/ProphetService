@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ImportSuspenseSettings struct {
 	bun.BaseModel    `bun:"table:import_suspense_settings"`
 	ImpexpSourceId   string    `bun:"impexp_source_id,type:varchar(50),pk"`

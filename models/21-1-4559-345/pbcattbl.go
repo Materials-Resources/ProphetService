@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type Pbcattbl struct {
 	bun.BaseModel `bun:"table:pbcattbl"`
 	PbtTnam       string `bun:"pbt_tnam,type:char(30),nullzero"`

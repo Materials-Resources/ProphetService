@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type PopupIndex struct {
 	bun.BaseModel    `bun:"table:popup_index"`
 	PopupIndexUid    int32     `bun:"popup_index_uid,type:int,pk,identity"`
@@ -19,6 +24,6 @@ type PopupIndex struct {
 	Action           string    `bun:"action,type:varchar(50),nullzero"`
 	UserId           string    `bun:"user_id,type:varchar(30),nullzero"`
 	Shortcut         string    `bun:"shortcut,type:varchar(30),nullzero"`
-	CoreFlag         `bun:"core_flag,type:bit,default:((0))"`
-	DynachangeId     float64 `bun:"dynachange_id,type:decimal(6,0),nullzero"`
+	CoreFlag         bool      `bun:"core_flag,type:bit,default:((0))"`
+	DynachangeId     float64   `bun:"dynachange_id,type:decimal(6,0),nullzero"`
 }

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FaultToleranceAuditTrail struct {
 	bun.BaseModel `bun:"table:fault_tolerance_audit_trail"`
 	FtatUid       int32     `bun:"ftat_uid,type:int,identity"`

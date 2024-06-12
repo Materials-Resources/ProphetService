@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ActivityReminder struct {
 	bun.BaseModel       `bun:"table:activity_reminder"`
 	ActivityReminderUid int32     `bun:"activity_reminder_uid,type:int,pk"`

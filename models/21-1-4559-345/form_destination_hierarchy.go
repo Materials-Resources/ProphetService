@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type FormDestinationHierarchy struct {
 	bun.BaseModel               `bun:"table:form_destination_hierarchy"`
 	FormDestinationHierarchyUid int32     `bun:"form_destination_hierarchy_uid,type:int,pk"`

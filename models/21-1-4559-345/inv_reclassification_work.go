@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvReclassificationWork struct {
 	bun.BaseModel              `bun:"table:inv_reclassification_work"`
 	InvReclassificationWorkUid int32     `bun:"inv_reclassification_work_uid,type:int,pk"`

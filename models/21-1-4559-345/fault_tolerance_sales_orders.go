@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type FaultToleranceSalesOrders struct {
 	bun.BaseModel `bun:"table:fault_tolerance_sales_orders"`
 	FtsoUid       int32  `bun:"ftso_uid,type:int,identity"`

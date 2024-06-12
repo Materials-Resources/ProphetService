@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type CustomerXShiptoCreditHistoryDaily struct {
 	bun.BaseModel                     `bun:"table:customer_x_shipto_credit_history_daily"`
 	CustomerXShiptoCdtHistoryDailyUid int32     `bun:"customer_x_shipto_cdt_history_daily_uid,type:int,pk,identity"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type SystemAlerts struct {
 	bun.BaseModel     `bun:"table:system_alerts"`
 	SystemAlertsUid   int32     `bun:"system_alerts_uid,type:int,pk"`

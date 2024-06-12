@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type DocumentLinkWindowXKey struct {
 	bun.BaseModel             `bun:"table:document_link_window_x_key"`
 	DocumentLinkWindowXKeyUid int32     `bun:"document_link_window_x_key_uid,type:int,pk"`

@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OePickTicketUd struct {
 	bun.BaseModel     `bun:"table:oe_pick_ticket_ud"`
 	OePickTicketUdUid int32     `bun:"oe_pick_ticket_ud_uid,type:int,pk,identity"`

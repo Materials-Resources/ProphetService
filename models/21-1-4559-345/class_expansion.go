@@ -1,5 +1,7 @@
 package model
 
+import "github.com/uptrace/bun"
+
 type ClassExpansion struct {
 	bun.BaseModel       `bun:"table:class_expansion"`
 	ClassExpansionUid   int32  `bun:"class_expansion_uid,type:int,identity"`

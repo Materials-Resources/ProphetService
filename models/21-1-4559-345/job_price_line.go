@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type JobPriceLine struct {
 	bun.BaseModel               `bun:"table:job_price_line"`
 	JobPriceLineUid             int32     `bun:"job_price_line_uid,type:int,pk"`

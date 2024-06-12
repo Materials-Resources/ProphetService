@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type OeLineLastMarginPrice struct {
 	bun.BaseModel            `bun:"table:oe_line_last_margin_price"`
 	OeLineLastMarginPriceUid int32     `bun:"oe_line_last_margin_price_uid,type:int,pk,identity"`

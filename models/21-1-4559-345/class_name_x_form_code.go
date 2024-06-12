@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type ClassNameXFormCode struct {
 	bun.BaseModel         `bun:"table:class_name_x_form_code"`
 	ClassNameXFormCodeUid int32     `bun:"class_name_x_form_code_uid,type:int,pk,identity"`

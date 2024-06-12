@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/uptrace/bun"
+	"time"
+)
+
 type InvTran struct {
 	bun.BaseModel          `bun:"table:inv_tran"`
 	TransactionNumber      float64   `bun:"transaction_number,type:decimal(19,0),pk"`
