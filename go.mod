@@ -5,7 +5,9 @@ go 1.22.4
 require (
 	github.com/denisenkom/go-mssqldb v0.12.3
 	github.com/hamba/avro/v2 v2.21.0
+	github.com/materials-resources/microservices-proto/golang/catalog v0.0.8
 	github.com/materials-resources/microservices-proto/golang/order v0.0.8
+	github.com/materials-resources/s-prophet/models/21-1-4559-345 v0.0.2
 	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 	github.com/twmb/franz-go v1.16.1
@@ -40,7 +42,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
-	github.com/materials-resources/microservices-proto/golang/catalog v0.0.8 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

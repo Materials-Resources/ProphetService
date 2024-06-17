@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
 	"time"
@@ -89,15 +88,15 @@ func (w UpdateProductWorker) ConsumeRecord(rec *kgo.Record) error {
 		return err
 	}
 
-	err = w.service.UpdateProduct(
-		context.Background(), &domain.Product{
-			Uid:            productRecord.Uid,
-			Name:           &productRecord.Name,
-			Description:    &productRecord.Description,
-			ProductGroupSn: &productRecord.ProductGroupSn,
-		}, []float64{1001})
-	if err != nil {
-		return err
-	}
+	//err = w.service.UpdateProduct(
+	//	context.Background(), &domain.Product{
+	//		Uid:            productRecord.Uid,
+	//		Name:           &productRecord.Name,
+	//		Description:    &productRecord.Description,
+	//		ProductGroupSn: &productRecord.ProductGroupSn,
+	//	}, []float64{1001})
+	//if err != nil {
+	//	return err
+	//}
 	return nil
 }

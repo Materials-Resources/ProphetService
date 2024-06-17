@@ -20,8 +20,6 @@ type CatalogService interface {
 
 	// GetProductBySupplierPartNumber returns a Product by the given part number and supplier
 	GetProductBySupplierPartNumber(ctx context.Context, partNumber string, supplier float64) (domain.Product, error)
-	// UpdateProduct updates a Product for specified locations
-	UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error
 	// DeleteProduct deletes a Product
 	DeleteProduct(ctx context.Context, uid string) error
 
@@ -29,18 +27,6 @@ type CatalogService interface {
 
 	// SetPrimaryProductSupplier sets the primary product supplier
 	SetPrimaryProductSupplier(ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error
-
-	// RequestDeleteProduct adds a request to deletes a Product
-	RequestDeleteProduct(ctx context.Context, uid string) error
-
-	// ListProductGroup returns a list of ProductGroup
-	ListProductGroup(ctx context.Context) ([]*domain.ProductGroup, error)
-	// GetProductGroup returns ProductGroup by the given SN
-	GetProductGroup(ctx context.Context, sn string) (domain.ProductGroup, []int32, error)
-	// UpdateProductGroup updates a ProductGroup
-	UpdateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error
-	// CreateProductGroup creates a new product group
-	CreateProductGroup(ctx context.Context, productGroup *domain.ProductGroup) error
 }
 
 type Producer interface {

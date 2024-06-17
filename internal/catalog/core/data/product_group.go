@@ -2,19 +2,14 @@ package data
 
 import (
 	"context"
-	"database/sql"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
-	"github.com/materials-resources/s-prophet/pkg/models"
+	prophet "github.com/materials-resources/s-prophet/models/21-1-4559-345"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/schema"
 	"time"
 )
 
-type productGroup struct {
-	models.ProductGroup `bun:",extend"`
-}
-
-func (m *productGroup) BeforeAppendModel(ctx context.Context, query schema.Query) error {
+func (m *ProductGroup) BeforeAppendModel(ctx context.Context, query schema.Query) error {
 	switch query.(type) {
 	case *bun.InsertQuery:
 		m.DateCreated = time.Now()
@@ -25,7 +20,7 @@ func (m *productGroup) BeforeAppendModel(ctx context.Context, query schema.Query
 	return nil
 }
 
-func (m *productGroup) toProductGroupDomain(d *domain.ProductGroup) {
+func (m *ProductGroup) toProductGroupDomain(d *domain.ProductGroup) {
 	d.Sn = m.ProductGroupId
 	d.Name = &m.ProductGroupDesc
 
@@ -72,7 +67,7 @@ type ProductGroupListOptions struct {
 }
 
 func (m *ProductGroupModel) List(ctx context.Context, opts *ProductGroupListOptions) ([]*domain.ProductGroup, error) {
-	var pgs []productGroup
+	var pgs []ProductGroup
 	q := m.bun.NewSelect().Model(&pgs).Where("company_id = ?", m.defaultValues.CompanyId).Order("product_group_id ASC")
 
 	err := q.Scan(ctx)
@@ -89,15 +84,15 @@ func (m *ProductGroupModel) List(ctx context.Context, opts *ProductGroupListOpti
 }
 
 func (m *ProductGroupModel) Create(ctx context.Context, pg *domain.ProductGroup) error {
-	pgData := productGroup{
-		ProductGroup: models.ProductGroup{
+	pgData := ProductGroup{
+		ProductGroup: prophet.ProductGroup{
 			ProductGroupId:   pg.Sn,
 			ProductGroupDesc: *pg.Name,
 			CompanyId:        m.defaultValues.CompanyId,
 			AssetAccountNo:   m.defaultValues.AssetAccountNo,
 			DeleteFlag:       m.defaultValues.DeleteFlag,
-			RevenueAccountNo: sql.NullString{String: m.defaultValues.RevenueAccountNo, Valid: true},
-			CosAccountNo:     sql.NullString{String: m.defaultValues.CosAccountNo, Valid: true},
+			RevenueAccountNo: m.defaultValues.RevenueAccountNo,
+			CosAccountNo:     m.defaultValues.CosAccountNo,
 			LastMaintainedBy: m.defaultValues.LastMaintainedBy,
 		},
 	}
@@ -120,8 +115,8 @@ func (m *ProductGroupModel) Update(ctx context.Context, pg *domain.ProductGroup)
 	return err
 }
 
-func (m *ProductGroupModel) get(ctx context.Context, productGroupId string) (*productGroup, error) {
-	var pg productGroup
+func (m *ProductGroupModel) get(ctx context.Context, productGroupId string) (*ProductGroup, error) {
+	var pg ProductGroup
 	err := m.bun.NewSelect().Model(&pg).Where("company_id = ?", m.defaultValues.CompanyId).Where("product_group_id = ?", productGroupId).Scan(ctx)
 	if err != nil {
 		return nil, err

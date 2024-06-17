@@ -60,6 +60,7 @@ func (a *App) Start() {
 
 	}
 
+	a.log.Info().Str("addr", lis.Addr().String()).Msg("listening")
 	err = a.GetGrpcServer().Serve(lis)
 	if err != nil {
 		a.Logger().Fatal().Err(err).Msg("failed to start server")

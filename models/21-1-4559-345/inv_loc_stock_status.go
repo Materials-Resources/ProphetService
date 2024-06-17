@@ -19,5 +19,5 @@ type InvLocStockStatus struct {
 	QtyOnSalesQuote      float64 `bun:"qty_on_sales_quote,type:decimal(19,9),default:(0)"`
 	QtyOnSpecialPo       float64 `bun:"qty_on_special_po,type:decimal(19,9),default:(0)"`
 	QtyOnDsPo            float64 `bun:"qty_on_ds_po,type:decimal(19,9),default:(0)"`
-	QtyOnSpecialPoCost   float64 `bun:"qty_on_special_po_cost,type:decimal(19,9),default:((0))"`
+	QtyOnSpecialPoCost   float64 `bun:"qty_on_special_po_cost,type:decimal(19,9),default:(0)"`
 }

@@ -12,9 +12,9 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func NewCatalogApi(tracer trace.Tracer, producer service.Producer,
+func NewCatalogApi(service service.CatalogService, tracer trace.Tracer,
 ) CatalogApi {
-	return CatalogApi{tracer: tracer, producer: producer}
+	return CatalogApi{service: service, tracer: tracer}
 }
 
 type CatalogApi struct {
@@ -80,9 +80,12 @@ func (s CatalogApi) ClerkUpdateProduct(ctx context.Context, request *rpc.ClerkUp
 }
 
 func (s CatalogApi) ClerkDeleteProduct(ctx context.Context, request *rpc.ClerkDeleteProductRequest) (*rpc.ClerkDeleteProductResponse, error) {
-	request.DeleteMode = rpc.DeleteMode_DELETE_MODE_SOFT
-	//TODO implement me
-	panic("implement me")
+	err := s.service.DeleteProduct(ctx, request.GetProductUid())
+	if err != nil {
+		return nil, err
+
+	}
+	return &rpc.ClerkDeleteProductResponse{}, nil
 }
 
 func (s CatalogApi) ClerkListGroups(ctx context.Context, request *rpc.ClerkListGroupRequest) (*rpc.ClerkListGroupResponse, error) {

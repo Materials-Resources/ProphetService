@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
-	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/uptrace/bun"
 	"sort"
 	"strconv"
@@ -12,15 +11,9 @@ import (
 	"time"
 )
 
-type invLoc struct {
-	models.InvLoc `bun:",extend"`
-	InvMast       *invMast      `bun:"rel:belongs-to,join:inv_mast_uid=inv_mast_uid"`
-	ProductGroup  *productGroup `bun:"rel:has-one,join:product_group_id=product_group_id"`
-}
+var _ bun.BeforeAppendModelHook = (*InvLoc)(nil)
 
-var _ bun.BeforeAppendModelHook = (*invLoc)(nil)
-
-func (m *invLoc) BeforeAppendModel(ctx context.Context, query bun.Query) error {
+func (m *InvLoc) BeforeAppendModel(ctx context.Context, query bun.Query) error {
 	switch query.(type) {
 	case *bun.InsertQuery:
 		m.DateCreated = time.Now()
@@ -37,13 +30,13 @@ type invLocDefaultValues struct {
 	LocationId float64
 }
 
-func (m *invLoc) toProductDomain(d *domain.Product) {
+func (m *InvLoc) toProductDomain(d *domain.Product) {
 	if m.InvMast != nil {
 		d.Uid = strconv.Itoa(int(m.InvMast.InvMastUid))
 		d.Sn = &m.InvMast.ItemId
 		d.Name = &m.InvMast.ItemDesc
 		d.Description = &m.InvMast.ItemDesc
-		d.ProductGroupSn = &m.ProductGroupId.String
+		d.ProductGroupSn = &m.ProductGroupId
 	}
 
 	if m.ProductGroup != nil {
@@ -89,7 +82,7 @@ type InvLocListOptions struct {
 }
 
 func (m *InvLocModel) List(ctx context.Context, opts *InvLocListOptions, pagination domain.Pagination) ([]*domain.Product, *domain.PaginationMetadata, error) {
-	var invLocRecs []*invLoc
+	var invLocRecs []*InvLoc
 	var totalCount int
 
 	q := m.bun.NewSelect().Model(&invLocRecs).
@@ -177,7 +170,7 @@ func (m *InvLocModel) Update(ctx context.Context, product *domain.Product) error
 	q := m.bun.NewUpdate().Model(rec).WherePK()
 
 	if product.ProductGroupSn != nil {
-		rec.ProductGroupId.String = *product.ProductGroupSn
+		rec.ProductGroupId = *product.ProductGroupSn
 	}
 	_, err = q.Exec(ctx)
 	if err != nil {
@@ -187,8 +180,8 @@ func (m *InvLocModel) Update(ctx context.Context, product *domain.Product) error
 	return nil
 }
 
-func (m *InvLocModel) get(ctx context.Context, invMastUid int32) (*invLoc, error) {
-	var invLocRec invLoc
+func (m *InvLocModel) get(ctx context.Context, invMastUid int32) (*InvLoc, error) {
+	var invLocRec InvLoc
 	err := m.bun.NewSelect().Model(&invLocRec).
 		Where("inv_mast_uid = ?", invMastUid).
 		Where("company_id = ?", m.defaultValues.CompanyId).
@@ -199,7 +192,7 @@ func (m *InvLocModel) get(ctx context.Context, invMastUid int32) (*invLoc, error
 	return &invLocRec, nil
 }
 
-func (m *InvLocModel) calculatePaginationMetadata(ctx context.Context, total int64, recs []*invLoc) *domain.PaginationMetadata {
+func (m *InvLocModel) calculatePaginationMetadata(ctx context.Context, total int64, recs []*InvLoc) *domain.PaginationMetadata {
 	paginationMetadata := &domain.PaginationMetadata{
 		NextCursor:     0,
 		PreviousCursor: 0,
