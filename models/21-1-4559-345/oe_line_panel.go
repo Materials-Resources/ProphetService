@@ -7,7 +7,7 @@ import (
 
 type OeLinePanel struct {
 	bun.BaseModel      `bun:"table:oe_line_panel"`
-	OeLinePanelUid     int32     `bun:"oe_line_panel_uid,type:int,autoincrement,pk"`                  // Unique identifier for oe_line_panel
+	OeLinePanelUid     int32     `bun:"oe_line_panel_uid,type:int,autoincrement,scanonly,pk"`         // Unique identifier for oe_line_panel
 	DefaultName        string    `bun:"default_name,type:varchar(255),nullzero"`                      // Default name for this panel
 	DefaultSequenceNo  int32     `bun:"default_sequence_no,type:int"`                                 // Default value for whether this is the default panel.
 	DefaultDisplayInOe string    `bun:"default_display_in_oe,type:char(1)"`                           // Default value for whether this panel is displayed in oe.

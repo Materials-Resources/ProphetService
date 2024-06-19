@@ -7,7 +7,7 @@ import (
 
 type DocumentLinkDocstar struct {
 	bun.BaseModel          `bun:"table:document_link_docstar"`
-	DocumentLinkDocstarUid int32     `bun:"document_link_docstar_uid,type:int,autoincrement,pk"`          // Unique identifier for table document_link_docstar
+	DocumentLinkDocstarUid int32     `bun:"document_link_docstar_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for table document_link_docstar
 	SourceAreaCd           int32     `bun:"source_area_cd,type:int"`                                      // Document link source area for this document link ID
 	DocumentAreaCd         string    `bun:"document_area_cd,type:varchar(255)"`                           // form document linking area this record relates to
 	DisplayAreaCd          int32     `bun:"display_area_cd,type:int"`                                     // Document link display area for which we want to store this document information

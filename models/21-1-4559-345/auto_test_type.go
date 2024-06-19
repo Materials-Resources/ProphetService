@@ -7,7 +7,7 @@ import (
 
 type AutoTestType struct {
 	bun.BaseModel    `bun:"table:auto_test_type"`
-	AutoTestTypeUid  int32     `bun:"auto_test_type_uid,type:int,autoincrement,pk"`                 // Unique identifier for auto_test_type table.
+	AutoTestTypeUid  int32     `bun:"auto_test_type_uid,type:int,autoincrement,scanonly,pk"`        // Unique identifier for auto_test_type table.
 	AutoTestTypeCd   int32     `bun:"auto_test_type_cd,type:int,unique"`                            // System code value describing a test action type.
 	ArgumentCount    int32     `bun:"argument_count,type:int"`                                      // Number of logical arguments needed to execute this type of test action.
 	DescArgument1    string    `bun:"desc_argument1,type:varchar(255),nullzero"`                    // Description of what the argument is for the test action type (if applicable).

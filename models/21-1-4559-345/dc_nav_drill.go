@@ -7,7 +7,7 @@ import (
 
 type DcNavDrill struct {
 	bun.BaseModel        `bun:"table:dc_nav_drill"`
-	DcNavDrillUid        int32     `bun:"dc_nav_drill_uid,type:int,autoincrement,pk"`                   // Unique identifier for the table
+	DcNavDrillUid        int32     `bun:"dc_nav_drill_uid,type:int,autoincrement,scanonly,pk"`          // Unique identifier for the table
 	SourceWindow         string    `bun:"source_window,type:varchar(255)"`                              // Window drilling from
 	SourceDatawindow     string    `bun:"source_datawindow,type:varchar(255),nullzero"`                 // DataWindow drilling from
 	SourceField          string    `bun:"source_field,type:varchar(255)"`                               // Field that was clicked on

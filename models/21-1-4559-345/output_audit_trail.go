@@ -7,7 +7,7 @@ import (
 
 type OutputAuditTrail struct {
 	bun.BaseModel       `bun:"table:output_audit_trail"`
-	OutputAuditTrailUid int32     `bun:"output_audit_trail_uid,type:int,autoincrement,pk"`             // Unique identifier of the table
+	OutputAuditTrailUid int32     `bun:"output_audit_trail_uid,type:int,autoincrement,scanonly,pk"`    // Unique identifier of the table
 	DocumentNumber      string    `bun:"document_number,type:varchar(255)"`                            // Document Number of the record been Printed, Emailed or Faxed
 	DocumentType        string    `bun:"document_type,type:varchar(255)"`                              // Document Type of the record been Printed, Emailed or Faxed
 	OutputType          string    `bun:"output_type,type:varchar(255)"`                                // Whether document it is been Printed, Emailed or Faxed

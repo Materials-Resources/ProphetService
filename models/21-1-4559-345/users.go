@@ -88,7 +88,7 @@ type Users struct {
 	DoeSalesrepId                     string    `bun:"doe_salesrep_id,type:varchar(16),nullzero"`                     // The salesrep_id that this user logs orders with in disconnected mode
 	DoeUserFlag                       string    `bun:"doe_user_flag,type:char(1),default:('N')"`                      // Indicates that this account is a DOE user
 	VacationEndDateModFlag            string    `bun:"vacation_end_date_mod_flag,type:char(1),default:('N')"`         // Flag that indicates whether the vacation_end_date was just modified for this user.  This is currently used by the alert.
-	UsersUid                          int32     `bun:"users_uid,type:int,autoincrement"`                              // Unique identifier on the users table.
+	UsersUid                          int32     `bun:"users_uid,type:int,autoincrement,scanonly"`                     // Unique identifier on the users table.
 	InvGroupHdrUid                    int32     `bun:"inv_group_hdr_uid,type:int,nullzero"`                           // Inventory mgmt group assigned to this user.
 	UsePoApprovalThresholdFlag        string    `bun:"use_po_approval_threshold_flag,type:char(1),default:('N')"`     // Flag to determine whether or not this user should dollar threshold to limit the approval of POs
 	PoApprovalThreshold               float64   `bun:"po_approval_threshold,type:decimal(19,9),nullzero"`             // The dollar amount that limits the approval of POs

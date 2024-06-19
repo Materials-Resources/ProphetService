@@ -271,7 +271,7 @@ type Customer struct {
 	DiscountItemId                       string    `bun:"discount_item_id,type:varchar(255),nullzero"`
 	DeliveryChargeInvMastUid             int32     `bun:"delivery_charge_inv_mast_uid,type:int,nullzero"`
 	IndividualInvoiceFlag                string    `bun:"individual_invoice_flag,type:char(1),nullzero"`
-	CustomerUid                          int32     `bun:"customer_uid,type:int,autoincrement,unique"`                 // Unique identifier for the table
+	CustomerUid                          int32     `bun:"customer_uid,type:int,autoincrement,unique,scanonly"`        // Unique identifier for the table
 	MultCustPartNoGroupFlag              string    `bun:"mult_cust_part_no_group_flag,type:char(1),nullzero"`         // Flag that determines if the customer should use a customer part no group or all groups that the customer is a member of.
 	MarketingAllowancePercentage         float64   `bun:"marketing_allowance_percentage,type:decimal(19,9),nullzero"` // Marketing allowance discount percentage.
 	AdAllowancePercentage                float64   `bun:"ad_allowance_percentage,type:decimal(19,9),nullzero"`        // Ad allowance discount percentage.

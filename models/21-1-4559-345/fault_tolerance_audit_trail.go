@@ -7,7 +7,7 @@ import (
 
 type FaultToleranceAuditTrail struct {
 	bun.BaseModel `bun:"table:fault_tolerance_audit_trail"`
-	FtatUid       int32     `bun:"ftat_uid,type:int,autoincrement"`
+	FtatUid       int32     `bun:"ftat_uid,type:int,autoincrement,scanonly"`
 	FtrUid        int32     `bun:"ftr_uid,type:int,pk"`
 	FtaUid        int32     `bun:"fta_uid,type:int,pk"`
 	FtpUid        int32     `bun:"ftp_uid,type:int,pk"`

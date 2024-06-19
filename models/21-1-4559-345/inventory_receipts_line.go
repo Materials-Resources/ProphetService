@@ -45,7 +45,7 @@ type InventoryReceiptsLine struct {
 	PalletId                  string    `bun:"pallet_id,type:varchar(30),nullzero"`                       // Value to be entered PO Receipts window in WWMS
 	CreatedBy                 string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	LabelQty                  int32     `bun:"label_qty,type:int,nullzero"` // Custom: Indicates the number of labels to print for corresponding line item.
-	InventoryReceiptsLineUid  int32     `bun:"inventory_receipts_line_uid,type:int,autoincrement"`
+	InventoryReceiptsLineUid  int32     `bun:"inventory_receipts_line_uid,type:int,autoincrement,scanonly"`
 	ReceiptRemovedBy          string    `bun:"receipt_removed_by,type:varchar(255),nullzero"`            // Indicates user id that reversed this inventory receipt line (if it has been reversed).
 	DirectShipFreightAmount   float64   `bun:"direct_ship_freight_amount,type:decimal(19,4),nullzero"`   // Custom: Indicates the freight added to receipt from linked oe line item.
 	ExcludeFromLandedCostFlag string    `bun:"exclude_from_landed_cost_flag,type:char(1),default:('N')"` // Exclude line from landed cost calculation

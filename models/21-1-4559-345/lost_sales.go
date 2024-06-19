@@ -7,7 +7,7 @@ import (
 
 type LostSales struct {
 	bun.BaseModel    `bun:"table:lost_sales"`
-	LostSalesUid     int32     `bun:"lost_sales_uid,type:int,autoincrement,pk"`                     // Unique identifier for lost sales code table
+	LostSalesUid     int32     `bun:"lost_sales_uid,type:int,autoincrement,scanonly,pk"`            // Unique identifier for lost sales code table
 	CompanyId        string    `bun:"company_id,type:varchar(8),unique"`                            // Indicates the company for lost sales code
 	LostSalesId      string    `bun:"lost_sales_id,type:varchar(255),unique"`                       // Lost sales reason identifier.
 	LostSalesDesc    string    `bun:"lost_sales_desc,type:varchar(255)"`                            // Lost sales reason description.

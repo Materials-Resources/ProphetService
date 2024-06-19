@@ -7,7 +7,7 @@ import (
 
 type DbmailInformation struct {
 	bun.BaseModel            `bun:"table:dbmail_information"`
-	DbmailInformationUid     int32     `bun:"dbmail_information_uid,type:int,autoincrement,pk"`             // Unique identifier
+	DbmailInformationUid     int32     `bun:"dbmail_information_uid,type:int,autoincrement,scanonly,pk"`    // Unique identifier
 	MailitemId               int32     `bun:"mailitem_id,type:int"`                                         // Identifies the dbmail item
 	UseSystemAlert           string    `bun:"use_system_alert,type:char(1),nullzero"`                       // Determines whether or not to use the system alert
 	CallFromWithinMailBo     string    `bun:"call_from_within_mail_bo,type:char(1),nullzero"`               // Determines whether or not the call was from within BO

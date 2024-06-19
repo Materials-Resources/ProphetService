@@ -7,7 +7,7 @@ import (
 
 type RebillInvoiceReason struct {
 	bun.BaseModel          `bun:"table:rebill_invoice_reason"`
-	RebillInvoiceReasonUid int32     `bun:"rebill_invoice_reason_uid,type:int,autoincrement,pk"`          // Unique identifier for this row.
+	RebillInvoiceReasonUid int32     `bun:"rebill_invoice_reason_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for this row.
 	CompanyId              string    `bun:"company_id,type:varchar(8),unique"`                            // The company for which this reason code applies.
 	ReasonCode             string    `bun:"reason_code,type:varchar(255),unique"`                         // The user-defined Reason ID.
 	ReasonDesc             string    `bun:"reason_desc,type:varchar(255)"`                                // The description of the reason.

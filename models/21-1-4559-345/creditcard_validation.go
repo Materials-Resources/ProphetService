@@ -7,7 +7,7 @@ import (
 
 type CreditcardValidation struct {
 	bun.BaseModel           `bun:"table:creditcard_validation"`
-	CreditcardValidationUid int32     `bun:"creditcard_validation_uid,type:int,autoincrement,pk"`          // Unique identifier for table.
+	CreditcardValidationUid int32     `bun:"creditcard_validation_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for table.
 	CardTypeCd              int32     `bun:"card_type_cd,type:int"`                                        // Credit Card type code
 	ValidationExpression    string    `bun:"validation_expression,type:varchar(255)"`                      // Credit Card Number Validation Regular Expression
 	DateCreated             time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

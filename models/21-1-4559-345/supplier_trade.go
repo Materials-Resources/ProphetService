@@ -7,7 +7,7 @@ import (
 
 type SupplierTrade struct {
 	bun.BaseModel    `bun:"table:supplier_trade"`
-	SupplierTradeUid int32     `bun:"supplier_trade_uid,type:int,autoincrement,pk"`                 // Unique identifier for record.
+	SupplierTradeUid int32     `bun:"supplier_trade_uid,type:int,autoincrement,scanonly,pk"`        // Unique identifier for record.
 	SupplierId       float64   `bun:"supplier_id,type:decimal(19,0),unique"`                        // Supplier ID for which this record pertains.
 	NaftaTaxId       string    `bun:"nafta_tax_id,type:varchar(255),nullzero"`                      // Pedimento/NAFTA Tax ID for this supplier.
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

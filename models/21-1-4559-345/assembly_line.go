@@ -29,7 +29,7 @@ type AssemblyLine struct {
 	DateOffsetDays           int32     `bun:"date_offset_days,type:int,nullzero"`            // Number of days later a component is required than the header Required Date
 	AssemblyItemRevisionUid  int32     `bun:"assembly_item_revision_uid,type:int,nullzero"`  // Column holds the revision uid of the assembly item.
 	ComponentItemRevisionUid int32     `bun:"component_item_revision_uid,type:int,nullzero"` // Column holds the revision uid of the component item.
-	AssemblyLineUid          int32     `bun:"assembly_line_uid,type:int,autoincrement,pk"`
+	AssemblyLineUid          int32     `bun:"assembly_line_uid,type:int,autoincrement,scanonly,pk"`
 	BackflushFlag            string    `bun:"backflush_flag,type:char(1),default:('N')"`         // Indicate if the component item is a backflush component.
 	RefDesignatorLocator     string    `bun:"ref_designator_locator,type:varchar(255),nullzero"` // Custom column at the component line level for extra information
 	UserComponentNumber      int32     `bun:"user_component_number,type:int,nullzero"`           // Custom: User defined line number for component

@@ -7,7 +7,7 @@ import (
 
 type AccntGroupMx struct {
 	bun.BaseModel    `bun:"table:accnt_group_mx"`
-	AccntGroupMxUid  int32     `bun:"accnt_group_mx_uid,type:int,autoincrement,pk"`                 // UID for account group. Identity.
+	AccntGroupMxUid  int32     `bun:"accnt_group_mx_uid,type:int,autoincrement,scanonly,pk"`        // UID for account group. Identity.
 	AccntGroupMxId   string    `bun:"accnt_group_mx_id,type:varchar(255)"`                          // account group id
 	GroupDescription string    `bun:"group_description,type:varchar(255),nullzero"`                 // Long group description. Not null values defined by SAT at this moment.
 	SequenceNo       int32     `bun:"sequence_no,type:int,default:((0))"`                           // Sequence number for ordering records. Will be used in case SAT defines new records.

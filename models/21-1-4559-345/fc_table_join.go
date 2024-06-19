@@ -7,7 +7,7 @@ import (
 
 type FcTableJoin struct {
 	bun.BaseModel    `bun:"table:fc_table_join"`
-	FcTableJoinUid   int32     `bun:"fc_table_join_uid,type:int,autoincrement"`                     // Unique identifier for each record
+	FcTableJoinUid   int32     `bun:"fc_table_join_uid,type:int,autoincrement,scanonly"`            // Unique identifier for each record
 	BaseTable        string    `bun:"base_table,type:varchar(255)"`                                 // table to which a secondary table is joined
 	BaseDataobject   string    `bun:"base_dataobject,type:varchar(255),nullzero"`                   // dataobject to which join_syntax is added
 	JoinTable        string    `bun:"join_table,type:varchar(255)"`                                 // secondary table

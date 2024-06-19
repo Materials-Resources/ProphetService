@@ -7,7 +7,7 @@ import (
 
 type FasteditRoles struct {
 	bun.BaseModel    `bun:"table:fastedit_roles"`
-	FasteditRolesUid int32     `bun:"fastedit_roles_uid,type:int,autoincrement,pk"`                 // Identity column
+	FasteditRolesUid int32     `bun:"fastedit_roles_uid,type:int,autoincrement,scanonly,pk"`        // Identity column
 	ClassName        string    `bun:"class_name,type:varchar(255)"`                                 // Class name of the window
 	RoleUid          int32     `bun:"role_uid,type:int"`                                            // Id of corresponding role
 	ActiveFlag       string    `bun:"active_flag,type:char(1),default:('Y')"`                       // Enable or disable fastedit for the role

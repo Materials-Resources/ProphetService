@@ -4,7 +4,7 @@ import "github.com/uptrace/bun"
 
 type EccSbAudit struct {
 	bun.BaseModel          `bun:"table:ecc_sb_audit"`
-	EccSbAuditUid          int32  `bun:"ecc_sb_audit_uid,type:int,autoincrement,pk"`
+	EccSbAuditUid          int32  `bun:"ecc_sb_audit_uid,type:int,autoincrement,scanonly,pk"`
 	EccTransactionTable    string `bun:"ecc_transaction_table,type:varchar(255)"`
 	EccInitiatorAuditTable string `bun:"ecc_initiator_audit_table,type:varchar(255)"`
 	EccTargetAuditTable    string `bun:"ecc_target_audit_table,type:varchar(255)"`

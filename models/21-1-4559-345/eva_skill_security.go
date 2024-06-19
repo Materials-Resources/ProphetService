@@ -7,7 +7,7 @@ import (
 
 type EvaSkillSecurity struct {
 	bun.BaseModel       `bun:"table:eva_skill_security"`
-	EvaSkillSecurityUid int32     `bun:"eva_skill_security_uid,type:int,autoincrement,pk"`             // Unique identifier for this table
+	EvaSkillSecurityUid int32     `bun:"eva_skill_security_uid,type:int,autoincrement,scanonly,pk"`    // Unique identifier for this table
 	SkillName           string    `bun:"skill_name,type:varchar(8000)"`                                // Skill name for this record
 	Dynachange          string    `bun:"dynachange,type:varchar(8000),nullzero"`                       // Dynachange information for this record
 	DisableFlag         string    `bun:"disable_flag,type:char(1),default:('N')"`                      // Is this record disabled

@@ -7,7 +7,7 @@ import (
 
 type BusinessRuleLog struct {
 	bun.BaseModel      `bun:"table:business_rule_log"`
-	BusinessRuleLogUid int32     `bun:"business_rule_log_uid,type:int,autoincrement,pk"`              // Unique identifier for record
+	BusinessRuleLogUid int32     `bun:"business_rule_log_uid,type:int,autoincrement,scanonly,pk"`     // Unique identifier for record
 	UserId             string    `bun:"user_id,type:varchar(255)"`                                    // User ID of current user
 	LogAction          string    `bun:"log_action,type:varchar(255)"`                                 // Action being  recorded:  Invoke, Return, Update
 	RuleName           string    `bun:"rule_name,type:varchar(255),nullzero"`                         // Name of rule being executed

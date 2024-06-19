@@ -7,7 +7,7 @@ import (
 
 type Datasource struct {
 	bun.BaseModel     `bun:"table:datasource"`
-	DatasourceUid     int32     `bun:"datasource_uid,type:int,autoincrement,pk"`                     // Unique identifier for the table.
+	DatasourceUid     int32     `bun:"datasource_uid,type:int,autoincrement,scanonly,pk"`            // Unique identifier for the table.
 	DatasourceDesc    string    `bun:"datasource_desc,type:varchar(255)"`                            // Description of the data source
 	DatasourceObject  string    `bun:"datasource_object,type:varchar(255)"`                          // Object that SQLcome from
 	ObjectTypeCd      int32     `bun:"object_type_cd,type:int"`                                      // Indicates where the object comes from (ie Native, XML).

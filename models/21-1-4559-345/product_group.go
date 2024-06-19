@@ -21,7 +21,7 @@ type ProductGroup struct {
 	TaxGroupId                   string    `bun:"tax_group_id,type:varchar(10),nullzero"`                        // Foreign key to the table tax_group_hdr
 	CompletionLeadTime           int32     `bun:"completion_lead_time,type:int,nullzero"`                        // This custom column will store the completion lead days needed for this product group
 	RequiredLeadTime             int32     `bun:"required_lead_time,type:int,nullzero"`                          // This custom column will store the required lead days needed for this product group
-	ProductGroupUid              int32     `bun:"product_group_uid,type:int,autoincrement,unique"`               // Unique internal ID number for this table.
+	ProductGroupUid              int32     `bun:"product_group_uid,type:int,autoincrement,unique,scanonly"`      // Unique internal ID number for this table.
 	LandedCostAccountNo          string    `bun:"landed_cost_account_no,type:varchar(255),nullzero"`             // Landed Cost income account
 	EnvironmentalFeeFlag         string    `bun:"environmental_fee_flag,type:char(1),default:('N')"`             // Indicates if the customer will be charged an environmental fee.
 	AdminFeeFlag                 string    `bun:"admin_fee_flag,type:char(1),default:('N')"`                     // Indicates if this customer should be charged a handling/admin fee?

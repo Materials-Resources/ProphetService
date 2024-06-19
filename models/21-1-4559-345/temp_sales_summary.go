@@ -7,7 +7,7 @@ import (
 
 type TempSalesSummary struct {
 	bun.BaseModel         `bun:"table:temp_sales_summary"`
-	TolsUid               int32     `bun:"tols_uid,type:int,autoincrement"`
+	TolsUid               int32     `bun:"tols_uid,type:int,autoincrement,scanonly"`
 	CompanyId             string    `bun:"company_id,type:varchar(8)"`
 	LocationId            float64   `bun:"location_id,type:decimal(19,0)"`
 	SummaryGroupCode      int16     `bun:"summary_group_code,type:smallint"`

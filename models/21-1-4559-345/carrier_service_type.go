@@ -7,7 +7,7 @@ import (
 
 type CarrierServiceType struct {
 	bun.BaseModel          `bun:"table:carrier_service_type"`
-	CarrierServiceTypeUid  int32     `bun:"carrier_service_type_uid,type:int,autoincrement,pk"`           // UID for this table.
+	CarrierServiceTypeUid  int32     `bun:"carrier_service_type_uid,type:int,autoincrement,scanonly,pk"`  // UID for this table.
 	CarrierServiceTypeId   int32     `bun:"carrier_service_type_id,type:int"`                             // Predefined value for this service type/carrier.
 	CarrierServiceTypeDesc string    `bun:"carrier_service_type_desc,type:varchar(255)"`                  // Predefined desc for this service type/carrier value.
 	CarrierProviderTypeUid int32     `bun:"carrier_provider_type_uid,type:int"`                           // UID of carrier for which this service type applies.

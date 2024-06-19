@@ -7,7 +7,7 @@ import (
 
 type CustomerEdiSetting struct {
 	bun.BaseModel             `bun:"table:customer_edi_setting"`
-	CustomerEdiSettingUid     int32     `bun:"customer_edi_setting_uid,type:int,autoincrement,pk"`           // Unique identifier for each record
+	CustomerEdiSettingUid     int32     `bun:"customer_edi_setting_uid,type:int,autoincrement,scanonly,pk"`  // Unique identifier for each record
 	CompanyId                 string    `bun:"company_id,type:varchar(8)"`                                   // Company ID for Customer to which settings apply
 	CustomerId                float64   `bun:"customer_id,type:decimal(19,0)"`                               // Customer to which settings apply
 	InterchgReceiverId        string    `bun:"interchg_receiver_id,type:varchar(255),nullzero"`              // Customer standard address name for EDI transactions

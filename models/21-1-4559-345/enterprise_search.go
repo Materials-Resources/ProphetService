@@ -7,7 +7,7 @@ import (
 
 type EnterpriseSearch struct {
 	bun.BaseModel             `bun:"table:enterprise_search"`
-	EnterpriseSearchUid       int32     `bun:"enterprise_search_uid,type:int,autoincrement,pk"`              // Unique ID for this table
+	EnterpriseSearchUid       int32     `bun:"enterprise_search_uid,type:int,autoincrement,scanonly,pk"`     // Unique ID for this table
 	EntityType                string    `bun:"entity_type,type:varchar(255)"`                                // Entity type for this record
 	TableName                 string    `bun:"table_name,type:varchar(255)"`                                 // Table to search for this record
 	SearchExpression          string    `bun:"search_expression,type:varchar(8000)"`                         // Search expression for the table related to this record

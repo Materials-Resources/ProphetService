@@ -7,7 +7,7 @@ import (
 
 type UsersXOeLinePanel struct {
 	bun.BaseModel        `bun:"table:users_x_oe_line_panel"`
-	UsersXOeLinePanelUid int32     `bun:"users_x_oe_line_panel_uid,type:int,autoincrement,pk"`          // Unique identifier for users_x_oe_line_panel
+	UsersXOeLinePanelUid int32     `bun:"users_x_oe_line_panel_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for users_x_oe_line_panel
 	UsersId              string    `bun:"users_id,type:varchar(30),unique"`                             // id from the users table.
 	OeLinePanelUid       int32     `bun:"oe_line_panel_uid,type:int,unique"`                            // oe_line_panel_uid from oe_line_panel table.
 	PanelName            string    `bun:"panel_name,type:varchar(40),nullzero"`                         // The name of this panel.

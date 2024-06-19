@@ -25,5 +25,5 @@ type Document struct {
 	Path              string    `bun:"path,type:varchar(255),nullzero"`                           // Path used to retrieve/create the document
 	RowStatusFlag     int32     `bun:"row_status_flag,type:int,default:((704))"`                  // Indicates the status of the record (active, inactive)
 	CreatedBy         string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`      // User who intially creates the record via the application
-	DocumentUid       int32     `bun:"document_uid,type:int,autoincrement,unique"`                // Unique Identifier for the record - will be unique and used for foreign key relationships
+	DocumentUid       int32     `bun:"document_uid,type:int,autoincrement,unique,scanonly"`       // Unique Identifier for the record - will be unique and used for foreign key relationships
 }

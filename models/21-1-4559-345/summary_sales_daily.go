@@ -7,7 +7,7 @@ import (
 
 type SummarySalesDaily struct {
 	bun.BaseModel         `bun:"table:summary_sales_daily"`
-	SummarySalesDailyUid  int32     `bun:"summary_sales_daily_uid,type:int,autoincrement,pk"`
+	SummarySalesDailyUid  int32     `bun:"summary_sales_daily_uid,type:int,autoincrement,scanonly,pk"`
 	CompanyId             string    `bun:"company_id,type:varchar(8),unique"`
 	LocationId            float64   `bun:"location_id,type:decimal(19,0),unique"`
 	SummaryDate           time.Time `bun:"summary_date,type:datetime,unique"`

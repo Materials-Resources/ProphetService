@@ -7,7 +7,7 @@ import (
 
 type PortalParamValue struct {
 	bun.BaseModel       `bun:"table:portal_param_value"`
-	PortalParamValueUid int32     `bun:"portal_param_value_uid,type:int,autoincrement,pk"`             // Unique ID for the portal parameter value
+	PortalParamValueUid int32     `bun:"portal_param_value_uid,type:int,autoincrement,scanonly,pk"`    // Unique ID for the portal parameter value
 	PortalAssignmentUid int32     `bun:"portal_assignment_uid,type:int,unique"`                        // Unique ID for the portal assignment
 	PortalParamDefUid   int32     `bun:"portal_param_def_uid,type:int,unique"`                         // Unique ID for the portal element parameter definition
 	Value               string    `bun:"value,type:varchar(255)"`                                      // Value to be passed to the portal for this user/role

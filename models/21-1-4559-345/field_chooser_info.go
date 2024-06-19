@@ -7,7 +7,7 @@ import (
 
 type FieldChooserInfo struct {
 	bun.BaseModel         `bun:"table:field_chooser_info"`
-	FieldChooserInfoUid   int32     `bun:"field_chooser_info_uid,type:int,autoincrement,pk"`             // UID for table
+	FieldChooserInfoUid   int32     `bun:"field_chooser_info_uid,type:int,autoincrement,scanonly,pk"`    // UID for table
 	Area                  int32     `bun:"area,type:int,unique"`                                         // Which area this is being used in - Order Lines, order header, etc.
 	FieldName             string    `bun:"field_name,type:varchar(255),unique"`                          // Actual name of the field
 	DisplayName           string    `bun:"display_name,type:varchar(255),nullzero"`                      // Display name of the field

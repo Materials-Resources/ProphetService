@@ -7,7 +7,7 @@ import (
 
 type ExtensibilityWindow struct {
 	bun.BaseModel          `bun:"table:extensibility_window"`
-	ExtensibilityWindowUid int32     `bun:"extensibility_window_uid,type:int,autoincrement,pk"`           // UID for the table.
+	ExtensibilityWindowUid int32     `bun:"extensibility_window_uid,type:int,autoincrement,scanonly,pk"`  // UID for the table.
 	WindowName             string    `bun:"window_name,type:varchar(255)"`                                // Window class name that the extensibility functionality will be enalbed for.
 	DateCreated            time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created
 	CreatedBy              string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record

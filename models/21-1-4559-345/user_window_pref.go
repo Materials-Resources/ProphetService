@@ -7,7 +7,7 @@ import (
 
 type UserWindowPref struct {
 	bun.BaseModel     `bun:"table:user_window_pref"`
-	UserWindowPrefUid int32     `bun:"user_window_pref_uid,type:int,autoincrement,pk"`               // Unique identifier
+	UserWindowPrefUid int32     `bun:"user_window_pref_uid,type:int,autoincrement,scanonly,pk"`      // Unique identifier
 	UserId            string    `bun:"user_id,type:varchar(30),unique"`                              // The user ID that these preferences are for
 	WindowCd          int32     `bun:"window_cd,type:int,unique"`                                    // The window that these preferences are for
 	ObjectName        string    `bun:"object_name,type:varchar(255),unique"`                         // The object on the window that we saved preferences for

@@ -23,6 +23,6 @@ type CashDrawer struct {
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
 	CashCardLoad            float64   `bun:"cash_card_load,type:decimal(19,4),default:(0)"`             // Amount of Cash Cash transactions for the cash drawer
-	CashDrawerUid           int32     `bun:"cash_drawer_uid,type:int,autoincrement"`                    // Unique identifier for the cash drawer
+	CashDrawerUid           int32     `bun:"cash_drawer_uid,type:int,autoincrement,scanonly"`           // Unique identifier for the cash drawer
 	LocIdForBranchConflict  float64   `bun:"loc_id_for_branch_conflict,type:decimal(19,0),nullzero"`    // Location id to get the default branch if we are not able to determine a single branch from the users on cash drawer in non interactive mode.
 }

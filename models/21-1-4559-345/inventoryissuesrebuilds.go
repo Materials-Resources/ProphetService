@@ -7,7 +7,7 @@ import (
 
 type Inventoryissuesrebuilds struct {
 	bun.BaseModel    `bun:"table:inventoryissuesrebuilds"`
-	Rebuilduid       int32     `bun:"rebuilduid,type:int,autoincrement,pk"`                         // Key value for this rebuild
+	Rebuilduid       int32     `bun:"rebuilduid,type:int,autoincrement,scanonly,pk"`                // Key value for this rebuild
 	RebuildSp        string    `bun:"rebuild_sp,type:varchar(255)"`                                 // Stored procedure that will perform the rebuild.
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created
 	CreatedBy        string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record

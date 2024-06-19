@@ -7,7 +7,7 @@ import (
 
 type PoolPosition struct {
 	bun.BaseModel    `bun:"table:pool_position"`
-	PoolPositionUid  int32     `bun:"pool_position_uid,type:int,autoincrement,pk"`                  // Unique ID for this table
+	PoolPositionUid  int32     `bun:"pool_position_uid,type:int,autoincrement,scanonly,pk"`         // Unique ID for this table
 	PoolPositionId   string    `bun:"pool_position_id,type:varchar(20)"`                            // User defined code for this pool position
 	Description      string    `bun:"description,type:varchar(255)"`                                // Description for this pool position
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

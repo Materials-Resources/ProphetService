@@ -7,7 +7,7 @@ import (
 
 type DbDrivenMaint struct {
 	bun.BaseModel    `bun:"table:db_driven_maint"`
-	DbDrivenMaintUid int32     `bun:"db_driven_maint_uid,type:int,autoincrement,pk"`                // UID for this table.
+	DbDrivenMaintUid int32     `bun:"db_driven_maint_uid,type:int,autoincrement,scanonly,pk"`       // UID for this table.
 	TableName        string    `bun:"table_name,type:varchar(255)"`                                 // DB table that this maint window is going to update.
 	DisplayName      string    `bun:"display_name,type:varchar(255)"`                               // Name as it will be displayed in P21 (used in windw title bar).
 	BoClass          string    `bun:"bo_class,type:varchar(255),nullzero"`                          // Optional - BO class to be used for maint window.

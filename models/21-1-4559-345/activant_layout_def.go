@@ -7,7 +7,7 @@ import (
 
 type ActivantLayoutDef struct {
 	bun.BaseModel        `bun:"table:activant_layout_def"`
-	ActivantLayoutDefUid int32     `bun:"activant_layout_def_uid,type:int,autoincrement,pk"`            // Unique identifier for each record
+	ActivantLayoutDefUid int32     `bun:"activant_layout_def_uid,type:int,autoincrement,scanonly,pk"`   // Unique identifier for each record
 	ColumnId             string    `bun:"column_id,type:varchar(255)"`                                  // Name of column in item_catalog table
 	DisplayColumnId      string    `bun:"display_column_id,type:varchar(255)"`                          // Two letter identifier for item_catalog column
 	ColumnName           string    `bun:"column_name,type:varchar(255),nullzero"`                       // User-defined column name

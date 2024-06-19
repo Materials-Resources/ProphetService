@@ -7,7 +7,7 @@ import (
 
 type FaxCover struct {
 	bun.BaseModel    `bun:"table:fax_cover"`
-	FaxCoverUid      int32     `bun:"fax_cover_uid,type:int,autoincrement,pk"`                      // UID
+	FaxCoverUid      int32     `bun:"fax_cover_uid,type:int,autoincrement,scanonly,pk"`             // UID
 	FaxCoverId       string    `bun:"fax_cover_id,type:varchar(255)"`                               // ID of the cover sheet in VSI fax
 	FaxCoverDesc     string    `bun:"fax_cover_desc,type:varchar(255),nullzero"`                    // Description of the coversheet
 	RowStatusFlag    int32     `bun:"row_status_flag,type:int"`                                     // Active \ Delete

@@ -7,8 +7,8 @@ import (
 
 type PredefinedFinRptRowXAcct struct {
 	bun.BaseModel           `bun:"table:predefined_fin_rpt_row_x_acct"`
-	PredefFinRptRowXAcctUid int32 `bun:"predef_fin_rpt_row_x_acct_uid,type:int,autoincrement,pk"` // Unique identifier of table (Identity Column)
-	StatementTypeCd         int32 `bun:"statement_type_cd,type:int"`                              /*
+	PredefFinRptRowXAcctUid int32 `bun:"predef_fin_rpt_row_x_acct_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	StatementTypeCd         int32 `bun:"statement_type_cd,type:int"`                                       /*
 		Financial Statement which the records belongs (Balance Sheet,
 		Profit & Loss, etc...)
 	*/

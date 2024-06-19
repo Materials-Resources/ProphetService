@@ -35,7 +35,7 @@ func (m *InvLoc) toProductDomain(d *domain.Product) {
 		d.Uid = strconv.Itoa(int(m.InvMast.InvMastUid))
 		d.Sn = &m.InvMast.ItemId
 		d.Name = &m.InvMast.ItemDesc
-		d.Description = &m.InvMast.ItemDesc
+		d.Description = &m.InvMast.ExtendedDesc
 		d.ProductGroupSn = &m.ProductGroupId
 	}
 

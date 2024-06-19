@@ -7,7 +7,7 @@ import (
 
 type XmlStylesheet struct {
 	bun.BaseModel    `bun:"table:xml_stylesheet"`
-	XmlStylesheetUid int32     `bun:"xml_stylesheet_uid,type:int,autoincrement,pk"`                 // Table UID
+	XmlStylesheetUid int32     `bun:"xml_stylesheet_uid,type:int,autoincrement,scanonly,pk"`        // Table UID
 	DocumentVersion  string    `bun:"document_version,type:varchar(255)"`                           // Version of the stylesheet
 	XmlStylesheetCd  int32     `bun:"xml_stylesheet_cd,type:int"`                                   // Code value of the stylesheet
 	XmlStylesheet    string    `bun:"xml_stylesheet,type:text"`                                     // The stylesheet

@@ -7,7 +7,7 @@ import (
 
 type CompanyLostSales struct {
 	bun.BaseModel       `bun:"table:company_lost_sales"`
-	CompanyLostSalesUid int32     `bun:"company_lost_sales_uid,type:int,autoincrement,pk"`             // Unique identifier for company lost sales table
+	CompanyLostSalesUid int32     `bun:"company_lost_sales_uid,type:int,autoincrement,scanonly,pk"`    // Unique identifier for company lost sales table
 	CompanyId           string    `bun:"company_id,type:varchar(8),unique"`                            // Identifies the company for lost sales settings
 	TransactionCodeNo   int32     `bun:"transaction_code_no,type:int,unique"`                          // Indicates what type of transaction was the quantity cancelled in. Order - Cancelled, Order Edited, Shipment Cancelled, Shipped Short etc.
 	ActionCodeNo        int32     `bun:"action_code_no,type:int"`                                      // Action taken at transaction entry

@@ -7,7 +7,7 @@ import (
 
 type RfKeysDefault struct {
 	bun.BaseModel    `bun:"table:rf_keys_default"`
-	KeyhelpUid       int32     `bun:"keyhelp_uid,type:int,autoincrement,pk"`                    // The primary key for the table
+	KeyhelpUid       int32     `bun:"keyhelp_uid,type:int,autoincrement,scanonly,pk"`           // The primary key for the table
 	KeyhelpCode      int32     `bun:"keyhelp_code,type:int"`                                    // This column  identifies the help key. The keyhelp values are defined in n_cst_constant_rf. They define a particular category of action like deposit, drill, skip.
 	WwmsWindowCode   int32     `bun:"wwms_window_code,type:int"`                                // This column determines the window where the key is to be displayed.
 	WwmsScreenCode   int32     `bun:"wwms_screen_code,type:int"`                                // This column determines the screen where the key is to be displayed.

@@ -7,7 +7,7 @@ import (
 
 type PopupStatement struct {
 	bun.BaseModel           `bun:"table:popup_statement"`
-	PopupStatementUid       int32     `bun:"popup_statement_uid,type:int,autoincrement,pk"`                // Popup Statement Id
+	PopupStatementUid       int32     `bun:"popup_statement_uid,type:int,autoincrement,scanonly,pk"`       // Popup Statement Id
 	Columns                 string    `bun:"columns,type:varchar(max)"`                                    // Select statement for popup
 	FromJoin                string    `bun:"from_join,type:varchar(max)"`                                  // From-Join statement for popup
 	Where                   string    `bun:"where,type:varchar(max)"`                                      // Where statement for popup

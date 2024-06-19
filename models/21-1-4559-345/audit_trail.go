@@ -7,7 +7,7 @@ import (
 
 type AuditTrail struct {
 	bun.BaseModel     `bun:"table:audit_trail"`
-	AuditTrailUid     int32     `bun:"audit_trail_uid,type:int,autoincrement,pk"`            // (Identity not for replication) Unique identifier for each record
+	AuditTrailUid     int32     `bun:"audit_trail_uid,type:int,autoincrement,scanonly,pk"`   // (Identity not for replication) Unique identifier for each record
 	SourceAreaCd      int32     `bun:"source_area_cd,type:int"`                              // Code representing transaction or maintenance record where audit_trail record was established
 	ColumnChanged     string    `bun:"column_changed,type:varchar(255)"`                     // Column description of value being changed
 	Key1Cd            string    `bun:"key1_cd,type:varchar(255)"`                            // Code representing primary column name used to tie audit_trail record to source record

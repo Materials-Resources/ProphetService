@@ -7,7 +7,7 @@ import (
 
 type ScheduledJobNotifications struct {
 	bun.BaseModel    `bun:"table:scheduled_job_notifications"`
-	NotificationUid  int32     `bun:"notification_uid,type:int,autoincrement,pk"`                                                                                                                                                             // UID Coulmn
+	NotificationUid  int32     `bun:"notification_uid,type:int,autoincrement,scanonly,pk"`                                                                                                                                                    // UID Coulmn
 	NotificationType string    `bun:"notification_type,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n"` // Type of Notification EMAIL,Alert etc.
 	NotificationDesc string    `bun:"notification_desc,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n"` // Notification Description
 	NotificationName string    `bun:"notification_name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n"` // Notification Name

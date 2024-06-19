@@ -23,7 +23,7 @@ type InvPeriodUsage struct {
 	DemandPeriodUid             int32     `bun:"demand_period_uid,type:int,unique"`                         // Unique identifier for the demand period.
 	InvMastUid                  int32     `bun:"inv_mast_uid,type:int,unique"`                              // Unique identifier for the item id.
 	UsageCopied                 string    `bun:"usage_copied,type:char(1),default:('N')"`                   // Indicates that the usage was copied to a substitute item
-	InvPeriodUsageUid           int32     `bun:"inv_period_usage_uid,type:int,autoincrement,pk"`
+	InvPeriodUsageUid           int32     `bun:"inv_period_usage_uid,type:int,autoincrement,scanonly,pk"`
 	MeanAbsolutePercentError    float64   `bun:"mean_absolute_percent_error,type:decimal(19,4),nullzero"`        // Tracks accuracy of forecasting.  Used in advanced demand forecasting in determining forecasting error and erratic items.
 	ExceptionalSalesFlag        string    `bun:"exceptional_sales_flag,type:char(1),nullzero"`                   // Flags whether filtered usage is being used as the actual usage because of exceptional sales.
 	ExceptionalDeviationFlag    string    `bun:"exceptional_deviation_flag,type:char(1),nullzero"`               // Used in advanced demand forecasting.  Flags when the MAD Percentage to mean absolute percent error ratio is sufficiently large.

@@ -7,7 +7,7 @@ import (
 
 type ItemCategoryHierarchyDeleteAudit struct {
 	bun.BaseModel                       `bun:"table:item_category_hierarchy_delete_audit"`
-	ItemCategoryHierarchyDeleteAuditUid int32     `bun:"item_category_hierarchy_delete_audit_uid,type:int,autoincrement"`
+	ItemCategoryHierarchyDeleteAuditUid int32     `bun:"item_category_hierarchy_delete_audit_uid,type:int,autoincrement,scanonly"`
 	ParentItemCategoryUid               int32     `bun:"parent_item_category_uid,type:int"`
 	ChildItemCategoryUid                int32     `bun:"child_item_category_uid,type:int"`
 	ParentItemCategoryId                string    `bun:"parent_item_category_id,type:varchar(255)"`

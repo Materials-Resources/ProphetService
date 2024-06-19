@@ -7,7 +7,7 @@ import (
 
 type InvoiceLineAuditTrail struct {
 	bun.BaseModel            `bun:"table:invoice_line_audit_trail"`
-	InvoiceLineAuditTrailUid int32     `bun:"invoice_line_audit_trail_uid,type:int,autoincrement"`
+	InvoiceLineAuditTrailUid int32     `bun:"invoice_line_audit_trail_uid,type:int,autoincrement,scanonly"`
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime,nullzero"`
 	AuditDate                time.Time `bun:"audit_date,type:datetime,nullzero"`
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(255),nullzero"`

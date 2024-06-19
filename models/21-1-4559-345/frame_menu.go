@@ -7,7 +7,7 @@ import (
 
 type FrameMenu struct {
 	bun.BaseModel             `bun:"table:frame_menu"`
-	FrameMenuUid              int32     `bun:"frame_menu_uid,type:int,autoincrement,pk"`
+	FrameMenuUid              int32     `bun:"frame_menu_uid,type:int,autoincrement,scanonly,pk"`
 	Handle                    int32     `bun:"handle,type:int"`
 	ParentHandle              int32     `bun:"parent_handle,type:int,nullzero"`
 	ParentClassName           string    `bun:"parent_class_name,type:varchar(255),nullzero"`

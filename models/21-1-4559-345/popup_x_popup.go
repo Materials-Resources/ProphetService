@@ -7,7 +7,7 @@ import (
 
 type PopupXPopup struct {
 	bun.BaseModel       `bun:"table:popup_x_popup"`
-	PopupXPopupUid      int32     `bun:"popup_x_popup_uid,type:int,autoincrement,pk"`                  // Unique Identifier of the table
+	PopupXPopupUid      int32     `bun:"popup_x_popup_uid,type:int,autoincrement,scanonly,pk"`         // Unique Identifier of the table
 	PopupIndexUid       int32     `bun:"popup_index_uid,type:int"`                                     // Unique identifier of the main popup
 	LinkedPopupIndexUid int32     `bun:"linked_popup_index_uid,type:int"`                              // Unique identifier of the linked popup
 	Order               int32     `bun:"order,type:int"`                                               // Order of the linked popup

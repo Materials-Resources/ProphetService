@@ -201,7 +201,7 @@ type Company struct {
 	InvoiceOnlyLocationId             float64   `bun:"invoice_only_location_id,type:decimal(19,0),nullzero"`
 	ExternalTaxCompanyCode            string    `bun:"external_tax_company_code,type:varchar(255),nullzero"` // For use with 3rd party tax integrations; the company code that should be used for tax requests when the P21 company ID can not be used directly.
 	ArToApClearingAcct                string    `bun:"ar_to_ap_clearing_acct,type:varchar(32),nullzero"`
-	CompanyUid                        int32     `bun:"company_uid,type:int,autoincrement,unique"` // Unique identifier for the table
+	CompanyUid                        int32     `bun:"company_uid,type:int,autoincrement,unique,scanonly"` // Unique identifier for the table
 	GlForeignCardlockAcct             string    `bun:"gl_foreign_cardlock_acct,type:varchar(32),nullzero"`
 	BinTypeUid                        int32     `bun:"bin_type_uid,type:int,nullzero"`                                     // Custom column to indicate the bin type for automatically create Inventory Return.
 	PriceRoundingFlag                 string    `bun:"price_rounding_flag,type:char(1),nullzero"`                          // Indicates if this company rounds prices.

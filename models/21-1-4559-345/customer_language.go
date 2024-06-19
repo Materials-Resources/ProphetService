@@ -7,7 +7,7 @@ import (
 
 type CustomerLanguage struct {
 	bun.BaseModel       `bun:"table:customer_language"`
-	CustomerLanguageUid int32     `bun:"customer_language_uid,type:int,autoincrement,pk"`              // Unique id for company_language record
+	CustomerLanguageUid int32     `bun:"customer_language_uid,type:int,autoincrement,scanonly,pk"`     // Unique id for company_language record
 	CompanyId           string    `bun:"company_id,type:varchar(8)"`                                   // Unique id for company code
 	CustomerId          float64   `bun:"customer_id,type:decimal(19,0)"`                               // Unique id for customer.
 	LanguageId          string    `bun:"language_id,type:varchar(8)"`                                  // A customer specified language for customer

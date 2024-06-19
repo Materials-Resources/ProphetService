@@ -7,7 +7,7 @@ import (
 
 type DatasourceXUsers struct {
 	bun.BaseModel       `bun:"table:datasource_x_users"`
-	DatasourceXUsersUid int32     `bun:"datasource_x_users_uid,type:int,autoincrement,pk"`             // Identifier
+	DatasourceXUsersUid int32     `bun:"datasource_x_users_uid,type:int,autoincrement,scanonly,pk"`    // Identifier
 	DatasourceUid       int32     `bun:"datasource_uid,type:int"`                                      // Datasource Uid
 	UsersId             string    `bun:"users_id,type:varchar(30)"`                                    // User Id
 	DateCreated         time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

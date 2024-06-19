@@ -7,7 +7,7 @@ import (
 
 type EmailLog struct {
 	bun.BaseModel          `bun:"table:email_log"`
-	EmailLogUid            int32     `bun:"email_log_uid,type:int,autoincrement,pk"`                      // Email Log Unique Identifier
+	EmailLogUid            int32     `bun:"email_log_uid,type:int,autoincrement,scanonly,pk"`             // Email Log Unique Identifier
 	CompanyId              string    `bun:"company_id,type:varchar(8),nullzero"`                          // Company ID
 	TransactionType        string    `bun:"transaction_type,type:varchar(255),nullzero"`                  // Transaction Type
 	TransactionNumber      string    `bun:"transaction_number,type:varchar(255),nullzero"`                // Transaction Number or ID

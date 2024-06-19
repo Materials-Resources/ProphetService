@@ -7,7 +7,7 @@ import (
 
 type GlDimenType struct {
 	bun.BaseModel    `bun:"table:gl_dimen_type"`
-	GlDimenTypeUid   int32     `bun:"gl_dimen_type_uid,type:int,autoincrement,pk"`                  // UID - identity
+	GlDimenTypeUid   int32     `bun:"gl_dimen_type_uid,type:int,autoincrement,scanonly,pk"`         // UID - identity
 	GlDimenTypeId    string    `bun:"gl_dimen_type_id,type:varchar(255),unique"`                    // Type ID
 	GlDimenTypeDesc  string    `bun:"gl_dimen_type_desc,type:varchar(255)"`                         // Description for Type
 	RecordTypeCd     int32     `bun:"record_type_cd,type:int,default:((932))"`                      // System Defined or User Defined Code

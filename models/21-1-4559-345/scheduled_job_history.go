@@ -7,7 +7,7 @@ import (
 
 type ScheduledJobHistory struct {
 	bun.BaseModel          `bun:"table:scheduled_job_history"`
-	ScheduledJobHistoryUid int32     `bun:"scheduled_job_history_uid,type:int,autoincrement,pk"`                                                                                                                                          // identity & auto-incremented column
+	ScheduledJobHistoryUid int32     `bun:"scheduled_job_history_uid,type:int,autoincrement,scanonly,pk"`                                                                                                                                 // identity & auto-incremented column
 	ScheduledJobUid        int32     `bun:"scheduled_job_uid,type:int"`                                                                                                                                                                   // foreign key to scheduled_job
 	JobRunAtDate           time.Time `bun:"job_run_at_date,type:datetime"`                                                                                                                                                                // last time when job finished it's task
 	JobRunStatus           string    `bun:"job_run_status,type:varchar(50)"`                                                                                                                                                              // job status, failed, cancelled or success

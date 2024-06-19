@@ -22,7 +22,7 @@ type Branch struct {
 	DefaultSalesrepId         string    `bun:"default_salesrep_id,type:varchar(255),nullzero"`            // Default Salesrep ID to be used when creating customers.
 	DunsNumber                string    `bun:"duns_number,type:varchar(255),nullzero"`                    // Dun and Bradstreet assigned identifier for a branch.
 	PreventAutoAssignLotsFlag string    `bun:"prevent_auto_assign_lots_flag,type:char(1),default:('N')"`  // Indicates if automatic allocation of lots for allocated quantity should be overridden
-	BranchUid                 int32     `bun:"branch_uid,type:int,autoincrement,unique"`                  // Unique identifier for the table
+	BranchUid                 int32     `bun:"branch_uid,type:int,autoincrement,unique,scanonly"`         // Unique identifier for the table
 	NetProfitConfigurationUid int32     `bun:"net_profit_configuration_uid,type:int,nullzero"`            // For CPA, the net profit calculation to be used for the branch
 	CompanyUid                int32     `bun:"company_uid,type:int"`                                      // Unique identifier for company table. Used with CPA
 	CfdiTimezoneOffset        string    `bun:"cfdi_timezone_offset,type:varchar(255),nullzero"`           // CFDI Time Zone Offset

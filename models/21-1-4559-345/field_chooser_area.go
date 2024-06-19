@@ -7,7 +7,7 @@ import (
 
 type FieldChooserArea struct {
 	bun.BaseModel       `bun:"table:field_chooser_area"`
-	FieldChooserAreaUid int32     `bun:"field_chooser_area_uid,type:int,autoincrement,pk"`             // Unique identifier for each record
+	FieldChooserAreaUid int32     `bun:"field_chooser_area_uid,type:int,autoincrement,scanonly,pk"`    // Unique identifier for each record
 	Area                int32     `bun:"area,type:int"`                                                // Field Chooser area / context code
 	Dataobject          string    `bun:"dataobject,type:varchar(255)"`                                 // Dataobject associated with a field chooser  area
 	WindowName          string    `bun:"window_name,type:varchar(255),nullzero"`                       // window name

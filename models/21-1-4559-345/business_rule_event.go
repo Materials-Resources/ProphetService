@@ -7,7 +7,7 @@ import (
 
 type BusinessRuleEvent struct {
 	bun.BaseModel        `bun:"table:business_rule_event"`
-	BusinessRuleEventUid int32     `bun:"business_rule_event_uid,type:int,autoincrement,pk"`            // UID for this table.
+	BusinessRuleEventUid int32     `bun:"business_rule_event_uid,type:int,autoincrement,scanonly,pk"`   // UID for this table.
 	PublishedEventName   string    `bun:"published_event_name,type:varchar(255)"`                       // Event name as appears in the publish statement in P21 code.
 	DisplayName          string    `bun:"display_name,type:varchar(255)"`                               // Event name as it will be shown to the user.
 	Description          string    `bun:"description,type:varchar(255)"`                                // Explanation of what event is and where it's called from.

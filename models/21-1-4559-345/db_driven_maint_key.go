@@ -7,7 +7,7 @@ import (
 
 type DbDrivenMaintKey struct {
 	bun.BaseModel       `bun:"table:db_driven_maint_key"`
-	DbDrivenMaintKeyUid int32     `bun:"db_driven_maint_key_uid,type:int,autoincrement,pk"`            // UID for this table.
+	DbDrivenMaintKeyUid int32     `bun:"db_driven_maint_key_uid,type:int,autoincrement,scanonly,pk"`   // UID for this table.
 	DbDrivenMaintUid    int32     `bun:"db_driven_maint_uid,type:int"`                                 // db_driven_maint record that this key is for.
 	KeyColumnName       string    `bun:"key_column_name,type:varchar(255)"`                            // Key column name.
 	DateCreated         time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

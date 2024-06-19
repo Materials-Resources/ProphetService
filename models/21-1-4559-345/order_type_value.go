@@ -7,7 +7,7 @@ import (
 
 type OrderTypeValue struct {
 	bun.BaseModel     `bun:"table:order_type_value"`
-	OrderTypeValueUid int32     `bun:"order_type_value_uid,type:int,autoincrement,pk"`               // Unique Identifier for table.
+	OrderTypeValueUid int32     `bun:"order_type_value_uid,type:int,autoincrement,scanonly,pk"`      // Unique Identifier for table.
 	OrderTypeId       int32     `bun:"order_type_id,type:int"`                                       // Identifier for the order_type - this will be 1 - 11.
 	RequiredFlag      string    `bun:"required_flag,type:char(1),default:('N')"`                     // Determine if this value will be required in OE.
 	Value             string    `bun:"value,type:varchar(40)"`                                       // This will hold the value to appear in the drop down

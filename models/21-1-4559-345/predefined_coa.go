@@ -7,7 +7,7 @@ import (
 
 type PredefinedCoa struct {
 	bun.BaseModel      `bun:"table:predefined_coa"`
-	PredefinedCoaUid   int32     `bun:"predefined_coa_uid,type:int,autoincrement,pk"`                 // Unique Identifier for the record.
+	PredefinedCoaUid   int32     `bun:"predefined_coa_uid,type:int,autoincrement,scanonly,pk"`        // Unique Identifier for the record.
 	AccountNumber      string    `bun:"account_number,type:varchar(10),unique"`                       // Account Number
 	AccountDescription string    `bun:"account_description,type:varchar(255)"`                        // Account Description
 	AccountType        string    `bun:"account_type,type:char(1)"`                                    // Account Type (Asset, Expense, Liability, etc...)
