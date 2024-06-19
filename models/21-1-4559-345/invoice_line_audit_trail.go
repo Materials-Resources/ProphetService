@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,12 +7,12 @@ import (
 
 type InvoiceLineAuditTrail struct {
 	bun.BaseModel            `bun:"table:invoice_line_audit_trail"`
-	InvoiceLineAuditTrailUid int32     `bun:"invoice_line_audit_trail_uid,type:int,identity"`
+	InvoiceLineAuditTrailUid int32     `bun:"invoice_line_audit_trail_uid,type:int,autoincrement"`
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime,nullzero"`
 	AuditDate                time.Time `bun:"audit_date,type:datetime,nullzero"`
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(255),nullzero"`
-	AuditUserName            string    `bun:"audit_user_name,type:nvarchar(256),nullzero"`
-	AuditLoginName           string    `bun:"audit_login_name,type:nvarchar(256),nullzero"`
+	AuditUserName            string    `bun:"audit_user_name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"`
+	AuditLoginName           string    `bun:"audit_login_name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"`
 	InvoiceLineUid           int32     `bun:"invoice_line_uid,type:int"`
 	OrderNoOld               string    `bun:"order_no_old,type:varchar(255),nullzero"`
 	OrderNoNew               string    `bun:"order_no_new,type:varchar(255),nullzero"`

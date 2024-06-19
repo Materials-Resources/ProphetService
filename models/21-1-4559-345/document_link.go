@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -22,6 +22,6 @@ type DocumentLink struct {
 	CreatedBy        string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
-	OutsideUseFlag   string    `bun:"outside_use_flag,type:char,default:('N')"`
-	MandatoryFlag    string    `bun:"mandatory_flag,type:char,default:('N')"`
+	OutsideUseFlag   string    `bun:"outside_use_flag,type:char(1),default:('N')"`
+	MandatoryFlag    string    `bun:"mandatory_flag,type:char(1),default:('N')"`
 }

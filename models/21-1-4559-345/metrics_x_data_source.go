@@ -1,10 +1,10 @@
-package model
+package gen
 
 import "github.com/uptrace/bun"
 
 type MetricsXDataSource struct {
 	bun.BaseModel         `bun:"table:metrics_x_data_source"`
-	MetricsXDataSourceUid int32  `bun:"metrics_x_data_source_uid,type:int,pk,identity"`
-	DataSourceName        string `bun:"data_source_name,type:nvarchar(255),nullzero"`
-	MetricsUid            int32  `bun:"metrics_uid,type:int,nullzero"`
+	MetricsXDataSourceUid int32  `bun:"metrics_x_data_source_uid,type:int,autoincrement,pk"`                                                                                                                                                            // metrics_x_data_source_uid
+	DataSourceName        string `bun:"data_source_name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"` // data_source_name
+	MetricsUid            int32  `bun:"metrics_uid,type:int,nullzero"`                                                                                                                                                                                  // metrics_uid
 }

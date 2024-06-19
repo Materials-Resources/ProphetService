@@ -1,4 +1,4 @@
-package model
+package gen
 
 import "github.com/uptrace/bun"
 
@@ -9,6 +9,6 @@ type Inventoryissuesrunitemlocation struct {
 	LocationId    int32 `bun:"location_id,type:int"`
 	Instances     int32 `bun:"instances,type:int,default:((1))"`
 	Testuid       int32 `bun:"TestUID,type:int,nullzero"`
-	TableUid      int32 `bun:"table_uid,type:int,identity"`
+	TableUid      int32 `bun:"table_uid,type:int,autoincrement"`
 	TotalTestUid  int32 `bun:"total_test_uid,type:int,nullzero"`
 }

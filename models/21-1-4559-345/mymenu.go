@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -19,6 +19,6 @@ type Mymenu struct {
 	OpenedbyMenuitem string    `bun:"openedby_menuitem,type:varchar(128),nullzero"`
 	Menuname         string    `bun:"menuname,type:varchar(128),nullzero"`
 	Windowrole       string    `bun:"WindowRole,type:varchar(128),nullzero"`
-	Icon             string    `bun:"icon,type:varchar(255),default:('activant.bmp')"`
-	SequenceNo       int32     `bun:"sequence_no,type:int,nullzero"`
+	Icon             string    `bun:"icon,type:varchar(255),default:('activant.bmp')"` // File name for menu/toolbar icon
+	SequenceNo       int32     `bun:"sequence_no,type:int,nullzero"`                   // Sequence Order of Menu Items
 }

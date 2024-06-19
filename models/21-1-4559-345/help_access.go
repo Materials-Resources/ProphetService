@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -18,5 +18,5 @@ type HelpAccess struct {
 	HelpFileDate        time.Time `bun:"help_file_date,type:datetime,nullzero"`
 	DateCreated         time.Time `bun:"date_created,type:datetime"`
 	LastMaintainedBy    string    `bun:"last_maintained_by,type:varchar(30)"`
-	HelpAccessUid       int32     `bun:"help_access_uid,type:int,pk,identity"`
+	HelpAccessUid       int32     `bun:"help_access_uid,type:int,autoincrement,pk"`
 }

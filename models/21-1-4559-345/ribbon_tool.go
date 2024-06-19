@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type RibbonTool struct {
 	bun.BaseModel      `bun:"table:ribbon_tool"`
-	RibbonToolUid      int32     `bun:"ribbon_tool_uid,type:int,pk,identity"`
+	RibbonToolUid      int32     `bun:"ribbon_tool_uid,type:int,autoincrement,pk"`
 	ToolId             string    `bun:"tool_id,type:varchar(255)"`
 	ToolText           string    `bun:"tool_text,type:varchar(255)"`
 	Description        string    `bun:"description,type:varchar(255)"`
@@ -21,5 +21,5 @@ type RibbonTool struct {
 	CreatedBy          string    `bun:"created_by,type:varchar(255),default:(user_name())"`
 	DateLastModified   time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy   string    `bun:"last_maintained_by,type:varchar(255),default:(user_name())"`
-	UsedInUiserverFlag string    `bun:"used_in_uiserver_flag,type:char,default:('N')"`
+	UsedInUiserverFlag string    `bun:"used_in_uiserver_flag,type:char(1),default:('N')"` // flags whether tool is used in the UIServer
 }

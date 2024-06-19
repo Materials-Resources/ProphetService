@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type WeboeFile struct {
 	bun.BaseModel     `bun:"table:weboe_file"`
-	WeboeFileUid      int32     `bun:"weboe_file_uid,type:int,identity"`
+	WeboeFileUid      int32     `bun:"weboe_file_uid,type:int,autoincrement"`
 	WeboeFileName     string    `bun:"weboe_file_name,type:varchar(255)"`
 	WeboeOldFileName  string    `bun:"weboe_old_file_name,type:varchar(255)"`
 	WeboeFileDesc     string    `bun:"weboe_file_desc,type:varchar(255)"`

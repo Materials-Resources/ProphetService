@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -26,13 +26,13 @@ type DocumentLinkWindowXKey struct {
 	CreatedBy                 string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	DateLastModified          time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy          string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
-	DisplayOutsideUseFlag     string    `bun:"display_outside_use_flag,type:char,default:('N')"`
-	DisplayMandatoryFlag      string    `bun:"display_mandatory_flag,type:char,default:('N')"`
-	DisplayPrintFlag          string    `bun:"display_print_flag,type:char,default:('N')"`
-	DisplayFaxFlag            string    `bun:"display_fax_flag,type:char,default:('N')"`
-	DisplayEmailFlag          string    `bun:"display_email_flag,type:char,default:('N')"`
-	DisplayAllSourceLinksFlag string    `bun:"display_all_source_links_flag,type:char,default:('N')"`
-	TransmitLotLinkFlag       string    `bun:"transmit_lot_link_flag,type:char,default:('N')"`
-	PrintItemLinkFlag         string    `bun:"print_item_link_flag,type:char,default:('N')"`
-	IncludeForImportRole      string    `bun:"include_for_import_role,type:varchar(255),nullzero"`
+	DisplayOutsideUseFlag     string    `bun:"display_outside_use_flag,type:char(1),default:('N')"`
+	DisplayMandatoryFlag      string    `bun:"display_mandatory_flag,type:char(1),default:('N')"`
+	DisplayPrintFlag          string    `bun:"display_print_flag,type:char(1),default:('N')"`
+	DisplayFaxFlag            string    `bun:"display_fax_flag,type:char(1),default:('N')"`
+	DisplayEmailFlag          string    `bun:"display_email_flag,type:char(1),default:('N')"`
+	DisplayAllSourceLinksFlag string    `bun:"display_all_source_links_flag,type:char(1),default:('N')"`
+	TransmitLotLinkFlag       string    `bun:"transmit_lot_link_flag,type:char(1),default:('N')"`  // Indicates whether to automatically transmit outside use lot document links to ship to
+	PrintItemLinkFlag         string    `bun:"print_item_link_flag,type:char(1),default:('N')"`    // Indicates whether to automatically print mandatory item document links
+	IncludeForImportRole      string    `bun:"include_for_import_role,type:varchar(255),nullzero"` // Import role for which document_link functionality should be included
 }

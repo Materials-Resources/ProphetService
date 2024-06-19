@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type TempSalesSummary struct {
 	bun.BaseModel         `bun:"table:temp_sales_summary"`
-	TolsUid               int32     `bun:"tols_uid,type:int,identity"`
+	TolsUid               int32     `bun:"tols_uid,type:int,autoincrement"`
 	CompanyId             string    `bun:"company_id,type:varchar(8)"`
 	LocationId            float64   `bun:"location_id,type:decimal(19,0)"`
 	SummaryGroupCode      int16     `bun:"summary_group_code,type:smallint"`
@@ -19,6 +19,6 @@ type TempSalesSummary struct {
 	SummaryCommissionCost float64   `bun:"summary_commission_cost,type:decimal(19,4)"`
 	SummaryOtherCost      float64   `bun:"summary_other_cost,type:decimal(19,4)"`
 	OrderDate             time.Time `bun:"order_date,type:datetime"`
-	Processed             string    `bun:"processed,type:char"`
+	Processed             string    `bun:"processed,type:char(1)"`
 	Guid                  string    `bun:"guid,type:uniqueidentifier,nullzero"`
 }

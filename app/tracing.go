@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"go.opentelemetry.io/otel/trace"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -45,4 +46,13 @@ func (a *App) newTracer() *tracesdk.TracerProvider {
 
 	return tp
 
+}
+
+// GetTP returns initialized instance of tracesdk.TracerProvider.
+func (a *App) GetTP() *tracesdk.TracerProvider {
+	return a.tp
+}
+
+func (a *App) CreateTracer(name string) trace.Tracer {
+	return a.traceProvider.Tracer(name)
 }

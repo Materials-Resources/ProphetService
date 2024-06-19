@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,37 +7,37 @@ import (
 
 type ScheduledJob struct {
 	bun.BaseModel              `bun:"table:scheduled_job"`
-	CompanyId                  string    `bun:"company_id,type:varchar(8),nullzero"`
-	Name                       string    `bun:"name,type:varchar(255)"`
-	Description                string    `bun:"description,type:varchar(255)"`
-	Type                       string    `bun:"type,type:varchar(255)"`
-	JobConfig                  string    `bun:"job_config,type:nvarchar,nullzero"`
-	StartDate                  time.Time `bun:"start_date,type:datetime"`
-	EndDate                    time.Time `bun:"end_date,type:datetime,nullzero"`
-	ScheduledIntervalInminutes int32     `bun:"scheduled_interval_inminutes,type:int"`
-	ActiveFlag                 string    `bun:"active_flag,type:char,default:('Y')"`
-	RunningFlag                string    `bun:"running_flag,type:char,default:('N')"`
-	LastRunDate                time.Time `bun:"last_run_date,type:datetime,nullzero"`
-	DeleteFlag                 string    `bun:"delete_flag,type:char,default:('N')"`
-	DateCreated                time.Time `bun:"date_created,type:datetime,default:(getdate())"`
-	CreatedBy                  string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
-	DateLastModified           time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
-	LastMaintainedBy           string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
-	ScheduledIntervalInhours   int32     `bun:"scheduled_interval_inhours,type:int,default:((0))"`
-	ScheduledIntervalInseconds int32     `bun:"scheduled_interval_inseconds,type:int,default:((0))"`
-	RepeatDays                 string    `bun:"repeat_days,type:char(15),nullzero"`
-	LastRunStatus              string    `bun:"last_run_status,type:varchar(50),nullzero"`
-	ScheduledJobUid            int32     `bun:"scheduled_job_uid,type:int,pk"`
-	SchedulerIdentifier        string    `bun:"scheduler_identifier,type:uniqueidentifier,nullzero"`
-	LastPingDate               time.Time `bun:"last_ping_date,type:datetime,nullzero"`
-	FirstRunDate               time.Time `bun:"first_run_date,type:datetime,nullzero"`
-	RecurrenceType             int32     `bun:"recurrence_type,type:int,default:((0))"`
-	RecurrenceIndex            int32     `bun:"recurrence_index,type:int,default:((0))"`
-	RecurrenceInterval         int32     `bun:"recurrence_interval,type:int,default:((0))"`
-	RecurrenceMonth            int32     `bun:"recurrence_month,type:int,default:((0))"`
-	RecurrenceDom              int32     `bun:"recurrence_dom,type:int,default:((0))"`
-	ConsecutiveFailureCounter  int32     `bun:"consecutive_failure_counter,type:int,default:((0))"`
-	HistoryLevel               int32     `bun:"history_level,type:int,default:((1664))"`
-	MaxRetryAttempts           int32     `bun:"max_retry_attempts,type:int,nullzero"`
-	RunOnce                    string    `bun:"run_once,type:char,default:('N')"`
+	CompanyId                  string    `bun:"company_id,type:varchar(8),nullzero"`                                                                                                                                                                      // company id as p21 system
+	Name                       string    `bun:"name,type:varchar(255)"`                                                                                                                                                                                   // job name
+	Description                string    `bun:"description,type:varchar(255)"`                                                                                                                                                                            // job description
+	Type                       string    `bun:"type,type:varchar(255)"`                                                                                                                                                                                   // job type (class name with assembly type)
+	JobConfig                  string    `bun:"job_config,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"` // a serialized json string which will job configurations. It should be nvarcha(max)
+	StartDate                  time.Time `bun:"start_date,type:datetime"`                                                                                                                                                                                 // start date of the job
+	EndDate                    time.Time `bun:"end_date,type:datetime,nullzero"`                                                                                                                                                                          // end date for the job
+	ScheduledIntervalInminutes int32     `bun:"scheduled_interval_inminutes,type:int"`                                                                                                                                                                    // how frequently this job will run
+	ActiveFlag                 string    `bun:"active_flag,type:char(1),default:('Y')"`                                                                                                                                                                   // says if job is active or not
+	RunningFlag                string    `bun:"running_flag,type:char(1),default:('N')"`                                                                                                                                                                  // says if job is running or not
+	LastRunDate                time.Time `bun:"last_run_date,type:datetime,nullzero"`                                                                                                                                                                     // when job has run last time
+	DeleteFlag                 string    `bun:"delete_flag,type:char(1),default:('N')"`                                                                                                                                                                   // says if job has been deleted
+	DateCreated                time.Time `bun:"date_created,type:datetime,default:(getdate())"`                                                                                                                                                           // Date and time the record was originally created
+	CreatedBy                  string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`                                                                                                                                                     // User who created the record
+	DateLastModified           time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`                                                                                                                                                     // Date and time the record was modified
+	LastMaintainedBy           string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`                                                                                                                                             // User who last changed the record
+	ScheduledIntervalInhours   int32     `bun:"scheduled_interval_inhours,type:int,default:((0))"`                                                                                                                                                        // scheduled job intervals in hours
+	ScheduledIntervalInseconds int32     `bun:"scheduled_interval_inseconds,type:int,default:((0))"`                                                                                                                                                      // scheduled job intervals in seconds
+	RepeatDays                 string    `bun:"repeat_days,type:char(15),nullzero"`                                                                                                                                                                       // scheduled job repeat in days
+	LastRunStatus              string    `bun:"last_run_status,type:varchar(50),nullzero"`                                                                                                                                                                // last run status for job
+	ScheduledJobUid            int32     `bun:"scheduled_job_uid,type:int,pk"`                                                                                                                                                                            // identity auto-incremented column (primary key)
+	SchedulerIdentifier        string    `bun:"scheduler_identifier,type:uniqueidentifier,nullzero"`                                                                                                                                                      // Unique identifier of the Scheduler thats running this Job.
+	LastPingDate               time.Time `bun:"last_ping_date,type:datetime,nullzero"`                                                                                                                                                                    // Keeps track of the last time the Scheduler pinged a job while it is running to confirm the DB connection has not been lost.
+	FirstRunDate               time.Time `bun:"first_run_date,type:datetime,nullzero"`                                                                                                                                                                    // The date the first time this job was picked up and run.
+	RecurrenceType             int32     `bun:"recurrence_type,type:int,default:((0))"`                                                                                                                                                                   // recurrence type as Daily/Monthly/Weekly/Yearly. Values are mapped with code_p21
+	RecurrenceIndex            int32     `bun:"recurrence_index,type:int,default:((0))"`                                                                                                                                                                  // recurrence type as First/Second/Third/Fourth/Last. Values are mapped with code_p21
+	RecurrenceInterval         int32     `bun:"recurrence_interval,type:int,default:((0))"`                                                                                                                                                               // recurrence interval
+	RecurrenceMonth            int32     `bun:"recurrence_month,type:int,default:((0))"`                                                                                                                                                                  // recurrence month of the year
+	RecurrenceDom              int32     `bun:"recurrence_dom,type:int,default:((0))"`                                                                                                                                                                    // recurrence day of the month
+	ConsecutiveFailureCounter  int32     `bun:"consecutive_failure_counter,type:int,default:((0))"`                                                                                                                                                       // Store consecutive failure counter value
+	HistoryLevel               int32     `bun:"history_level,type:int,default:((1664))"`                                                                                                                                                                  // indicates what all history should be created in scheduled_job_history when the scheduled job runs.
+	MaxRetryAttempts           int32     `bun:"max_retry_attempts,type:int,nullzero"`                                                                                                                                                                     // maximum retry option for individual jobs
+	RunOnce                    string    `bun:"run_once,type:char(1),default:('N')"`                                                                                                                                                                      // flag to indicate if the job needs to run once
 }

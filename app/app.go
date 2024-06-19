@@ -20,6 +20,8 @@ type App struct {
 	server     *grpc.Server
 	serverOnce sync.Once
 
+	traceProvider *tracesdk.TracerProvider
+
 	tp *tracesdk.TracerProvider
 	mp *metric.MeterProvider
 
@@ -34,6 +36,8 @@ func NewApp(config *Config) (*App, error) {
 	a := &App{
 		Config: config,
 	}
+
+	a.traceProvider = a.newTracer()
 
 	a.tp = a.newTracer()
 
@@ -91,11 +95,6 @@ func (a *App) GetDB() *bun.DB {
 		})
 
 	return a.bun
-}
-
-// GetTP returns initialized instance of tracesdk.TracerProvider.
-func (a *App) GetTP() *tracesdk.TracerProvider {
-	return a.tp
 }
 
 // GetModels returns an initialized instance of data.Models.

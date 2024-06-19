@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type FrameMenu struct {
 	bun.BaseModel             `bun:"table:frame_menu"`
-	FrameMenuUid              int32     `bun:"frame_menu_uid,type:int,pk,identity"`
+	FrameMenuUid              int32     `bun:"frame_menu_uid,type:int,autoincrement,pk"`
 	Handle                    int32     `bun:"handle,type:int"`
 	ParentHandle              int32     `bun:"parent_handle,type:int,nullzero"`
 	ParentClassName           string    `bun:"parent_class_name,type:varchar(255),nullzero"`
@@ -16,7 +16,7 @@ type FrameMenu struct {
 	FrameName                 string    `bun:"frame_name,type:varchar(255)"`
 	Tag                       string    `bun:"tag,type:varchar(255),nullzero"`
 	TextLabel                 string    `bun:"text_label,type:varchar(255)"`
-	Enabled                   string    `bun:"enabled,type:char,default:('Y')"`
+	Enabled                   string    `bun:"enabled,type:char(1),default:('Y')"`
 	ToolbarItemImage          string    `bun:"toolbar_item_image,type:varchar(255),nullzero"`
 	ToolbarItemText           string    `bun:"toolbar_item_text,type:varchar(255),nullzero"`
 	MenuImage                 string    `bun:"menu_image,type:varchar(255),nullzero"`
@@ -30,16 +30,16 @@ type FrameMenu struct {
 	CreatedBy                 string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	DateLastModified          time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy          string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"`
-	UseClickedService         string    `bun:"use_clicked_service,type:char,default:('N')"`
-	WindowRole                int32     `bun:"window_role,type:int,nullzero"`
-	UseCompanyRequiredMessage string    `bun:"use_company_required_message,type:char,default:('N')"`
-	UserDefined               string    `bun:"user_defined,type:char,default:('N')"`
-	TitleExpression           string    `bun:"title_expression,type:varchar(8000),nullzero"`
-	ServiceName               string    `bun:"service_name,type:varchar(255),nullzero"`
-	FasteditType              string    `bun:"fastedit_type,type:char,nullzero"`
-	MenuContext               int32     `bun:"menu_context,type:int,default:((3))"`
-	StringparmUrl             string    `bun:"stringparm_url,type:varchar(8000),nullzero"`
-	ServiceKey                string    `bun:"service_key,type:varchar(8000),nullzero"`
-	SchedulerEnabled          string    `bun:"scheduler_enabled,type:char,nullzero"`
-	ReportMetadataUid         int32     `bun:"report_metadata_uid,type:int,nullzero"`
+	UseClickedService         string    `bun:"use_clicked_service,type:char(1),default:('N')"`          // Indicates whether the menu item uses the n_cst_srv_menuclicked service to launch
+	WindowRole                int32     `bun:"window_role,type:int,nullzero"`                           // Alllows behaviors like Inquiry and QBE roles to be encapsulated
+	UseCompanyRequiredMessage string    `bun:"use_company_required_message,type:char(1),default:('N')"` // Disallows execution of menu item if there is no default company on user record
+	UserDefined               string    `bun:"user_defined,type:char(1),default:('N')"`                 // Indicates that this menu option is user created
+	TitleExpression           string    `bun:"title_expression,type:varchar(8000),nullzero"`            // Expression to be used in the window title
+	ServiceName               string    `bun:"service_name,type:varchar(255),nullzero"`                 // Service name for bulkeditor funtionality
+	FasteditType              string    `bun:"fastedit_type,type:char(1),nullzero"`                     // F => FastEdit / Q => QueryTab / [Empty] => Non of the above
+	MenuContext               int32     `bun:"menu_context,type:int,default:((3))"`                     // Whether menu is enabled for the desktop or UIServer or both
+	StringparmUrl             string    `bun:"stringparm_url,type:varchar(8000),nullzero"`              // Stores URL string parameter for user defined menu items that launch a web visual rule.
+	ServiceKey                string    `bun:"service_key,type:varchar(8000),nullzero"`                 // A comma-delimited set of fields used by the API to retrieve records
+	SchedulerEnabled          string    `bun:"scheduler_enabled,type:char(1),nullzero"`                 // Flag to enabled Web Scheduler ribbon tool.
+	ReportMetadataUid         int32     `bun:"report_metadata_uid,type:int,nullzero"`                   // Unique Identifier for Report Metadata
 }

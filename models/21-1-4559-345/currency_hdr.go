@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,13 +7,13 @@ import (
 
 type CurrencyHdr struct {
 	bun.BaseModel              `bun:"table:currency_hdr"`
-	CurrencyId                 float64   `bun:"currency_id,type:decimal(19,0),pk"`
-	CurrencyDesc               string    `bun:"currency_desc,type:varchar(20)"`
-	DeleteFlag                 string    `bun:"delete_flag,type:char"`
-	DateCreated                time.Time `bun:"date_created,type:datetime"`
-	DateLastModified           time.Time `bun:"date_last_modified,type:datetime"`
-	LastMaintainedBy           string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"`
-	CurrencyMask               string    `bun:"currency_mask,type:varchar(50),nullzero"`
-	AvailableForOrdersInvoices string    `bun:"available_for_orders_invoices,type:char,default:('Y')"`
-	IsoCurrencyCd              int32     `bun:"iso_currency_cd,type:int,nullzero"`
+	CurrencyId                 float64   `bun:"currency_id,type:decimal(19,0),pk"`                         // What is the unique currency identifier for this ro
+	CurrencyDesc               string    `bun:"currency_desc,type:varchar(20)"`                            // What currency is this?
+	DeleteFlag                 string    `bun:"delete_flag,type:char(1)"`                                  // Indicates whether this record is logically deleted
+	DateCreated                time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
+	DateLastModified           time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
+	LastMaintainedBy           string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
+	CurrencyMask               string    `bun:"currency_mask,type:varchar(50),nullzero"`                   // What display mask should be used for this currency?
+	AvailableForOrdersInvoices string    `bun:"available_for_orders_invoices,type:char(1),default:('Y')"`  // Specifies a currency is avilable for orders and invoices.
+	IsoCurrencyCd              int32     `bun:"iso_currency_cd,type:int,nullzero"`                         // ISO Currency Code
 }

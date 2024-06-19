@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -8,9 +8,9 @@ import (
 type SysParamsP21 struct {
 	bun.BaseModel       `bun:"table:sys_params_p21"`
 	SysParamsUid        int32     `bun:"sys_params_uid,type:int,pk"`
-	ConfigurationId     int32     `bun:"configuration_id,type:int"`
-	Module              string    `bun:"module,type:varchar(32)"`
-	SysParamName        string    `bun:"sys_param_name,type:varchar(32)"`
+	ConfigurationId     int32     `bun:"configuration_id,type:int,unique"`
+	Module              string    `bun:"module,type:varchar(32),unique"`
+	SysParamName        string    `bun:"sys_param_name,type:varchar(32),unique"`
 	SysParamValue       string    `bun:"sys_param_value,type:varchar(255)"`
 	SysParamDataType    string    `bun:"sys_param_data_type,type:varchar(16)"`
 	SysParamDescription string    `bun:"sys_param_description,type:varchar(255)"`

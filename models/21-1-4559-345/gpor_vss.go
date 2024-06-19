@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -20,6 +20,6 @@ type GporVss struct {
 	CProdorderqty                      float64   `bun:"c_ProdOrderQty,type:decimal(19,4)"`
 	CExpeditedate                      time.Time `bun:"c_ExpediteDate,type:datetime,nullzero"`
 	CComponentqty                      float64   `bun:"c_ComponentQty,type:decimal(19,4)"`
-	CQtyavailableinotherrevisions      float64   `bun:"c_QtyAvailableInOtherRevisions,type:decimal(9,0),default:((0))"`
-	CSalesorderproductionorderqty      float64   `bun:"c_salesorderproductionorderqty,type:decimal(19,9),default:((0))"`
+	CQtyavailableinotherrevisions      float64   `bun:"c_QtyAvailableInOtherRevisions,type:decimal(9,0),default:((0))"`  // Column to hold qty in other revisions that are not current.
+	CSalesorderproductionorderqty      float64   `bun:"c_salesorderproductionorderqty,type:decimal(19,9),default:((0))"` // Open Quantity for Sales Orders Assemblies on 'P' Disposition
 }

@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type InvSystemParameters struct {
 	bun.BaseModel             `bun:"table:inv_system_parameters"`
-	UseBinCapability          string    `bun:"use_bin_capability,type:char"`
+	UseBinCapability          string    `bun:"use_bin_capability,type:char(1)"`
 	DateCreated               time.Time `bun:"date_created,type:datetime"`
 	DateLastModified          time.Time `bun:"date_last_modified,type:datetime"`
 	LastMaintainedBy          string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"`
@@ -28,16 +28,16 @@ type InvSystemParameters struct {
 	MinExceptionalSale        float64   `bun:"min_exceptional_sale,type:decimal(19,4)"`
 	ExceptionalSalesPercent   float64   `bun:"exceptional_sales_percent,type:decimal(19,4)"`
 	OrderHitPercent           float64   `bun:"order_hit_percent,type:decimal(19,4)"`
-	DefaultUom                string    `bun:"default_uom,type:char,nullzero"`
-	MaintainMovingAverageCost string    `bun:"maintain_moving_average_cost,type:char,nullzero"`
-	ExcludeDueInFromNetstock  string    `bun:"exclude_due_in_from_netstock,type:char"`
+	DefaultUom                string    `bun:"default_uom,type:char(1),nullzero"`
+	MaintainMovingAverageCost string    `bun:"maintain_moving_average_cost,type:char(1),nullzero"`
+	ExcludeDueInFromNetstock  string    `bun:"exclude_due_in_from_netstock,type:char(1)"`
 	RoundingFactor            float64   `bun:"rounding_factor,type:decimal(5,4),nullzero"`
-	AllowUncostedAdjustments  string    `bun:"allow_uncosted_adjustments,type:char"`
-	DefaultAdjustmentCost     string    `bun:"default_adjustment_cost,type:char"`
+	AllowUncostedAdjustments  string    `bun:"allow_uncosted_adjustments,type:char(1)"`
+	DefaultAdjustmentCost     string    `bun:"default_adjustment_cost,type:char(1)"`
 	ReceiptsForLeadTime       int32     `bun:"receipts_for_lead_time,type:int,default:(4)"`
 	InvSystemParameterUid     int32     `bun:"inv_system_parameter_uid,type:int,pk"`
-	UseLotCapability          string    `bun:"use_lot_capability,type:char,default:('N')"`
-	UseSerialCapability       string    `bun:"use_serial_capability,type:char,default:('N')"`
-	TrackSerialDimensionsCd   string    `bun:"track_serial_dimensions_cd,type:char,default:('N')"`
-	DimensionScaleCd          string    `bun:"dimension_scale_cd,type:char,default:('I')"`
+	UseLotCapability          string    `bun:"use_lot_capability,type:char(1),default:('N')"`
+	UseSerialCapability       string    `bun:"use_serial_capability,type:char(1),default:('N')"`
+	TrackSerialDimensionsCd   string    `bun:"track_serial_dimensions_cd,type:char(1),default:('N')"`
+	DimensionScaleCd          string    `bun:"dimension_scale_cd,type:char(1),default:('I')"`
 }

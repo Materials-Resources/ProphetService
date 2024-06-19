@@ -1,4 +1,4 @@
-package model
+package gen
 
 import "github.com/uptrace/bun"
 
@@ -13,12 +13,12 @@ type Inventoryissuesresults40 struct {
 	TableInvBinQtyAllocated            float64 `bun:"table_inv_bin_qty_allocated,type:decimal(19,9)"`
 	BinId                              string  `bun:"bin_id,type:varchar(10)"`
 	BinType                            string  `bun:"bin_type,type:varchar(255),nullzero"`
-	PickableFlag                       string  `bun:"pickable_flag,type:char,nullzero"`
-	PickLockedFlag                     string  `bun:"pick_locked_flag,type:char"`
-	PutableFlag                        string  `bun:"putable_flag,type:char,nullzero"`
-	PutLockedFlag                      string  `bun:"put_locked_flag,type:char"`
-	FrozenFlag                         string  `bun:"frozen_flag,type:char"`
-	RfBinFlag                          string  `bun:"rf_bin_flag,type:char"`
-	ConsolidationBinFlag               string  `bun:"consolidation_bin_flag,type:char"`
-	WeighStationFlag                   string  `bun:"weigh_station_flag,type:char,nullzero"`
+	PickableFlag                       string  `bun:"pickable_flag,type:char(1),nullzero"`
+	PickLockedFlag                     string  `bun:"pick_locked_flag,type:char(1)"`
+	PutableFlag                        string  `bun:"putable_flag,type:char(1),nullzero"`
+	PutLockedFlag                      string  `bun:"put_locked_flag,type:char(1)"`
+	FrozenFlag                         string  `bun:"frozen_flag,type:char(1)"`
+	RfBinFlag                          string  `bun:"rf_bin_flag,type:char(1)"`
+	ConsolidationBinFlag               string  `bun:"consolidation_bin_flag,type:char(1)"`
+	WeighStationFlag                   string  `bun:"weigh_station_flag,type:char(1),nullzero"`
 }

@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type FaultToleranceAuditTrail struct {
 	bun.BaseModel `bun:"table:fault_tolerance_audit_trail"`
-	FtatUid       int32     `bun:"ftat_uid,type:int,identity"`
+	FtatUid       int32     `bun:"ftat_uid,type:int,autoincrement"`
 	FtrUid        int32     `bun:"ftr_uid,type:int,pk"`
 	FtaUid        int32     `bun:"fta_uid,type:int,pk"`
 	FtpUid        int32     `bun:"ftp_uid,type:int,pk"`
@@ -19,5 +19,5 @@ type FaultToleranceAuditTrail struct {
 	AuditLogin    string    `bun:"audit_login,type:varchar(255),nullzero"`
 	ColumnName    string    `bun:"column_name,type:varchar(255),nullzero"`
 	TableName     string    `bun:"table_name,type:varchar(255),nullzero"`
-	LineNo        string    `bun:"line_no,type:varchar(255),pk,default:((0))"`
+	LineNo        string    `bun:"line_no,type:varchar(255),default:((0)),pk"`
 }

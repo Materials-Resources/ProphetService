@@ -1,4 +1,4 @@
-package model
+package gen
 
 import "github.com/uptrace/bun"
 

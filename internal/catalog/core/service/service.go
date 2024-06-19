@@ -23,6 +23,8 @@ type CatalogService interface {
 	// DeleteProduct deletes a Product
 	DeleteProduct(ctx context.Context, uid string) error
 
+	UpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 
 	// SetPrimaryProductSupplier sets the primary product supplier

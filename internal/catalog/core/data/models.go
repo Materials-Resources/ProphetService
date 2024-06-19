@@ -48,8 +48,8 @@ type InvLoc struct {
 	InvMast             *InvMast             `bun:"rel:belongs-to,join:inv_mast_uid=inv_mast_uid"`
 	ProductGroup        *ProductGroup        `bun:"rel:has-one,join:product_group_id=product_group_id"`
 	InvBins             []*InvBin            `bun:"rel:has-many,join:company_id=company_id,join:location_id=location_id,join:inv_mast_uid=inv_mast_uid"`
-	InvTrans            []*InvTran           `bun:"rel:has-many,join:location_id=location_id,join:inv_mast_uid=inv_mast_uid"`
-	InvLocStockStatuses []*InvLocStockStatus `bun:"rel:has-many,join:location_id=location_id,join:inv_mast_uid=inv_mast_uid"`
+	InvTrans            []*InvTran           `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid,join:location_id=location_id"`
+	InvLocStockStatuses []*InvLocStockStatus `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid,join:location_id=location_id"`
 }
 
 type InvLocMsp struct {
@@ -65,17 +65,21 @@ type InvMast struct {
 
 	AssemblyHdr *AssemblyHdr `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
 
-	AverageInventoryValue []*AverageInventoryValue `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	AlternateCodes        []*AlternateCode         `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	ItemIdChangeHistory   []*ItemIdChangeHistory   `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	InvAdjLines           []*InvAdjLine            `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	InvLocs               []*InvLoc                `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	InvLocMsps            []*InvLocMsp             `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	InventorySuppliers    []*InventorySupplier     `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	ItemCategoryXInvMasts []*ItemCategoryXInvMast  `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	ItemConversions       []*ItemConversion        `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	ItemUoms              []*ItemUom               `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
-	PricePages            []*PricePage             `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	AverageInventoryValues []*AverageInventoryValue `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	AlternateCodes         []*AlternateCode         `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	ItemIdChangeHistories  []*ItemIdChangeHistory   `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InvAdjLines            []*InvAdjLine            `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InvLocs                []*InvLoc                `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InvLocMsps             []*InvLocMsp             `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InventorySuppliers     []*InventorySupplier     `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	ItemCategoryXInvMasts  []*ItemCategoryXInvMast  `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	ItemConversions        []*ItemConversion        `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	ItemUoms               []*ItemUom               `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	PricePages             []*PricePage             `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+}
+
+type InvSub struct {
+	prophet.InvSub `bun:",extend"`
 }
 
 type InvTran struct {

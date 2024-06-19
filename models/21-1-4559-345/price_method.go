@@ -1,10 +1,10 @@
-package model
+package gen
 
 import "github.com/uptrace/bun"
 
 type PriceMethod struct {
 	bun.BaseModel  `bun:"table:price_method"`
-	PriceMethodUid int64   `bun:"price_method_uid,type:bigint,identity"`
+	PriceMethodUid int64   `bun:"price_method_uid,type:bigint,autoincrement"`
 	PricePagePrice bool    `bun:"price_page_price,type:bit,default:((0))"`
 	CustomerPrice  bool    `bun:"customer_price,type:bit,default:((0))"`
 	ContractPrice  bool    `bun:"contract_price,type:bit,default:((0))"`

@@ -1,4 +1,4 @@
-package model
+package gen
 
 import (
 	"github.com/uptrace/bun"
@@ -7,7 +7,7 @@ import (
 
 type InvBinAudit struct {
 	bun.BaseModel       `bun:"table:inv_bin_audit"`
-	InvBinAuditUid      int32     `bun:"inv_bin_audit_uid,type:int,identity"`
+	InvBinAuditUid      int32     `bun:"inv_bin_audit_uid,type:int,autoincrement"`
 	InvBinUid           int32     `bun:"inv_bin_uid,type:int,nullzero"`
 	InvMastUid          int32     `bun:"inv_mast_uid,type:int"`
 	LocationId          float64   `bun:"location_id,type:decimal(19,0)"`
