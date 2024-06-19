@@ -7,7 +7,7 @@ import (
 
 type PopupIndex struct {
 	bun.BaseModel    `bun:"table:popup_index"`
-	PopupIndexUid    int32     `bun:"popup_index_uid,type:int,autoincrement,scanonly,pk"`           // Popup Index Id
+	PopupIndexUid    int32     `bun:"popup_index_uid,type:int,autoincrement,identity,pk"`           // Popup Index Id
 	Dwcontrol        string    `bun:"dwcontrol,type:varchar(50),unique,nullzero"`                   // DW control associated to popup
 	Window           string    `bun:"window,type:varchar(50),unique,nullzero"`                      // Window associated to popup
 	Dwfield          string    `bun:"dwfield,type:varchar(50),unique,nullzero"`                     // Field associated to popup

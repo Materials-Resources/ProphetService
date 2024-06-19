@@ -24,7 +24,7 @@ type InvoiceHdrSalesrep struct {
 	EditedCommissionFlag       string    `bun:"edited_commission_flag,type:char(1),nullzero"`                // Indicates whether commission amount was edited by user
 	PriorCommissionAmount      float64   `bun:"prior_commission_amount,type:decimal(19,2),nullzero"`         // Total commission amt from last commission saved
 	SplitFlag                  string    `bun:"split_flag,type:char(1),nullzero"`                            // This column indicates this record was created during a split commission  for this salesrep and invoice
-	InvoiceHdrSalesrepUid      int32     `bun:"invoice_hdr_salesrep_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the record
+	InvoiceHdrSalesrepUid      int32     `bun:"invoice_hdr_salesrep_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the record
 	CommissionScheduleUid      int32     `bun:"commission_schedule_uid,type:int,nullzero"`                   // Unique record for a schedule
 	CommissionCost             float64   `bun:"commission_cost,type:decimal(19,4),nullzero"`                 // Total commission cost used when calculating commission
 	ExtendedPrice              float64   `bun:"extended_price,type:decimal(19,4),nullzero"`                  // Total price used when calculating commissions

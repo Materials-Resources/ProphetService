@@ -16,5 +16,5 @@ type InvPeriodUsageTemp struct {
 	NumberOfHits          int32     `bun:"number_of_hits,type:int"`                                      // The quantity that must be added to the number of hits.
 	DateCreated           time.Time `bun:"date_created,type:datetime"`                                   // Indicates the date/time this record was created.
 	LastMaintainedBy      string    `bun:"last_maintained_by,type:varchar(255)"`                         // ID of the user who last maintained this record
-	InvPeriodUsageTempUid int32     `bun:"inv_period_usage_temp_uid,type:int,autoincrement,scanonly,pk"` // Unique ID for inv_period_usage_temp records
+	InvPeriodUsageTempUid int32     `bun:"inv_period_usage_temp_uid,type:int,autoincrement,identity,pk"` // Unique ID for inv_period_usage_temp records
 }

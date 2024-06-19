@@ -7,7 +7,7 @@ import (
 
 type CurrencySatIso struct {
 	bun.BaseModel              `bun:"table:currency_sat_iso"`
-	CurrencySatIsoUid          int32     `bun:"currency_sat_iso_uid,type:int,autoincrement,scanonly,pk"`      // Id for the table
+	CurrencySatIsoUid          int32     `bun:"currency_sat_iso_uid,type:int,autoincrement,identity,pk"`      // Id for the table
 	CurrencySatIsoCode         string    `bun:"currency_sat_iso_code,type:varchar(255)"`                      // Code for the sat currency
 	CurrencySatIsoDesc         string    `bun:"currency_sat_iso_desc,type:varchar(255)"`                      // Description of the currency
 	DateCreated                time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

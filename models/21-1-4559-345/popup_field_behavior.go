@@ -7,7 +7,7 @@ import (
 
 type PopupFieldBehavior struct {
 	bun.BaseModel         `bun:"table:popup_field_behavior"`
-	PopupFieldBehaviorUid int32     `bun:"popup_field_behavior_uid,type:int,autoincrement,scanonly,pk"`  // Unique identifier of popup_field_behavior
+	PopupFieldBehaviorUid int32     `bun:"popup_field_behavior_uid,type:int,autoincrement,identity,pk"`  // Unique identifier of popup_field_behavior
 	PopupFieldUid         int32     `bun:"popup_field_uid,type:int"`                                     // Foreign key association to popup_field
 	Condition             string    `bun:"condition,type:varchar(max)"`                                  // Condition to evaluate if the behavior should be used
 	ConfigurationId       int32     `bun:"configuration_id,type:int,default:((0))"`                      // Defines a configuration_id for this behavior

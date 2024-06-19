@@ -7,7 +7,7 @@ import (
 
 type PricePageSuppdisc struct {
 	bun.BaseModel        `bun:"table:price_page_suppdisc"`
-	PricePageSuppdiscUid int32     `bun:"price_page_suppdisc_uid,type:int,autoincrement,scanonly,pk"` // Unique ID for this price_page_suppdisc record
+	PricePageSuppdiscUid int32     `bun:"price_page_suppdisc_uid,type:int,autoincrement,identity,pk"` // Unique ID for this price_page_suppdisc record
 	PricePageUid         int32     `bun:"price_page_uid,type:int"`                                    // Unique ID for Price Pages
 	SupplierId           float64   `bun:"supplier_id,type:decimal(19,0)"`                             // Supplier to associate with this Price Page
 	DiscountGroupId      string    `bun:"discount_group_id,type:varchar(8)"`                          // Discount Group to associate with this Price Page

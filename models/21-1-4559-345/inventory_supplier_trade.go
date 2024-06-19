@@ -7,7 +7,7 @@ import (
 
 type InventorySupplierTrade struct {
 	bun.BaseModel               `bun:"table:inventory_supplier_trade"`
-	InventorySupplierTradeUid   int32     `bun:"inventory_supplier_trade_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for this table.
+	InventorySupplierTradeUid   int32     `bun:"inventory_supplier_trade_uid,type:int,autoincrement,identity,pk"` // Unique identifier for this table.
 	InventorySupplierUid        int32     `bun:"inventory_supplier_uid,type:int,unique"`                          // Inventory supplier record for which this data pertains.
 	CertificateOfOriginFilePath string    `bun:"certificate_of_origin_file_path,type:varchar(255),nullzero"`      // Path for CoO related to the inventory supplier.
 	CertificateOfOriginExpDate  time.Time `bun:"certificate_of_origin_exp_date,type:datetime,nullzero"`           // Expiration date tied to this inventory suppliers CoO.

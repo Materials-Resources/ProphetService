@@ -7,7 +7,7 @@ import (
 
 type BusinessRuleEventKey struct {
 	bun.BaseModel           `bun:"table:business_rule_event_key"`
-	BusinessRuleEventKeyUid int32     `bun:"business_rule_event_key_uid,type:int,autoincrement,scanonly,pk"` // UID for this table.
+	BusinessRuleEventKeyUid int32     `bun:"business_rule_event_key_uid,type:int,autoincrement,identity,pk"` // UID for this table.
 	BusinessRuleEventUid    int32     `bun:"business_rule_event_uid,type:int"`                               // Business rule event that this value relates to.
 	KeyValue                string    `bun:"key_value,type:varchar(255)"`                                    // Internal value of the key for this event.
 	DisplayValue            string    `bun:"display_value,type:varchar(255)"`                                // Value of the key for this event that will be shown to the user.

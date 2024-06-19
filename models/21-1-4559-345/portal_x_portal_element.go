@@ -7,7 +7,7 @@ import (
 
 type PortalXPortalElement struct {
 	bun.BaseModel           `bun:"table:portal_x_portal_element"`
-	PortalXPortalElementUid int32     `bun:"portal_x_portal_element_uid,type:int,autoincrement,scanonly,pk"` // Unique ID for the portal/portal_element link
+	PortalXPortalElementUid int32     `bun:"portal_x_portal_element_uid,type:int,autoincrement,identity,pk"` // Unique ID for the portal/portal_element link
 	PortalUid               int32     `bun:"portal_uid,type:int,unique"`                                     // Portal UID
 	PortalElementUid        int32     `bun:"portal_element_uid,type:int"`                                    // Portal Element UID
 	SequenceNo              int32     `bun:"sequence_no,type:int,unique"`                                    // The sequence of this element on the portal

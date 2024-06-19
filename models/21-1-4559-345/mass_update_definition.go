@@ -7,7 +7,7 @@ import (
 
 type MassUpdateDefinition struct {
 	bun.BaseModel           `bun:"table:mass_update_definition"`
-	MassUpdateDefinitionUid int32     `bun:"mass_update_definition_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of the table
+	MassUpdateDefinitionUid int32     `bun:"mass_update_definition_uid,type:int,autoincrement,identity,pk"` // Unique identifier of the table
 	TableName               string    `bun:"table_name,type:varchar(255)"`                                  // Table name which will be exposed to the mass update
 	IncludeFlag             string    `bun:"include_flag,type:char(1)"`                                     // Allow access to the mass update
 	RowStatusFlag           int32     `bun:"row_status_flag,type:int"`                                      // Row status

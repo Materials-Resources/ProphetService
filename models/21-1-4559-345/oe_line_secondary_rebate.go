@@ -7,7 +7,7 @@ import (
 
 type OeLineSecondaryRebate struct {
 	bun.BaseModel             `bun:"table:oe_line_secondary_rebate"`
-	OeLineSecondaryRebateUid  int32     `bun:"oe_line_secondary_rebate_uid,type:int,autoincrement,scanonly,pk"` // Unique id for the row.
+	OeLineSecondaryRebateUid  int32     `bun:"oe_line_secondary_rebate_uid,type:int,autoincrement,identity,pk"` // Unique id for the row.
 	OeLineUid                 int32     `bun:"oe_line_uid,type:int"`                                            // Indicates the associated oe_line record.
 	SecondaryRebateCalcMethCd int32     `bun:"secondary_rebate_calc_meth_cd,type:int,nullzero"`                 // The method used to calculate the secondary rebate (Multiply, Divide, Add, Subtract).
 	SecondaryRebateSourceCd   int32     `bun:"secondary_rebate_source_cd,type:int,nullzero"`                    // The source of the secondary rebate.

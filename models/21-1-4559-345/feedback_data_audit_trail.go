@@ -7,7 +7,7 @@ import (
 
 type FeedbackDataAuditTrail struct {
 	bun.BaseModel             `bun:"table:feedback_data_audit_trail"`
-	FeedbackDataAuditTrailUid int32     `bun:"feedback_data_audit_trail_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for rows of table.
+	FeedbackDataAuditTrailUid int32     `bun:"feedback_data_audit_trail_uid,type:int,autoincrement,identity,pk"` // Unique identifier for rows of table.
 	UsersId                   string    `bun:"users_id,type:varchar(40),unique"`                                 // ID for user running the window.
 	CaseNo                    string    `bun:"case_no,type:varchar(255),unique,nullzero"`                        // Support case entered when running window.
 	DateCreated               time.Time `bun:"date_created,type:datetime,default:(getdate())"`                   // Date and time the record was originally created

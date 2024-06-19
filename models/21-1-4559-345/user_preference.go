@@ -7,7 +7,7 @@ import (
 
 type UserPreference struct {
 	bun.BaseModel     `bun:"table:user_preference"`
-	UserPreferenceUid int32     `bun:"user_preference_uid,type:int,autoincrement,scanonly,pk"`       // Unique ID for the given user preference
+	UserPreferenceUid int32     `bun:"user_preference_uid,type:int,autoincrement,identity,pk"`       // Unique ID for the given user preference
 	UserId            string    `bun:"user_id,type:varchar(30),unique"`                              // User ID
 	PreferenceUid     int32     `bun:"preference_uid,type:int,unique"`                               // Preference ID - relates back to the preference table.
 	Value             string    `bun:"value,type:varchar(max)"`                                      // Value of the preference

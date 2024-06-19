@@ -7,7 +7,7 @@ import (
 
 type PopupColumn struct {
 	bun.BaseModel               `bun:"table:popup_column"`
-	PopupColumnUid              int32     `bun:"popup_column_uid,type:int,autoincrement,scanonly,pk"`          // Unique identifier for popup_column
+	PopupColumnUid              int32     `bun:"popup_column_uid,type:int,autoincrement,identity,pk"`          // Unique identifier for popup_column
 	ColumnName                  string    `bun:"column_name,type:varchar(255)"`                                // Defines the column name for the popup window
 	DatawindowName              string    `bun:"datawindow_name,type:varchar(255),nullzero"`                   // Datawindow name for the popup
 	AutoRetrieveFlag            string    `bun:"auto_retrieve_flag,type:char(1),nullzero"`                     // Enables auto retrieve of data

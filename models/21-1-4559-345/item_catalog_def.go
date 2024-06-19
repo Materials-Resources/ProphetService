@@ -7,7 +7,7 @@ import (
 
 type ItemCatalogDef struct {
 	bun.BaseModel     `bun:"table:item_catalog_def"`
-	ItemCatalogDefUid int32     `bun:"item_catalog_def_uid,type:int,autoincrement,scanonly,pk"`      // Unique identifier of each record
+	ItemCatalogDefUid int32     `bun:"item_catalog_def_uid,type:int,autoincrement,identity,pk"`      // Unique identifier of each record
 	ColumnId          string    `bun:"column_id,type:varchar(255)"`                                  // Two letter identifier for item_catalog column
 	ColumnName        string    `bun:"column_name,type:varchar(255),nullzero"`                       // User-defined column name
 	ItemSearchFlag    string    `bun:"item_search_flag,type:char(1),default:('N')"`                  // Indicates whether to include column in item search popup

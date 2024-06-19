@@ -7,7 +7,7 @@ import (
 
 type RibbonTool struct {
 	bun.BaseModel      `bun:"table:ribbon_tool"`
-	RibbonToolUid      int32     `bun:"ribbon_tool_uid,type:int,autoincrement,scanonly,pk"`
+	RibbonToolUid      int32     `bun:"ribbon_tool_uid,type:int,autoincrement,identity,pk"`
 	ToolId             string    `bun:"tool_id,type:varchar(255)"`
 	ToolText           string    `bun:"tool_text,type:varchar(255)"`
 	Description        string    `bun:"description,type:varchar(255)"`

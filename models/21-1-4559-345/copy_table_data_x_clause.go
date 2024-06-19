@@ -7,7 +7,7 @@ import (
 
 type CopyTableDataXClause struct {
 	bun.BaseModel           `bun:"table:copy_table_data_x_clause"`
-	CopyTableDataXClauseUid int32     `bun:"copy_table_data_x_clause_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	CopyTableDataXClauseUid int32     `bun:"copy_table_data_x_clause_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	CopyTableDataXTableUid  int32     `bun:"copy_table_data_x_table_uid,type:int,unique"`                     // Table associated with Where & From clauses
 	FromClause              string    `bun:"from_clause,type:varchar(8000)"`                                  // From Clause
 	WhereClause             string    `bun:"where_clause,type:varchar(8000)"`                                 // Where Clause

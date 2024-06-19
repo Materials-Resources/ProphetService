@@ -7,7 +7,7 @@ import (
 
 type PricePageDiscgrp struct {
 	bun.BaseModel       `bun:"table:price_page_discgrp"`
-	PricePageDiscgrpUid int32     `bun:"price_page_discgrp_uid,type:int,autoincrement,scanonly,pk"` // Unique ID for this price_page_discgrp record.
+	PricePageDiscgrpUid int32     `bun:"price_page_discgrp_uid,type:int,autoincrement,identity,pk"` // Unique ID for this price_page_discgrp record.
 	PricePageUid        int32     `bun:"price_page_uid,type:int"`                                   // Unique ID for Price Pages.
 	DiscountGroupId     string    `bun:"discount_group_id,type:varchar(8)"`                         // Discount Group to associate with this Price Page.
 	EffectiveDate       time.Time `bun:"effective_date,type:datetime"`                              // Starting date on which pricing page will be used in pricing calculations.

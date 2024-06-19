@@ -7,7 +7,7 @@ import (
 
 type PricingTemplateLocationDflt struct {
 	bun.BaseModel                  `bun:"table:pricing_template_location_dflt"`
-	PricingTemplateLocationDfltUid int32     `bun:"pricing_template_location_dflt_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the record
+	PricingTemplateLocationDfltUid int32     `bun:"pricing_template_location_dflt_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the record
 	PricingTemplateLocationUid     int32     `bun:"pricing_template_location_uid,type:int"`                                // Unique identifier for the associated pricing_template_location record
 	PricingTemplateKeyFieldUid     int32     `bun:"pricing_template_key_field_uid,type:int"`                               // Unique identifier for the associated pricing_template_key_field record
 	ColumnId                       float64   `bun:"column_id,type:decimal(19,0)"`                                          // Unqiue identifier for the pricing_service_column record

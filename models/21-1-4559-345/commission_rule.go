@@ -37,7 +37,7 @@ type CommissionRule struct {
 	FreightCodeUid             int32     `bun:"freight_code_uid,type:int,nullzero"`                         // Freight code associated with this rule.
 	SalesLocationId            float64   `bun:"sales_location_id,type:decimal(19,0),nullzero"`              // Sales Location ID associated with this rule.
 	PrimarySupplierId          float64   `bun:"primary_supplier_id,type:decimal(19,0),nullzero"`            // Primary Supplier ID associated with this rule.
-	CommissionRuleUid          int32     `bun:"commission_rule_uid,type:int,autoincrement,unique,scanonly"` // Unique identifier for a record
+	CommissionRuleUid          int32     `bun:"commission_rule_uid,type:int,autoincrement,unique,identity"` // Unique identifier for a record
 	AllocatedBackorderFlag     string    `bun:"allocated_backorder_flag,type:char(1),default:('Y')"`        // Indicates whether rule applies to only lines where stock item is allocated or backordered.
 	SpecialFlag                string    `bun:"special_flag,type:char(1),default:('Y')"`                    // Indicates whether rule applies to only lines where disposition is special.
 	OtherChargeItemFlag        string    `bun:"other_charge_item_flag,type:char(1),default:('N')"`          // Indicates whether rule applies to only lines where item is other charge.

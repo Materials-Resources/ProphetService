@@ -7,7 +7,7 @@ import (
 
 type JobPriceCustShiptoOrdlim struct {
 	bun.BaseModel               `bun:"table:job_price_cust_shipto_ordlim"`
-	JobPriceCustshiptoordlimUid int32     `bun:"job_price_custshiptoordlim_uid,type:int,autoincrement,scanonly,pk"` // Unique internal ID number.
+	JobPriceCustshiptoordlimUid int32     `bun:"job_price_custshiptoordlim_uid,type:int,autoincrement,identity,pk"` // Unique internal ID number.
 	JobPriceCustShiptoUid       int32     `bun:"job_price_cust_shipto_uid,type:int"`                                // FK to column job_price_customer_shipto.job_price_cust_shipto_uid.  Link to associated customer/ship-to instance.
 	JobPriceHdrBudgetPrdUid     int32     `bun:"job_price_hdr_budget_prd_uid,type:int"`                             // FK to column job_price_hdr_budget_prd.job_price_hdr_budget_prd_uid.  Link to associated budget period instance.
 	OrderLimit                  int32     `bun:"order_limit,type:int,default:((0))"`                                // Maximum number of orders that can be associated w/this contract for the specified customer/ship-to/period.

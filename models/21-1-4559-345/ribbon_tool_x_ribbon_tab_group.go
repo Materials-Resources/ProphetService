@@ -7,7 +7,7 @@ import (
 
 type RibbonToolXRibbonTabGroup struct {
 	bun.BaseModel                `bun:"table:ribbon_tool_x_ribbon_tab_group"`
-	RibbonToolXRibbonTabGroupUid int32     `bun:"ribbon_tool_x_ribbon_tab_group_uid,type:int,autoincrement,scanonly,pk"`
+	RibbonToolXRibbonTabGroupUid int32     `bun:"ribbon_tool_x_ribbon_tab_group_uid,type:int,autoincrement,identity,pk"`
 	RibbonToolUid                int32     `bun:"ribbon_tool_uid,type:int"`
 	RibbonTabGroupUid            int32     `bun:"ribbon_tab_group_uid,type:int"`
 	SequenceNo                   int32     `bun:"sequence_no,type:int"`

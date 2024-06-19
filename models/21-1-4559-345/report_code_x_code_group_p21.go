@@ -7,7 +7,7 @@ import (
 
 type ReportCodeXCodeGroupP21 struct {
 	bun.BaseModel              `bun:"table:report_code_x_code_group_p21"`
-	ReportCodeXCodeGroupP21Uid int32     `bun:"report_code_x_code_group_p21_uid,type:int,autoincrement,scanonly,pk"` // Primary key
+	ReportCodeXCodeGroupP21Uid int32     `bun:"report_code_x_code_group_p21_uid,type:int,autoincrement,identity,pk"` // Primary key
 	ReportCodeGroupP21Uid      int32     `bun:"report_code_group_p21_uid,type:int"`                                  // Relationship to report_code_group_p21
 	ReportCodeP21Uid           int32     `bun:"report_code_p21_uid,type:int"`                                        // Relationship to report_code_p21
 	DateCreated                time.Time `bun:"date_created,type:datetime,default:(getdate())"`                      // Date and time the record was originally created

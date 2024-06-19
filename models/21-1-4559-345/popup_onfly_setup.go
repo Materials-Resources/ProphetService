@@ -7,7 +7,7 @@ import (
 
 type PopupOnflySetup struct {
 	bun.BaseModel      `bun:"table:popup_onfly_setup"`
-	PopupOnflySetupUid int32     `bun:"popup_onfly_setup_uid,type:int,autoincrement,scanonly,pk"`     // unic id of the table
+	PopupOnflySetupUid int32     `bun:"popup_onfly_setup_uid,type:int,autoincrement,identity,pk"`     // unic id of the table
 	SearchKey          string    `bun:"search_key,type:varchar(500),unique"`                          // this is the name of the popupsOn Fly
 	ParentColumn       string    `bun:"parent_column,type:varchar(100),unique,nullzero"`              // name of the column of the parent used to the relationship
 	ChildColumn        string    `bun:"child_column,type:varchar(100),unique,nullzero"`               // name of the column of the child used to the relationship

@@ -7,7 +7,7 @@ import (
 
 type CustomerXShiptoCreditHistoryDaily struct {
 	bun.BaseModel                     `bun:"table:customer_x_shipto_credit_history_daily"`
-	CustomerXShiptoCdtHistoryDailyUid int32     `bun:"customer_x_shipto_cdt_history_daily_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier
+	CustomerXShiptoCdtHistoryDailyUid int32     `bun:"customer_x_shipto_cdt_history_daily_uid,type:int,autoincrement,identity,pk"` // Unique identifier
 	CompanyId                         string    `bun:"company_id,type:varchar(8)"`                                                 // The company id associated with the customer
 	CustomerId                        float64   `bun:"customer_id,type:decimal(19,0)"`                                             // The customer identifier
 	ShipToId                          float64   `bun:"ship_to_id,type:decimal(19,0)"`                                              // The ShipTo identifier

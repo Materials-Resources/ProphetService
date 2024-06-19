@@ -7,7 +7,7 @@ import (
 
 type CopyTableDataXArgument struct {
 	bun.BaseModel             `bun:"table:copy_table_data_x_argument"`
-	CopyTableDataXArgumentUid int32     `bun:"copy_table_data_x_argument_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	CopyTableDataXArgumentUid int32     `bun:"copy_table_data_x_argument_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	CopyTableDataXProcessUid  int32     `bun:"copy_table_data_x_process_uid,type:int,unique"`                     // Process Type Code
 	ArgumentName              string    `bun:"argument_name,type:varchar(255),unique"`                            // Argument Name
 	DefaultValue              string    `bun:"default_value,type:varchar(255)"`                                   // Argument Default Value

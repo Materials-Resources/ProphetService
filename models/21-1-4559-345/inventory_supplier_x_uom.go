@@ -7,7 +7,7 @@ import (
 
 type InventorySupplierXUom struct {
 	bun.BaseModel            `bun:"table:inventory_supplier_x_uom"`
-	InventorySupplierXUomUid int32     `bun:"inventory_supplier_x_uom_uid,type:int,autoincrement,scanonly,pk"` // Table uinque identifier
+	InventorySupplierXUomUid int32     `bun:"inventory_supplier_x_uom_uid,type:int,autoincrement,identity,pk"` // Table uinque identifier
 	ItemUomUid               int32     `bun:"item_uom_uid,type:int,unique"`                                    // Unique identifier of the Unit of Measure record
 	InventorySupplierUid     int32     `bun:"inventory_supplier_uid,type:int,unique"`                          // Unique identifier of the Supplier record
 	SupplierUnitOfMeasure    string    `bun:"supplier_unit_of_measure,type:varchar(255),nullzero"`             // Unit of Measure Alias used by the Supplier

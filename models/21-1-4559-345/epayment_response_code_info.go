@@ -7,7 +7,7 @@ import (
 
 type EpaymentResponseCodeInfo struct {
 	bun.BaseModel             `bun:"table:epayment_response_code_info"`
-	EpymntResponseCodeInfoUid int32     `bun:"epymnt_response_code_info_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the epayment_response_code_info table
+	EpymntResponseCodeInfoUid int32     `bun:"epymnt_response_code_info_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the epayment_response_code_info table
 	EpaymentIntegrationTypeCd int32     `bun:"epayment_integration_type_cd,type:int"`                            // Code that identifies the electronic payments integration that returns the response code
 	ResponseCodeTypeCd        int32     `bun:"response_code_type_cd,type:int"`                                   // The type of response code (AVS, CVV, etc.) - from code_p21 table
 	ResponseCode              string    `bun:"response_code,type:varchar(255)"`                                  // The identifier returned by the integration as the response code (typically one character)

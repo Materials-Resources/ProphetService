@@ -7,7 +7,7 @@ import (
 
 type AdsMetricConfiguration struct {
 	bun.BaseModel             `bun:"table:ads_metric_configuration"`
-	AdsMetricConfigurationUid int32     `bun:"ads_metric_configuration_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier
+	AdsMetricConfigurationUid int32     `bun:"ads_metric_configuration_uid,type:int,autoincrement,identity,pk"` // Unique identifier
 	HubMetricKey              string    `bun:"hub_metric_key,type:varchar(255)"`                                // The metric key value from the hub database
 	ConfigurationDisplayText  string    `bun:"configuration_display_text,type:varchar(255)"`                    // The display value for the configuration item
 	DateCreated               time.Time `bun:"date_created,type:datetime,default:(getdate())"`                  // Date and time the record was originally created

@@ -21,7 +21,7 @@ type Inventoryissuestestdesc struct {
 	OnHand                            bool   `bun:"on_hand,type:bit,nullzero"`
 	Setup                             bool   `bun:"setup,type:bit,nullzero"`
 	CustomTestNumber                  int32  `bun:"custom_test_number,type:int,nullzero"`
-	TotalTestUid                      int32  `bun:"total_test_uid,type:int,autoincrement,scanonly"`
+	TotalTestUid                      int32  `bun:"total_test_uid,type:int,autoincrement,identity"`
 	InvLoc                            bool   `bun:"inv_loc,type:bit,default:((0))"` // Track whether this test is part of the inv_loc test type.  (I.e. does the test include data from inv_loc.)
 	DebugSql                          string `bun:"debug_sql,type:varchar(max),nullzero"`
 	DebugSqlDesc                      string `bun:"debug_sql_desc,type:varchar(max),nullzero"`

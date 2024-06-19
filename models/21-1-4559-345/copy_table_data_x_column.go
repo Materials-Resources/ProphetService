@@ -7,7 +7,7 @@ import (
 
 type CopyTableDataXColumn struct {
 	bun.BaseModel           `bun:"table:copy_table_data_x_column"`
-	CopyTableDataXColumnUid int32     `bun:"copy_table_data_x_column_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	CopyTableDataXColumnUid int32     `bun:"copy_table_data_x_column_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	CopyTableDataXTableUid  int32     `bun:"copy_table_data_x_table_uid,type:int,unique"`                     // Table associated with Columns
 	ColumnName              string    `bun:"column_name,type:varchar(255),unique"`                            // Column Name
 	ColumnValue             string    `bun:"column_value,type:varchar(255),nullzero"`                         // Value to replace the Column Name

@@ -7,7 +7,7 @@ import (
 
 type PaymentTypeMx struct {
 	bun.BaseModel             `bun:"table:payment_type_mx"`
-	PaymentTypeMxUid          int32     `bun:"payment_type_mx_uid,type:int,autoincrement,scanonly,pk"`       // PK
+	PaymentTypeMxUid          int32     `bun:"payment_type_mx_uid,type:int,autoincrement,identity,pk"`       // PK
 	PaymentTypeMxId           string    `bun:"payment_type_mx_id,type:varchar(2)"`                           // Payment Type Id
 	PaymentTypeMxDesc         string    `bun:"payment_type_mx_desc,type:varchar(255)"`                       // Payment type description
 	DateCreated               time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

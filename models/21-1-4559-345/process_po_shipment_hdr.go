@@ -7,7 +7,7 @@ import (
 
 type ProcessPoShipmentHdr struct {
 	bun.BaseModel           `bun:"table:process_po_shipment_hdr"`
-	ProcessPoShipmentHdrUid int32     `bun:"process_po_shipment_hdr_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for this shipment record.
+	ProcessPoShipmentHdrUid int32     `bun:"process_po_shipment_hdr_uid,type:int,autoincrement,identity,pk"` // Unique identifier for this shipment record.
 	PoNo                    float64   `bun:"po_no,type:decimal(19,0)"`                                       // The PO number for the Process PO this shipment record is associated with.
 	ConfirmedFlag           string    `bun:"confirmed_flag,type:char(1),default:('N')"`                      // Indicates that the associated Process PO was shipped.
 	ShipDate                time.Time `bun:"ship_date,type:datetime,nullzero"`                               // The date that the inventory for the associated Process PO was shipped.

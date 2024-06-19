@@ -7,7 +7,7 @@ import (
 
 type TpcxOutboundDocument struct {
 	bun.BaseModel             `bun:"table:tpcx_outbound_document"`
-	TpcxOutboundDocumentUid   int32     `bun:"tpcx_outbound_document_uid,type:int,autoincrement,scanonly,pk"` // UID
+	TpcxOutboundDocumentUid   int32     `bun:"tpcx_outbound_document_uid,type:int,autoincrement,identity,pk"` // UID
 	ApplicationServerLocation string    `bun:"application_server_location,type:varchar(255),nullzero"`        // Jaguar server
 	MessageType               string    `bun:"message_type,type:varchar(255)"`                                // Type of document, GETPA, EDI, etc
 	QueueName                 string    `bun:"queue_name,type:varchar(255)"`                                  // Name of the message queue the document will be transitted on.

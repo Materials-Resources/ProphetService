@@ -7,7 +7,7 @@ import (
 
 type NavigationIndex struct {
 	bun.BaseModel      `bun:"table:navigation_index"`
-	NavigationIndexUid int32     `bun:"navigation_index_uid,type:int,autoincrement,scanonly,pk"`      // Unique ID for navigation index
+	NavigationIndexUid int32     `bun:"navigation_index_uid,type:int,autoincrement,identity,pk"`      // Unique ID for navigation index
 	UsersId            string    `bun:"users_id,type:varchar(30),unique"`                             // User ID
 	MenuName           string    `bun:"menu_name,type:varchar(2000),unique"`                          // Full hierarchical menu class name
 	MenuText           string    `bun:"menu_text,type:varchar(255)"`                                  // Translated menu text

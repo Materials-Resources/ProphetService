@@ -7,7 +7,7 @@ import (
 
 type FreightquoteClass struct {
 	bun.BaseModel        `bun:"table:freightquote_class"`
-	FreightquoteClassUid int32     `bun:"freightquote_class_uid,type:int,autoincrement,scanonly,pk"`    // A unique identifier for each freightquote class
+	FreightquoteClassUid int32     `bun:"freightquote_class_uid,type:int,autoincrement,identity,pk"`    // A unique identifier for each freightquote class
 	FreightquoteClassId  float64   `bun:"freightquote_class_id,type:decimal(19,9)"`                     // The actual class identifier used by freightquote.com and users
 	RowStatusFlag        int32     `bun:"row_status_flag,type:int"`                                     // Has the record been logically deleted?
 	DateCreated          time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

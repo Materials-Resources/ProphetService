@@ -7,7 +7,7 @@ import (
 
 type PricingTemplateItemDflt struct {
 	bun.BaseModel              `bun:"table:pricing_template_item_dflt"`
-	PricingTemplateItemDfltUid int32     `bun:"pricing_template_item_dflt_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the record
+	PricingTemplateItemDfltUid int32     `bun:"pricing_template_item_dflt_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the record
 	PricingTemplateKeyFieldUid int32     `bun:"pricing_template_key_field_uid,type:int"`                           // Unique identifier for the associated pricing_template_key_field record which determines the key field these defaults are for.
 	ColumnId                   float64   `bun:"column_id,type:decimal(19,0)"`                                      // Unique identifier for the pricing_service_column
 	DefaultValue               string    `bun:"default_value,type:varchar(255)"`                                   // The default value for the column

@@ -7,7 +7,7 @@ import (
 
 type PopupDetail struct {
 	bun.BaseModel                       `bun:"table:popup_detail"`
-	PopupDetailUid                      int32     `bun:"popup_detail_uid,type:int,autoincrement,scanonly,pk"`            // Popup Detail Id
+	PopupDetailUid                      int32     `bun:"popup_detail_uid,type:int,autoincrement,identity,pk"`            // Popup Detail Id
 	PopupTitle                          string    `bun:"popup_title,type:varchar(40)"`                                   // Title
 	PopupDesc                           string    `bun:"popup_desc,type:varchar(255)"`                                   // Description
 	RestrictHdlr                        string    `bun:"restrict_hdlr,type:varchar(32)"`                                 // Restrict Handler

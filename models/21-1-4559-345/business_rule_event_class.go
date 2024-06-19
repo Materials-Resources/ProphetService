@@ -7,7 +7,7 @@ import (
 
 type BusinessRuleEventClass struct {
 	bun.BaseModel             `bun:"table:business_rule_event_class"`
-	BusinessRuleEventClassUid int32     `bun:"business_rule_event_class_uid,type:int,autoincrement,scanonly,pk"` // UID for this table.
+	BusinessRuleEventClassUid int32     `bun:"business_rule_event_class_uid,type:int,autoincrement,identity,pk"` // UID for this table.
 	BusinessRuleEventUid      int32     `bun:"business_rule_event_uid,type:int"`                                 // FK to the business rule event record that this rule class goes with.
 	RuleClassName             string    `bun:"rule_class_name,type:varchar(255)"`                                // Name of the .NET class that will be triggered for the associated business rule event.
 	RunTypeCd                 int32     `bun:"run_type_cd,type:int"`                                             // Determines if this rule will be executed synchronously or asynchronously.

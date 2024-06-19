@@ -7,7 +7,7 @@ import (
 
 type TempPoLocSummary struct {
 	bun.BaseModel    `bun:"table:temp_po_loc_summary"`
-	TplsId           int32     `bun:"tpls_id,type:int,autoincrement,scanonly"`
+	TplsId           int32     `bun:"tpls_id,type:int,autoincrement,identity"`
 	CompanyId        string    `bun:"company_id,type:varchar(8)"`
 	LocationId       float64   `bun:"location_id,type:decimal(19,0)"`
 	SummaryDate      time.Time `bun:"summary_date,type:datetime"`

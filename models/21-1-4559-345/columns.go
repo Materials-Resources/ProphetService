@@ -14,6 +14,6 @@ type Columns struct {
 	DateCreated       time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified  time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy  string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	ColumnsUid        int32     `bun:"columns_uid,type:int,autoincrement,unique,scanonly"`        // Unique identity column for columns
+	ColumnsUid        int32     `bun:"columns_uid,type:int,autoincrement,unique,identity"`        // Unique identity column for columns
 	BaseQuarterOffset float64   `bun:"base_quarter_offset,type:decimal(4,0),default:((0))"`       // Quarter offset used for quarterly financial statements.
 }

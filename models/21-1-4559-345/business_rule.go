@@ -7,7 +7,7 @@ import (
 
 type BusinessRule struct {
 	bun.BaseModel              `bun:"table:business_rule"`
-	BusinessRuleUid            int32     `bun:"business_rule_uid,type:int,autoincrement,scanonly,pk"`         // Unique identifier
+	BusinessRuleUid            int32     `bun:"business_rule_uid,type:int,autoincrement,identity,pk"`         // Unique identifier
 	RuleTypeCd                 int32     `bun:"rule_type_cd,type:int"`                                        // The type of the rule
 	RuleName                   string    `bun:"rule_name,type:varchar(255)"`                                  // The name of the rule
 	FieldName                  string    `bun:"field_name,type:varchar(255),nullzero"`                        // The field for which the rule applies

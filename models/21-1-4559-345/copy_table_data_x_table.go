@@ -7,7 +7,7 @@ import (
 
 type CopyTableDataXTable struct {
 	bun.BaseModel            `bun:"table:copy_table_data_x_table"`
-	CopyTableDataXTableUid   int32     `bun:"copy_table_data_x_table_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	CopyTableDataXTableUid   int32     `bun:"copy_table_data_x_table_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	CopyTableDataXProcessUid int32     `bun:"copy_table_data_x_process_uid,type:int,unique"`                  // Copy Table Process
 	TableName                string    `bun:"table_name,type:varchar(255),unique"`                            // Table Name
 	SourceTableName          string    `bun:"source_table_name,type:varchar(255),nullzero"`                   // Source Table Name

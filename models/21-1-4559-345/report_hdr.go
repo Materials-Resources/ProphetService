@@ -7,7 +7,7 @@ import (
 
 type ReportHdr struct {
 	bun.BaseModel        `bun:"table:report_hdr"`
-	ReportHdrUid         int32     `bun:"report_hdr_uid,type:int,autoincrement,scanonly,pk"`            // identity
+	ReportHdrUid         int32     `bun:"report_hdr_uid,type:int,autoincrement,identity,pk"`            // identity
 	ReportName           string    `bun:"report_name,type:varchar(255)"`                                // rpt file name of crystal report
 	ReportSourcePath     string    `bun:"report_source_path,type:varchar(255)"`                         // fully qualifier path to report file
 	PostPurgeFlag        string    `bun:"post_purge_flag,type:char(1)"`                                 // flag to indicate purge of parm data after report is executed

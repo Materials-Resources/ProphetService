@@ -7,7 +7,7 @@ import (
 
 type LostSalesTransaction struct {
 	bun.BaseModel           `bun:"table:lost_sales_transaction"`
-	LostSalesTransactionUid int32     `bun:"lost_sales_transaction_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for lost_sales_transaction.
+	LostSalesTransactionUid int32     `bun:"lost_sales_transaction_uid,type:int,autoincrement,identity,pk"` // Unique identifier for lost_sales_transaction.
 	LostSalesUid            int32     `bun:"lost_sales_uid,type:int"`                                       // Idenitifies the reason chosen by the user to cancel the qty (from the lost_sales table).
 	AffectUsage             string    `bun:"affect_usage,type:char(1)"`                                     // Whether or not the cancelled quantity associated with this change should affect the usage of the item.  This comes from the lost_sales table but is stored here also for historical data purposes.
 	TransactionCodeNo       int32     `bun:"transaction_code_no,type:int"`                                  // The action/transaction type which led to the generation of this record.

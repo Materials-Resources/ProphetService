@@ -7,7 +7,7 @@ import (
 
 type ThirdpartybillFiletype struct {
 	bun.BaseModel             `bun:"table:thirdpartybill_filetype"`
-	ThirdpartybillFiletypeUid int32     `bun:"thirdpartybill_filetype_uid,type:int,autoincrement,scanonly,pk"` // Unique record identifier
+	ThirdpartybillFiletypeUid int32     `bun:"thirdpartybill_filetype_uid,type:int,autoincrement,identity,pk"` // Unique record identifier
 	FiletypePrefix            string    `bun:"filetype_prefix,type:varchar(255)"`                              // P21 output filename prefix
 	Description               string    `bun:"description,type:varchar(255)"`                                  // P21 output file description
 	RowStatusFlag             int32     `bun:"row_status_flag,type:int"`                                       // Indicates current record status

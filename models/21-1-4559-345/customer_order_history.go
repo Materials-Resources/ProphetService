@@ -7,7 +7,7 @@ import (
 
 type CustomerOrderHistory struct {
 	bun.BaseModel           `bun:"table:customer_order_history"`
-	CustomerOrderHistoryUid int32     `bun:"customer_order_history_uid,type:int,autoincrement,scanonly,pk"` // Unique Identifier
+	CustomerOrderHistoryUid int32     `bun:"customer_order_history_uid,type:int,autoincrement,identity,pk"` // Unique Identifier
 	CompanyId               string    `bun:"company_id,type:varchar(8)"`                                    // The company id associated with the customer
 	CustomerId              float64   `bun:"customer_id,type:decimal(19,0)"`                                // The customer identifier
 	YearOrdered             int32     `bun:"year_ordered,type:int"`                                         // Year of the orders

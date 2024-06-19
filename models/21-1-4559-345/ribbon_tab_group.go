@@ -7,7 +7,7 @@ import (
 
 type RibbonTabGroup struct {
 	bun.BaseModel     `bun:"table:ribbon_tab_group"`
-	RibbonTabGroupUid int32     `bun:"ribbon_tab_group_uid,type:int,autoincrement,scanonly,pk"`
+	RibbonTabGroupUid int32     `bun:"ribbon_tab_group_uid,type:int,autoincrement,identity,pk"`
 	TabGroupId        string    `bun:"tab_group_id,type:varchar(255)"`
 	TabGroupText      string    `bun:"tab_group_text,type:varchar(255)"`
 	Description       string    `bun:"description,type:varchar(255)"`

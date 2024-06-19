@@ -4,7 +4,7 @@ import "github.com/uptrace/bun"
 
 type P21DeletionSql struct {
 	bun.BaseModel     `bun:"table:p21_deletion_sql"`
-	P21DeletionSqlUid int32  `bun:"p21_deletion_sql_uid,type:int,autoincrement,scanonly"`
+	P21DeletionSqlUid int32  `bun:"p21_deletion_sql_uid,type:int,autoincrement,identity"`
 	DeletionType      int32  `bun:"deletion_type,type:int"`
 	DeletionOrder     int32  `bun:"deletion_order,type:int"`
 	DeletionDb        string `bun:"deletion_db,type:char(1)"`

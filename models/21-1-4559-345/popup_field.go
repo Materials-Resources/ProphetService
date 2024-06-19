@@ -7,7 +7,7 @@ import (
 
 type PopupField struct {
 	bun.BaseModel                    `bun:"table:popup_field"`
-	PopupFieldUid                    int32     `bun:"popup_field_uid,type:int,autoincrement,scanonly,pk"`           // Popup Field Id
+	PopupFieldUid                    int32     `bun:"popup_field_uid,type:int,autoincrement,identity,pk"`           // Popup Field Id
 	FieldName                        string    `bun:"field_name,type:varchar(99)"`                                  // Field name
 	Header                           string    `bun:"header,type:varchar(50),nullzero"`                             // Header field name on window
 	FieldType                        int16     `bun:"field_type,type:smallint"`                                     // Type

@@ -7,7 +7,7 @@ import (
 
 type AverageInventoryValue struct {
 	bun.BaseModel            `bun:"table:average_inventory_value"`
-	AverageInventoryValueUid int32     `bun:"average_inventory_value_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the record
+	AverageInventoryValueUid int32     `bun:"average_inventory_value_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the record
 	DemandPeriodUid          int32     `bun:"demand_period_uid,type:int"`                                     // Unique identifier for the demand period when the inventory value was calculated
 	LocationId               float64   `bun:"location_id,type:decimal(19,0)"`                                 // The location where the item is located
 	InvMastUid               int32     `bun:"inv_mast_uid,type:int"`                                          // Unique identifier for the item id specific to this record.

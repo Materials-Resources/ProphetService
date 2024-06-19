@@ -7,7 +7,7 @@ import (
 
 type ReportCodeP21 struct {
 	bun.BaseModel    `bun:"table:report_code_p21"`
-	ReportCodeP21Uid int32     `bun:"report_code_p21_uid,type:int,autoincrement,scanonly,pk"`       // Primary key
+	ReportCodeP21Uid int32     `bun:"report_code_p21_uid,type:int,autoincrement,identity,pk"`       // Primary key
 	CodeNo           int32     `bun:"code_no,type:int"`                                             // Code of the option
 	LanguageId       string    `bun:"language_id,type:varchar(8)"`                                  // id of the lauges of the option
 	CodeDescription  string    `bun:"code_description,type:varchar(255)"`                           // Description displayed for the user

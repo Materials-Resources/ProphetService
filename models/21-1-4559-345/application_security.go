@@ -7,7 +7,7 @@ import (
 
 type ApplicationSecurity struct {
 	bun.BaseModel          `bun:"table:application_security"`
-	ApplicationSecurityUid int32     `bun:"application_security_uid,type:int,autoincrement,scanonly,pk"`  // Unique ID for table, primary key
+	ApplicationSecurityUid int32     `bun:"application_security_uid,type:int,autoincrement,identity,pk"`  // Unique ID for table, primary key
 	InternalName           string    `bun:"internal_name,type:varchar(255)"`                              // Internal name of security setting
 	DisplayName            string    `bun:"display_name,type:varchar(255)"`                               // External (display) name for security setting
 	ScopeTypeCd            int32     `bun:"scope_type_cd,type:int"`                                       // Code value to determine the scope of this setting

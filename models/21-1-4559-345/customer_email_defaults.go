@@ -7,7 +7,7 @@ import (
 
 type CustomerEmailDefaults struct {
 	bun.BaseModel            `bun:"table:customer_email_defaults"`
-	CustomerEmailDefaultsUid int32     `bun:"customer_email_defaults_uid,type:int,autoincrement,scanonly,pk"` // UID
+	CustomerEmailDefaultsUid int32     `bun:"customer_email_defaults_uid,type:int,autoincrement,identity,pk"` // UID
 	CompanyId                string    `bun:"company_id,type:varchar(8)"`                                     // Company ID
 	CustomerId               float64   `bun:"customer_id,type:decimal(19,0)"`                                 // Customer ID
 	FormTypeCd               int32     `bun:"form_type_cd,type:int"`                                          // Form type

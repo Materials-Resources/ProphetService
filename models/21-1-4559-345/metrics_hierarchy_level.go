@@ -4,7 +4,7 @@ import "github.com/uptrace/bun"
 
 type MetricsHierarchyLevel struct {
 	bun.BaseModel            `bun:"table:metrics_hierarchy_level"`
-	MetricsHierarchyLevelUid int32  `bun:"metrics_hierarchy_level_uid,type:int,autoincrement,scanonly,pk"`                                                                                                                                                   // metrics_hierarchy_level_uid
+	MetricsHierarchyLevelUid int32  `bun:"metrics_hierarchy_level_uid,type:int,autoincrement,identity,pk"`                                                                                                                                                   // metrics_hierarchy_level_uid
 	Name                     string `bun:"name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n"`                        // name
 	Active                   bool   `bun:"active,type:bit"`                                                                                                                                                                                                  // active
 	ParentHierarchyLevelUid  int32  `bun:"parent_hierarchy_level_uid,type:int,nullzero"`                                                                                                                                                                     // parent_hierarchy_level_uid

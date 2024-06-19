@@ -7,7 +7,7 @@ import (
 
 type ReportKeyword struct {
 	bun.BaseModel    `bun:"table:report_keyword"`
-	ReportKeywordUid int32     `bun:"report_keyword_uid,type:int,autoincrement,scanonly,pk"`        // Primary key
+	ReportKeywordUid int32     `bun:"report_keyword_uid,type:int,autoincrement,identity,pk"`        // Primary key
 	Keyword          string    `bun:"keyword,type:varchar(250)"`                                    // Name of the keyword
 	Statement        string    `bun:"statement,type:varchar(250)"`                                  // column that thave the name of the column or function for the keyword
 	Alias            string    `bun:"alias,type:varchar(250)"`                                      // name used to display in the dataset

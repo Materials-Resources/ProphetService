@@ -1,6 +1,7 @@
 package consume
 
 import (
+	"fmt"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/data"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/event"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
@@ -61,8 +62,13 @@ func (w *Workers) DeleteProduct(rec *kgo.Record) error {
 		if err != nil {
 			return err
 		}
+		fmt.Println(err)
 		return nil
 	})
+	if err != nil {
+		span.RecordError(err)
+		return err
+	}
 
-	return err
+	return nil
 }

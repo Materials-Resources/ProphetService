@@ -16,5 +16,5 @@ type CommissionScheduleDetail struct {
 	DateCreated                 time.Time `bun:"date_created,type:datetime"`                                            // Indicates the date/time this record was created.
 	DateLastModified            time.Time `bun:"date_last_modified,type:datetime"`                                      // Indicates the date/time this record was last modified.
 	LastMaintainedBy            string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"`             // ID of the user who last maintained this record
-	CommissionScheduleDetailUid int32     `bun:"commission_schedule_detail_uid,type:int,autoincrement,unique,scanonly"` // Identity column for commission_schedule_detail table.
+	CommissionScheduleDetailUid int32     `bun:"commission_schedule_detail_uid,type:int,autoincrement,unique,identity"` // Identity column for commission_schedule_detail table.
 }

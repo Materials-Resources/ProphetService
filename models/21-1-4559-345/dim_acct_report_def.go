@@ -7,7 +7,7 @@ import (
 
 type DimAcctReportDef struct {
 	bun.BaseModel       `bun:"table:dim_acct_report_def"`
-	DimAcctReportDefUid int32     `bun:"dim_acct_report_def_uid,type:int,autoincrement,scanonly,pk"`   // Table UID
+	DimAcctReportDefUid int32     `bun:"dim_acct_report_def_uid,type:int,autoincrement,identity,pk"`   // Table UID
 	ReportTypeCd        int32     `bun:"report_type_cd,type:int,unique"`                               // Report Type Code
 	ReportDescription   string    `bun:"report_description,type:varchar(255)"`                         // Report Description
 	ViewName            string    `bun:"view_name,type:varchar(255),unique"`                           // Report View Name

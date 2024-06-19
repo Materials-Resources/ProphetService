@@ -19,5 +19,5 @@ type InvoiceLineTaxes struct {
 	TaxCharged          float64   `bun:"tax_charged,type:decimal(19,4),default:(0)"`                    // What was the tax charged for this line -  for this jurisdiction?
 	TotalSalesAmt       float64   `bun:"total_sales_amt,type:decimal(19,4),default:(0)"`                // The total cost of the items on an order.
 	TaxableSalesAmt     float64   `bun:"taxable_sales_amt,type:decimal(19,4),default:(0)"`              // This column will hold the taxable sales for Tax Adjustments only.  Will be 0 for regular tax records.
-	InvoiceLineTaxesUid int32     `bun:"invoice_line_taxes_uid,type:int,autoincrement,unique,scanonly"` // Unique identifier for a record.
+	InvoiceLineTaxesUid int32     `bun:"invoice_line_taxes_uid,type:int,autoincrement,unique,identity"` // Unique identifier for a record.
 }

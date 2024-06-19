@@ -7,7 +7,7 @@ import (
 
 type EccCustomColumnTransferTypeXTable struct {
 	bun.BaseModel                        `bun:"table:ecc_custom_column_transfer_type_x_table"`
-	EccCustomColumnTransferTypeXTableUid int32     `bun:"ecc_custom_column_transfer_type_x_table_uid,type:int,autoincrement,scanonly,pk"`
+	EccCustomColumnTransferTypeXTableUid int32     `bun:"ecc_custom_column_transfer_type_x_table_uid,type:int,autoincrement,identity,pk"`
 	EccTransferType                      string    `bun:"ecc_transfer_type,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,unique"`
 	UdTableName                          string    `bun:"ud_table_name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,unique"`
 	JoinSql                              string    `bun:"join_sql,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"`

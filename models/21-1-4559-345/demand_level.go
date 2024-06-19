@@ -7,7 +7,7 @@ import (
 
 type DemandLevel struct {
 	bun.BaseModel       `bun:"table:demand_level"`
-	DemandLevelUid      int32     `bun:"demand_level_uid,type:int,autoincrement,scanonly,pk"`          // Unique Identifier for table.
+	DemandLevelUid      int32     `bun:"demand_level_uid,type:int,autoincrement,identity,pk"`          // Unique Identifier for table.
 	ServiceLevelPctGoal float64   `bun:"service_level_pct_goal,type:decimal(19,2),nullzero"`           // Percent of service level for safety stock.
 	StockOutDeviation   float64   `bun:"stock_out_deviation,type:decimal(19,2),nullzero"`              // Standard deviation for stock outs.
 	BackorderDeviation  float64   `bun:"backorder_deviation,type:decimal(19,2),nullzero"`              // Standard deviation for backorders

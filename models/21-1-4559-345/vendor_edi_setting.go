@@ -7,7 +7,7 @@ import (
 
 type VendorEdiSetting struct {
 	bun.BaseModel             `bun:"table:vendor_edi_setting"`
-	VendorEdiSettingUid       int32     `bun:"vendor_edi_setting_uid,type:int,autoincrement,scanonly,pk"`    // Unique identifier for each record
+	VendorEdiSettingUid       int32     `bun:"vendor_edi_setting_uid,type:int,autoincrement,identity,pk"`    // Unique identifier for each record
 	CompanyId                 string    `bun:"company_id,type:varchar(8)"`                                   // Company ID for Vendor to which settings apply
 	VendorId                  float64   `bun:"vendor_id,type:decimal(19,0)"`                                 // Vendor to which settings apply
 	InterchgReceiverId        string    `bun:"interchg_receiver_id,type:varchar(255),nullzero"`              // Vendor standard address name for EDI transactions

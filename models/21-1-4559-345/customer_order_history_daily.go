@@ -7,7 +7,7 @@ import (
 
 type CustomerOrderHistoryDaily struct {
 	bun.BaseModel              `bun:"table:customer_order_history_daily"`
-	CustomerOdrHistoryDailyUid int32     `bun:"customer_odr_history_daily_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier
+	CustomerOdrHistoryDailyUid int32     `bun:"customer_odr_history_daily_uid,type:int,autoincrement,identity,pk"` // Unique identifier
 	CompanyId                  string    `bun:"company_id,type:varchar(8)"`                                        // The company id associated with the customer
 	CustomerId                 float64   `bun:"customer_id,type:decimal(19,0)"`                                    // The customer identifier
 	DateOrdered                time.Time `bun:"date_ordered,type:datetime"`                                        // Date of the orders

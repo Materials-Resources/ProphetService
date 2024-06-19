@@ -7,7 +7,7 @@ import (
 
 type CustomerCreditHistoryDaily struct {
 	bun.BaseModel              `bun:"table:customer_credit_history_daily"`
-	CustomerCdtHistoryDailyUid int32     `bun:"customer_cdt_history_daily_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier
+	CustomerCdtHistoryDailyUid int32     `bun:"customer_cdt_history_daily_uid,type:int,autoincrement,identity,pk"` // Unique identifier
 	CompanyId                  string    `bun:"company_id,type:varchar(8)"`                                        // The company id associated with the customer
 	CustomerId                 float64   `bun:"customer_id,type:decimal(19,0)"`                                    // The customer identifier
 	DateInvoiced               time.Time `bun:"date_invoiced,type:datetime"`                                       // Date of the invoice/payment

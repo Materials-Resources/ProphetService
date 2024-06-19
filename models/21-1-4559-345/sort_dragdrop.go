@@ -7,7 +7,7 @@ import (
 
 type SortDragdrop struct {
 	bun.BaseModel       `bun:"table:sort_dragdrop"`
-	SortDragdropUid     int32     `bun:"sort_dragdrop_uid,type:int,autoincrement,scanonly,pk"`         // Unique Identifier
+	SortDragdropUid     int32     `bun:"sort_dragdrop_uid,type:int,autoincrement,identity,pk"`         // Unique Identifier
 	Dataobject          string    `bun:"dataobject,type:varchar(255),unique"`                          // Datawindow Object Name
 	UserId              string    `bun:"user_id,type:varchar(30),unique"`                              // User ID
 	SelectedColumnsList string    `bun:"selected_columns_list,type:varchar(8000)"`                     // Selected Column List (Comma Delimited)

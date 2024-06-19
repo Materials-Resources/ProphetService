@@ -7,7 +7,7 @@ import (
 
 type ItemMergeAudit struct {
 	bun.BaseModel     `bun:"table:item_merge_audit"`
-	ItemMergeAuditUid int32     `bun:"item_merge_audit_uid,type:int,autoincrement,scanonly,pk"` // Identifier
+	ItemMergeAuditUid int32     `bun:"item_merge_audit_uid,type:int,autoincrement,identity,pk"` // Identifier
 	ItemMergeRun      int32     `bun:"item_merge_run,type:int"`                                 // Item Merge Run Number
 	SourceItemId      string    `bun:"source_item_id,type:varchar(40)"`                         // Source Item ID
 	TargetItemId      string    `bun:"target_item_id,type:varchar(40)"`                         // Target Item ID

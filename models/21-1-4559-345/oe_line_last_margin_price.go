@@ -7,7 +7,7 @@ import (
 
 type OeLineLastMarginPrice struct {
 	bun.BaseModel            `bun:"table:oe_line_last_margin_price"`
-	OeLineLastMarginPriceUid int32     `bun:"oe_line_last_margin_price_uid,type:int,autoincrement,scanonly,pk"` // UID for table
+	OeLineLastMarginPriceUid int32     `bun:"oe_line_last_margin_price_uid,type:int,autoincrement,identity,pk"` // UID for table
 	OeLineUid                int32     `bun:"oe_line_uid,type:int"`                                             // Link to OE Line
 	PrevSkuPrice             float64   `bun:"prev_sku_price,type:decimal(19,9),nullzero"`                       // Previous SKU Price
 	PrevQtyOrdered           float64   `bun:"prev_qty_ordered,type:decimal(19,9),nullzero"`                     // Previous Qty Ordered

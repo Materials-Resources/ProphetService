@@ -17,5 +17,5 @@ type CommissionSchedule struct {
 	DateLastModified       time.Time `bun:"date_last_modified,type:datetime"`                               // Indicates the date/time this record was last modified.
 	LastMaintainedBy       string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"`      // ID of the user who last maintained this record
 	AppliesTo              string    `bun:"applies_to,type:char(1)"`                                        // Determines whether to apply the commission rule to the entire invoice or the line.
-	CommissionScheduleUid  int32     `bun:"commission_schedule_uid,type:int,autoincrement,unique,scanonly"` // Unique identifier for a record
+	CommissionScheduleUid  int32     `bun:"commission_schedule_uid,type:int,autoincrement,unique,identity"` // Unique identifier for a record
 }

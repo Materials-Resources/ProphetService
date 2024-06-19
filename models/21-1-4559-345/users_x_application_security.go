@@ -7,7 +7,7 @@ import (
 
 type UsersXApplicationSecurity struct {
 	bun.BaseModel          `bun:"table:users_x_application_security"`
-	UsersXAppSecurityUid   int32     `bun:"users_x_app_security_uid,type:int,autoincrement,scanonly,pk"`  // Unique ID, primary key
+	UsersXAppSecurityUid   int32     `bun:"users_x_app_security_uid,type:int,autoincrement,identity,pk"`  // Unique ID, primary key
 	UsersId                string    `bun:"users_id,type:varchar(30)"`                                    // ID from user table, FK
 	ApplicationSecurityUid int32     `bun:"application_security_uid,type:int"`                            // UID from application_security table, FK
 	CodeValue              int32     `bun:"code_value,type:int,nullzero"`                                 // Code (int) value for this record. Will contain only codes for code_p21

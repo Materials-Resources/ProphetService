@@ -7,7 +7,7 @@ import (
 
 type CopyTableDataXCounter struct {
 	bun.BaseModel            `bun:"table:copy_table_data_x_counter"`
-	CopyTableDataXCounterUid int32     `bun:"copy_table_data_x_counter_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	CopyTableDataXCounterUid int32     `bun:"copy_table_data_x_counter_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	CopyTableDataXTableUid   int32     `bun:"copy_table_data_x_table_uid,type:int,unique"`                      // Table associated with Counter
 	CounterId                string    `bun:"counter_id,type:varchar(64),unique"`                               // Counter associated with table
 	DateCreated              time.Time `bun:"date_created,type:datetime,default:(getdate())"`                   // Date and time the record was originally created

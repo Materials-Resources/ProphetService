@@ -7,7 +7,7 @@ import (
 
 type CarrierPackageType struct {
 	bun.BaseModel          `bun:"table:carrier_package_type"`
-	CarrierPackageTypeUid  int32     `bun:"carrier_package_type_uid,type:int,autoincrement,scanonly,pk"`  // UID for table
+	CarrierPackageTypeUid  int32     `bun:"carrier_package_type_uid,type:int,autoincrement,identity,pk"`  // UID for table
 	CarrierPackageTypeId   int32     `bun:"carrier_package_type_id,type:int"`                             // Name of carrier package type
 	CarrierPackageTypeDesc string    `bun:"carrier_package_type_desc,type:varchar(255)"`                  // Description of carrier package type
 	CarrierProviderTypeUid int32     `bun:"carrier_provider_type_uid,type:int"`                           // UID of carrier associated with package type

@@ -17,7 +17,7 @@ type FinReport struct {
 	PathAndFileName     string    `bun:"path_and_file_name,type:varchar(255),nullzero"`             // The path and file name of the financial worksheet.
 	DeleteFlag          string    `bun:"delete_flag,type:char(1),default:('N')"`                    // Indicates whether the financial statement is deleted.
 	RecordTypeCd        int32     `bun:"record_type_cd,type:int,nullzero"`                          // Determine the type of record (User Defined, System Defined, Not In Use, etc...)
-	FinReportUid        int32     `bun:"fin_report_uid,type:int,autoincrement,unique,scanonly"`     // Unique identity column for fin_report
+	FinReportUid        int32     `bun:"fin_report_uid,type:int,autoincrement,unique,identity"`     // Unique identity column for fin_report
 	SourceTypeCd        int32     `bun:"source_type_cd,type:int,nullzero"`                          // Source type code for fin_report.
 	StatementTypeCd     int32     `bun:"statement_type_cd,type:int,default:((2137))"`               // The statement type code for this record.
 	InitialNumberOfRows int32     `bun:"initial_number_of_rows,type:int,nullzero"`                  // This value determines how many initial rows are added to express setup if no previous rows exist.

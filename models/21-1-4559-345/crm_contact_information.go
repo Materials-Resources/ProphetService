@@ -7,7 +7,7 @@ import (
 
 type CrmContactInformation struct {
 	bun.BaseModel            `bun:"table:crm_contact_information"`
-	CrmContactInformationUid int32     `bun:"crm_contact_information_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the record.
+	CrmContactInformationUid int32     `bun:"crm_contact_information_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the record.
 	CompanyId                string    `bun:"company_id,type:varchar(8),unique,nullzero"`                     // The identifier of the company the contains this record.
 	EntityLinkIdChar         string    `bun:"entity_link_id_char,type:varchar(255),unique,nullzero"`          // The character identifier for the entity.
 	EntityLinkIdDec          float64   `bun:"entity_link_id_dec,type:decimal(19,0),unique,nullzero"`          // The decimal identifier for the entity.

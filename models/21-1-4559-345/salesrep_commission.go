@@ -23,7 +23,7 @@ type SalesrepCommission struct {
 	MfrRepPaidOnPartialFlag   string    `bun:"mfr_rep_paid_on_partial_flag,type:char(1),default:('N')"`    // Determines whether or not commission for Cash Receipts are paid on partial payments.
 	TotalProfitThreshold      float64   `bun:"total_profit_threshold,type:decimal(19,2),default:((0.00))"` // The aggregate profit over invoice lines that generate a commission needs to meet this value.
 	TotalProfitThresholdType  string    `bun:"total_profit_threshold_type,type:char(1),nullzero"`          // The type of total_profit_threshold ($ or %).  Can be null if neither is selected.
-	SalesrepCommissionUid     int32     `bun:"salesrep_commission_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier on the salerep_commission table
+	SalesrepCommissionUid     int32     `bun:"salesrep_commission_uid,type:int,autoincrement,identity,pk"` // Unique identifier on the salerep_commission table
 	TerritoryUid              int32     `bun:"territory_uid,type:int,unique,nullzero"`                     // Custom This column will hold the territory used for commission calcs.
 	HouseSplitPercentage      float64   `bun:"house_split_percentage,type:decimal(19,9),nullzero"`         // Decimal value indicating a split percentage that goes to the house when commissions are calculated for the salesrep.
 	CalcDaysOverdueFromDateCd int32     `bun:"calc_days_overdue_from_date_cd,type:int,default:((1347))"`   // Indicates whether the days overdue should be calculated by due date or invoice date.

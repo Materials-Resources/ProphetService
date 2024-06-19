@@ -7,7 +7,7 @@ import (
 
 type CopyTableDataXProcess struct {
 	bun.BaseModel            `bun:"table:copy_table_data_x_process"`
-	CopyTableDataXProcessUid int32     `bun:"copy_table_data_x_process_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier of table (Identity Column)
+	CopyTableDataXProcessUid int32     `bun:"copy_table_data_x_process_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	ProcessTypeCd            int32     `bun:"process_type_cd,type:int"`                                         // Process Type Code
 	DateCreated              time.Time `bun:"date_created,type:datetime,default:(getdate())"`                   // Date and time the record was originally created
 	CreatedBy                string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`             // User who created the record

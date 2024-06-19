@@ -7,7 +7,7 @@ import (
 
 type BusinessRuleDataElement struct {
 	bun.BaseModel              `bun:"table:business_rule_data_element"`
-	BusinessRuleDataElementUid int32     `bun:"business_rule_data_element_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier
+	BusinessRuleDataElementUid int32     `bun:"business_rule_data_element_uid,type:int,autoincrement,identity,pk"` // Unique identifier
 	BusinessRuleUid            int32     `bun:"business_rule_uid,type:int"`                                        // The business rule this record this element applies to
 	FieldName                  string    `bun:"field_name,type:varchar(255)"`                                      // The field for the data element
 	ClassName                  string    `bun:"class_name,type:varchar(255),nullzero"`                             // The class for the data element

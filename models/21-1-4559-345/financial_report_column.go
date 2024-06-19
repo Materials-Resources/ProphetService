@@ -7,7 +7,7 @@ import (
 
 type FinancialReportColumn struct {
 	bun.BaseModel            `bun:"table:financial_report_column"`
-	FinancialReportColumnUid int32     `bun:"financial_report_column_uid,type:int,autoincrement,scanonly,pk"` // Unique ID for financial report column
+	FinancialReportColumnUid int32     `bun:"financial_report_column_uid,type:int,autoincrement,identity,pk"` // Unique ID for financial report column
 	SpreadsheetColumn        string    `bun:"spreadsheet_column,type:varchar(2),unique"`                      // The alpha-numeric value of the column for this record
 	SpreadsheetColumnNo      int32     `bun:"spreadsheet_column_no,type:int"`                                 // The numeric value of the column for this record
 	FinReportUid             int32     `bun:"fin_report_uid,type:int,unique"`                                 // The uid from the fin_report table

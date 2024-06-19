@@ -7,7 +7,7 @@ import (
 
 type WindowXMenu struct {
 	bun.BaseModel    `bun:"table:window_x_menu"`
-	WindowXMenuUid   int32     `bun:"window_x_menu_uid,type:int,autoincrement,scanonly,pk"`         // Unique identifier for the table
+	WindowXMenuUid   int32     `bun:"window_x_menu_uid,type:int,autoincrement,identity,pk"`         // Unique identifier for the table
 	WindowName       string    `bun:"window_name,type:varchar(255)"`                                // Window to be linked to the menu item
 	MenuName         string    `bun:"menu_name,type:varchar(2000)"`                                 // Menu item captured by the navigation index
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

@@ -7,7 +7,7 @@ import (
 
 type UserDefinedColumn struct {
 	bun.BaseModel        `bun:"table:user_defined_column"`
-	UserDefinedColumnUid int32     `bun:"user_defined_column_uid,type:int,autoincrement,scanonly,pk"` // Unique Identifier for the user_defined_column record
+	UserDefinedColumnUid int32     `bun:"user_defined_column_uid,type:int,autoincrement,identity,pk"` // Unique Identifier for the user_defined_column record
 	BaseTable            string    `bun:"base_table,type:varchar(40)"`                                // The base table for the user defined column
 	ColumnName           string    `bun:"column_name,type:varchar(40)"`                               // The name of the user defined column
 	DataType             string    `bun:"data_type,type:varchar(10)"`                                 // The data type of the user defined column

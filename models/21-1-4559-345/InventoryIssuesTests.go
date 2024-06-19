@@ -9,5 +9,5 @@ type Inventoryissuestests struct {
 	Orderby                 string `bun:"OrderBy,type:varchar(255),nullzero"`
 	Description             string `bun:"Description,type:varchar(255),nullzero"`
 	TotalTestUid            int32  `bun:"total_test_uid,type:int,nullzero"`
-	InventoryIssuesTestsUid int32  `bun:"inventory_issues_tests_uid,type:int,autoincrement,scanonly"`
+	InventoryIssuesTestsUid int32  `bun:"inventory_issues_tests_uid,type:int,autoincrement,identity"`
 }

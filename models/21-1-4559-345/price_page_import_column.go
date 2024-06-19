@@ -7,7 +7,7 @@ import (
 
 type PricePageImportColumn struct {
 	bun.BaseModel            `bun:"table:price_page_import_column"`
-	PricePageImportColumnUid int32     `bun:"price_page_import_column_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for this record
+	PricePageImportColumnUid int32     `bun:"price_page_import_column_uid,type:int,autoincrement,identity,pk"` // Unique identifier for this record
 	Name                     string    `bun:"name,type:varchar(50)"`                                           // Datawindow column name for the column
 	Description              string    `bun:"description,type:varchar(255)"`                                   // Description of the column
 	DataType                 string    `bun:"data_type,type:varchar(10)"`                                      // Data type of the column

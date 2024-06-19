@@ -7,7 +7,7 @@ import (
 
 type PodDocumentTemplate struct {
 	bun.BaseModel          `bun:"table:pod_document_template"`
-	PodDocumentTemplateUid int32     `bun:"pod_document_template_uid,type:int,autoincrement,scanonly,pk"` // Unique row identifier
+	PodDocumentTemplateUid int32     `bun:"pod_document_template_uid,type:int,autoincrement,identity,pk"` // Unique row identifier
 	DocumentCd             int32     `bun:"document_cd,type:int,unique"`                                  // Identifies document application
 	DocumentTemplate       string    `bun:"document_template,type:text,nullzero"`                         // XML document template
 	RowStatusFlag          int32     `bun:"row_status_flag,type:int,default:((704))"`                     // Row status

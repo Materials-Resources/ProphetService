@@ -74,22 +74,22 @@ func (m *InvMastModel) deleteAssociatedRecords(ctx context.Context, rec InvMast)
 
 	}
 
-	//// delete assembly_hdr records
-	//if rec.AssemblyHdr != nil {
-	//	if rec.AssemblyHdr.AssemblyLines != nil {
-	//		for _, assemblyLine := range rec.AssemblyHdr.AssemblyLines {
-	//			_, err := m.bun.NewDelete().Model(&assemblyLine).WherePK().Exec(ctx)
-	//			if err != nil {
-	//				return err
-	//			}
-	//		}
-	//	}
-	//	_, err := m.bun.NewDelete().Model(&rec.AssemblyHdr).WherePK().Exec(ctx)
-	//	if err != nil {
-	//		return err
-	//	}
-	//
-	//}
+	// delete assembly_hdr records
+	if rec.AssemblyHdr != nil {
+		if rec.AssemblyHdr.AssemblyLines != nil {
+			for _, assemblyLine := range rec.AssemblyHdr.AssemblyLines {
+				_, err := m.bun.NewDelete().Model(&assemblyLine).WherePK().Exec(ctx)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		_, err := m.bun.NewDelete().Model(&rec.AssemblyHdr).WherePK().Exec(ctx)
+		if err != nil {
+			return err
+		}
+
+	}
 
 	if rec.AverageInventoryValues != nil {
 		_, err := m.bun.NewDelete().Model(&rec.AverageInventoryValues).WherePK().Exec(ctx)

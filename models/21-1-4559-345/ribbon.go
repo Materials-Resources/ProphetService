@@ -7,7 +7,7 @@ import (
 
 type Ribbon struct {
 	bun.BaseModel    `bun:"table:ribbon"`
-	RibbonUid        int32     `bun:"ribbon_uid,type:int,autoincrement,scanonly,pk"`
+	RibbonUid        int32     `bun:"ribbon_uid,type:int,autoincrement,identity,pk"`
 	Name             string    `bun:"name,type:varchar(255)"`
 	Description      string    `bun:"description,type:varchar(255),nullzero"`
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`

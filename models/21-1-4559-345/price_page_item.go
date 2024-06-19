@@ -7,7 +7,7 @@ import (
 
 type PricePageItem struct {
 	bun.BaseModel    `bun:"table:price_page_item"`
-	PricePageItemUid int32     `bun:"price_page_item_uid,type:int,autoincrement,scanonly,pk"` // Unique ID for this price_page_item record.
+	PricePageItemUid int32     `bun:"price_page_item_uid,type:int,autoincrement,identity,pk"` // Unique ID for this price_page_item record.
 	PricePageUid     int32     `bun:"price_page_uid,type:int"`                                // Unique ID for Price Pages.
 	InvMastUid       int32     `bun:"inv_mast_uid,type:int"`                                  // Unique identifier for the item id.
 	EffectiveDate    time.Time `bun:"effective_date,type:datetime"`                           // Starting date on which pricing page will be used in pricing calculations.

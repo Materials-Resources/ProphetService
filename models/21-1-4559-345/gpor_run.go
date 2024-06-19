@@ -7,7 +7,7 @@ import (
 
 type GporRun struct {
 	bun.BaseModel                 `bun:"table:gpor_run"`
-	GporRunUid                    int32     `bun:"gpor_run_uid,type:int,autoincrement,scanonly,pk"`
+	GporRunUid                    int32     `bun:"gpor_run_uid,type:int,autoincrement,identity,pk"`
 	GporRunHdrUid                 int32     `bun:"gpor_run_hdr_uid,type:int"`
 	SequenceNo                    int16     `bun:"sequence_no,type:smallint"`
 	ItemId                        string    `bun:"item_id,type:varchar(40)"`

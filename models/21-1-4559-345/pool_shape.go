@@ -7,7 +7,7 @@ import (
 
 type PoolShape struct {
 	bun.BaseModel    `bun:"table:pool_shape"`
-	PoolShapeUid     int32     `bun:"pool_shape_uid,type:int,autoincrement,scanonly,pk"`            // Unique ID for this table
+	PoolShapeUid     int32     `bun:"pool_shape_uid,type:int,autoincrement,identity,pk"`            // Unique ID for this table
 	PoolShapeId      string    `bun:"pool_shape_id,type:varchar(20)"`                               // User defined code for this pool shape
 	Description      string    `bun:"description,type:varchar(255)"`                                // Description for this pool shape
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

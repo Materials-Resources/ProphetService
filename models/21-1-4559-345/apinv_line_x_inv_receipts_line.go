@@ -7,7 +7,7 @@ import (
 
 type ApinvLineXInvReceiptsLine struct {
 	bun.BaseModel           `bun:"table:apinv_line_x_inv_receipts_line"`
-	ApinvLineXInvRecLineUid int32     `bun:"apinv_line_x_inv_rec_line_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the record
+	ApinvLineXInvRecLineUid int32     `bun:"apinv_line_x_inv_rec_line_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the record
 	ReceiptNumber           float64   `bun:"receipt_number,type:decimal(19,0)"`                                // Inventory receipt number that this record relates to.
 	ReceiptLine             int32     `bun:"receipt_line,type:int"`                                            // Line on the inventory receipt that this record relates to.
 	ApinvLineUid            int32     `bun:"apinv_line_uid,type:int,nullzero"`                                 // Unique identifier of the voucher line that this record relates to.

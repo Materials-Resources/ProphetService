@@ -20,7 +20,7 @@ type ChartOfAccts struct {
 	CreatedBy                  string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 	AccountInformation         string    `bun:"account_information,type:varchar(255),nullzero"`            // a field for extended information about the account
 	GlReportDefaultPrintMethod int32     `bun:"gl_report_default_print_method,type:int,default:((1016))"`  // default printing type for GL reports
-	ChartOfAcctsUid            int32     `bun:"chart_of_accts_uid,type:int,autoincrement,unique,scanonly"` // Unique identity column for chart_of_accts
+	ChartOfAcctsUid            int32     `bun:"chart_of_accts_uid,type:int,autoincrement,unique,identity"` // Unique identity column for chart_of_accts
 	RecordTypeCd               int32     `bun:"record_type_cd,type:int,nullzero"`                          // Determine the type of record (User Defined, System Defined, etc...)
 	DocLinkSmartFormFlag       string    `bun:"doc_link_smart_form_flag,type:char(1),nullzero"`            // Flag to indicate that the associated gl account is valid to use with doc-link smart forms.
 	AccountDefinitionCd        int32     `bun:"account_definition_cd,type:int,nullzero"`                   // Determines whether the Account is an AR/AP Account

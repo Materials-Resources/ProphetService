@@ -7,7 +7,7 @@ import (
 
 type ShippingDocumentTemplate struct {
 	bun.BaseModel               `bun:"table:shipping_document_template"`
-	ShippingDocumentTemplateUid int32     `bun:"shipping_document_template_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for table.
+	ShippingDocumentTemplateUid int32     `bun:"shipping_document_template_uid,type:int,autoincrement,identity,pk"` // Unique identifier for table.
 	DocumentType                string    `bun:"document_type,type:varchar(255)"`                                   // Document Identifier
 	DocumentTemplate            string    `bun:"document_template,type:text"`                                       // XML template string of the document
 	CarrierTypeCd               int32     `bun:"carrier_type_cd,type:int"`                                          // Carrier tpye, UPS, FEDEX, etc.

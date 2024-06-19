@@ -7,7 +7,7 @@ import (
 
 type ShippingIntegrationMsgHandling struct {
 	bun.BaseModel                     `bun:"table:shipping_integration_msg_handling"`
-	ShippingIntegrationMsgHandlingUid int32     `bun:"shipping_integration_msg_handling_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the shipping_integration_msg_handling table.
+	ShippingIntegrationMsgHandlingUid int32     `bun:"shipping_integration_msg_handling_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the shipping_integration_msg_handling table.
 	ShippingIntegrationTypeCd         int32     `bun:"shipping_integration_type_cd,type:int,unique"`                             // Code that identifies the shipping integration that returns the message code/id.
 	MessageNumberOrId                 string    `bun:"message_number_or_id,type:varchar(255),unique"`                            // The message number or id returned from the shipping integration.
 	IgnoreErrorFlag                   string    `bun:"ignore_error_flag,type:char(1),default:('N')"`                             // Whether or not the application will ignore (that is, bypass displaying to the user) the returned message.

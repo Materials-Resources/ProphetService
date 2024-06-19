@@ -7,7 +7,7 @@ import (
 
 type Metrics struct {
 	bun.BaseModel         `bun:"table:metrics"`
-	MetricsUid            int32     `bun:"metrics_uid,type:int,autoincrement,scanonly,pk"`                                                                                                                                                                                  // metrics_uid
+	MetricsUid            int32     `bun:"metrics_uid,type:int,autoincrement,identity,pk"`                                                                                                                                                                                  // metrics_uid
 	UniqueName            string    `bun:"unique_name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"`                       // unique_name
 	Name                  string    `bun:"name,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n"`                                       // name
 	Description           string    `bun:"description,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"`                       // description

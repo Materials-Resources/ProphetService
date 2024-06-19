@@ -7,7 +7,7 @@ import (
 
 type ReportParm struct {
 	bun.BaseModel    `bun:"table:report_parm"`
-	ReportParmUid    int32     `bun:"report_parm_uid,type:int,autoincrement,scanonly,pk"`           // identity
+	ReportParmUid    int32     `bun:"report_parm_uid,type:int,autoincrement,identity,pk"`           // identity
 	ReportHdrUid     int32     `bun:"report_hdr_uid,type:int"`                                      // key to primary table
 	ReportLevel      int32     `bun:"report_level,type:int"`                                        // level of parms in crystal report (0-primary, 1-1st subreport, ect)
 	ParmSeqNo        int32     `bun:"parm_seq_no,type:int"`                                         // order of parms per level

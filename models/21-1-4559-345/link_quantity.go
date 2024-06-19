@@ -7,7 +7,7 @@ import (
 
 type LinkQuantity struct {
 	bun.BaseModel    `bun:"table:link_quantity"`
-	LinkQuantityUid  int32     `bun:"link_quantity_uid,type:int,autoincrement,scanonly,pk"`         // Unique Identifier for table
+	LinkQuantityUid  int32     `bun:"link_quantity_uid,type:int,autoincrement,identity,pk"`         // Unique Identifier for table
 	FromUid          int32     `bun:"from_uid,type:int"`                                            // Transaction UID this is linked from
 	FromTypeCd       int32     `bun:"from_type_cd,type:int"`                                        // Type of transaction this is linked from
 	ToUid            int32     `bun:"to_uid,type:int"`                                              // Transaction UID this is linked to

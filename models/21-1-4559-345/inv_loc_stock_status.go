@@ -4,7 +4,7 @@ import "github.com/uptrace/bun"
 
 type InvLocStockStatus struct {
 	bun.BaseModel        `bun:"table:inv_loc_stock_status"`
-	InvLocStockStatusUid int32   `bun:"inv_loc_stock_status_uid,type:int,autoincrement,scanonly,pk"` // Uniquely Identifies each record in the table.
+	InvLocStockStatusUid int32   `bun:"inv_loc_stock_status_uid,type:int,autoincrement,identity,pk"` // Uniquely Identifies each record in the table.
 	InvMastUid           int32   `bun:"inv_mast_uid,type:int,unique"`                                // Uniquely indentifies the item
 	LocationId           float64 `bun:"location_id,type:decimal(19,0),unique"`                       // Unique indentifier for the location
 	QtyToTransfer        float64 `bun:"qty_to_transfer,type:decimal(19,9),default:(0)"`              // Qty on transfer at the source location

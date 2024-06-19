@@ -7,7 +7,7 @@ import (
 
 type DrillSecurityAdditionalMenus struct {
 	bun.BaseModel        `bun:"table:drill_security_additional_menus"`
-	DsAdditionalMenusUid int32     `bun:"ds_additional_menus_uid,type:int,autoincrement,scanonly"`      // identity column
+	DsAdditionalMenusUid int32     `bun:"ds_additional_menus_uid,type:int,autoincrement,identity"`      // identity column
 	BaseMenu             string    `bun:"base_menu,type:varchar(255)"`                                  // menu option most likely to exist
 	DuplicateMenu        string    `bun:"duplicate_menu,type:varchar(255)"`                             // additional menu that shares same name
 	WindowName           string    `bun:"window_name,type:varchar(255)"`                                // window name of menu option

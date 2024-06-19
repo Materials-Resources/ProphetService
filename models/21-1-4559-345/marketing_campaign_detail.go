@@ -7,7 +7,7 @@ import (
 
 type MarketingCampaignDetail struct {
 	bun.BaseModel              `bun:"table:marketing_campaign_detail"`
-	MarketingCampaignDetailUid int32     `bun:"marketing_campaign_detail_uid,type:int,autoincrement,scanonly,pk"` // Unique identifier for the table
+	MarketingCampaignDetailUid int32     `bun:"marketing_campaign_detail_uid,type:int,autoincrement,identity,pk"` // Unique identifier for the table
 	ListId                     float64   `bun:"list_id,type:decimal(19,0)"`                                       // The key from the mail_list table
 	BoughtFlag                 string    `bun:"bought_flag,type:char(1)"`                                         // Indicates whether the item must have been bought or not bought
 	EntityUid                  int32     `bun:"entity_uid,type:int"`                                              // Either the product_group_uid or inv_mast_uid

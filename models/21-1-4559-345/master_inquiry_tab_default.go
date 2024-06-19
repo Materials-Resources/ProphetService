@@ -7,7 +7,7 @@ import (
 
 type MasterInquiryTabDefault struct {
 	bun.BaseModel              `bun:"table:master_inquiry_tab_default"`
-	MasterInquiryTabDefaultUid int32     `bun:"master_inquiry_tab_default_uid,type:int,autoincrement,scanonly,pk"` // Unique indentifier for the table
+	MasterInquiryTabDefaultUid int32     `bun:"master_inquiry_tab_default_uid,type:int,autoincrement,identity,pk"` // Unique indentifier for the table
 	MasterInquiryTypeCd        int32     `bun:"master_inquiry_type_cd,type:int,unique"`                            // Denotes the window i.e. Supplier or Customer Master Inquiry
 	UserId                     string    `bun:"user_id,type:varchar(30),unique"`                                   // The user who specified the preference
 	DefaultTabIndex            int16     `bun:"default_tab_index,type:smallint"`                                   // The number of the preferred tabpage

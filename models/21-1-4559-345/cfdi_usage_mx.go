@@ -7,7 +7,7 @@ import (
 
 type CfdiUsageMx struct {
 	bun.BaseModel     `bun:"table:cfdi_usage_mx"`
-	CfdiUsageMxUid    int32     `bun:"cfdi_usage_mx_uid,type:int,autoincrement,scanonly,pk"`         // Primary key
+	CfdiUsageMxUid    int32     `bun:"cfdi_usage_mx_uid,type:int,autoincrement,identity,pk"`         // Primary key
 	CfdiUsageCd       string    `bun:"cfdi_usage_cd,type:varchar(10)"`                               // Code for the CFDI usage
 	CfdiUsageDesc     string    `bun:"cfdi_usage_desc,type:varchar(255)"`                            // Usage description
 	DateCreated       time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

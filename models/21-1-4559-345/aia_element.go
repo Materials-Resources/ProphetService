@@ -7,7 +7,7 @@ import (
 
 type AiaElement struct {
 	bun.BaseModel    `bun:"table:aia_element"`
-	AiaElementUid    int32     `bun:"aia_element_uid,type:int,autoincrement,scanonly,pk"`           // Unique ID for this AIA element
+	AiaElementUid    int32     `bun:"aia_element_uid,type:int,autoincrement,identity,pk"`           // Unique ID for this AIA element
 	Description      string    `bun:"description,type:varchar(255)"`                                // The description of this AIA element
 	PointValue       float64   `bun:"point_value,type:decimal(19,9),default:((0))"`                 // The point value of this AIA element
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created

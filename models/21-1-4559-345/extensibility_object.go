@@ -7,7 +7,7 @@ import (
 
 type ExtensibilityObject struct {
 	bun.BaseModel          `bun:"table:extensibility_object"`
-	ExtensibilityObjectUid int32     `bun:"extensibility_object_uid,type:int,autoincrement,scanonly,pk"`
+	ExtensibilityObjectUid int32     `bun:"extensibility_object_uid,type:int,autoincrement,identity,pk"`
 	ExtensibilityWindowUid int32     `bun:"extensibility_window_uid,type:int,unique"`
 	ObjectType             string    `bun:"object_type,type:varchar(255),unique"`
 	ObjectBaseClass        string    `bun:"object_base_class,type:varchar(255),unique"`
