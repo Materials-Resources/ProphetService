@@ -78,13 +78,13 @@ func (m *InvMastModel) deleteAssociatedRecords(ctx context.Context, rec InvMast)
 	if rec.AssemblyHdr != nil {
 		if rec.AssemblyHdr.AssemblyLines != nil {
 			for _, assemblyLine := range rec.AssemblyHdr.AssemblyLines {
-				_, err := m.bun.NewDelete().Model(&assemblyLine).WherePK().Exec(ctx)
+				_, err := m.bun.NewDelete().Model(assemblyLine).WherePK().Exec(ctx)
 				if err != nil {
 					return err
 				}
 			}
 		}
-		_, err := m.bun.NewDelete().Model(&rec.AssemblyHdr).WherePK().Exec(ctx)
+		_, err := m.bun.NewDelete().Model(rec.AssemblyHdr).WherePK().Exec(ctx)
 		if err != nil {
 			return err
 		}
@@ -168,6 +168,15 @@ func (m *InvMastModel) deleteAssociatedRecords(ctx context.Context, rec InvMast)
 
 	}
 
+	if rec.InvXrefs != nil {
+		for _, invXref := range rec.InvXrefs {
+			_, err := m.bun.NewDelete().Model(invXref).WherePK().Exec(ctx)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -197,6 +206,7 @@ func (m *InvMastModel) DeleteByInvMastUid(ctx context.Context, invMastUid int32)
 		Relation("InvLocs.InvTrans").
 		Relation("InvLocs.InvLocStockStatuses").
 		Relation("InvLocMsps").
+		Relation("InvXrefs").
 		Relation("ItemIdChangeHistories").
 		Relation("ItemCategoryXInvMasts").
 		Relation("ItemUoms").

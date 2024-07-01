@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 	"github.com/uptrace/bun"
 	"sort"
@@ -31,6 +32,7 @@ type invLocDefaultValues struct {
 }
 
 func (m *InvLoc) toProductDomain(d *domain.Product) {
+	d.StockQuantity = m.QtyOnHand
 	if m.InvMast != nil {
 		d.Uid = strconv.Itoa(int(m.InvMast.InvMastUid))
 		d.Sn = &m.InvMast.ItemId
@@ -70,6 +72,8 @@ func (m *InvLocModel) Get(ctx context.Context, uid string) (*domain.Product, err
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println(rec)
 
 	productDomain := &domain.Product{}
 	rec.toProductDomain(productDomain)
@@ -182,10 +186,12 @@ func (m *InvLocModel) Update(ctx context.Context, product *domain.Product) error
 
 func (m *InvLocModel) get(ctx context.Context, invMastUid int32) (*InvLoc, error) {
 	var invLocRec InvLoc
-	err := m.bun.NewSelect().Model(&invLocRec).
-		Where("inv_mast_uid = ?", invMastUid).
-		Where("company_id = ?", m.defaultValues.CompanyId).
-		Where("location_id = ?", m.defaultValues.LocationId).Scan(ctx)
+	err := m.bun.NewSelect().
+		Model(&invLocRec).
+		Relation("InvMast").
+		Where("inv_loc.inv_mast_uid = ?", invMastUid).
+		Where("inv_loc.company_id = ?", m.defaultValues.CompanyId).
+		Where("inv_loc.location_id = ?", m.defaultValues.LocationId).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

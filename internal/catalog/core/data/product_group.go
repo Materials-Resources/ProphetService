@@ -111,7 +111,7 @@ func (m *ProductGroupModel) Update(ctx context.Context, pg *domain.ProductGroup)
 	if pg.Name != nil {
 		productGroupRec.ProductGroupDesc = *pg.Name
 	}
-	_, err = m.bun.NewUpdate().Model(productGroupRec).WherePK().Exec(ctx)
+	_, err = m.bun.NewUpdate().Model(productGroupRec).ExcludeColumn("product_group_uid").WherePK().Exec(ctx)
 	return err
 }
 

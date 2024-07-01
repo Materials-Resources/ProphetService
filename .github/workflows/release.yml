@@ -37,14 +37,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-  buf:
-    name: "Push proto to BSR with branch"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: bufbuild/buf-setup-action@v1
-      - name: "push release to BSR"
-        run:
-          "buf push proto --branch ${{ github.ref_name }}"
-        env:
-          BUF_TOKEN: "${{ secrets.BUF_TOKEN }}"

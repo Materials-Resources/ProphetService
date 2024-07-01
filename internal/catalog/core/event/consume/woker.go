@@ -1,13 +1,13 @@
 package consume
 
 import (
-	"fmt"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/data"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/event"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sr"
 	"github.com/twmb/franz-go/plugin/kotel"
+	"go.opentelemetry.io/otel/codes"
 	"strconv"
 )
 
@@ -62,11 +62,10 @@ func (w *Workers) DeleteProduct(rec *kgo.Record) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(err)
 		return nil
 	})
 	if err != nil {
-		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 

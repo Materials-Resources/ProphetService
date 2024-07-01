@@ -26,14 +26,29 @@ func CreateProductGroupSlice(groups []*domain.ProductGroup) []*rpc.ProductGroup 
 }
 
 func CreateProduct(p *domain.Product) *rpc.Product {
-	return &rpc.Product{
+
+	r := &rpc.Product{
 		Uid:              p.Uid,
-		Sn:               *p.Sn,
-		Name:             *p.Name,
-		Description:      *p.Description,
-		ProductGroupSn:   *p.ProductGroupSn,
 		ProductGroupName: p.ProductGroupName,
 	}
+
+	if p.Sn != nil {
+		r.Sn = *p.Sn
+	}
+
+	if p.Name != nil {
+		r.Name = *p.Name
+	}
+
+	if p.Description != nil {
+		r.Description = *p.Description
+
+	}
+	if p.ProductGroupSn != nil {
+		r.ProductGroupSn = *p.ProductGroupSn
+
+	}
+	return r
 }
 
 func CreateProductSlice(products []*domain.Product) []*rpc.Product {
@@ -73,10 +88,18 @@ func CreateClerkReadProductResponse(p *domain.Product) *rpc.ClerkReadProductResp
 }
 
 func CreateClerkListProductsResponse(products []*domain.Product, pagination *domain.PaginationMetadata) *rpc.ClerkListProductsResponse {
-	return &rpc.ClerkListProductsResponse{
+	res := &rpc.ClerkListProductsResponse{
 		CursorMetadata: CreateCursorMetadata(pagination),
-		Products:       CreateProductSlice(products),
 	}
+
+	for _, p := range products {
+		res.Products = append(res.Products, &rpc.ClerkListProductsResponse_ProductDetails{
+			Product:       CreateProduct(p),
+			StockQuantity: float32(p.StockQuantity),
+		})
+
+	}
+	return res
 }
 
 func ConvertClerkCreateGroupRequestToDomain(r *rpc.ClerkCreateGroupRequest) *domain.ProductGroup {

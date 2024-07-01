@@ -71,6 +71,7 @@ type InvMast struct {
 	InvAdjLines            []*InvAdjLine            `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 	InvLocs                []*InvLoc                `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 	InvLocMsps             []*InvLocMsp             `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
+	InvXrefs               []*InvXref               `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 	InventorySuppliers     []*InventorySupplier     `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 	ItemCategoryXInvMasts  []*ItemCategoryXInvMast  `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
 	ItemConversions        []*ItemConversion        `bun:"rel:has-many,join:inv_mast_uid=inv_mast_uid"`
@@ -84,6 +85,10 @@ type InvSub struct {
 
 type InvTran struct {
 	prophet.InvTran `bun:",extend"`
+}
+
+type InvXref struct {
+	prophet.InvXref `bun:",extend"`
 }
 
 type InventoryReceiptsLine struct {

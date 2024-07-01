@@ -11,6 +11,7 @@ type Product struct {
 	Description      *string
 	ProductGroupSn   *string
 	ProductGroupName string
+	StockQuantity    float64
 }
 
 type ProductFilters struct {
