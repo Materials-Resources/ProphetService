@@ -34,7 +34,7 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile
-          args: |
+          build-args: |
             GH_ACCESS_TOKEN=${{ secrets.GH_ACCESS_TOKEN }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
