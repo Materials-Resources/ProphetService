@@ -13,10 +13,10 @@ RUN go mod download && go mod verify
 
 COPY . .
 
-RUN go build -v -o /usr/local/bin/prophet .
+RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /usr/local/bin/prophet .
 
 
-FROM alpine as production
+FROM scratch as production
 EXPOSE 50058
 COPY --from=build /usr/local/bin/prophet /usr/local/bin/prophet
 
