@@ -1,6 +1,10 @@
-FROM golang:1.22.4-alpine as build
+FROM golang:1.22.4 as build
 
 WORKDIR /usr/src/app/build
+
+ENV GOPRIVATE=github.com/materials-resources/microservices-proto
+ARG GH_ACCESS_TOKEN
+RUN git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
 
 COPY go.mod ./
 COPY go.sum ./
