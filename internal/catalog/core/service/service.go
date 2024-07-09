@@ -24,6 +24,7 @@ type CatalogService interface {
 	DeleteProduct(ctx context.Context, uid string) error
 
 	UpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+	UpdateProduct(ctx context.Context, product *domain.Product) error
 
 	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
 

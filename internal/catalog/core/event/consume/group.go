@@ -111,6 +111,7 @@ func (pc *PartitionConsumer) Consume() {
 				if err != nil {
 					pc.cl.CommitRecords(context.Background(), rec)
 				}
+
 			}
 		}
 

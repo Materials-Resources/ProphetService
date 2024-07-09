@@ -71,3 +71,20 @@ func (w *Workers) DeleteProduct(rec *kgo.Record) error {
 
 	return nil
 }
+
+func (w *Workers) UpdateProduct(rec *kgo.Record) error {
+	ctx, span := w.tracer.WithProcessSpan(rec)
+	defer span.End()
+	var productRecord event.ProductRecord
+	err := w.serde.Decode(rec.Value, &productRecord)
+	if err != nil {
+		return event.ErrDecodingRecord
+
+	}
+
+	product := event.ProductDomainFromRecord(productRecord)
+
+	err = w.service.UpdateProduct(ctx, &product)
+
+	return err
+}

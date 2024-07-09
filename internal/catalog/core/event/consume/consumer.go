@@ -23,10 +23,11 @@ func NewConsumer(manager *event.Manager, a *app.App, service service.CatalogServ
 
 	cg.AddWorker(event.DeleteProductTopic, workers.DeleteProduct)
 	cg.AddWorker(event.UpdateGroupTopic, workers.UpdateGroup)
+	cg.AddWorker(event.UpdateProductTopic, workers.UpdateProduct)
 
 	opts := []kgo.Opt{
 		kgo.ConsumerGroup("s-catalog-consumer-group"),
-		kgo.ConsumeTopics(event.DeleteProductTopic, event.UpdateGroupTopic),
+		kgo.ConsumeTopics(event.DeleteProductTopic, event.UpdateGroupTopic, event.UpdateProductTopic),
 		kgo.OnPartitionsAssigned(cg.assigned),
 		kgo.OnPartitionsRevoked(cg.lost),
 		kgo.OnPartitionsLost(cg.lost),

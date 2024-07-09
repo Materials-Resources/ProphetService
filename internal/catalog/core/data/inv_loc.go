@@ -101,8 +101,8 @@ func (m *InvLocModel) List(ctx context.Context, opts *InvLocListOptions, paginat
 
 	countQ := *q
 
+	wg.Add(1)
 	go func() {
-		wg.Add(1)
 		defer wg.Done()
 		c, err := countQ.Count(ctx)
 		if err != nil {

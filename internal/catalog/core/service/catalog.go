@@ -50,12 +50,7 @@ func (c Catalog) UpdateGroup(ctx context.Context, productGroup *domain.ProductGr
 	return c.localModel.ProductGroup.Update(ctx, productGroup)
 }
 
-func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product, locations []float64) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product) error {
+func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product) error {
 	v := validator.New()
 
 	domain.ValidateProductUpdate(v, *product)
@@ -66,6 +61,18 @@ func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product
 	}
 
 	return c.localModel.InvLoc.Update(ctx, product)
+}
+
+func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product) error {
+	ctx, span := c.tracer.Start(ctx, "catalog.ClerkUpdateGroup")
+	defer span.End()
+
+	// TODO: preform authorization checks on requester
+
+	v := validator.New()
+	domain.ValidateProductUpdate(v, *product)
+
+	return c.eventProducer.UpdateProduct(ctx, product)
 }
 
 func (c Catalog) ClerkDeleteProduct(ctx context.Context, uid string, deleteMode domain.DeleteMode) error {

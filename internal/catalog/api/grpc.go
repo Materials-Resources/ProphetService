@@ -18,9 +18,8 @@ func NewCatalogApi(service service.CatalogService, tracer trace.Tracer,
 }
 
 type CatalogApi struct {
-	service  service.CatalogService
-	tracer   trace.Tracer
-	producer service.Producer
+	service service.CatalogService
+	tracer  trace.Tracer
 }
 
 func (s CatalogApi) CreateSupplier(ctx context.Context, request *rpc.CreateSupplierRequest) (*rpc.CreateSupplierResponse, error) {

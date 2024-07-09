@@ -1,19 +1,32 @@
-## help: print this help message
+# ==================================================================================== #
+# HELPERS
+# ==================================================================================== #
+
 .PHONY: help
+## help: print this help message
 help:
 	@echo 'Usage:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 
 
+.PHONY: confirm
+confirm:
+	@echo -n 'Are you sure? [y/N] ' && read ans && [ $${ans:-N} = y ]
+
+.PHONY: no-dirty
+no-dirty:
+	git diff --exit-code
+
+
 # ==================================================================================== #
-# Development
+# DEVELOPMENT
 # ==================================================================================== #
 
-.PHONY: dev/setup
-## dev/setup: Setup the development environment
-dev/setup: dev/tools dev/redpanda/up dev/metrics/up
-	@echo "Install linter"
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.57.2
+.PHONY: devops/scaffold
+## devops/scaffold: Scaffold the development environment
+devops/scaffold:
+	podman kube play devops/redpanda.yml
+
 
 .PHONY: dev/clean
 ## dev/clean: Clean the development environment
@@ -65,42 +78,23 @@ dev/metrics/down:
 # ==================================================================================== #
 # Quality Control
 # ==================================================================================== #
-.PHONY: qc
-## qc: Run all quality control checks
-qc: qc/proto qc/app
-
-.PHONY: qc/proto
-qc/proto:
-	buf breaking proto --against 'https://github.com/Materials-Resources/s_prophet.git#branch=main,subdir=proto'
-	buf lint proto
-
-.PHONY: qc/app
-## qc/app: Validate the application
-qc/app:
-	go fmt ./...
+.PHONY: lint
+## lint: Run quality control checks
+lint:
 	go vet ./...
-	golangci-lint run ./...
-
-
-# ==================================================================================== #
-# Code Generation
-# ==================================================================================== #
-.PHONY: gen/proto
-## gen/proto: Generate packages from proto files using the buf cli tool
-gen/proto: qc/proto
-	buf generate proto
-
+	go fmt ./...
+	golangci-lint run
 
 # ==================================================================================== #
 # Application
 # ==================================================================================== #
 .PHONY: app/build
 ## app/build: Build the application
-app/build: qc
-	go build -o bin/s_prophet .
+app/build:
+	go build -o bin/app .
 
-.PHONY: app/serve
-## app/serve: Run the application
-app/serve:
+.PHONY: app/run
+## app/run: Run the application
+app/run:
 	set OTEL_EXPORTER_OTLP_INSECURE=true
 	go run . serve -c config.yml

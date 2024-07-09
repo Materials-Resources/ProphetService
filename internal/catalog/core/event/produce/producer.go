@@ -66,3 +66,23 @@ func (p *Producer) UpdateGroup(ctx context.Context, group *domain.ProductGroup) 
 	wg.Wait()
 	return nil
 }
+
+func (p *Producer) UpdateProduct(ctx context.Context, product *domain.Product) error {
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	rec := &kgo.Record{
+		Topic: event.UpdateProductTopic, Value: p.serde.MustEncode(event.ProductRecordFromDomain(product)),
+	}
+
+	p.client.Produce(ctx, rec, func(record *kgo.Record, err error) {
+		defer wg.Done()
+		if err != nil {
+			fmt.Printf("record had a produce error: %v\n", err)
+		}
+
+	})
+	wg.Wait()
+	return nil
+}
