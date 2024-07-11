@@ -98,3 +98,21 @@ app/build:
 app/run:
 	set OTEL_EXPORTER_OTLP_INSECURE=true
 	go run . serve -c config.yml
+
+.PHONY: build
+## build: Build the application
+build:
+	CGO_ENABLED=0 go build -trimpath -o ./bin/server_$(GOOS)_$(GOARCH)$(EXTENSION) \
+    		$(BUILD_INFO) -tags $(GO_BUILD_TAGS) ./cmd
+.PHONY: build/linux_amd64
+build/linux_amd64:
+	GOOS=linux GOARCH=amd64 $(MAKE) build
+.PHONY: build/linux_arm64
+build/linux_arm64:
+	GOOS=linux GOARCH=arm64 $(MAKE) build
+.PHONY: build/darwin_amd64
+build/darwin_amd64:
+	GOOS=darwin GOARCH=amd64 $(MAKE) build
+.PHONY: build/darwin_arm64
+build/darwin_arm64:
+	GOOS=darwin GOARCH=arm64 $(MAKE) build

@@ -1,24 +1,18 @@
-FROM golang:1.22-alpine AS build
+FROM alpine AS base
 
-WORKDIR /usr/src/app/build
+ARG TARGETPLATFORM
+COPY bin/ /tmp/bin
 
-ARG GH_ACCESS_TOKEN
-
-RUN apk add git && \
-    git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
-
-COPY go.mod ./
-COPY go.sum ./
-
-RUN go mod download && go mod verify
-
-COPY . .
-
-RUN go build -ldflags="-w -s" -o app .
+RUN export GOOS=$(echo ${TARGETPLATFORM} | cut -d / -f1) && \
+    export GOARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) && \
+    mv /tmp/bin/server_${GOOS}_${GOARCH} /server
 
 
-FROM scratch
+FROM alpine
+
+RUN apk --update add ca-certificates
+
+COPY --from=base /server /usr/local/bin/
+
 EXPOSE 50058
-COPY --from=build /usr/src/app/build/app /usr/local/bin/
-
-ENTRYPOINT ["app"]
+ENTRYPOINT ["server"]
