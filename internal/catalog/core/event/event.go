@@ -29,7 +29,7 @@ func NewManager(app *app.App) (*Manager, error) {
 		Serde: &sr.Serde{},
 		app:   app,
 	}
-	registry := NewRegistry()
+	registry := NewRegistry(app)
 
 	err := registry.RegisterSchemas(manager.Serde)
 	if err != nil {
@@ -40,7 +40,7 @@ func NewManager(app *app.App) (*Manager, error) {
 
 func (m *Manager) GetDefaultKgoOptions() []kgo.Opt {
 	return []kgo.Opt{
-		kgo.SeedBrokers("localhost:19092"),
+		kgo.SeedBrokers(m.app.Config.Kafka.Brokers...),
 		kgo.WithHooks(m.createKotelService().Hooks()),
 	}
 }

@@ -31,8 +31,8 @@ func (a *App) newTracer() *tracesdk.TracerProvider {
 		tracesdk.WithResource(
 			resource.NewWithAttributes(
 				semconv.SchemaURL,
-				semconv.ServiceNameKey.String(a.Config.Tracing.Service),
-				attribute.String("environment", a.Config.App.Environment),
+				semconv.ServiceNameKey.String(a.Config.Observability.Service),
+				attribute.String("environment", a.Config.Environment),
 			),
 		),
 	)

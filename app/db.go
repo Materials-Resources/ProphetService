@@ -2,7 +2,7 @@ package app
 
 import (
 	"database/sql"
-	"fmt"
+	"github.com/materials-resources/s-prophet/config"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	"net/url"
 
@@ -14,11 +14,11 @@ import (
 
 func (a *App) newBun() {
 	query := url.Values{}
-	query.Add("database", a.Config.Database.DB)
+	query.Add("database", a.Config.Database.Name)
 	u := &url.URL{
 		Scheme:   "sqlserver",
-		User:     url.UserPassword(a.Config.Database.Username, a.Config.Database.Password),
-		Host:     fmt.Sprintf("%s:%d", a.Config.Database.Host, a.Config.Database.Port),
+		User:     url.UserPassword(a.Config.Database.User, a.Config.Database.Password),
+		Host:     a.Config.Database.Host,
 		RawQuery: query.Encode(),
 	}
 
@@ -44,7 +44,7 @@ func (a *App) newBun() {
 
 	registerBunOtelTracer(bunDb, a.GetTP())
 
-	if a.Config.App.Environment == EnvironmentDevelopment {
+	if a.Config.Environment == config.EnvironmentDevelopment {
 		a.Logger().Info().Msg("registering bun debug hooks")
 		bunDb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	}

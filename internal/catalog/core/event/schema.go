@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hamba/avro/v2"
+	"github.com/materials-resources/s-prophet/app"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 	"github.com/twmb/franz-go/pkg/sr"
 )
@@ -86,8 +87,8 @@ type Registry struct {
 	client *sr.Client
 }
 
-func NewRegistry() *Registry {
-	cl, err := sr.NewClient(sr.URLs("localhost:18081"))
+func NewRegistry(a *app.App) *Registry {
+	cl, err := sr.NewClient(sr.URLs(a.Config.Kafka.Brokers...))
 	if err != nil {
 		fmt.Println(err)
 	}

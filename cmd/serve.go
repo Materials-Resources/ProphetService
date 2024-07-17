@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/materials-resources/s-prophet/config"
 	"log"
 
 	"github.com/materials-resources/s-prophet/app"
@@ -17,7 +18,7 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cPath := rootCmd.PersistentFlags().Lookup("config").Value
 
-		c := app.NewConfig(cPath.String())
+		c := config.NewConfig(cPath.String())
 
 		a, err := app.NewApp(c)
 		if err != nil {
