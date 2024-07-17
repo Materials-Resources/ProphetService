@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"github.com/materials-resources/s-prophet/config"
 	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/rs/zerolog"
 	"net"
@@ -15,7 +16,7 @@ import (
 )
 
 type App struct {
-	Config *Config
+	Config *config.Config
 
 	server     *grpc.Server
 	serverOnce sync.Once
@@ -31,7 +32,7 @@ type App struct {
 	log *zerolog.Logger
 }
 
-func NewApp(config *Config) (*App, error) {
+func NewApp(config *config.Config) (*App, error) {
 
 	a := &App{
 		Config: config,
