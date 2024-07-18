@@ -4,6 +4,10 @@ go 1.22.4
 
 require (
 	github.com/hamba/avro/v2 v2.22.1
+	github.com/knadh/koanf/parsers/yaml v0.1.0
+	github.com/knadh/koanf/providers/env v0.1.0
+	github.com/knadh/koanf/providers/file v1.0.0
+	github.com/knadh/koanf/v2 v2.1.1
 	github.com/materials-resources/microservices-proto/golang/catalog v0.0.9
 	github.com/materials-resources/microservices-proto/golang/order v0.0.8
 	github.com/materials-resources/s-prophet/models/21-1-4559-345 v0.0.6
@@ -27,7 +31,6 @@ require (
 	golang.org/x/sync v0.7.0
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.2
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -45,10 +48,6 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/knadh/koanf/maps v0.1.1 // indirect
-	github.com/knadh/koanf/parsers/yaml v0.1.0 // indirect
-	github.com/knadh/koanf/providers/env v0.1.0 // indirect
-	github.com/knadh/koanf/providers/file v1.0.0 // indirect
-	github.com/knadh/koanf/v2 v2.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
@@ -72,4 +71,5 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240617180043-68d350f18fd4 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240617180043-68d350f18fd4 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
