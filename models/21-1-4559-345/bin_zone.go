@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -18,12 +18,12 @@ type BinZone struct {
 	CreatedBy                string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	BinReplenishmentInterval int32     `bun:"bin_replenishment_interval,type:int,nullzero"`                 // Time to elapse (in minutes) before trying to send an alert or notify all Wireless users.
-	BinReplenishmentUser     string    `bun:"bin_replenishment_user,type:varchar(30),nullzero"`             // User associated with doing bin replenishment for this zone.
+	BinReplenishmentInterval *int32    `bun:"bin_replenishment_interval,type:int"`                          // Time to elapse (in minutes) before trying to send an alert or notify all Wireless users.
+	BinReplenishmentUser     *string   `bun:"bin_replenishment_user,type:varchar(30)"`                      // User associated with doing bin replenishment for this zone.
 	BypassFullQtyFlag        string    `bun:"bypass_full_qty_flag,type:char(1),default:('N')"`              // Exclude zone from full line/package allocations during pick ticket printing.
-	AiaPointValue            float64   `bun:"aia_point_value,type:decimal(19,9),nullzero"`                  // The Advanced Inventory Allocation point value assigned to this bin zone
-	AllocationUom            string    `bun:"allocation_uom,type:varchar(8),nullzero"`                      // Used if you are using alternate bin allocation strategy to determine order of bin allocation.
-	PrinterName              string    `bun:"printer_name,type:varchar(255),nullzero"`                      // Custom column to specify printer path per Pick Zone/Location
-	TagItemIdValidationFlag  string    `bun:"tag_item_id_validation_flag,type:char(1),nullzero"`            // Choose if this zone should perform item validations.
-	DayPickZoneFlag          string    `bun:"day_pick_zone_flag,type:char(1),nullzero"`                     // Flag column to mark the zone and treat it as a day pick zone in WWMS
+	AiaPointValue            *float64  `bun:"aia_point_value,type:decimal(19,9)"`                           // The Advanced Inventory Allocation point value assigned to this bin zone
+	AllocationUom            *string   `bun:"allocation_uom,type:varchar(8)"`                               // Used if you are using alternate bin allocation strategy to determine order of bin allocation.
+	PrinterName              *string   `bun:"printer_name,type:varchar(255)"`                               // Custom column to specify printer path per Pick Zone/Location
+	TagItemIdValidationFlag  *string   `bun:"tag_item_id_validation_flag,type:char(1)"`                     // Choose if this zone should perform item validations.
+	DayPickZoneFlag          *string   `bun:"day_pick_zone_flag,type:char(1)"`                              // Flag column to mark the zone and treat it as a day pick zone in WWMS
 }

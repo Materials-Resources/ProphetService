@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -12,7 +12,7 @@ type UserDefinedColumn struct {
 	ColumnName           string    `bun:"column_name,type:varchar(40)"`                               // The name of the user defined column
 	DataType             string    `bun:"data_type,type:varchar(10)"`                                 // The data type of the user defined column
 	DataLength           int32     `bun:"data_length,type:int"`                                       // The data length of the user defined column
-	DataScale            int32     `bun:"data_scale,type:int,nullzero"`                               // The data scale of the user defined column
+	DataScale            *int32    `bun:"data_scale,type:int"`                                        // The data scale of the user defined column
 	ColumnDescription    string    `bun:"column_description,type:varchar(255)"`                       // The description of the the user defined column
 	ColumnLabel          string    `bun:"column_label,type:varchar(255)"`                             // The label for the user defined column
 	NewTableName         string    `bun:"new_table_name,type:varchar(255)"`

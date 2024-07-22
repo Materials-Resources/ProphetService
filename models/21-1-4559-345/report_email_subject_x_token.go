@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"

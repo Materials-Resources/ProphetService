@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -20,10 +20,10 @@ type RmaReceiptHdr struct {
 	CreatedBy         string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified  time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy  string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	InvoiceNo         string    `bun:"invoice_no,type:varchar(10),default:(null)"`                   // FK to invoice_hdr.invoice_no column - link to associated invoice header record
+	InvoiceNo         *string   `bun:"invoice_no,type:varchar(10),default:(null)"`                   // FK to invoice_hdr.invoice_no column - link to associated invoice header record
 	FrontCounterRma   string    `bun:"front_counter_rma,type:char(1),default:('N')"`                 // Indicates whether this receipt was received at the front counter.  Used for taxing purposes.
 	InvoiceBatchUid   int32     `bun:"invoice_batch_uid,type:int,default:(1)"`                       // FK to invoice_batch.invoice_batch_uid - link to associated invoice_batch record
-	CreditPercentage  float64   `bun:"credit_percentage,type:decimal(19,0),nullzero"`                // A custom column which is used to calculate the Refund Amount
-	SignatureFilename string    `bun:"signature_filename,type:varchar(255),nullzero"`                // Stores the filename of the signature capture
-	RfnavTransNo      int32     `bun:"rfnav_trans_no,type:int,nullzero"`                             // F73204: RF Navigator transaction number
+	CreditPercentage  *float64  `bun:"credit_percentage,type:decimal(19,0)"`                         // A custom column which is used to calculate the Refund Amount
+	SignatureFilename *string   `bun:"signature_filename,type:varchar(255)"`                         // Stores the filename of the signature capture
+	RfnavTransNo      *int32    `bun:"rfnav_trans_no,type:int"`                                      // F73204: RF Navigator transaction number
 }

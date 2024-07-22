@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -10,9 +10,9 @@ type StageNotepad struct {
 	StageNotepadUid  int32     `bun:"stage_notepad_uid,type:int,pk"`                                // What is the unique identifier for this table
 	StageUid         int32     `bun:"stage_uid,type:int"`                                           // What stage does this note belong to?
 	NoteId           float64   `bun:"note_id,type:decimal(19,0)"`                                   // What is the unique identifier for this process note?
-	NotepadClassId   string    `bun:"notepad_class_id,type:varchar(8),nullzero"`                    // What is the class for this note?
+	NotepadClassId   *string   `bun:"notepad_class_id,type:varchar(8)"`                             // What is the class for this note?
 	Topic            string    `bun:"topic,type:varchar(30)"`                                       // Topic - like a Header for the note
-	Note             string    `bun:"note,type:text,nullzero"`                                      // What are the contents of the note?
+	Note             *string   `bun:"note,type:text"`                                               // What are the contents of the note?
 	ActivationDate   time.Time `bun:"activation_date,type:datetime"`                                // When should this note be activated?
 	ExpirationDate   time.Time `bun:"expiration_date,type:datetime"`                                // When does this note expire?
 	EntryDate        time.Time `bun:"entry_date,type:datetime"`                                     // When was this note entered?

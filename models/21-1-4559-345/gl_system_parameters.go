@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -14,9 +14,9 @@ type GlSystemParameters struct {
 	DateCreated              time.Time `bun:"date_created,type:datetime"`
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime"`
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"`
-	ValidateJobId            string    `bun:"validate_job_id,type:char(1),nullzero"`
-	DisplayJobId             string    `bun:"display_job_id,type:char(1),nullzero"`
+	ValidateJobId            *string   `bun:"validate_job_id,type:char(1)"`
+	DisplayJobId             *string   `bun:"display_job_id,type:char(1)"`
 	TrackEncumbrances        string    `bun:"track_encumbrances,type:char(1)"`
-	EncumbrancesBudgetColumn float64   `bun:"encumbrances_budget_column,type:decimal(1,0),nullzero"`
+	EncumbrancesBudgetColumn *float64  `bun:"encumbrances_budget_column,type:decimal(1,0)"`
 	GlSystemParameterUid     string    `bun:"gl_system_parameter_uid,type:numeric(19,0),pk"`
 }

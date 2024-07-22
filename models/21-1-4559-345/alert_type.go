@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -16,5 +16,5 @@ type AlertType struct {
 	ModuleCd         int32     `bun:"module_cd,type:int"`                                        // Identifies to what module an alert belongs.
 	ConfigurationId  int32     `bun:"configuration_id,type:int"`                                 // A company id that the alert_type is available.
 	ViewName         string    `bun:"view_name,type:varchar(255)"`                               // View that is executed by the alert.
-	JobId            string    `bun:"job_id,type:varchar(255),nullzero"`                         // This column stores the job_id of the SQLServer job associate with a specific alert type.  Such as order entry.
+	JobId            *string   `bun:"job_id,type:varchar(255)"`                                  // This column stores the job_id of the SQLServer job associate with a specific alert type.  Such as order entry.
 }

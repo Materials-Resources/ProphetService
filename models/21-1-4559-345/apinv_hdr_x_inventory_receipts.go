@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -9,7 +9,7 @@ type ApinvHdrXInventoryReceipts struct {
 	bun.BaseModel           `bun:"table:apinv_hdr_x_inventory_receipts"`
 	ApinvHdrXInvReceiptsUid int32     `bun:"apinv_hdr_x_inv_receipts_uid,type:int,pk"`                       // Unique identifier for table apinv_hdr_x_inventory_receipts
 	ReceiptNumber           float64   `bun:"receipt_number,type:decimal(19,0),unique"`                       // Inventory receipt number
-	VoucherNumber           string    `bun:"voucher_number,type:varchar(10),unique,nullzero"`                // Voucher number created by the receipt number
+	VoucherNumber           *string   `bun:"voucher_number,type:varchar(10),unique"`                         // Voucher number created by the receipt number
 	ExchangeRate            float64   `bun:"exchange_rate,type:decimal(19,6)"`                               // Exchange rate calculated at the time of the inventory receipt
 	ReceiptAmount           float64   `bun:"receipt_amount,type:decimal(19,4)"`                              // Inventory receipt amount used to create the voucher
 	ReceiptAmountForeign    float64   `bun:"receipt_amount_foreign,type:decimal(19,4)"`                      // Inventory receipt amount used to create the voucher (This amount is in terms of the vendor or supplier currency)

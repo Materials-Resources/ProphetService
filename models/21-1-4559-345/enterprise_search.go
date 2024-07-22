@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -17,7 +17,7 @@ type EnterpriseSearch struct {
 	CreatedBy                 string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified          time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy          string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	DeleteClause              string    `bun:"delete_clause,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n,nullzero"`
-	CompanyColumn             string    `bun:"company_column,type:varchar(255),nullzero"`               // Stores the name of the column on the searched table that holds the company.
-	IncludeNullCompanyRecords string    `bun:"include_null_company_records,type:char(1),default:('N')"` // Determines whether search for a particular entity type should include records that have a NULL company value.
+	DeleteClause              *string   `bun:"delete_clause,type:Error: 50000, Severity: -1, State: 1. (Params:). The error is printed in terse mode because there was error during formatting. Tracing, ETW, notifications etc are skipped.\r\n"`
+	CompanyColumn             *string   `bun:"company_column,type:varchar(255)"`                        // Stores the name of the column on the searched table that holds the company.
+	IncludeNullCompanyRecords *string   `bun:"include_null_company_records,type:char(1),default:('N')"` // Determines whether search for a particular entity type should include records that have a NULL company value.
 }

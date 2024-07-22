@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -10,7 +10,7 @@ type CopyTableDataXTable struct {
 	CopyTableDataXTableUid   int32     `bun:"copy_table_data_x_table_uid,type:int,autoincrement,identity,pk"` // Unique identifier of table (Identity Column)
 	CopyTableDataXProcessUid int32     `bun:"copy_table_data_x_process_uid,type:int,unique"`                  // Copy Table Process
 	TableName                string    `bun:"table_name,type:varchar(255),unique"`                            // Table Name
-	SourceTableName          string    `bun:"source_table_name,type:varchar(255),nullzero"`                   // Source Table Name
+	SourceTableName          *string   `bun:"source_table_name,type:varchar(255)"`                            // Source Table Name
 	SequenceNumber           int32     `bun:"sequence_number,type:int"`                                       // Sequence Order Number
 	DateCreated              time.Time `bun:"date_created,type:datetime,default:(getdate())"`                 // Date and time the record was originally created
 	CreatedBy                string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`           // User who created the record

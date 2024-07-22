@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,7 +13,7 @@ type CurrencyHdr struct {
 	DateCreated                time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified           time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy           string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	CurrencyMask               string    `bun:"currency_mask,type:varchar(50),nullzero"`                   // What display mask should be used for this currency?
+	CurrencyMask               *string   `bun:"currency_mask,type:varchar(50)"`                            // What display mask should be used for this currency?
 	AvailableForOrdersInvoices string    `bun:"available_for_orders_invoices,type:char(1),default:('Y')"`  // Specifies a currency is avilable for orders and invoices.
-	IsoCurrencyCd              int32     `bun:"iso_currency_cd,type:int,nullzero"`                         // ISO Currency Code
+	IsoCurrencyCd              *int32    `bun:"iso_currency_cd,type:int"`                                  // ISO Currency Code
 }

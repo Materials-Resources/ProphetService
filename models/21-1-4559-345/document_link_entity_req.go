@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -8,10 +8,10 @@ import (
 type DocumentLinkEntityReq struct {
 	bun.BaseModel               `bun:"table:document_link_entity_req"`
 	DocumentLinkEntityReqUid    int32     `bun:"document_link_entity_req_uid,type:int,pk"`
-	CompanyId                   string    `bun:"company_id,type:varchar(8),nullzero"`
+	CompanyId                   *string   `bun:"company_id,type:varchar(8)"`
 	EntityId                    int32     `bun:"entity_id,type:int"`
 	EntityType                  int32     `bun:"entity_type,type:int"`
-	RequireLotDocumentationFlag string    `bun:"require_lot_documentation_flag,type:char(1),nullzero"`
+	RequireLotDocumentationFlag *string   `bun:"require_lot_documentation_flag,type:char(1)"`
 	PrintFlag                   string    `bun:"print_flag,type:char(1),default:('N')"`
 	FaxFlag                     string    `bun:"fax_flag,type:char(1),default:('N')"`
 	EmailFlag                   string    `bun:"email_flag,type:char(1),default:('N')"`

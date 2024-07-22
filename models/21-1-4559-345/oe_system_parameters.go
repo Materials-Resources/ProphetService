@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,12 +13,12 @@ type OeSystemParameters struct {
 	LastMaintainedBy              string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"`
 	CommissionCostFlag            string    `bun:"commission_cost_flag,type:char(1)"`
 	OtherCost                     string    `bun:"other_cost,type:char(1)"`
-	OtherCostSource               string    `bun:"other_cost_source,type:varchar(4),nullzero"`
-	DownpaymentOption             string    `bun:"downpayment_option,type:varchar(4),nullzero"`
-	RecalculatePrice              string    `bun:"recalculate_price,type:char(1),nullzero"`
-	PricingUomIsOrderUom          string    `bun:"pricing_uom_is_order_uom,type:varchar(1),nullzero"`
+	OtherCostSource               *string   `bun:"other_cost_source,type:varchar(4)"`
+	DownpaymentOption             *string   `bun:"downpayment_option,type:varchar(4)"`
+	RecalculatePrice              *string   `bun:"recalculate_price,type:char(1)"`
+	PricingUomIsOrderUom          *string   `bun:"pricing_uom_is_order_uom,type:varchar(1)"`
 	PrintPickTicket               string    `bun:"print_pick_ticket,type:char(1)"`
-	AllOn1StPickHold              string    `bun:"all_on_1st_pick_hold,type:char(1),nullzero"`
+	AllOn1StPickHold              *string   `bun:"all_on_1st_pick_hold,type:char(1)"`
 	SuppressPickAndHold           string    `bun:"suppress_pick_and_hold,type:char(1)"`
 	OeSystemParameterUid          string    `bun:"oe_system_parameter_uid,type:numeric(19,0),pk"`
 	AllowSourceShipToDiffer       string    `bun:"allow_source_ship_to_differ,type:char(1)"`

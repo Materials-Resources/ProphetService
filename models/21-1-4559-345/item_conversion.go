@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -25,6 +25,6 @@ type ItemConversion struct {
 	InvMastUid             int32     `bun:"inv_mast_uid,type:int,pk"`                                  // Unique identifier for the item id.
 	PrintOnProdOrder       string    `bun:"print_on_prod_order,type:char(1),default:('N')"`            // Should conversion be printed on production orders?
 	ConvertAtTransferFlag  string    `bun:"convert_at_transfer_flag,type:char(1),default:('N')"`       // Flag indicating whether UOM conversion should happen on transfer
-	MinOrderQty            float64   `bun:"min_order_qty,type:decimal(19,9),nullzero"`                 // Custom - Minimum order quantity to be used when the conversion is applied in OE
+	MinOrderQty            *float64  `bun:"min_order_qty,type:decimal(19,9)"`                          // Custom - Minimum order quantity to be used when the conversion is applied in OE
 	ConvertAtProdOrderFlag string    `bun:"convert_at_prod_order_flag,type:char(1),default:('N')"`     // Flag indicating whether UOM conversion should happen on production order entry
 }

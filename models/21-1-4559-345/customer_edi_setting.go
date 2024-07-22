@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -10,17 +10,17 @@ type CustomerEdiSetting struct {
 	CustomerEdiSettingUid     int32     `bun:"customer_edi_setting_uid,type:int,autoincrement,identity,pk"`  // Unique identifier for each record
 	CompanyId                 string    `bun:"company_id,type:varchar(8)"`                                   // Company ID for Customer to which settings apply
 	CustomerId                float64   `bun:"customer_id,type:decimal(19,0)"`                               // Customer to which settings apply
-	InterchgReceiverId        string    `bun:"interchg_receiver_id,type:varchar(255),nullzero"`              // Customer standard address name for EDI transactions
-	IntlSan                   string    `bun:"intl_san,type:varchar(255),nullzero"`                          // International standard address name
-	TradingPartnerName        string    `bun:"trading_partner_name,type:varchar(255),nullzero"`              // Name used for TPCx transactions
-	PassportCustomerId        string    `bun:"passport_customer_id,type:varchar(255),nullzero"`              // Customer passport ID assigned by Allen Bradley
-	EdiInterchangeIdQualifier string    `bun:"edi_interchange_id_qualifier,type:varchar(255),nullzero"`      // Qualifier for EDI interchange ID
-	EdiInterchangeId          string    `bun:"edi_interchange_id,type:varchar(255),nullzero"`                // EDI Interchange ID
-	ApplicationCode           string    `bun:"application_code,type:varchar(255),nullzero"`                  // EDI application code
-	ElementSeparator          string    `bun:"element_separator,type:varchar(255),default:('|')"`            // Up to two characters used as element separator
-	SubElementSeparator       string    `bun:"sub_element_separator,type:varchar(255),default:('>')"`        // Up to two characters used as sub-element separator
-	SegmentTerminator         string    `bun:"segment_terminator,type:varchar(255),default:('~')"`           // Up to two characters used as segment terminator
-	RepetitionSeparator       string    `bun:"repetition_separator,type:varchar(255),default:('<')"`         // Up to two characters used as repetition terminator
+	InterchgReceiverId        *string   `bun:"interchg_receiver_id,type:varchar(255)"`                       // Customer standard address name for EDI transactions
+	IntlSan                   *string   `bun:"intl_san,type:varchar(255)"`                                   // International standard address name
+	TradingPartnerName        *string   `bun:"trading_partner_name,type:varchar(255)"`                       // Name used for TPCx transactions
+	PassportCustomerId        *string   `bun:"passport_customer_id,type:varchar(255)"`                       // Customer passport ID assigned by Allen Bradley
+	EdiInterchangeIdQualifier *string   `bun:"edi_interchange_id_qualifier,type:varchar(255)"`               // Qualifier for EDI interchange ID
+	EdiInterchangeId          *string   `bun:"edi_interchange_id,type:varchar(255)"`                         // EDI Interchange ID
+	ApplicationCode           *string   `bun:"application_code,type:varchar(255)"`                           // EDI application code
+	ElementSeparator          *string   `bun:"element_separator,type:varchar(255),default:('|')"`            // Up to two characters used as element separator
+	SubElementSeparator       *string   `bun:"sub_element_separator,type:varchar(255),default:('>')"`        // Up to two characters used as sub-element separator
+	SegmentTerminator         *string   `bun:"segment_terminator,type:varchar(255),default:('~')"`           // Up to two characters used as segment terminator
+	RepetitionSeparator       *string   `bun:"repetition_separator,type:varchar(255),default:('<')"`         // Up to two characters used as repetition terminator
 	AppendLineFeedFlag        string    `bun:"append_line_feed_flag,type:char(1),default:('N')"`             // Indicates whether to append line feed
 	FunctionalAckFlag         string    `bun:"functional_ack_flag,type:char(1),default:('Y')"`               // Indicates whether to request functional acknowledgement
 	TestingModeFlag           string    `bun:"testing_mode_flag,type:char(1),default:('Y')"`                 // Indicates whether in testing mode

@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -9,7 +9,7 @@ type SummaryInvoiceDaily struct {
 	bun.BaseModel          `bun:"table:summary_invoice_daily"`
 	SummaryInvoiceDailyUid int32     `bun:"summary_invoice_daily_uid,type:int,autoincrement,identity,pk"`
 	CompanyId              string    `bun:"company_id,type:varchar(8),unique"`
-	BranchId               string    `bun:"branch_id,type:varchar(8),unique,nullzero"`
+	BranchId               *string   `bun:"branch_id,type:varchar(8),unique"`
 	SummaryDate            time.Time `bun:"summary_date,type:datetime,unique"`
 	SummaryGroupCd         int16     `bun:"summary_group_cd,type:smallint,unique"`
 	SummaryCd              int32     `bun:"summary_cd,type:int,unique"`

@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -28,6 +28,6 @@ type CustomerCreditHistory struct {
 	FreightBilled             float64   `bun:"freight_billed,type:decimal(19,4),default:((0))"`                // Total billed freight for the specified month.
 	FreightUnbilled           float64   `bun:"freight_unbilled,type:decimal(19,4),default:((0))"`              // Total unbilled freight for the specified month.
 	AvgFastSlowDaysAmountPaid float64   `bun:"avg_fast_slow_days_amount_paid,type:decimal(19,4),default:((0))"`
-	MerchandiseInvoicedSales  float64   `bun:"merchandise_invoiced_sales,type:decimal(19,2),nullzero"` // Custom column indicate the invoiced sales amount for merchandise item only.
-	NoOfMerchandiseInvoices   int32     `bun:"no_of_merchandise_invoices,type:int,nullzero"`           // Custom column indicate the number of invoices for the time period used in calculating the value of the new “Merchandise Sales” colum
+	MerchandiseInvoicedSales  *float64  `bun:"merchandise_invoiced_sales,type:decimal(19,2)"` // Custom column indicate the invoiced sales amount for merchandise item only.
+	NoOfMerchandiseInvoices   *int32    `bun:"no_of_merchandise_invoices,type:int"`           // Custom column indicate the number of invoices for the time period used in calculating the value of the new “Merchandise Sales” colum
 }

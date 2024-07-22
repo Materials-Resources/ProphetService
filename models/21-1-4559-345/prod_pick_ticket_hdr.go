@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -17,6 +17,6 @@ type ProdPickTicketHdr struct {
 	CreatedBy                string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	RetrievedByWms           string    `bun:"retrieved_by_wms,type:char(1),default:('N')"`                  // Determines whether or not this record has been pulled into an external WMS system
+	RetrievedByWms           *string   `bun:"retrieved_by_wms,type:char(1),default:('N')"`                  // Determines whether or not this record has been pulled into an external WMS system
 	ConfirmableRowStatusFlag int32     `bun:"confirmable_row_status_flag,type:int,default:((1980))"`        // Indicates current picking status.
 }

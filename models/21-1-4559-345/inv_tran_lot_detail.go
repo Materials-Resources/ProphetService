@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,9 +15,9 @@ type InvTranLotDetail struct {
 	DateCreated         time.Time `bun:"date_created,type:datetime"`                                    // Indicates the date/time this record was created.
 	DateLastModified    time.Time `bun:"date_last_modified,type:datetime"`                              // Indicates the date/time this record was last modified.
 	LastMaintainedBy    string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"` // ID of the user who last maintained this record
-	QtyAllocated        float64   `bun:"qty_allocated,type:decimal(19,9),nullzero"`                     // Change to the quantity allocated.
+	QtyAllocated        *float64  `bun:"qty_allocated,type:decimal(19,9)"`                              // Change to the quantity allocated.
 	InvTranLotDetailUid int32     `bun:"inv_tran_lot_detail_uid,type:int,pk"`                           // Internal unique identifier for a inv_tran_lot_detail row.
 	DocumentLineLotUid  int32     `bun:"document_line_lot_uid,type:int"`                                // What is the unique identifier for this document line lot?
 	InvMastUid          int32     `bun:"inv_mast_uid,type:int"`                                         // Unique identifier for the item id.
-	SkuCost             float64   `bun:"sku_cost,type:decimal(19,9),nullzero"`                          // Lot cost
+	SkuCost             *float64  `bun:"sku_cost,type:decimal(19,9)"`                                   // Lot cost
 }

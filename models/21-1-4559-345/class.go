@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,12 +15,12 @@ type Class struct {
 	DateCreated             time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	LogoPathFilename        string    `bun:"logo_path_filename,type:varchar(255),nullzero"`             // Logo file associated with a particular class
+	LogoPathFilename        *string   `bun:"logo_path_filename,type:varchar(255)"`                      // Logo file associated with a particular class
 	ExportClassFlag         string    `bun:"export_class_flag,type:char(1),default:('N')"`              // Indicates whether this is an export class and will use an item's export description or not.
-	FuelSurchargePercentage float64   `bun:"fuel_surcharge_percentage,type:decimal(19,4),nullzero"`     // A custom column which indicates the percentage that will be applied against a shipment when a shipment is confirmed.
-	MaxFuelChargePerShip    float64   `bun:"max_fuel_charge_per_ship,type:decimal(19,4),nullzero"`      // A custom column which indicates the maximum fuel surcharge that will be applied against a shipment when a shipment is confirmed.
+	FuelSurchargePercentage *float64  `bun:"fuel_surcharge_percentage,type:decimal(19,4)"`              // A custom column which indicates the percentage that will be applied against a shipment when a shipment is confirmed.
+	MaxFuelChargePerShip    *float64  `bun:"max_fuel_charge_per_ship,type:decimal(19,4)"`               // A custom column which indicates the maximum fuel surcharge that will be applied against a shipment when a shipment is confirmed.
 	ClassUid                int32     `bun:"class_uid,type:int"`
-	AffinityFlag            string    `bun:"affinity_flag,type:char(1),nullzero"`                   // Indicates the Affinity for a specific Class 2. Possible values: A - Z
-	HarmonizedCode          string    `bun:"harmonized_code,type:varchar(13),nullzero"`             // Classification number used to identify a type of item(s).
+	AffinityFlag            *string   `bun:"affinity_flag,type:char(1)"`                            // Indicates the Affinity for a specific Class 2. Possible values: A - Z
+	HarmonizedCode          *string   `bun:"harmonized_code,type:varchar(13)"`                      // Classification number used to identify a type of item(s).
 	AvailForCycleCountFlag  string    `bun:"avail_for_cycle_count_flag,type:char(1),default:('N')"` // Determines whether or not an item with this class will be available for cycle count.
 }

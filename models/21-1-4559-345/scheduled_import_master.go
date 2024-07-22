@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -19,7 +19,7 @@ type ScheduledImportMaster struct {
 	DateCreated              time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	FileFormatCd             int32     `bun:"file_format_cd,type:int,default:(1012)"`                    // Code identifying the format the data is in, XML, tab-delimited.
-	XmlDocumentUid           int32     `bun:"xml_document_uid,type:int,nullzero"`                        // If XML, pointer to the document record defining the data set.
+	FileFormatCd             *int32    `bun:"file_format_cd,type:int,default:(1012)"`                    // Code identifying the format the data is in, XML, tab-delimited.
+	XmlDocumentUid           *int32    `bun:"xml_document_uid,type:int"`                                 // If XML, pointer to the document record defining the data set.
 	FileLockingFlag          string    `bun:"file_locking_flag,type:char(1),default:('N')"`              // Determines whether this import type uses file locking
 }

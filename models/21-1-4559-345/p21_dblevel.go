@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -7,6 +7,6 @@ import (
 
 type P21Dblevel struct {
 	bun.BaseModel `bun:"table:p21_dblevel"`
-	Version       int16     `bun:"version,type:tinyint,nullzero"`
+	Version       *int16    `bun:"version,type:tinyint"`
 	DateCreated   time.Time `bun:"date_created,type:datetime,default:(getdate())"`
 }

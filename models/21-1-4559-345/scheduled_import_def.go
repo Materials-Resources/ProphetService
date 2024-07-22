@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -17,5 +17,5 @@ type ScheduledImportDef struct {
 	DateLastModified      time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy      string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
 	FileFormatCd          int32     `bun:"file_format_cd,type:int,default:(1012)"`                    // Code describing the format of the data, ex XML or tab delimited.
-	DefaultFileprefix     string    `bun:"default_fileprefix,type:varchar(255),nullzero"`             // Default code assigned to an import file
+	DefaultFileprefix     *string   `bun:"default_fileprefix,type:varchar(255)"`                      // Default code assigned to an import file
 }

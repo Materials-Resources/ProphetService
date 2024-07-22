@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,5 +13,5 @@ type Roles struct {
 	DateCreated             time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	MinimumMarginPercentage float64   `bun:"minimum_margin_percentage,type:decimal(19,9),nullzero"`     // Minimum acceptable margin percentage for users with this role
+	MinimumMarginPercentage *float64  `bun:"minimum_margin_percentage,type:decimal(19,9)"`              // Minimum acceptable margin percentage for users with this role
 }

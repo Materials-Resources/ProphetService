@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,9 +13,9 @@ type RfKeysDefault struct {
 	WwmsScreenCode   int32     `bun:"wwms_screen_code,type:int"`                                // This column determines the screen where the key is to be displayed.
 	Keystroke        string    `bun:"keystroke,type:varchar(255)"`                              // This column has the key combination to press for the function key.
 	Description      string    `bun:"description,type:varchar(255)"`                            // This column has the description of action performed on key press.
-	EventName        string    `bun:"event_name,type:varchar(255),nullzero"`                    // This column has the name of the event which will be  triggered on key press
-	KeystrokeDesc    string    `bun:"keystroke_desc,type:varchar(255),nullzero"`                // This column has the key apart from modifier(shift, ctrl).
-	KeystrokeMod     string    `bun:"keystroke_mod,type:varchar(255),nullzero"`                 // This column has the  modifier like shift, ctrl to be used with key.
+	EventName        *string   `bun:"event_name,type:varchar(255)"`                             // This column has the name of the event which will be  triggered on key press
+	KeystrokeDesc    *string   `bun:"keystroke_desc,type:varchar(255)"`                         // This column has the key apart from modifier(shift, ctrl).
+	KeystrokeMod     *string   `bun:"keystroke_mod,type:varchar(255)"`                          // This column has the  modifier like shift, ctrl to be used with key.
 	ImageFile        string    `bun:"image_file,type:varchar(255)"`                             // This column has the name of the image file to be shown for the function or event
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`           // Date and time the record was originally created
 	CreatedBy        string    `bun:"created_by,type:varchar(255),default:('P21_DBA')"`         // User who created the record

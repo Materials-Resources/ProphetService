@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,5 +13,5 @@ type VoucherClass struct {
 	DateCreated             time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	FreightVoucherClassFlag string    `bun:"freight_voucher_class_flag,type:char(1),nullzero"`          // Indicates whether a voucher class will be used to input freight vouchers, used by custom only.
+	FreightVoucherClassFlag *string   `bun:"freight_voucher_class_flag,type:char(1)"`                   // Indicates whether a voucher class will be used to input freight vouchers, used by custom only.
 }

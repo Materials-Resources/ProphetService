@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -19,5 +19,5 @@ type PopupFieldBehavior struct {
 	DateLastModified      time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy      string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
 	AsParameter           bool      `bun:"as_parameter,type:bit,default:((0))"`                          // Override AsParameter for a Specific Dynachange or condition.
-	ParameterDefaultValue string    `bun:"parameter_default_value,type:varchar(255),nullzero"`           // Override Parameter Default Value for a Specific Dynachange or condition.
+	ParameterDefaultValue *string   `bun:"parameter_default_value,type:varchar(255)"`                    // Override Parameter Default Value for a Specific Dynachange or condition.
 }

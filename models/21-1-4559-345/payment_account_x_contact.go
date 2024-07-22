@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -19,6 +19,6 @@ type PaymentAccountXContact struct {
 	CreatedBy                 string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified          time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy          string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	CreditcardProcessorUid    int32     `bun:"creditcard_processor_uid,type:int,nullzero"`                   // Associates, where necessary, the Contact Payment Account with an electronic payment processor record.
-	EpfMerchantAccountUid     int32     `bun:"epf_merchant_account_uid,type:int,nullzero"`                   // Associates, where necessary, the Contact Payment Account with an EPF merchant account record.
+	CreditcardProcessorUid    *int32    `bun:"creditcard_processor_uid,type:int"`                            // Associates, where necessary, the Contact Payment Account with an electronic payment processor record.
+	EpfMerchantAccountUid     *int32    `bun:"epf_merchant_account_uid,type:int"`                            // Associates, where necessary, the Contact Payment Account with an EPF merchant account record.
 }

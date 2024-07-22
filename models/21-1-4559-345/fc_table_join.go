@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -9,7 +9,7 @@ type FcTableJoin struct {
 	bun.BaseModel    `bun:"table:fc_table_join"`
 	FcTableJoinUid   int32     `bun:"fc_table_join_uid,type:int,autoincrement,identity"`            // Unique identifier for each record
 	BaseTable        string    `bun:"base_table,type:varchar(255)"`                                 // table to which a secondary table is joined
-	BaseDataobject   string    `bun:"base_dataobject,type:varchar(255),nullzero"`                   // dataobject to which join_syntax is added
+	BaseDataobject   *string   `bun:"base_dataobject,type:varchar(255)"`                            // dataobject to which join_syntax is added
 	JoinTable        string    `bun:"join_table,type:varchar(255)"`                                 // secondary table
 	JoinSyntax       string    `bun:"join_syntax,type:varchar(8000)"`                               // syntax to join join_table to base_table
 	RowStatusFlag    int32     `bun:"row_status_flag,type:int,default:((704))"`                     // status of each record

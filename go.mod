@@ -10,7 +10,7 @@ require (
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/materials-resources/microservices-proto/golang/catalog v0.0.9
 	github.com/materials-resources/microservices-proto/golang/order v0.0.8
-	github.com/materials-resources/s-prophet/models/21-1-4559-345 v0.0.6
+	github.com/materials-resources/s-prophet/models/21-1-4559-345 v0.0.7
 	github.com/microsoft/go-mssqldb v1.7.2
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.8.1

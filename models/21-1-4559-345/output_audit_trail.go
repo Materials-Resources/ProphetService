@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,8 +13,8 @@ type OutputAuditTrail struct {
 	OutputType          string    `bun:"output_type,type:varchar(255)"`                                // Whether document it is been Printed, Emailed or Faxed
 	FileName            string    `bun:"file_name,type:varchar(8000)"`                                 // File created that contains the transaction information
 	FilePath            string    `bun:"file_path,type:varchar(8000)"`                                 // Location where the file was saved
-	ClientName          string    `bun:"client_name,type:varchar(255),nullzero"`                       // Computer name that generated the Printed, Emailed or Faxed request
-	PrinterName         string    `bun:"printer_name,type:varchar(255),nullzero"`                      // Printer name
+	ClientName          *string   `bun:"client_name,type:varchar(255)"`                                // Computer name that generated the Printed, Emailed or Faxed request
+	PrinterName         *string   `bun:"printer_name,type:varchar(255)"`                               // Printer name
 	DateCreated         time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created
 	CreatedBy           string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified    time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified

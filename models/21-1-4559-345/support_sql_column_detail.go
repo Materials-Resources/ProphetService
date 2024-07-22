@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import "github.com/uptrace/bun"
 
@@ -10,6 +10,6 @@ type SupportSqlColumnDetail struct {
 	ColumnLabel               string `bun:"column_label,type:varchar(255)"`
 	ColumnToken               string `bun:"column_token,type:varchar(255)"`
 	ColumnDatatypeCd          int32  `bun:"column_datatype_cd,type:int"`
-	ColumnLength              int32  `bun:"column_length,type:int,nullzero"`
-	ColumnPrecision           int32  `bun:"column_precision,type:int,nullzero"`
+	ColumnLength              *int32 `bun:"column_length,type:int"`
+	ColumnPrecision           *int32 `bun:"column_precision,type:int"`
 }

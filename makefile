@@ -30,7 +30,8 @@ devops/scaffold:
 
 .PHONY: dev/clean
 ## dev/clean: Clean the development environment
-dev/clean: dev/redpanda/down dev/metrics/down
+dev/clean:
+	podman kube play --down devops/redpanda.yml
 
 .PHONY: dev/tools
 ## dev/tools: Check and Install the development tools

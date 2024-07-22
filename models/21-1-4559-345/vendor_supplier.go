@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -14,6 +14,6 @@ type VendorSupplier struct {
 	DateCreated      time.Time `bun:"date_created,type:datetime"`                                    // Indicates the date/time this record was created.
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`                              // Indicates the date/time this record was last modified.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"` // ID of the user who last maintained this record
-	PrimaryVendor    string    `bun:"primary_vendor,type:char(1),nullzero"`                          // Indicates whether this vendor is primary.
-	CreatedBy        string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
+	PrimaryVendor    *string   `bun:"primary_vendor,type:char(1)"`                                   // Indicates whether this vendor is primary.
+	CreatedBy        *string   `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 }

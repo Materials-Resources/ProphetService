@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -16,9 +16,9 @@ type Mymenu struct {
 	DateCreated      time.Time `bun:"date_created,type:datetime"`
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30)"`
-	OpenedbyMenuitem string    `bun:"openedby_menuitem,type:varchar(128),nullzero"`
-	Menuname         string    `bun:"menuname,type:varchar(128),nullzero"`
-	Windowrole       string    `bun:"WindowRole,type:varchar(128),nullzero"`
+	OpenedbyMenuitem *string   `bun:"openedby_menuitem,type:varchar(128)"`
+	Menuname         *string   `bun:"menuname,type:varchar(128)"`
+	Windowrole       *string   `bun:"WindowRole,type:varchar(128)"`
 	Icon             string    `bun:"icon,type:varchar(255),default:('activant.bmp')"` // File name for menu/toolbar icon
-	SequenceNo       int32     `bun:"sequence_no,type:int,nullzero"`                   // Sequence Order of Menu Items
+	SequenceNo       *int32    `bun:"sequence_no,type:int"`                            // Sequence Order of Menu Items
 }

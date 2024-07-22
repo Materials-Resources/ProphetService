@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -21,8 +21,8 @@ type CustomObjects struct {
 	Type             string    `bun:"type,type:char(1)"`                                         // Column to identify whether the version belongs to a user or a role.
 	ObjectType       string    `bun:"object_type,type:char(1)"`                                  // The type of object( Data window,Menu,Tab)
 	ApplyToAll       int32     `bun:"apply_to_all,type:int,default:(2)"`                         // Apply the version_id modifications to all objects
-	DefaultValues    string    `bun:"default_values,type:text,nullzero"`                         // default values for tab controls in dynachange designer and version manager
+	DefaultValues    *string   `bun:"default_values,type:text"`                                  // default values for tab controls in dynachange designer and version manager
 	RowStatusFlag    int32     `bun:"row_status_flag,type:int,default:((704))"`                  // Status of the version
-	DesignUid        int32     `bun:"design_uid,type:int,nullzero"`                              // Design UID
+	DesignUid        *int32    `bun:"design_uid,type:int"`                                       // Design UID
 	MigratedToWeb    string    `bun:"migrated_to_web,type:char(1),default:('N')"`                // stores a flag indicating migration status
 }

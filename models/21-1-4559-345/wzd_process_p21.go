@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,7 +15,7 @@ type WzdProcessP21 struct {
 	StepStatusCode   string    `bun:"step_status_code,type:char(1),default:('A')"`                   // Task/step status
 	WindowNm         string    `bun:"window_nm,type:varchar(60)"`                                    // Window PowerBuilder object name
 	DataobjectNm     string    `bun:"dataobject_nm,type:varchar(60)"`                                // DataWindow PowerBuilder object name
-	InstructTx       string    `bun:"instruct_tx,type:text,nullzero"`                                // Wizard instruction
+	InstructTx       *string   `bun:"instruct_tx,type:text"`                                         // Wizard instruction
 	DateCreated      time.Time `bun:"date_created,type:datetime,default:(getdate())"`                // Indicates the date/time this record was created.
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`          // Indicates the date/time this record was last modified.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"` // ID of the user who last maintained this record

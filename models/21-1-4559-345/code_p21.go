@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,5 +15,5 @@ type CodeP21 struct {
 	DateCreated        time.Time `bun:"date_created,type:datetime,default:(getdate())"`
 	DateLastModified   time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`
 	LastMaintainedBy   string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"`
-	CodeSubDescription string    `bun:"code_sub_description,type:varchar(255),nullzero"`
+	CodeSubDescription *string   `bun:"code_sub_description,type:varchar(255)"`
 }

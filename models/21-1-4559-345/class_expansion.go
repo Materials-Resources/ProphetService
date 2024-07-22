@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import "github.com/uptrace/bun"
 
@@ -10,5 +10,5 @@ type ClassExpansion struct {
 	ColumnName          string `bun:"column_name,type:varchar(255)"`
 	NullState           string `bun:"null_state,type:varchar(255)"`
 	Done                string `bun:"done,type:char(1)"`
-	ColumnExpansionTime int32  `bun:"column_expansion_time,type:int,nullzero"`
+	ColumnExpansionTime *int32 `bun:"column_expansion_time,type:int"`
 }

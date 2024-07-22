@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -17,5 +17,5 @@ type MessageLog struct {
 	ButtonPressed    int32     `bun:"button_pressed,type:int"`                            // This column is unused.
 	MsgSeverityLevel int32     `bun:"msg_severity_level,type:int"`                        // This column is unused.
 	Stack            string    `bun:"stack,type:varchar(255)"`                            // This column is unused.
-	UserTextExtended string    `bun:"user_text_extended,type:text,nullzero"`              // This column is unused.
+	UserTextExtended *string   `bun:"user_text_extended,type:text"`                       // This column is unused.
 }

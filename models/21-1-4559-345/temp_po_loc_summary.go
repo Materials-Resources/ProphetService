@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -17,5 +17,5 @@ type TempPoLocSummary struct {
 	SummaryHdrCount  int32     `bun:"summary_hdr_count,type:int"`
 	SummaryLineCount int32     `bun:"summary_line_count,type:int"`
 	Processed        string    `bun:"processed,type:char(1)"`
-	Guid             string    `bun:"guid,type:uniqueidentifier,nullzero"`
+	Guid             *string   `bun:"guid,type:uniqueidentifier"`
 }

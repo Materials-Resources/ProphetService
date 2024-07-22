@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,10 +13,10 @@ type DocumentLinkDocstar struct {
 	DisplayAreaCd          int32     `bun:"display_area_cd,type:int"`                                     // Document link display area for which we want to store this document information
 	Key1Cd                 string    `bun:"key1_cd,type:varchar(255)"`                                    // Key 1 cd for transaction records related to this type of transaction
 	Key1ValueField         string    `bun:"key1_value_field,type:varchar(255)"`                           // form field to get the key1 value from
-	Key2Cd                 string    `bun:"key2_cd,type:varchar(255),nullzero"`                           // Key 2 cd for transaction records related to this type of transaction
-	Key2ValueField         string    `bun:"key2_value_field,type:varchar(255),nullzero"`                  // form field to get the key2 value from
-	Key3Cd                 string    `bun:"key3_cd,type:varchar(255),nullzero"`                           // Key 3 cd for transaction records related to this type of transaction
-	Key3ValueField         string    `bun:"key3_value_field,type:varchar(255),nullzero"`                  // form field to get the key3 value from
+	Key2Cd                 *string   `bun:"key2_cd,type:varchar(255)"`                                    // Key 2 cd for transaction records related to this type of transaction
+	Key2ValueField         *string   `bun:"key2_value_field,type:varchar(255)"`                           // form field to get the key2 value from
+	Key3Cd                 *string   `bun:"key3_cd,type:varchar(255)"`                                    // Key 3 cd for transaction records related to this type of transaction
+	Key3ValueField         *string   `bun:"key3_value_field,type:varchar(255)"`                           // form field to get the key3 value from
 	DateCreated            time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created
 	CreatedBy              string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified       time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified

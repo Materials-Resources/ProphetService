@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,8 +13,8 @@ type CommissionRuleDetail struct {
 	BreakValue       float64   `bun:"break_value,type:decimal(19,9)"`                            // Break Value - amount at which the break changes
 	BreakType        string    `bun:"break_type,type:char(1)"`                                   // Break Type - computed or an exact amount
 	Value            float64   `bun:"value,type:decimal(19,9)"`                                  // Value (for computation if Computed -  or exact if Ex
-	Factor           string    `bun:"factor,type:char(1),nullzero"`                              // Whether use multiplier or percentage to calculate commission
-	Source           string    `bun:"source,type:char(1),nullzero"`                              // What is the source for this repeating journal entry?
+	Factor           *string   `bun:"factor,type:char(1)"`                                       // Whether use multiplier or percentage to calculate commission
+	Source           *string   `bun:"source,type:char(1)"`                                       // What is the source for this repeating journal entry?
 	DeleteFlag       string    `bun:"delete_flag,type:char(1)"`                                  // Indicates whether this record is logically deleted
 	DateCreated      time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.

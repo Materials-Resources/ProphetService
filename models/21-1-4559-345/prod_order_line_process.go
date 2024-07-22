@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -21,11 +21,11 @@ type ProdOrderLineProcess struct {
 	CreatedBy               string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record.
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified.
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record.
-	AdditionalLabor         float64   `bun:"additional_labor,type:decimal(19,9),nullzero"`                 // Labor Cost specified after the Completion of the Production Order.
-	AdditionalFreight       float64   `bun:"additional_freight,type:decimal(19,9),nullzero"`               // Freight Cost specified after the Completion of the Production Order.
-	AdditionalMaterial      float64   `bun:"additional_material,type:decimal(19,9),nullzero"`              // Material Cost specified after the Completion of the Production Order.
-	AdditionalOtherCharge   float64   `bun:"additional_other_charge,type:decimal(19,9),nullzero"`          // Other Charge Cost specified after the Completion of the Production Order.
-	SourceTypeCd            int32     `bun:"source_type_cd,type:int,nullzero"`                             // Code (from code_p21 table) which indicates where the record was created
+	AdditionalLabor         *float64  `bun:"additional_labor,type:decimal(19,9)"`                          // Labor Cost specified after the Completion of the Production Order.
+	AdditionalFreight       *float64  `bun:"additional_freight,type:decimal(19,9)"`                        // Freight Cost specified after the Completion of the Production Order.
+	AdditionalMaterial      *float64  `bun:"additional_material,type:decimal(19,9)"`                       // Material Cost specified after the Completion of the Production Order.
+	AdditionalOtherCharge   *float64  `bun:"additional_other_charge,type:decimal(19,9)"`                   // Other Charge Cost specified after the Completion of the Production Order.
+	SourceTypeCd            *int32    `bun:"source_type_cd,type:int"`                                      // Code (from code_p21 table) which indicates where the record was created
 	LaborCostIndirect       float64   `bun:"labor_cost_indirect,type:decimal(19,9)"`                       // Total Labor (indirect)
-	AdditionalLaborIndirect float64   `bun:"additional_labor_indirect,type:decimal(19,9),nullzero"`        // Additional total labor (Indirect)
+	AdditionalLaborIndirect *float64  `bun:"additional_labor_indirect,type:decimal(19,9)"`                 // Additional total labor (Indirect)
 }

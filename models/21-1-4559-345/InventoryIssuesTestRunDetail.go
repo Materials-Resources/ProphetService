@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,5 +13,5 @@ type Inventoryissuestestrundetail struct {
 	DateStarted   time.Time `bun:"date_started,type:datetime"`
 	DateCompleted time.Time `bun:"date_completed,type:datetime"`
 	DateDiffMs    int32     `bun:"date_diff_ms,type:int"`
-	TotalTestUid  int32     `bun:"total_test_uid,type:int,nullzero"`
+	TotalTestUid  *int32    `bun:"total_test_uid,type:int"`
 }

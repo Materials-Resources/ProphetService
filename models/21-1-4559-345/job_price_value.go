@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -41,21 +41,21 @@ type JobPriceValue struct {
 	Break12             float64   `bun:"break12,type:decimal(19,9),default:(0)"`
 	Break13             float64   `bun:"break13,type:decimal(19,9),default:(0)"`
 	Break14             float64   `bun:"break14,type:decimal(19,9),default:(0)"`
-	OtherCost1          float64   `bun:"other_cost1,type:decimal(19,9),nullzero"` // Other Cost corresponding to the quantity break that is used to price the item.
-	OtherCost2          float64   `bun:"other_cost2,type:decimal(19,9),nullzero"`
-	OtherCost3          float64   `bun:"other_cost3,type:decimal(19,9),nullzero"`
-	OtherCost4          float64   `bun:"other_cost4,type:decimal(19,9),nullzero"`
-	OtherCost5          float64   `bun:"other_cost5,type:decimal(19,9),nullzero"`
-	OtherCost6          float64   `bun:"other_cost6,type:decimal(19,9),nullzero"`
-	OtherCost7          float64   `bun:"other_cost7,type:decimal(19,9),nullzero"`
-	OtherCost8          float64   `bun:"other_cost8,type:decimal(19,9),nullzero"`
-	OtherCost9          float64   `bun:"other_cost9,type:decimal(19,9),nullzero"`
-	OtherCost10         float64   `bun:"other_cost10,type:decimal(19,9),nullzero"`
-	OtherCost11         float64   `bun:"other_cost11,type:decimal(19,9),nullzero"`
-	OtherCost12         float64   `bun:"other_cost12,type:decimal(19,9),nullzero"`
-	OtherCost13         float64   `bun:"other_cost13,type:decimal(19,9),nullzero"`
-	OtherCost14         float64   `bun:"other_cost14,type:decimal(19,9),nullzero"`
-	OtherCost15         float64   `bun:"other_cost15,type:decimal(19,9),nullzero"`
+	OtherCost1          *float64  `bun:"other_cost1,type:decimal(19,9)"` // Other Cost corresponding to the quantity break that is used to price the item.
+	OtherCost2          *float64  `bun:"other_cost2,type:decimal(19,9)"`
+	OtherCost3          *float64  `bun:"other_cost3,type:decimal(19,9)"`
+	OtherCost4          *float64  `bun:"other_cost4,type:decimal(19,9)"`
+	OtherCost5          *float64  `bun:"other_cost5,type:decimal(19,9)"`
+	OtherCost6          *float64  `bun:"other_cost6,type:decimal(19,9)"`
+	OtherCost7          *float64  `bun:"other_cost7,type:decimal(19,9)"`
+	OtherCost8          *float64  `bun:"other_cost8,type:decimal(19,9)"`
+	OtherCost9          *float64  `bun:"other_cost9,type:decimal(19,9)"`
+	OtherCost10         *float64  `bun:"other_cost10,type:decimal(19,9)"`
+	OtherCost11         *float64  `bun:"other_cost11,type:decimal(19,9)"`
+	OtherCost12         *float64  `bun:"other_cost12,type:decimal(19,9)"`
+	OtherCost13         *float64  `bun:"other_cost13,type:decimal(19,9)"`
+	OtherCost14         *float64  `bun:"other_cost14,type:decimal(19,9)"`
+	OtherCost15         *float64  `bun:"other_cost15,type:decimal(19,9)"`
 	RowStatusFlag       int32     `bun:"row_status_flag,type:int"`                                     // Status of a row (e.g., active, inactive, deleted)
 	DateCreated         time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created
 	CreatedBy           string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record

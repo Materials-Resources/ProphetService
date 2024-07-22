@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,5 +13,5 @@ type DiscountGroup struct {
 	DateCreated              time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified         time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy         string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	ExtendedDesc             string    `bun:"extended_desc,type:varchar(255),nullzero"`                  // Extended description of the discount group.
+	ExtendedDesc             *string   `bun:"extended_desc,type:varchar(255)"`                           // Extended description of the discount group.
 }

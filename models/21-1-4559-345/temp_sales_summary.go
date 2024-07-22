@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -20,5 +20,5 @@ type TempSalesSummary struct {
 	SummaryOtherCost      float64   `bun:"summary_other_cost,type:decimal(19,4)"`
 	OrderDate             time.Time `bun:"order_date,type:datetime"`
 	Processed             string    `bun:"processed,type:char(1)"`
-	Guid                  string    `bun:"guid,type:uniqueidentifier,nullzero"`
+	Guid                  *string   `bun:"guid,type:uniqueidentifier"`
 }

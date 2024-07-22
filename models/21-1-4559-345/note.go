@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -9,9 +9,9 @@ type Note struct {
 	bun.BaseModel           `bun:"table:note"`
 	NoteUid                 int32     `bun:"note_uid,type:int,pk"`                                         // Note UID
 	DocumentUid             int32     `bun:"document_uid,type:int"`                                        // UID of the table that uses the note
-	NotepadClassId          string    `bun:"notepad_class_id,type:varchar(8),nullzero"`                    // Class of note
+	NotepadClassId          *string   `bun:"notepad_class_id,type:varchar(8)"`                             // Class of note
 	Topic                   string    `bun:"topic,type:varchar(255)"`                                      // Title of the note
-	Note                    string    `bun:"note,type:text,nullzero"`                                      // Body of the note
+	Note                    *string   `bun:"note,type:text"`                                               // Body of the note
 	ActivationDate          time.Time `bun:"activation_date,type:datetime"`                                // Date that the note begins to be viewable
 	ExpirationDate          time.Time `bun:"expiration_date,type:datetime"`                                // Date when the note ends being viewable
 	EntryDate               time.Time `bun:"entry_date,type:datetime"`                                     // Date the note is created

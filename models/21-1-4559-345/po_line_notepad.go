@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -10,9 +10,9 @@ type PoLineNotepad struct {
 	NoteId           float64   `bun:"note_id,type:decimal(19,0),pk"`                                 // Unique ID for this note.
 	PoNo             float64   `bun:"po_no,type:decimal(19,0)"`                                      // Purchase Order to associate with this note.
 	LineNo           float64   `bun:"line_no,type:decimal(19,0)"`                                    // Line number to associate with this note.
-	NotepadClass     string    `bun:"notepad_class,type:varchar(8),nullzero"`                        // Class for this note.
+	NotepadClass     *string   `bun:"notepad_class,type:varchar(8)"`                                 // Class for this note.
 	Topic            string    `bun:"topic,type:varchar(30)"`                                        // The topic of the note for the referenced area.
-	Note             string    `bun:"note,type:text,nullzero"`                                       // User defined Note contents.
+	Note             *string   `bun:"note,type:text"`                                                // User defined Note contents.
 	ActivationDate   time.Time `bun:"activation_date,type:datetime"`                                 // Date on which the note is activated.
 	ExpirationDate   time.Time `bun:"expiration_date,type:datetime"`                                 // Date on which the note expires.
 	EntryDate        time.Time `bun:"entry_date,type:datetime"`                                      // Date the note was entered.

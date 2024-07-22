@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -8,7 +8,7 @@ import (
 type CompanyWorkDay struct {
 	bun.BaseModel     `bun:"table:company_work_day"`
 	CompanyWorkDayUid int32     `bun:"company_work_day_uid,type:int,pk"`                             // Unique ID for the Work Day
-	CompanyId         string    `bun:"company_id,type:varchar(8),nullzero"`                          // Company ID
+	CompanyId         *string   `bun:"company_id,type:varchar(8)"`                                   // Company ID
 	WorkDay           int32     `bun:"work_day,type:int"`                                            // Day of week (1 is Sunday, 7 is Saturday)
 	ActiveFlag        string    `bun:"active_flag,type:char(1),default:('N')"`                       // Flag to indicate whether given day is a work day
 	StartTime         time.Time `bun:"start_time,type:datetime"`                                     // Start of work day

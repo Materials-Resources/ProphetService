@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -11,7 +11,7 @@ type BusinessRuleEventClass struct {
 	BusinessRuleEventUid      int32     `bun:"business_rule_event_uid,type:int"`                                 // FK to the business rule event record that this rule class goes with.
 	RuleClassName             string    `bun:"rule_class_name,type:varchar(255)"`                                // Name of the .NET class that will be triggered for the associated business rule event.
 	RunTypeCd                 int32     `bun:"run_type_cd,type:int"`                                             // Determines if this rule will be executed synchronously or asynchronously.
-	ConfigurationId           int32     `bun:"configuration_id,type:int,nullzero"`                               // Configuration for which this rule should be executed. Baseline if null or 0.
+	ConfigurationId           *int32    `bun:"configuration_id,type:int"`                                        // Configuration for which this rule should be executed. Baseline if null or 0.
 	SequenceNo                int32     `bun:"sequence_no,type:int"`                                             // Sequence that the rules for this even should be executed.
 	DateCreated               time.Time `bun:"date_created,type:datetime,default:(getdate())"`                   // Date and time the record was originally created
 	CreatedBy                 string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`             // User who created the record

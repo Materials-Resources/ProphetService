@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -14,5 +14,5 @@ type CellDefinition struct {
 	DateCreated      time.Time `bun:"date_created,type:datetime"`                                // Indicates the date/time this record was created.
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
-	AccountMask      string    `bun:"account_mask,type:varchar(32),nullzero"`                    // The selected account range.  This value can be strictly the account mask if all accounts of a particular mask should be selected.
+	AccountMask      *string   `bun:"account_mask,type:varchar(32)"`                             // The selected account range.  This value can be strictly the account mask if all accounts of a particular mask should be selected.
 }

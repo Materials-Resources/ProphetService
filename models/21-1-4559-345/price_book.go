@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -14,6 +14,6 @@ type PriceBook struct {
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`    // Indicates the date/time this record was last modified.
 	DateCreated      time.Time `bun:"date_created,type:datetime"`          // Indicates the date/time this record was created.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30)"` // ID of the user who last maintained this record
-	CreatedBy        string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
-	CompanyId        string    `bun:"company_id,type:varchar(255),nullzero"` // Company that this book is for.
+	CreatedBy        *string   `bun:"created_by,type:varchar(255),default:(suser_sname())"`
+	CompanyId        *string   `bun:"company_id,type:varchar(255)"` // Company that this book is for.
 }

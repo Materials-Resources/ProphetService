@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -13,5 +13,5 @@ type OeHdrTax struct {
 	DateCreated      time.Time `bun:"date_created,type:datetime"`                                    // Indicates the date/time this record was created.
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`                              // Indicates the date/time this record was last modified.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"` // ID of the user who last maintained this record
-	RmaLinkedTax     string    `bun:"rma_linked_tax,type:char(1),nullzero"`                          // Indicates whether a record was added as a result of linking an RMA line to an order
+	RmaLinkedTax     *string   `bun:"rma_linked_tax,type:char(1)"`                                   // Indicates whether a record was added as a result of linking an RMA line to an order
 }

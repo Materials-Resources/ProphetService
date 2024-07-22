@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,5 +15,5 @@ type InvSub struct {
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`                          // Indicates the date/time this record was last modified.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30),default:(user_name())"` // ID of the user who last maintained this record
 	Interchangeable  string    `bun:"interchangeable,type:char(1)"`                              // Are the item and the substitute interchangeable?
-	CreatedBy        string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`
+	CreatedBy        *string   `bun:"created_by,type:varchar(255),default:(suser_sname())"`
 }

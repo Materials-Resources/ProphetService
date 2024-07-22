@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -21,5 +21,5 @@ type CustomObjectsBackup struct {
 	Type             string    `bun:"type,type:char(1)"`
 	ObjectType       string    `bun:"object_type,type:char(1)"`
 	ApplyToAll       int32     `bun:"apply_to_all,type:int"`
-	DefaultValues    string    `bun:"default_values,type:text,nullzero"`
+	DefaultValues    *string   `bun:"default_values,type:text"`
 }

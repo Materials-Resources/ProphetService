@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -18,6 +18,6 @@ type DctTransaction struct {
 	CreatedBy               string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	MenuclickedName         string    `bun:"menuclicked_name,type:varchar(255),nullzero"`                  // Identifies the menu item the user clicks to open associated import window
+	MenuclickedName         *string   `bun:"menuclicked_name,type:varchar(255)"`                           // Identifies the menu item the user clicks to open associated import window
 	LegacyExportFlag        string    `bun:"legacy_export_flag,type:char(1),default:('N')"`                // Indicates whether any legacy solutin exports data for this Data Express transaction
 }

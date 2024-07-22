@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -12,9 +12,9 @@ type LabelDefinitionXLoc struct {
 	CompanyId                string    `bun:"company_id,type:varchar(8)"`                                   // Company ID for this location
 	LocationId               float64   `bun:"location_id,type:decimal(19,0)"`                               // Location ID for this record
 	LabelProcessTypeCd       int32     `bun:"label_process_type_cd,type:int"`                               // Label Printing Processes code
-	LabelTemplateFilename    string    `bun:"label_template_filename,type:varchar(255),nullzero"`           // Path to label template file (if null, just the label definition ID will be passed to the forms package, leaving the onus for finding the actual file path on the forms processing software)
+	LabelTemplateFilename    *string   `bun:"label_template_filename,type:varchar(255)"`                    // Path to label template file (if null, just the label definition ID will be passed to the forms package, leaving the onus for finding the actual file path on the forms processing software)
 	DefaultPrintOptionCd     int32     `bun:"default_print_option_cd,type:int"`                             // Default option code for printing this label (Yes/No/Prompt)
-	DefaultPrinter           string    `bun:"default_printer,type:varchar(255),nullzero"`                   // Default printer for this label at the location
+	DefaultPrinter           *string   `bun:"default_printer,type:varchar(255)"`                            // Default printer for this label at the location
 	RowStatusFlag            int32     `bun:"row_status_flag,type:int"`                                     // Status of this row
 	DateCreated              time.Time `bun:"date_created,type:datetime,default:(getdate())"`               // Date and time the record was originally created
 	CreatedBy                string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record

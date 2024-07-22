@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,7 +15,7 @@ type PortalElement struct {
 	CreatedBy         string    `bun:"created_by,type:varchar(255),default:(suser_sname())"`         // User who created the record
 	DateLastModified  time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy  string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
-	IconName          string    `bun:"icon_name,type:varchar(255),nullzero"`                         // Icon name the portal element
-	PortalCd          int32     `bun:"portal_cd,type:int,nullzero"`                                  // Code from code_p21 for portal.
-	ReportMetadataUid int32     `bun:"report_metadata_uid,type:int,nullzero"`                        // Unique Identifier for Report Metadata
+	IconName          *string   `bun:"icon_name,type:varchar(255)"`                                  // Icon name the portal element
+	PortalCd          *int32    `bun:"portal_cd,type:int"`                                           // Code from code_p21 for portal.
+	ReportMetadataUid *int32    `bun:"report_metadata_uid,type:int"`                                 // Unique Identifier for Report Metadata
 }

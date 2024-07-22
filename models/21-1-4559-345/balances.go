@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -23,8 +23,8 @@ type Balances struct {
 	EncumberedBalance        float64   `bun:"encumbered_balance,type:decimal(19,4),default:(0)"`         // Sum of transactions posted to encumbered account for a particular year-to-date.
 	EncumberedThisPeriod     float64   `bun:"encumbered_this_period,type:decimal(19,4),default:(0)"`     // Sum of transactions posted to encumbered account for a single period.
 	DateBudgetChanged        time.Time `bun:"date_budget_changed,type:datetime,default:('01/01/1980')"`  // Indicates the date when the budget last changed.
-	ForeignPeriodBalance     float64   `bun:"foreign_period_balance,type:decimal(19,4),nullzero"`        // Stores foreign amount for period per currency
-	ForeignCumulativeBalance float64   `bun:"foreign_cumulative_balance,type:decimal(19,4),nullzero"`    // Stores accumulated foreign amount per currency
+	ForeignPeriodBalance     *float64  `bun:"foreign_period_balance,type:decimal(19,4)"`                 // Stores foreign amount for period per currency
+	ForeignCumulativeBalance *float64  `bun:"foreign_cumulative_balance,type:decimal(19,4)"`             // Stores accumulated foreign amount per currency
 	CurrencyId               float64   `bun:"currency_id,type:decimal(19,0),pk"`                         // Indicates currency of foreign amounts
 	CumulativeBudget1        float64   `bun:"cumulative_budget_1,type:decimal(19,2),default:((0))"`      // Cumulative balance of budget 1.
 	CumulativeBudget2        float64   `bun:"cumulative_budget_2,type:decimal(19,2),default:((0))"`      // Cumulative balance of budget 2.

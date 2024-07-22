@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,7 +15,7 @@ type ApSystemParameters struct {
 	DateCreated                time.Time `bun:"date_created,type:datetime"`
 	DateLastModified           time.Time `bun:"date_last_modified,type:datetime"`
 	LastMaintainedBy           string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"`
-	ValidateJobId              string    `bun:"validate_job_id,type:char(1),nullzero"`
-	DisplayJobId               string    `bun:"display_job_id,type:char(1),nullzero"`
+	ValidateJobId              *string   `bun:"validate_job_id,type:char(1)"`
+	DisplayJobId               *string   `bun:"display_job_id,type:char(1)"`
 	ApSystemParameterUid       int32     `bun:"ap_system_parameter_uid,type:int,pk"`
 }

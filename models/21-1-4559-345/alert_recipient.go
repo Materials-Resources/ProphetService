@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -9,7 +9,7 @@ type AlertRecipient struct {
 	bun.BaseModel     `bun:"table:alert_recipient"`
 	AlertRecipientUid int32     `bun:"alert_recipient_uid,type:int,pk"`                           // Unique Identifier of record
 	AlertMessageUid   int32     `bun:"alert_message_uid,type:int,unique"`                         // Unique identifier from alert_message table
-	AlertEmailName    string    `bun:"alert_email_name,type:varchar(255),nullzero"`               // Name that identifies the email address for alert.
+	AlertEmailName    *string   `bun:"alert_email_name,type:varchar(255)"`                        // Name that identifies the email address for alert.
 	AlertEmailAddress string    `bun:"alert_email_address,type:varchar(255),unique"`              // Email address for this alert
 	RowStatusFlag     int32     `bun:"row_status_flag,type:int"`                                  // Indicates current record status.
 	DateCreated       time.Time `bun:"date_created,type:datetime,default:(getdate())"`            // Indicates the date/time this record was created.

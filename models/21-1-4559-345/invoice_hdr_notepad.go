@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -10,11 +10,11 @@ type InvoiceHdrNotepad struct {
 	InvoiceNo            string    `bun:"invoice_no,type:varchar(10),pk"`                       // Invoice number to which these invoice notes apply.
 	NoteId               float64   `bun:"note_id,type:decimal(19,0),pk"`                        // Identifies the note.
 	Topic                string    `bun:"topic,type:varchar(30)"`                               // The topic of the note for the referenced area.
-	Note                 string    `bun:"note,type:text,nullzero"`                              // Text of the note.
+	Note                 *string   `bun:"note,type:text"`                                       // Text of the note.
 	ActivationDate       time.Time `bun:"activation_date,type:datetime"`                        // Starting date of the note.
 	ExpirationDate       time.Time `bun:"expiration_date,type:datetime"`                        // Expiration date of the note.
 	EntryDate            time.Time `bun:"entry_date,type:datetime"`                             // Entry date of the note.
-	NotepadClassId       string    `bun:"notepad_class_id,type:varchar(8),nullzero"`            // A user-defined ID code which can be associated with an invoice note
+	NotepadClassId       *string   `bun:"notepad_class_id,type:varchar(8)"`                     // A user-defined ID code which can be associated with an invoice note
 	Mandatory            string    `bun:"mandatory,type:char(1)"`                               // Is the note mandatory?
 	DeleteFlag           string    `bun:"delete_flag,type:char(1)"`                             // Indicates whether this record is logically deleted
 	DateCreated          time.Time `bun:"date_created,type:datetime"`                           // Indicates the date/time this record was created.

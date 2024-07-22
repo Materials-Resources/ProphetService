@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -15,5 +15,5 @@ type OeLineTax struct {
 	DateCreated      time.Time `bun:"date_created,type:datetime"`                                    // Indicates the date/time this record was created.
 	DateLastModified time.Time `bun:"date_last_modified,type:datetime"`                              // Indicates the date/time this record was last modified.
 	LastMaintainedBy string    `bun:"last_maintained_by,type:varchar(30),default:(user_name(null))"` // ID of the user who last maintained this record
-	LineType         int32     `bun:"line_type,type:int,nullzero"`                                   // Indicates any special type of oe_line sub-type, such as a part or labor line.
+	LineType         *int32    `bun:"line_type,type:int"`                                            // Indicates any special type of oe_line sub-type, such as a part or labor line.
 }

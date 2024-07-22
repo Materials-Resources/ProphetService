@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -28,6 +28,6 @@ type Ten99Balances struct {
 	OrdindaryDividends      float64   `bun:"ordindary_dividends,type:decimal(19,9),default:(0)"`        // Ordindary distributions year balance
 	AttorneyProceeds        float64   `bun:"attorney_proceeds,type:decimal(19,4),default:(0)"`          // Gross proceeds paid to an attorney for 1099 tax form
 	InterestIncome          float64   `bun:"interest_income,type:decimal(19,9),default:((0))"`          // Interest income yearly balance reported on 1099-INT
-	IsrTaxWithheld          float64   `bun:"isr_tax_withheld,type:decimal(19,9),nullzero"`              // Custom (F30860): ISR tax amount withheld from vendor invoices
+	IsrTaxWithheld          *float64  `bun:"isr_tax_withheld,type:decimal(19,9)"`                       // Custom (F30860): ISR tax amount withheld from vendor invoices
 	QualifiedDividends      float64   `bun:"qualified_dividends,type:decimal(19,9),default:((0))"`      // Qualified Dividends for 1099-DIV
 }

@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -9,7 +9,7 @@ type ItemCatalogDef struct {
 	bun.BaseModel     `bun:"table:item_catalog_def"`
 	ItemCatalogDefUid int32     `bun:"item_catalog_def_uid,type:int,autoincrement,identity,pk"`      // Unique identifier of each record
 	ColumnId          string    `bun:"column_id,type:varchar(255)"`                                  // Two letter identifier for item_catalog column
-	ColumnName        string    `bun:"column_name,type:varchar(255),nullzero"`                       // User-defined column name
+	ColumnName        *string   `bun:"column_name,type:varchar(255)"`                                // User-defined column name
 	ItemSearchFlag    string    `bun:"item_search_flag,type:char(1),default:('N')"`                  // Indicates whether to include column in item search popup
 	DisplayColumnId   string    `bun:"display_column_id,type:varchar(255)"`                          // Column ID displayed to the user
 	RowStatusFlag     int32     `bun:"row_status_flag,type:int,default:((704))"`                     // Status of each record

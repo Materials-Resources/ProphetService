@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -34,6 +34,6 @@ type DemandPatternCriteria struct {
 	LastMaintainedBy          string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
 	WarnIfTrendExceedsPercent float64   `bun:"warn_if_trend_exceeds_percent,type:decimal(19,9)"`             // Flag items identified as trend items when their average trend percent change is greater than this value.
 	RowStatusFlag             int32     `bun:"row_status_flag,type:int,default:((704))"`                     // Current status of this criteria.
-	BuyerId                   string    `bun:"buyer_id,type:varchar(16),nullzero"`                           // Custom F68622: Optional buyer ID criteria to limit items by buyer.
+	BuyerId                   *string   `bun:"buyer_id,type:varchar(16)"`                                    // Custom F68622: Optional buyer ID criteria to limit items by buyer.
 	ConsiderSporadicFlag      string    `bun:"consider_sporadic_flag,type:char(1),default:('Y')"`            // Sporadic Demand Flag
 }

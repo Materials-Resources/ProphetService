@@ -1,4 +1,4 @@
-package gen
+package prophet
 
 import (
 	"github.com/uptrace/bun"
@@ -18,6 +18,6 @@ type ItemCategoryXInvMast struct {
 	DateLastModified        time.Time `bun:"date_last_modified,type:datetime,default:(getdate())"`         // Date and time the record was modified
 	LastMaintainedBy        string    `bun:"last_maintained_by,type:varchar(255),default:(suser_sname())"` // User who last changed the record
 	DisplayDesc             string    `bun:"display_desc,type:varchar(255)"`                               // Item description - overrides inv_mast.item_desc in category context
-	Comments                string    `bun:"comments,type:varchar(255),nullzero"`                          // Additional user comments.
-	AlternateCodeUid        int32     `bun:"alternate_code_uid,type:int,nullzero"`                         // Unique identifier for an alternate code.
+	Comments                *string   `bun:"comments,type:varchar(255)"`                                   // Additional user comments.
+	AlternateCodeUid        *int32    `bun:"alternate_code_uid,type:int"`                                  // Unique identifier for an alternate code.
 }
