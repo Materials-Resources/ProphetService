@@ -91,8 +91,8 @@ func (m *ProductGroupModel) Create(ctx context.Context, pg *domain.ProductGroup)
 			CompanyId:        m.defaultValues.CompanyId,
 			AssetAccountNo:   m.defaultValues.AssetAccountNo,
 			DeleteFlag:       m.defaultValues.DeleteFlag,
-			RevenueAccountNo: m.defaultValues.RevenueAccountNo,
-			CosAccountNo:     m.defaultValues.CosAccountNo,
+			RevenueAccountNo: &m.defaultValues.RevenueAccountNo,
+			CosAccountNo:     &m.defaultValues.CosAccountNo,
 			LastMaintainedBy: m.defaultValues.LastMaintainedBy,
 		},
 	}

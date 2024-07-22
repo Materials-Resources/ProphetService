@@ -32,13 +32,16 @@ type invLocDefaultValues struct {
 }
 
 func (m *InvLoc) toProductDomain(d *domain.Product) {
-	d.StockQuantity = m.QtyOnHand
+	if m.QtyOnHand != nil {
+		d.StockQuantity = *m.QtyOnHand
+
+	}
 	if m.InvMast != nil {
 		d.Uid = strconv.Itoa(int(m.InvMast.InvMastUid))
 		d.Sn = &m.InvMast.ItemId
 		d.Name = &m.InvMast.ItemDesc
-		d.Description = &m.InvMast.ExtendedDesc
-		d.ProductGroupSn = &m.ProductGroupId
+		d.Description = m.InvMast.ExtendedDesc
+		d.ProductGroupSn = m.ProductGroupId
 	}
 
 	if m.ProductGroup != nil {
@@ -174,7 +177,7 @@ func (m *InvLocModel) Update(ctx context.Context, product *domain.Product) error
 	q := m.bun.NewUpdate().Model(rec).WherePK()
 
 	if product.ProductGroupSn != nil {
-		rec.ProductGroupId = *product.ProductGroupSn
+		rec.ProductGroupId = product.ProductGroupSn
 	}
 	_, err = q.Exec(ctx)
 	if err != nil {
