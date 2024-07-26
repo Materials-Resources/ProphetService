@@ -20,6 +20,7 @@ func (c *EventConsumer) ConsumeDeleteProduct(
 	var productRecord ProductRecord
 	err := c.serde.Decode(rec.Value, &productRecord)
 	if err != nil {
+		return err
 	}
 	err = deleteProduct(ctx, productRecord.Uid)
 	if err != nil {

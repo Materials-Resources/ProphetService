@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/materials-resources/s-prophet/config"
 	"log"
+	"os"
 
 	"github.com/materials-resources/s-prophet/app"
 	_ "github.com/materials-resources/s-prophet/internal/billing"
@@ -18,14 +19,20 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cPath := rootCmd.PersistentFlags().Lookup("config").Value
 
-		c := config.NewConfig(cPath.String())
+		c, err := config.NewConfig(cPath.String())
+		if err != nil {
+			log.Fatalf("failed to read config")
+		}
 
 		a, err := app.NewApp(c)
 		if err != nil {
-			log.Fatalf("failed to intialize app: %v", err)
+			os.Exit(1)
 		}
 
-		a.Start()
+		err = a.Start()
+		if err != nil {
+			a.Logger.Fatal().Err(err).Msg("failed to start app")
+		}
 		defer a.Stop()
 	},
 }

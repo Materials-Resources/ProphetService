@@ -88,7 +88,7 @@ type Registry struct {
 }
 
 func NewRegistry(a *app.App) *Registry {
-	cl, err := sr.NewClient(sr.URLs(a.Config.Kafka.Registry...))
+	cl, err := sr.NewClient(sr.URLs(a.Config().Kafka.Registry...))
 	if err != nil {
 		fmt.Println(err)
 	}

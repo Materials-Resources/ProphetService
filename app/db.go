@@ -14,11 +14,11 @@ import (
 
 func (a *App) newBun() {
 	query := url.Values{}
-	query.Add("database", a.Config.Database.Name)
+	query.Add("database", a.conf.Database.Name)
 	u := &url.URL{
 		Scheme:   "sqlserver",
-		User:     url.UserPassword(a.Config.Database.User, a.Config.Database.Password),
-		Host:     a.Config.Database.Host,
+		User:     url.UserPassword(a.conf.Database.User, a.conf.Database.Password),
+		Host:     a.conf.Database.Host,
 		RawQuery: query.Encode(),
 	}
 
@@ -28,11 +28,11 @@ func (a *App) newBun() {
 	)
 
 	if err != nil {
-		a.Logger().Fatal().Err(err).Msg("could not connect to database")
+		a.Logger.Fatal().Err(err).Msg("could not connect to database")
 	}
 
 	if err := db.Ping(); err != nil {
-		a.Logger().Fatal().Err(err).Msg("could not ping database")
+		a.Logger.Fatal().Err(err).Msg("could not ping database")
 	}
 
 	bunDb := bun.NewDB(
@@ -40,12 +40,12 @@ func (a *App) newBun() {
 		mssqldialect.New(),
 	)
 
-	a.Logger().Info().Str("db", query.Get("database")).Str("host", u.Hostname()).Msg("connected to database")
+	a.Logger.Info().Str("db", query.Get("database")).Str("host", u.Hostname()).Msg("connected to database")
 
 	registerBunOtelTracer(bunDb, a.GetTP())
 
-	if a.Config.Environment == config.EnvironmentDevelopment {
-		a.Logger().Info().Msg("registering bun debug hooks")
+	if a.conf.Environment == config.EnvironmentDevelopment {
+		a.Logger.Info().Msg("registering bun debug hooks")
 		bunDb.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	}
 

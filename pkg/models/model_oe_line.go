@@ -330,6 +330,9 @@ func (m *OeLineModel) Create(ctx context.Context, params CreateOeLineParams) (*O
 	}
 
 	err = m.generateOeLineUid(ctx, &oeLine.OeLineUid)
+	if err != nil {
+		return nil, err
+	}
 
 	err = m.Insert(ctx, oeLine)
 	if err != nil {

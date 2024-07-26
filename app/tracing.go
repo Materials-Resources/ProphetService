@@ -14,14 +14,14 @@ import (
 )
 
 // newTracer creates a new tracer provider and sets it on the App.
-func (a *App) newTracer() *tracesdk.TracerProvider {
+func (a *App) newTraceProvider() error {
 
 	ctx := context.Background()
 
 	exp, err := otlptracegrpc.New(ctx, otlptracegrpc.WithInsecure(), otlptracegrpc.WithEndpoint("localhost:4317"))
 
 	if err != nil {
-		a.Logger().Err(err).Msg("could not create tracing exporter")
+		return err
 	}
 
 	tp := tracesdk.NewTracerProvider(
@@ -31,8 +31,8 @@ func (a *App) newTracer() *tracesdk.TracerProvider {
 		tracesdk.WithResource(
 			resource.NewWithAttributes(
 				semconv.SchemaURL,
-				semconv.ServiceNameKey.String(a.Config.Observability.Service),
-				attribute.String("environment", a.Config.Environment),
+				semconv.ServiceNameKey.String(a.conf.Observability.Service),
+				attribute.String("environment", a.conf.Environment),
 			),
 		),
 	)
@@ -44,13 +44,14 @@ func (a *App) newTracer() *tracesdk.TracerProvider {
 		),
 	)
 
-	return tp
+	a.traceProvider = tp
+	return nil
 
 }
 
 // GetTP returns initialized instance of tracesdk.TracerProvider.
 func (a *App) GetTP() *tracesdk.TracerProvider {
-	return a.tp
+	return a.traceProvider
 }
 
 func (a *App) CreateTracer(name string) trace.Tracer {

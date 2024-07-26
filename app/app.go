@@ -2,10 +2,12 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"github.com/materials-resources/s-prophet/config"
 	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/rs/zerolog"
 	"net"
+	"os"
 	"sync"
 
 	"github.com/uptrace/bun"
@@ -16,60 +18,60 @@ import (
 )
 
 type App struct {
-	Config *config.Config
+	conf *config.Config
 
 	server     *grpc.Server
 	serverOnce sync.Once
 
 	traceProvider *tracesdk.TracerProvider
-
-	tp *tracesdk.TracerProvider
-	mp *metric.MeterProvider
+	mp            *metric.MeterProvider
 
 	bunOnce sync.Once
 	bun     *bun.DB
 
-	log *zerolog.Logger
+	Logger *zerolog.Logger
 }
 
 func NewApp(config *config.Config) (*App, error) {
 
 	a := &App{
-		Config: config,
+		conf: config,
 	}
 
-	a.traceProvider = a.newTracer()
+	a.initLog()
 
-	a.tp = a.newTracer()
-
-	a.newLogger()
-
-	otel.SetTracerProvider(a.tp)
+	err := a.newTraceProvider()
+	if err != nil {
+		return nil, err
+	}
+	otel.SetTracerProvider(a.traceProvider)
 
 	return a, nil
 }
 
-func (a *App) Start() {
+func (a *App) Start() error {
 	ctx := context.Background()
 
 	if err := onStart.Run(ctx, a); err != nil {
-		a.Logger().Fatal().Err(err).Msg("failed to run onStart hooks")
+		a.Logger.Fatal().Err(err).Msg("failed to run onStart hooks")
 	}
 
 	lis, err := net.Listen(
 		"tcp",
 		"0.0.0.0:50058",
 	)
+
 	if err != nil {
-		a.Logger().Fatal().Err(err).Msg("failed to create listener")
+		a.Logger.Fatal().Err(err).Msg("failed to create listener")
 
 	}
 
-	a.log.Info().Str("addr", lis.Addr().String()).Msg("listening")
 	err = a.GetGrpcServer().Serve(lis)
 	if err != nil {
-		a.Logger().Fatal().Err(err).Msg("failed to start server")
+		return fmt.Errorf("failed to start server: %w", err)
 	}
+
+	return nil
 
 }
 
@@ -85,6 +87,10 @@ func (a *App) GetGrpcServer() *grpc.Server {
 		},
 	)
 	return a.server
+}
+
+func (a *App) Config() *config.Config {
+	return a.conf
 }
 
 // GetDB returns an initialized instance of  bun.DB.
@@ -105,4 +111,13 @@ func (a *App) GetModels() models.Models {
 }
 func (a *App) GetMP() *metric.MeterProvider {
 	return a.mp
+}
+
+func (a *App) initLog() {
+
+	output := zerolog.ConsoleWriter{Out: os.Stderr}
+
+	lg := zerolog.New(output).With().Timestamp().Logger()
+
+	a.Logger = &lg
 }

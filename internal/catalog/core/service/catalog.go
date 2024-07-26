@@ -43,7 +43,7 @@ func (c Catalog) UpdateGroup(ctx context.Context, productGroup *domain.ProductGr
 
 	valid := v.Valid()
 	if !valid {
-		return errors.New(fmt.Sprintf("%s", v.Errors))
+		return fmt.Errorf("%s", v.Errors)
 
 	}
 
@@ -56,7 +56,7 @@ func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product) err
 	domain.ValidateProductUpdate(v, *product)
 
 	if !v.Valid() {
-		return errors.New(fmt.Sprintf("%s", v.Errors))
+		return fmt.Errorf("%s", v.Errors)
 
 	}
 
@@ -91,7 +91,7 @@ func (c Catalog) ClerkCreateGroup(ctx context.Context, productGroup *domain.Prod
 	domain.ValidateProductGroupCreate(v, *productGroup)
 
 	if !v.Valid() {
-		return errors.New(fmt.Sprintf("%s", v.Errors))
+		return fmt.Errorf("%s", v.Errors)
 	}
 
 	return c.localModel.ProductGroup.Create(ctx, productGroup)

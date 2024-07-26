@@ -81,7 +81,6 @@ func oePickTicketToShipment(rec *oePickTicket) *domain.Shipment {
 		shipment.ContactId = rec.OeHdr.ContactId.String
 
 		if rec.OeHdr.Contact != nil {
-			fmt.Println("Contact: ", rec.OeHdr.Contact.FirstName, rec.OeHdr.Contact.LastName)
 			shipment.ContactName = fmt.Sprintf("%s %s", rec.OeHdr.Contact.FirstName, rec.OeHdr.Contact.LastName)
 		}
 	}

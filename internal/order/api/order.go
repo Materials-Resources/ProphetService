@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"github.com/materials-resources/s-prophet/internal/order/service"
 	"strconv"
@@ -56,8 +55,6 @@ func (s OrderApi) ClerkCreateQuote(ctx context.Context, request *rpc.ClerkCreate
 	}
 
 	//err := s.controller.ClerkCreateQuote(ctx, order)
-
-	fmt.Println(order.Id)
 	return &rpc.ClerkCreateQuoteResponse{
 		Id: order.Id,
 	}, nil

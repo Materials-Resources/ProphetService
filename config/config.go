@@ -1,11 +1,11 @@
 package config
 
 import (
+	"fmt"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/v2"
-	"log"
 	"strings"
 )
 
@@ -40,22 +40,26 @@ type KafkaConfig struct {
 }
 
 // NewConfig reads from a config file or environment variables starting with PROPHET_ and returns a Config struct
-func NewConfig(configPath string) *Config {
+func NewConfig(configPath string) (*Config, error) {
 
 	var k = koanf.New(".")
 
 	if err := k.Load(file.Provider(configPath), yaml.Parser()); err != nil {
-		log.Fatalf("error loading config file: %v", err)
+		return nil, fmt.Errorf("error loading config file: %w", err)
 	}
 
-	k.Load(env.Provider("PROPHET_", ".", func(s string) string {
+	if err := k.Load(env.Provider("PROPHET_", ".", func(s string) string {
 		return strings.Replace(strings.ToLower(strings.TrimPrefix(s, "PROPHET_")), "_", ".", -1)
-	}), nil)
+	}), nil); err != nil {
+		return nil, fmt.Errorf("error loading env vars: %w", err)
+	}
 
 	var config Config
 
-	k.Unmarshal("", &config)
+	if err := k.Unmarshal("", &config); err != nil {
+		return nil, fmt.Errorf("error unmarshalling config: %w", err)
+	}
 
-	return &config
+	return &config, nil
 
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func (a *App) newGrpcServer() *grpc.Server {
-	handler := grpc.StatsHandler(otelgrpc.NewServerHandler(otelgrpc.WithTracerProvider(a.tp)))
+	handler := grpc.StatsHandler(otelgrpc.NewServerHandler(otelgrpc.WithTracerProvider(a.traceProvider)))
 
 	s := grpc.NewServer(handler)
 	reflection.Register(s)

@@ -18,7 +18,7 @@ func NewServerAdapter(app *app.App) *ServerAdapter {
 		api: a,
 	}
 	billingS.registerService(app.GetGrpcServer())
-	app.Logger().Info().Msg("Billing Service registered")
+	app.Logger.Info().Msg("Billing Service registered")
 
 	return &ServerAdapter{
 		server: app.GetGrpcServer(),

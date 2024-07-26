@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -73,8 +72,6 @@ defaults:
 			if err != nil {
 				t.Fatal(err)
 			}
-
-			fmt.Println(file.Name())
 			defer os.Remove(file.Name())
 
 			_, err = file.Write(tc.input)
@@ -82,7 +79,11 @@ defaults:
 				t.Fatal(err)
 			}
 
-			got := NewConfig(file.Name())
+			got, err := NewConfig(file.Name())
+			if (err != nil) != tc.wantErr {
+				t.Errorf("NewConfig() error = %v, wantErr %v", err, tc.wantErr)
+				return
+			}
 			if !reflect.DeepEqual(got, tc.wantConfig) {
 				t.Errorf("NewConfig() got = %v, want %v", got, tc.wantConfig)
 			}
