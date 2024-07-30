@@ -10,6 +10,11 @@ import (
 )
 
 var onStart appHooks
+var onSetup appHooks
+
+func OnSetup(name string, fn HookFunc) {
+	onSetup.Add(newHook(name, fn))
+}
 
 func OnStart(name string, fn HookFunc) {
 	onStart.Add(newHook(name, fn))

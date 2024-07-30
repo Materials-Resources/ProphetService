@@ -9,13 +9,6 @@ import (
 	"sync"
 )
 
-const (
-	UpdateGroupTopic   = "catalog_group_update"
-	CreateGroupTopic   = "catalog_group_create"
-	UpdateProductTopic = "product_update"
-	DeleteProductTopic = "product_delete"
-)
-
 type Manager struct {
 	app   *app.App
 	Serde *sr.Serde
@@ -29,12 +22,7 @@ func NewManager(app *app.App) (*Manager, error) {
 		Serde: &sr.Serde{},
 		app:   app,
 	}
-	registry := NewRegistry(app)
 
-	err := registry.RegisterSchemas(manager.Serde)
-	if err != nil {
-		return nil, err
-	}
 	return manager, nil
 }
 

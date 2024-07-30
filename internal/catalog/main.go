@@ -9,16 +9,18 @@ import (
 	"github.com/materials-resources/s-prophet/internal/catalog/core/event/consume"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/event/produce"
 	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
-	"github.com/twmb/franz-go/pkg/kgo"
 )
 
 func init() {
 	app.OnStart(
-		"catalogService.init", func(ctx context.Context, a *app.App) error {
-
-			kgo.NewClient()
+		"catalog.start", func(ctx context.Context, a *app.App) error {
 
 			manager, err := event.NewManager(a)
+			if err != nil {
+				return err
+			}
+
+			err = manager.RegisterSchemasWithSerde()
 			if err != nil {
 				return err
 			}
@@ -39,4 +41,22 @@ func init() {
 			return nil
 		},
 	)
+
+	app.OnSetup("catalog.setup", func(ctx context.Context, a *app.App) error {
+		manager, err := event.NewManager(a)
+		if err != nil {
+			return err
+		}
+		err = manager.RegisterSchemasWithRegistry()
+		if err != nil {
+			return err
+		}
+
+		err = manager.RegisterTopics()
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 }

@@ -8,7 +8,7 @@ import (
 
 func init() {
 	app.OnStart(
-		"catalogService.init", func(ctx context.Context, a *app.App) error {
+		"catalogService.start", func(ctx context.Context, a *app.App) error {
 			grpc.NewServerAdapter(a)
 
 			return nil

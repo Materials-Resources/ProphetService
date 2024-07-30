@@ -11,7 +11,7 @@ import (
 
 func init() {
 	app.OnStart(
-		"OrderService.init", func(ctx context.Context, a *app.App) error {
+		"order.start", func(ctx context.Context, a *app.App) error {
 			rpc.RegisterOrderServiceServer(
 				a.GetGrpcServer(),
 				api.NewOrderApi(*service.NewOrderController(data.NewModels(a.GetDB()))))

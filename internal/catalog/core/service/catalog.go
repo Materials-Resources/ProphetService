@@ -64,8 +64,6 @@ func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product) err
 }
 
 func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product) error {
-	ctx, span := c.tracer.Start(ctx, "catalog.ClerkUpdateGroup")
-	defer span.End()
 
 	// TODO: preform authorization checks on requester
 
@@ -173,20 +171,6 @@ func (c Catalog) SetPrimaryProductSupplier(
 		})
 
 	return err
-}
-
-func (c Catalog) RegisterWorkers() {
-
-	//cg := consumer.NewConsumerGroup()
-	//
-	//cg.RegisterWorkers(
-	//	consumer.NewWorker(
-	//		DeleteProductTopic, func(rec *kgo.Record) error {
-	//			return c.event.Consumer.ConsumeDeleteProduct(context.Background(), rec, c.DeleteProduct)
-	//
-	//		}))
-	//
-	//cg.Start([]string{"localhost:19092"}, "18")
 }
 
 func (c Catalog) DeleteProduct(ctx context.Context, uid string) error {

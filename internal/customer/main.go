@@ -11,7 +11,7 @@ import (
 
 func init() {
 	app.OnStart(
-		"CustomerService.init", func(ctx context.Context, a *app.App) error {
+		"customer.start", func(ctx context.Context, a *app.App) error {
 			m := models.NewModels(a.GetDB())
 			svc.RegisterCustomerServiceServer(
 				a.GetGrpcServer(),

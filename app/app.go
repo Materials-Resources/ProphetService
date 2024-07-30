@@ -49,6 +49,17 @@ func NewApp(config *config.Config) (*App, error) {
 	return a, nil
 }
 
+// Setup runs the setup hooks.
+func (a *App) Setup() error {
+	ctx := context.Background()
+
+	if err := onSetup.Run(ctx, a); err != nil {
+		a.Logger.Fatal().Err(err).Msg("failed to run onSetup hooks")
+	}
+
+	return nil
+}
+
 func (a *App) Start() error {
 	ctx := context.Background()
 
@@ -77,7 +88,7 @@ func (a *App) Start() error {
 
 // Stop stops the application.
 func (a *App) Stop() {
-	a.GetGrpcServer().Stop()
+	a.server.Stop()
 }
 
 func (a *App) GetGrpcServer() *grpc.Server {

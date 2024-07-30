@@ -10,7 +10,7 @@ import (
 
 func init() {
 	app.OnStart(
-		"InventoryService.init", func(ctx context.Context, a *app.App) error {
+		"inventory.start", func(ctx context.Context, a *app.App) error {
 			a.Logger.Info().Msg("Initializing Inventory Service")
 			svc.RegisterInventoryServiceServer(
 				a.GetGrpcServer(),

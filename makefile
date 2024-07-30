@@ -89,16 +89,23 @@ lint:
 # ==================================================================================== #
 # Application
 # ==================================================================================== #
-.PHONY: app/build
-## app/build: Build the application
-app/build:
-	go build -o bin/app .
 
 .PHONY: app/run
 ## app/run: Run the application
-app/run:
+app/serve:
 	set OTEL_EXPORTER_OTLP_INSECURE=true
-	go run . serve -c config.yml
+	go run ./cmd --config config.yaml serve
+
+.PHONY: app/setup
+## app/setup: Setup the application
+app/setup:
+	set OTEL_EXPORTER_OTLP_INSECURE=true
+	go run ./cmd --config config.yaml setup
+
+
+# ==================================================================================== #
+# Build
+# ==================================================================================== #
 
 .PHONY: build
 ## build: Build the application

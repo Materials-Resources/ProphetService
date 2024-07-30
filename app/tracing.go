@@ -18,7 +18,7 @@ func (a *App) newTraceProvider() error {
 
 	ctx := context.Background()
 
-	exp, err := otlptracegrpc.New(ctx, otlptracegrpc.WithInsecure(), otlptracegrpc.WithEndpoint("localhost:4317"))
+	exp, err := otlptracegrpc.New(ctx, otlptracegrpc.WithInsecure())
 
 	if err != nil {
 		return err

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hamba/avro/v2"
-	"github.com/materials-resources/s-prophet/app"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 	"github.com/twmb/franz-go/pkg/sr"
 )
@@ -14,8 +13,26 @@ var (
 	ErrDecodingRecord = errors.New("could not decode record")
 )
 
-const (
-	productSchema = `{
+type ProductRecord struct {
+	Uid            string  `avro:"uid"`
+	Name           *string `avro:"name"`
+	Description    *string `avro:"description"`
+	ProductGroupSn *string `avro:"product_group_sn"`
+}
+
+type ProductGroupRecord struct {
+	Sn   string  `avro:"sn"`
+	Name *string `avro:"name"`
+}
+
+var schemas = []struct {
+	name         string
+	schema       string
+	schemaStruct any
+}{
+	{
+		name: "product",
+		schema: `{
 	"type": "record",
 	"name": "product",
 	"namespace": "org.hamba.avro",
@@ -25,14 +42,22 @@ const (
 		{"name": "description", "type": ["string", "null"]},
 		{"name": "product_group_sn", "type": ["string", "null"]}
 	]
-}`
-)
-
-type ProductRecord struct {
-	Uid            string  `avro:"uid"`
-	Name           *string `avro:"name"`
-	Description    *string `avro:"description"`
-	ProductGroupSn *string `avro:"product_group_sn"`
+}`,
+		schemaStruct: ProductRecord{},
+	},
+	{
+		name: "product_group",
+		schema: `{
+	"type": "record",
+	"name": "product_group",
+	"namespace": "org.materialsresources.avro",
+	"fields" : [
+		{"name": "sn", "type": "string"},
+		{"name": "name", "type": ["string", "null"]}
+	]
+}`,
+		schemaStruct: ProductGroupRecord{},
+	},
 }
 
 func ProductRecordFromDomain(product *domain.Product) ProductRecord {
@@ -53,21 +78,6 @@ func ProductDomainFromRecord(record ProductRecord) domain.Product {
 	}
 }
 
-const productGroupSchema = `{
-	"type": "record",
-	"name": "product_group",
-	"namespace": "org.materialsresources.avro",
-	"fields" : [
-		{"name": "sn", "type": "string"},
-		{"name": "name", "type": ["string", "null"]}
-	]
-}`
-
-type ProductGroupRecord struct {
-	Sn   string  `avro:"sn"`
-	Name *string `avro:"name"`
-}
-
 func ProductGroupRecordFromDomain(productGroup *domain.ProductGroup) ProductGroupRecord {
 	return ProductGroupRecord{
 		Sn:   productGroup.Sn,
@@ -83,52 +93,63 @@ func ProductGroupDomainFromRecord(record *ProductGroupRecord) domain.ProductGrou
 
 }
 
-type Registry struct {
-	client *sr.Client
-}
-
-func NewRegistry(a *app.App) *Registry {
-	cl, err := sr.NewClient(sr.URLs(a.Config().Kafka.Registry...))
+// RegisterSchemasWithRegistry registers schemas with the kafka schema registry
+func (m *Manager) RegisterSchemasWithRegistry() error {
+	cl, err := sr.NewClient(sr.URLs(m.app.Config().Kafka.Registry...))
 	if err != nil {
-		fmt.Println(err)
-	}
-	return &Registry{client: cl}
-}
-
-func (r *Registry) RegisterSchemas(serde *sr.Serde) error {
-	err := r.registerSchema("product", productSchema, ProductRecord{}, serde)
-	if err != nil {
-		return err
+		return fmt.Errorf("could not create schema registry client: %w", err)
 	}
 
-	err = r.registerSchema("product_group", productGroupSchema, ProductGroupRecord{}, serde)
-	if err != nil {
-		return err
-	}
-	return nil
-
-}
-func (r *Registry) registerSchema(name, schema string, schemaStruct any, serde *sr.Serde) error {
-	ss, err := r.client.CreateSchema(
-		context.Background(), name, sr.Schema{
-			Schema: schema,
+	for _, s := range schemas {
+		ctx := context.Background()
+		_, err := cl.CreateSchema(ctx, s.name, sr.Schema{
 			Type:   sr.TypeAvro,
+			Schema: s.schema,
 		})
-	if err != nil {
-		fmt.Println(err)
+		if err != nil {
+			return fmt.Errorf("could not create schema: %w", err)
+		}
 	}
-	avroSchema, err := avro.Parse(schema)
-	if err != nil {
-		fmt.Println(err)
-	}
-	serde.Register(
-		ss.ID, schemaStruct, sr.EncodeFn(
-			func(v any) ([]byte, error) {
-				return avro.Marshal(avroSchema, v)
-			}), sr.DecodeFn(
-			func(bytes []byte, a any) error {
-				return avro.Unmarshal(avroSchema, bytes, a)
-			}),
-	)
+
 	return nil
+
+}
+
+// RegisterSchemasWithSerde associates schemas with serde
+func (m *Manager) RegisterSchemasWithSerde() error {
+
+	// Create a new connection to the schema registry
+	cl, err := sr.NewClient(sr.URLs(m.app.Config().Kafka.Registry...))
+	if err != nil {
+		return fmt.Errorf("could not create schema registry client: %w", err)
+	}
+
+	for _, s := range schemas {
+		ctx := context.Background()
+
+		// Lookup the schema in the registry
+		ss, err := cl.LookupSchema(ctx, s.name, sr.Schema{
+			Type:   sr.TypeAvro,
+			Schema: s.schema,
+		})
+
+		avroSchema, err := avro.Parse(s.schema)
+		if err != nil {
+			return fmt.Errorf("could not parse schema: %w", err)
+		}
+
+		// Register the schema with the serde
+		m.Serde.Register(
+			ss.ID, s.schemaStruct, sr.EncodeFn(
+				func(v any) ([]byte, error) {
+					return avro.Marshal(avroSchema, v)
+				}), sr.DecodeFn(
+				func(bytes []byte, a any) error {
+					return avro.Unmarshal(avroSchema, bytes, a)
+				}),
+		)
+
+	}
+	return nil
+
 }

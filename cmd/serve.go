@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"github.com/materials-resources/s-prophet/config"
