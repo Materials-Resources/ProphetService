@@ -110,8 +110,7 @@ app/setup:
 .PHONY: build
 ## build: Build the application
 build:
-	CGO_ENABLED=0 go build -trimpath -o ./bin/server_$(GOOS)_$(GOARCH)$(EXTENSION) \
-    		$(BUILD_INFO) -tags $(GO_BUILD_TAGS) ./cmd
+	CGO_ENABLED=0 go build -trimpath -o ./bin/server_$(GOOS)_$(GOARCH)$(EXTENSION) ./cmd
 .PHONY: build/linux_amd64
 build/linux_amd64:
 	GOOS=linux GOARCH=amd64 $(MAKE) build
