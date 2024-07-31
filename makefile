@@ -94,6 +94,7 @@ lint:
 ## app/run: Run the application
 app/serve:
 	set OTEL_EXPORTER_OTLP_INSECURE=true
+	set OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 	go run ./cmd --config config.yaml serve
 
 .PHONY: app/setup

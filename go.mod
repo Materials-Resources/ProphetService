@@ -13,14 +13,15 @@ require (
 	github.com/materials-resources/s-prophet/models/21-1-4559-345 v0.0.8
 	github.com/microsoft/go-mssqldb v1.7.2
 	github.com/rs/zerolog v1.33.0
-	github.com/spf13/cobra v1.8.1
 	github.com/twmb/franz-go v1.17.0
+	github.com/twmb/franz-go/pkg/kadm v1.13.0
 	github.com/twmb/franz-go/pkg/sr v1.0.0
 	github.com/twmb/franz-go/plugin/kotel v1.5.0
 	github.com/uptrace/bun v1.2.1
 	github.com/uptrace/bun/dialect/mssqldialect v1.2.1
 	github.com/uptrace/bun/extra/bundebug v1.2.1
 	github.com/uptrace/bun/extra/bunotel v1.2.1
+	github.com/urfave/cli/v2 v2.27.3
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.53.0
 	go.opentelemetry.io/otel v1.28.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.28.0
@@ -45,7 +46,6 @@ require (
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
-	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
@@ -59,12 +59,9 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
-	github.com/twmb/franz-go/pkg/kadm v1.13.0 // indirect
 	github.com/twmb/franz-go/pkg/kmsg v1.8.0 // indirect
 	github.com/uptrace/opentelemetry-go-extra/otelsql v0.3.1 // indirect
-	github.com/urfave/cli/v2 v2.27.3 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect

@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: 'broker-0'
-          image: 'docker.redpanda.com/redpandadata/redpanda:v24.1.9'
+          image: 'docker.redpanda.com/redpandadata/redpanda:v24.2.1'
           args:
             - redpanda
             - start
@@ -33,9 +33,10 @@ spec:
             - containerPort: 18082
             - containerPort: 19092
               hostPort: 19092
-            - containerPort: 19644
+            - containerPort: 9644
+              hostPort: 9644
         - name: 'console'
-          image: 'docker.redpanda.com/redpandadata/console:v2.6.0'
+          image: 'docker.redpanda.com/redpandadata/console:v2.6.1'
           command:
             - /bin/sh
           args:
