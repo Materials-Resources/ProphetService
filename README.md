@@ -16,14 +16,6 @@ Container images are built for each release tag and can be pulled from the [GitH
 
 Helm charts are provided in the deployment folder and can be installed using the following commands:
 
-
-# Developing
-
-`make dev/setup`: This will install dependencies required for development.
-
-`make qc`: Before pushing changes, run this to ensure that the code is error free and formatted correctly.
-
-
 ### Protobuf
 
 The following proto schemas are used to interact with this microservice:
