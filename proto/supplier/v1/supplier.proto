@@ -1,7 +1,0 @@
-syntax = 'proto3';
-
-package supplier.v1;
-
-option go_package = "github.com/materials-resources/s_prophet/internal/core/model/supplier_v1alpha0";
-
-service SupplierService {}

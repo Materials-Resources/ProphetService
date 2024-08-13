@@ -1,6 +1,6 @@
 module github.com/materials-resources/s-prophet
 
-go 1.22.5
+go 1.22.6
 
 require (
 	github.com/hamba/avro/v2 v2.23.0
@@ -8,20 +8,20 @@ require (
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/knadh/koanf/providers/file v1.0.0
 	github.com/knadh/koanf/v2 v2.1.1
-	github.com/materials-resources/microservices-proto/golang/catalog v0.0.9
-	github.com/materials-resources/microservices-proto/golang/order v0.0.8
+	github.com/materials-resources/microservices-proto/golang/catalog v0.2.4
+	github.com/materials-resources/microservices-proto/golang/order v0.2.7
 	github.com/materials-resources/s-prophet/models/21-1-4559-345 v0.0.8
 	github.com/microsoft/go-mssqldb v1.7.2
 	github.com/rs/zerolog v1.33.0
-	github.com/twmb/franz-go v1.17.0
+	github.com/twmb/franz-go v1.17.1
 	github.com/twmb/franz-go/pkg/kadm v1.13.0
-	github.com/twmb/franz-go/pkg/sr v1.0.0
+	github.com/twmb/franz-go/pkg/sr v1.0.1
 	github.com/twmb/franz-go/plugin/kotel v1.5.0
 	github.com/uptrace/bun v1.2.1
 	github.com/uptrace/bun/dialect/mssqldialect v1.2.1
 	github.com/uptrace/bun/extra/bundebug v1.2.1
 	github.com/uptrace/bun/extra/bunotel v1.2.1
-	github.com/urfave/cli/v2 v2.27.3
+	github.com/urfave/cli/v2 v2.27.4
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.53.0
 	go.opentelemetry.io/otel v1.28.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.28.0

@@ -39,7 +39,8 @@ func (p *Producer) DeleteProduct(ctx context.Context, product *domain.Product) e
 	p.client.Produce(ctx, rec, func(record *kgo.Record, err error) {
 		defer wg.Done()
 		if err != nil {
-			fmt.Printf("record had a produce error: %v\n", err)
+			span := trace.SpanFromContext(ctx)
+			span.RecordError(fmt.Errorf("record had a produce error: %v\n", err))
 		}
 
 	})
@@ -59,7 +60,8 @@ func (p *Producer) UpdateGroup(ctx context.Context, group *domain.ProductGroup) 
 	p.client.Produce(ctx, rec, func(record *kgo.Record, err error) {
 		defer wg.Done()
 		if err != nil {
-			fmt.Printf("record had a produce error: %v\n", err)
+			span := trace.SpanFromContext(ctx)
+			span.RecordError(fmt.Errorf("record had a produce error: %v\n", err))
 		}
 
 	})
@@ -79,7 +81,8 @@ func (p *Producer) UpdateProduct(ctx context.Context, product *domain.Product) e
 	p.client.Produce(ctx, rec, func(record *kgo.Record, err error) {
 		defer wg.Done()
 		if err != nil {
-			fmt.Printf("record had a produce error: %v\n", err)
+			span := trace.SpanFromContext(ctx)
+			span.RecordError(fmt.Errorf("record had a produce error: %v\n", err))
 		}
 
 	})

@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
 	"github.com/uptrace/bun"
 	"sort"
@@ -75,8 +74,6 @@ func (m *InvLocModel) Get(ctx context.Context, uid string) (*domain.Product, err
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(rec)
 
 	productDomain := &domain.Product{}
 	rec.toProductDomain(productDomain)

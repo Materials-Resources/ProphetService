@@ -18,6 +18,35 @@ var (
 	ErrorResourceNotFound = errors.New("resource not found")
 )
 
+type CatalogService interface {
+	ListProducts(ctx context.Context, pagination domain.Pagination) ([]*domain.Product, *domain.PaginationMetadata, error)
+	GetProduct(ctx context.Context, uid string) (*domain.Product, error)
+	// UpdateProduct produces an event to update a Product
+	UpdateProduct(ctx context.Context, product *domain.Product) error
+	DeleteProduct(ctx context.Context, uid string) error
+
+	ListGroups(ctx context.Context) ([]*domain.ProductGroup, error)
+	CreateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+	ReadGroup(ctx context.Context, sn string) (*domain.ProductGroup, error)
+	// UpdateGroup produces an event to update a ProductGroup
+	UpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+
+	// GetProductBySupplierPartNumber returns a Product by the given part number and supplier
+	GetProductBySupplierPartNumber(ctx context.Context, partNumber string, supplier float64) (domain.Product, error)
+
+	// HandleDeleteProduct handles the deletion of a Product
+	HandleDeleteProduct(ctx context.Context, uid string) error
+	// HandleUpdateGroup handles the update of a ProductGroup
+	HandleUpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error
+	// HandleUpdateProduct handles the update of a Product
+	HandleUpdateProduct(ctx context.Context, product *domain.Product) error
+
+	UpdateProductSupplier(ctx context.Context, productSupplier *domain.ProductSupplier) error
+
+	// SetPrimaryProductSupplier sets the primary product supplier
+	SetPrimaryProductSupplier(ctx context.Context, productUid int32, locationId, supplierUid, divisionId float64) error
+}
+
 func NewCatalogService(a *app.App, producer *produce.Producer) Catalog {
 
 	return Catalog{
@@ -29,6 +58,8 @@ func NewCatalogService(a *app.App, producer *produce.Producer) Catalog {
 	}
 }
 
+var _ CatalogService = Catalog{}
+
 type Catalog struct {
 	app           *app.App
 	m             models.Models
@@ -37,7 +68,7 @@ type Catalog struct {
 	eventProducer *produce.Producer
 }
 
-func (c Catalog) UpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
+func (c Catalog) HandleUpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 	v := validator.New()
 	domain.ValidateProductGroupUpdate(v, *productGroup)
 
@@ -50,7 +81,7 @@ func (c Catalog) UpdateGroup(ctx context.Context, productGroup *domain.ProductGr
 	return c.localModel.ProductGroup.Update(ctx, productGroup)
 }
 
-func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product) error {
+func (c Catalog) HandleUpdateProduct(ctx context.Context, product *domain.Product) error {
 	v := validator.New()
 
 	domain.ValidateProductUpdate(v, *product)
@@ -63,7 +94,7 @@ func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product) err
 	return c.localModel.InvLoc.Update(ctx, product)
 }
 
-func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product) error {
+func (c Catalog) UpdateProduct(ctx context.Context, product *domain.Product) error {
 
 	// TODO: preform authorization checks on requester
 
@@ -73,17 +104,17 @@ func (c Catalog) ClerkUpdateProduct(ctx context.Context, product *domain.Product
 	return c.eventProducer.UpdateProduct(ctx, product)
 }
 
-func (c Catalog) ClerkDeleteProduct(ctx context.Context, uid string, deleteMode domain.DeleteMode) error {
+func (c Catalog) HandleDeleteProduct(ctx context.Context, uid string) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c Catalog) ClerkListProducts(ctx context.Context, pagination domain.Pagination) ([]*domain.Product, *domain.PaginationMetadata, error) {
+func (c Catalog) ListProducts(ctx context.Context, pagination domain.Pagination) ([]*domain.Product, *domain.PaginationMetadata, error) {
 	opts := &data.InvLocListOptions{}
 	return c.localModel.InvLoc.List(ctx, opts, pagination)
 }
 
-func (c Catalog) ClerkCreateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
+func (c Catalog) CreateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 	v := validator.New()
 
 	domain.ValidateProductGroupCreate(v, *productGroup)
@@ -95,17 +126,17 @@ func (c Catalog) ClerkCreateGroup(ctx context.Context, productGroup *domain.Prod
 	return c.localModel.ProductGroup.Create(ctx, productGroup)
 }
 
-func (c Catalog) ClerkListGroups(ctx context.Context) ([]*domain.ProductGroup, error) {
+func (c Catalog) ListGroups(ctx context.Context) ([]*domain.ProductGroup, error) {
 	opts := &data.ProductGroupListOptions{}
 	return c.localModel.ProductGroup.List(ctx, opts)
 }
 
-func (c Catalog) ClerkReadGroup(ctx context.Context, sn string) (*domain.ProductGroup, error) {
+func (c Catalog) ReadGroup(ctx context.Context, sn string) (*domain.ProductGroup, error) {
 	return c.localModel.ProductGroup.Get(ctx, sn)
 
 }
 
-func (c Catalog) ClerkUpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
+func (c Catalog) UpdateGroup(ctx context.Context, productGroup *domain.ProductGroup) error {
 
 	ctx, span := c.tracer.Start(ctx, "catalog.ClerkUpdateGroup")
 	defer span.End()
@@ -118,11 +149,7 @@ func (c Catalog) ClerkUpdateGroup(ctx context.Context, productGroup *domain.Prod
 	return c.eventProducer.UpdateGroup(ctx, productGroup)
 }
 
-func (c Catalog) ClerkGetProduct(ctx context.Context, uid string) (*domain.Product, error) {
-	return c.getProduct(ctx, uid)
-}
-
-func (c Catalog) CustomerGetProduct(ctx context.Context, uid string) (*domain.Product, error) {
+func (c Catalog) GetProduct(ctx context.Context, uid string) (*domain.Product, error) {
 	return c.getProduct(ctx, uid)
 }
 
@@ -153,15 +180,16 @@ func (c Catalog) SetPrimaryProductSupplier(
 				ctx, productUid,
 				locationId)
 
+			if err != nil {
+				return err
+			}
+
 			for _, inventorySupplierXLoc := range inventorySupplierXLocs {
 				if inventorySupplierXLoc.InventorySupplierUid == inventorySupplier.InventorySupplierUid {
 					inventorySupplierXLoc.PrimarySupplier = "Y"
 				} else {
 					inventorySupplierXLoc.PrimarySupplier = "N"
 				}
-				fmt.Println(
-					inventorySupplier.InventorySupplierUid, inventorySupplierXLoc.InventorySupplierUid,
-					inventorySupplierXLoc.PrimarySupplier)
 				if err := m.InventorySupplierXLoc.Update(ctx, inventorySupplierXLoc); err != nil {
 					return err
 				}
