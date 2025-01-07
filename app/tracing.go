@@ -32,7 +32,7 @@ func (a *App) newTraceProvider() error {
 			resource.NewWithAttributes(
 				semconv.SchemaURL,
 				semconv.ServiceNameKey.String(a.conf.Observability.Service),
-				attribute.String("environment", a.conf.Environment),
+				attribute.String("environment", a.conf.Environment.String()),
 			),
 		),
 	)

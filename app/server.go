@@ -1,15 +1,25 @@
 package app
 
 import (
-	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"connectrpc.com/grpcreflect"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
+	"net/http"
 )
 
-func (a *App) newGrpcServer() *grpc.Server {
-	handler := grpc.StatsHandler(otelgrpc.NewServerHandler(otelgrpc.WithTracerProvider(a.traceProvider)))
+func (a *App) RegisterService(path string, handler http.Handler, serviceName string) {
+	a.mux.Handle(path, handler)
+	a.reflectionRoutes = append(a.reflectionRoutes, serviceName)
+}
 
-	s := grpc.NewServer(handler)
-	reflection.Register(s)
-	return s
+func (a *App) serveHttp() error {
+	return http.ListenAndServe(":8082", h2c.NewHandler(a.mux, &http2.Server{}))
+}
+
+func (a *App) registerReflection() {
+	reflector := grpcreflect.NewStaticReflector(a.reflectionRoutes...)
+
+	a.mux.Handle(grpcreflect.NewHandlerV1(reflector))
+	a.mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
+
 }

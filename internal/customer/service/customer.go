@@ -3,32 +3,26 @@ package service
 import (
 	"context"
 	"github.com/materials-resources/s-prophet/internal/customer/domain"
-	"github.com/materials-resources/s-prophet/pkg/models"
+	"github.com/materials-resources/s-prophet/internal/customer/repository"
+	"github.com/materials-resources/s-prophet/pkg/helpers"
 )
 
 type Customer struct {
-	m models.Models
+	repository *repository.Repository
 }
 
-func NewCustomerService(models *models.Models) *Customer {
+func NewCustomerService(repository *repository.Repository) *Customer {
 	return &Customer{
-		m: *models,
+		repository: repository,
 	}
 }
 
 func (c Customer) GetContactById(ctx context.Context, id string) (domain.Contact, error) {
 
 	// get contact record
-	contactRec, err := c.m.Contacts.Get(ctx, id)
+	contactRec, err := c.repository.Contacts.Select(ctx, id)
 	if err != nil {
 		return domain.Contact{}, err
-	}
-
-	// get ship to records for contact
-	contactsXShipToRec, err := c.m.ContactsXShipTo.GetByContactId(ctx, "MRS", id)
-	if err != nil {
-		return domain.Contact{}, err
-
 	}
 
 	// map data
@@ -36,21 +30,15 @@ func (c Customer) GetContactById(ctx context.Context, id string) (domain.Contact
 		Id:        contactRec.Id,
 		FirstName: contactRec.FirstName,
 		LastName:  contactRec.LastName,
-		Phone:     contactRec.DirectPhone.String,
-		Email:     contactRec.EmailAddress.String,
+		Phone:     helpers.GetValueOrDefault(contactRec.DirectPhone, ""),
+		Email:     helpers.GetValueOrDefault(contactRec.EmailAddress, ""),
 	}
 
-	for _, r := range contactsXShipToRec {
-		// get address info for customer branch
-		addressRec, err := c.m.Address.Get(ctx, r.ShipToId)
-		if err != nil {
-			return domain.Contact{}, err
-
-		}
+	for _, r := range contactRec.ContactsXShipTo {
 		dom.Branches = append(
 			dom.Branches, &domain.CustomerBranch{
 				Id:   r.ShipToId,
-				Name: addressRec.Name,
+				Name: r.Address.Name,
 			})
 	}
 	return dom, nil

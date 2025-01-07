@@ -17,22 +17,14 @@ confirm:
 no-dirty:
 	git diff --exit-code
 
-
 # ==================================================================================== #
-# DEVELOPMENT
+# Code Generation
 # ==================================================================================== #
 
-.PHONY: devops/up
-## devops/up: Scaffold the development environment
-devops/up:
-	podman kube play devops/tracing.yaml
-	podman kube play devops/redpanda.yaml
-
-.PHONY: devops/down
-## devops/down: Clean the development environment
-devops/down:
-	podman kube play --down devops/tracing.yaml
-	podman kube play --down devops/redpanda.yaml
+.PHONY: gen/buf
+## gen/buf: Generate code from buf.gen.yaml specifications
+gen/buf:
+	buf generate
 
 # ==================================================================================== #
 # Quality Control
@@ -48,8 +40,8 @@ lint:
 # Application
 # ==================================================================================== #
 
-.PHONY: app/run
-## app/run: Run the application
+.PHONY: app/serve
+## app/serve: Serve the application
 app/serve:
 	set OTEL_EXPORTER_OTLP_INSECURE=true
 	set OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
@@ -82,3 +74,4 @@ build/darwin_amd64:
 .PHONY: build/darwin_arm64
 build/darwin_arm64:
 	GOOS=darwin GOARCH=arm64 $(MAKE) build
+

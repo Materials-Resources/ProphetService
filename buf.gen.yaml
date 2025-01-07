@@ -1,14 +1,23 @@
-version: v1
-
+version: v2
+clean: true
 plugins:
-  - plugin: buf.build/protocolbuffers/go
-    out: proto
-    opt: paths=source_relative
+  - remote: buf.build/connectrpc/go:v1.17.0
+    out: internal/grpc
+    opt:
+      - module=github.com/materials-resources/s-prophet/internal/grpc
+      - Mcatalog.proto=github.com/materials-resources/s-prophet/internal/grpc/catalog
+      - Morder.proto=github.com/materials-resources/s-prophet/internal/grpc/order
+  - remote: buf.build/protocolbuffers/go:v1.34.2
+    out: internal/grpc
+    opt:
+      - module=github.com/materials-resources/s-prophet/internal/grpc
+      - Mcatalog.proto=github.com/materials-resources/s-prophet/internal/grpc/catalog
+      - Morder.proto=github.com/materials-resources/s-prophet/internal/grpc/order
 
-  - plugin: buf.build/grpc/go
-    out: proto
-    opt: paths=source_relative,require_unimplemented_servers=false
 
-  - plugin: buf.build/community/pseudomuto-doc
-    out: proto
-    opt: markdown,docs.md
+inputs:
+  - git_repo: https://github.com/Materials-Resources/microservices-proto.git
+    branch: main
+    types:
+      - "catalog.v1.CatalogService"
+      - "order.v1.OrderService"

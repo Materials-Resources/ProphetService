@@ -2,13 +2,14 @@ package catalog
 
 import (
 	"context"
-	rpc "github.com/materials-resources/microservices-proto/golang/catalog"
 	"github.com/materials-resources/s-prophet/app"
 	"github.com/materials-resources/s-prophet/internal/catalog/api"
-	"github.com/materials-resources/s-prophet/internal/catalog/core/event"
-	"github.com/materials-resources/s-prophet/internal/catalog/core/event/consume"
-	"github.com/materials-resources/s-prophet/internal/catalog/core/event/produce"
-	"github.com/materials-resources/s-prophet/internal/catalog/core/service"
+	"github.com/materials-resources/s-prophet/internal/catalog/event"
+	"github.com/materials-resources/s-prophet/internal/catalog/event/consume"
+	"github.com/materials-resources/s-prophet/internal/catalog/event/produce"
+	"github.com/materials-resources/s-prophet/internal/catalog/repository"
+	"github.com/materials-resources/s-prophet/internal/catalog/service"
+	"github.com/materials-resources/s-prophet/internal/grpc/catalog/catalogconnect"
 )
 
 func init() {
@@ -27,14 +28,13 @@ func init() {
 
 			producer := produce.NewProducer(a, manager)
 
-			cs := service.NewCatalogService(a, producer)
+			svc := service.NewCatalogService(a, producer)
 
-			consumer := consume.NewConsumer(manager, a, cs)
+			consumer := consume.NewConsumer(manager, a, repository.NewRepository(a.GetDB()))
 
-			rpc.RegisterCatalogServiceServer(
-				a.GetGrpcServer(), api.NewCatalogApi(cs,
-					a.GetTP().Tracer("CatalogApi"),
-				))
+			path, handler := catalogconnect.NewCatalogServiceHandler(api.NewCatalogServiceHandler(svc))
+
+			a.RegisterService(path, handler, catalogconnect.CatalogServiceName)
 
 			go func() { consumer.Consume() }()
 

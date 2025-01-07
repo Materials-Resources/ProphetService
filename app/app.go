@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/materials-resources/s-prophet/config"
-	"github.com/materials-resources/s-prophet/pkg/models"
 	"github.com/rs/zerolog"
-	"net"
+	"net/http"
 	"os"
 	"sync"
 
@@ -14,14 +13,13 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/metric"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
-	"google.golang.org/grpc"
 )
 
 type App struct {
 	conf *config.Config
 
-	server     *grpc.Server
-	serverOnce sync.Once
+	mux              *http.ServeMux
+	reflectionRoutes []string
 
 	traceProvider *tracesdk.TracerProvider
 	mp            *metric.MeterProvider
@@ -34,8 +32,11 @@ type App struct {
 
 func NewApp(config *config.Config) (*App, error) {
 
+	mux := http.NewServeMux()
+
 	a := &App{
 		conf: config,
+		mux:  mux,
 	}
 
 	a.initLog()
@@ -67,37 +68,17 @@ func (a *App) Start() error {
 		a.Logger.Fatal().Err(err).Msg("failed to run onStart hooks")
 	}
 
-	lis, err := net.Listen(
-		"tcp",
-		"0.0.0.0:50058",
-	)
-
-	if err != nil {
-		a.Logger.Fatal().Err(err).Msg("failed to create listener")
-
+	if a.conf.Environment.IsDevelopment() {
+		a.registerReflection()
 	}
 
-	err = a.GetGrpcServer().Serve(lis)
+	err := a.serveHttp()
 	if err != nil {
 		return fmt.Errorf("failed to start server: %w", err)
 	}
 
 	return nil
 
-}
-
-// Stop stops the application.
-func (a *App) Stop() {
-	a.server.Stop()
-}
-
-func (a *App) GetGrpcServer() *grpc.Server {
-	a.serverOnce.Do(
-		func() {
-			a.server = a.newGrpcServer()
-		},
-	)
-	return a.server
 }
 
 func (a *App) Config() *config.Config {
@@ -115,11 +96,6 @@ func (a *App) GetDB() *bun.DB {
 	return a.bun
 }
 
-// GetModels returns an initialized instance of data.Models.
-func (a *App) GetModels() models.Models {
-
-	return *models.NewModels(a.GetDB())
-}
 func (a *App) GetMP() *metric.MeterProvider {
 	return a.mp
 }

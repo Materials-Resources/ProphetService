@@ -1,6 +1,6 @@
 module github.com/materials-resources/s-prophet/models/21-1-4559-345
 
-go 1.22.4
+go 1.23
 
 require github.com/uptrace/bun v1.2.1
 

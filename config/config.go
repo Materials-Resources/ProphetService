@@ -9,10 +9,32 @@ import (
 	"strings"
 )
 
-const EnvironmentDevelopment = "development"
+const (
+	EnvironmentDevelopment = "development"
+	EnvironmentProduction  = "production"
+)
+
+type Environment string
+
+const (
+	EnvDevelopment Environment = EnvironmentDevelopment
+	EnvProduction  Environment = EnvironmentProduction
+)
+
+func (e Environment) IsDevelopment() bool {
+	return e == EnvDevelopment
+}
+
+func (e Environment) IsProduction() bool {
+	return e == EnvProduction
+}
+
+func (e Environment) String() string {
+	return string(e)
+}
 
 type Config struct {
-	Environment   string              `koanf:"environment"`
+	Environment   Environment         `koanf:"environment"`
 	Database      DatabaseConfig      `koanf:"database"`
 	Observability ObservabilityConfig `koanf:"observability"`
 
