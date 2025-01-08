@@ -2,8 +2,8 @@ package order
 
 import (
 	"context"
-	rpc "github.com/materials-resources/microservices-proto/golang/order"
 	"github.com/materials-resources/s-prophet/app"
+	"github.com/materials-resources/s-prophet/internal/grpc/order/orderconnect"
 	"github.com/materials-resources/s-prophet/internal/order/api"
 	"github.com/materials-resources/s-prophet/internal/order/repository"
 	"github.com/materials-resources/s-prophet/internal/order/service"
@@ -12,9 +12,8 @@ import (
 func init() {
 	app.OnStart(
 		"order.start", func(ctx context.Context, a *app.App) error {
-			rpc.RegisterOrderServiceServer(
-				a.GetGrpcServer(),
-				api.NewOrderApi(service.NewOrderController(repository.NewRepository(a.GetDB()))))
+			path, handler := orderconnect.NewOrderServiceHandler(api.NewOrderServiceHandler(service.NewOrderService(repository.NewRepository(a.GetDB()))))
+			a.RegisterService(path, handler, orderconnect.OrderServiceName)
 			return nil
 		},
 	)
