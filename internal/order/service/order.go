@@ -85,9 +85,10 @@ func (s *Order) ListOrders(ctx context.Context, req *orderv1.ListOrdersRequest) 
 	response := &orderv1.ListOrdersResponse{}
 
 	for _, order := range orders {
+
 		response.Orders = append(response.Orders, &orderv1.Order{
 			Id:            order.Id,
-			Status:        0,
+			Status:        convertOrderStatus(order.Status),
 			PurchaseOrder: order.PurchaseOrder,
 			DateCreated:   timestamppb.New(order.DateCreated),
 		})
@@ -106,4 +107,19 @@ func (s *Order) ListShipmentsByOrder(ctx context.Context, orderId string) ([]*do
 }
 func NewOrderService(repo *repository.Repository) *Order {
 	return &Order{repository: repo}
+}
+
+func convertOrderStatus(status domain.OrderStatus) orderv1.Order_Status {
+	switch status {
+	case domain.OrderStatusCompleted:
+		return orderv1.Order_STATUS_COMPLETED
+	case domain.OrderStatusPendingApproval:
+		return orderv1.Order_STATUS_PENDING_APPROVAL
+	case domain.OrderStatusApproved:
+		return orderv1.Order_STATUS_APPROVED
+	case domain.OrderStatusCancelled:
+		return orderv1.Order_STATUS_CANCELLED
+	default:
+		return orderv1.Order_STATUS_UNSPECIFIED
+	}
 }

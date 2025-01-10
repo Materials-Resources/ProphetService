@@ -14,6 +14,16 @@ const (
 	OrderTypeOrder
 )
 
+type OrderStatus int
+
+const (
+	OrderStatusUnknown OrderStatus = iota
+	OrderStatusPendingApproval
+	OrderStatusApproved
+	OrderStatusCancelled
+	OrderStatusCompleted
+)
+
 type Order struct {
 	Id               string
 	CustomerBranchId string
@@ -22,6 +32,7 @@ type Order struct {
 	ContactId        string
 	ContactName      string
 	PurchaseOrder    string
+	Status           OrderStatus
 
 	Taker         string
 	DateCreated   time.Time
@@ -29,11 +40,6 @@ type Order struct {
 
 	ShippingAddress      Address
 	DeliveryInstructions string
-}
-
-type OrderStatus struct {
-	Approved  bool
-	Cancelled bool
 }
 
 func ValidateOrder(v *validator.Validator, order *Order) {

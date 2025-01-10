@@ -135,7 +135,7 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 		return nil, err
 	}
 
-	err = r.db.NewSelect().Model(&oeHdrRecs).Where("address_id = ?", branchId).Limit(params.PageSize).Order("date_created DESC").Scan(ctx)
+	err = r.db.NewSelect().Model(&oeHdrRecs).Where("address_id = ? and projected_order = ? and delete_flag = ?", branchId, "N", "N").Limit(params.PageSize).Order("date_created DESC").Scan(ctx)
 
 	if err != nil {
 		return nil, err
@@ -148,6 +148,7 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 		orders = append(orders, &domain.Order{
 			Id:                   oeHdrRec.OrderNo,
 			PurchaseOrder:        getOptionalValue(oeHdrRec.PoNo, ""),
+			Status:               determineOrderStatus(oeHdrRec),
 			Taker:                getOptionalValue(oeHdrRec.Taker, ""),
 			DateCreated:          oeHdrRec.DateCreated,
 			DeliveryInstructions: getOptionalValue(oeHdrRec.DeliveryInstructions, ""),
@@ -296,4 +297,17 @@ func getOptionalValue[T comparable](ptr *T, defaultValue T) T {
 		return defaultValue
 	}
 	return *ptr
+}
+func determineOrderStatus(oeHdrRec *oeHdr) domain.OrderStatus {
+	if getOptionalValue(oeHdrRec.CancelFlag, "N") == "Y" {
+		return domain.OrderStatusCancelled
+	} else if getOptionalValue(oeHdrRec.Completed, "N") == "Y" {
+		return domain.OrderStatusCompleted
+	} else if getOptionalValue(oeHdrRec.Approved, "N") == "Y" {
+		return domain.OrderStatusApproved
+	} else if getOptionalValue(oeHdrRec.Approved, "N") == "N" {
+		return domain.OrderStatusPendingApproval
+	} else {
+		return domain.OrderStatusUnknown
+	}
 }
