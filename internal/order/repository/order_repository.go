@@ -19,11 +19,12 @@ func NewOrderRepository(db bun.IDB) *OrderRepository {
 }
 
 type ListOrdersParams struct {
+	BranchId         string
 	CustomerId       string
-	AdminId          string
-	OnlyActiveOrders bool
 	Page             int
 	PageSize         int
+	AdminId          string
+	OnlyActiveOrders bool
 }
 
 type CreateQuoteItemParams struct {
@@ -32,26 +33,32 @@ type CreateQuoteItemParams struct {
 }
 type CreateQuoteParams struct {
 	PurchaseOrder        string
-	CustomerId           string
 	ContactId            string
+	BranchId             string
 	RequestDate          time.Time
 	DeliveryInstructions string
 	Items                []CreateQuoteItemParams
 }
 
 func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuoteParams) error {
-	customerId, err := strconv.ParseFloat(quote.CustomerId, 64)
+	branchId, err := strconv.ParseFloat(quote.BranchId, 64)
+
+	shipToRec, err := r.getShipTo(ctx, branchId)
+	if err != nil {
+		return err
+	}
 
 	// TODO validate contact belongs to customer
-	customerRec, err := r.getCustomer(ctx, customerId)
+	addressRec, err := r.getAddress(ctx, shipToRec.ShipToId)
 	if err != nil {
 		return err
 	}
 
-	addressRec, err := r.getAddress(ctx, customerId)
+	customerRec, err := r.getCustomer(ctx, shipToRec.CustomerId)
 	if err != nil {
 		return err
 	}
+
 	contactRec, err := r.getContact(ctx, quote.ContactId)
 	if err != nil {
 		return err
@@ -71,14 +78,14 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 	oeHdrNew := prophet.OeHdr{
 		OeHdrUid:             oeHdrUid,
 		OrderNo:              strconv.Itoa(int(orderNo)),
-		CustomerId:           customerId,
+		CustomerId:           customerRec.CustomerId,
 		ContactId:            &quote.ContactId,
 		ProjectedOrder:       ptrTo("Y"),
 		PoNo:                 &quote.PurchaseOrder,
 		DeliveryInstructions: &quote.DeliveryInstructions,
 		PickTicketType:       customerRec.PickTicketType,
 		Terms:                &customerRec.TermsId,
-		AddressId:            &addressRec.Id,
+		AddressId:            &branchId,
 		Ship2Name:            &addressRec.Name,
 		Ship2Add1:            addressRec.MailAddress1,
 		Ship2Add2:            addressRec.MailAddress2,
@@ -121,53 +128,34 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 }
 
 func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParams) ([]*domain.Order, error) {
-	var dbOrders []*oeHdr
+	var oeHdrRecs []*oeHdr
 
-	query := r.db.NewSelect().
-		Model(&dbOrders).Relation("Customer").Relation("Contact")
-	query = query.Limit(100).OrderExpr("oe_hdr.order_no")
-	if params.OnlyActiveOrders {
-		query = query.Where("oe_hdr.delete_flag = 'N'")
+	branchId, err := strconv.ParseFloat(params.BranchId, 64)
+	if err != nil {
+		return nil, err
 	}
 
-	err := query.Scan(ctx)
+	err = r.db.NewSelect().Model(&oeHdrRecs).Where("address_id = ?", branchId).Limit(params.PageSize).Order("date_created DESC").Scan(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to list orders: %w", err)
+		return nil, err
 	}
 
-	orders := make([]*domain.Order, len(dbOrders))
-	for i, dbOrder := range dbOrders {
-		orders[i] = mapDbOrderToDomainWithoutItems(dbOrder)
+	var orders []*domain.Order
+
+	for _, oeHdrRec := range oeHdrRecs {
+
+		orders = append(orders, &domain.Order{
+			Id:                   oeHdrRec.OrderNo,
+			PurchaseOrder:        getOptionalValue(oeHdrRec.PoNo, ""),
+			Taker:                getOptionalValue(oeHdrRec.Taker, ""),
+			DateCreated:          oeHdrRec.DateCreated,
+			DeliveryInstructions: getOptionalValue(oeHdrRec.DeliveryInstructions, ""),
+		})
+
 	}
 
-	return orders, nil
-}
-
-func mapDbOrderToDomainWithoutItems(dbOrder *oeHdr) *domain.Order {
-
-	order := &domain.Order{
-		Id: dbOrder.OrderNo,
-		Customer: domain.Customer{
-			Id:   strconv.FormatFloat(dbOrder.Customer.CustomerId, 'f', 0, 64),
-			Name: dbOrder.Customer.CustomerName,
-		},
-		PurchaseOrder:        dbOrder.PoNo,
-		Taker:                dbOrder.Taker,
-		DateCreated:          dbOrder.DateCreated,
-		DeliveryInstructions: dbOrder.DeliveryInstructions,
-	}
-
-	if dbOrder.Contact != nil {
-		order.Contact = domain.Contact{
-			Id:        dbOrder.Contact.Id,
-			FirstName: dbOrder.Contact.FirstName,
-			LastName:  dbOrder.Contact.LastName,
-		}
-	}
-
-	return order
-
+	return orders, err
 }
 
 func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Order, error) {
@@ -186,11 +174,11 @@ func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Orde
 func mapDbOrderToDomainOrder(dbOrder *oeHdr) *domain.Order {
 	order := &domain.Order{
 		Id:                   dbOrder.OrderNo,
-		PurchaseOrder:        dbOrder.PoNo,
-		DeliveryInstructions: dbOrder.DeliveryInstructions,
+		PurchaseOrder:        *dbOrder.PoNo,
+		DeliveryInstructions: *dbOrder.DeliveryInstructions,
 		DateCreated:          dbOrder.DateCreated,
-		DateRequested:        dbOrder.RequestedDate,
-		Taker:                dbOrder.Taker,
+		DateRequested:        *dbOrder.RequestedDate,
+		Taker:                *dbOrder.Taker,
 		Customer: domain.Customer{
 			Id:   strconv.FormatFloat(dbOrder.CustomerId, 'f', 0, 64),
 			Name: dbOrder.Customer.CustomerName,
@@ -203,12 +191,6 @@ func mapDbOrderToDomainOrder(dbOrder *oeHdr) *domain.Order {
 			FirstName: dbOrder.Contact.FirstName,
 			LastName:  dbOrder.Contact.LastName,
 			Title:     dbOrder.Contact.Title,
-		}
-	}
-
-	if dbOrder.OeLines != nil {
-		for _, line := range dbOrder.OeLines {
-			order.Items = append(order.Items, mapDbLineToDomainOrderItem(line))
 		}
 	}
 
@@ -251,9 +233,9 @@ func (r *OrderRepository) getCustomer(ctx context.Context, customerId float64) (
 	return &customerRec, nil
 }
 
-func (r *OrderRepository) getAddress(ctx context.Context, customerId float64) (*address, error) {
+func (r *OrderRepository) getAddress(ctx context.Context, branchId float64) (*address, error) {
 	addressRec := address{}
-	err := r.db.NewSelect().Model(&addressRec).Where("id = ?", customerId).Scan(ctx)
+	err := r.db.NewSelect().Model(&addressRec).Where("id = ?", branchId).Scan(ctx)
 
 	if err != nil {
 		return nil, err
@@ -295,6 +277,23 @@ func (r *OrderRepository) createOeHdrSalesRep(ctx context.Context, orderNo strin
 	return nil
 }
 
+func (r *OrderRepository) getShipTo(ctx context.Context, id float64) (*prophet.ShipTo, error) {
+	shipToRec := prophet.ShipTo{}
+	err := r.db.NewSelect().Model(&shipToRec).Where("ship_to_id = ? and company_id = ?", id, "MRS").Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &shipToRec, nil
+
+}
+
 func ptrTo[T any](v T) *T {
 	return &v
+}
+
+func getOptionalValue[T comparable](ptr *T, defaultValue T) T {
+	if ptr == nil {
+		return defaultValue
+	}
+	return *ptr
 }

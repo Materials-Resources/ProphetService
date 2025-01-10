@@ -19,9 +19,11 @@ type OrderServiceHandler struct {
 }
 
 func (h OrderServiceHandler) ListOrders(ctx context.Context, req *connect.Request[order.ListOrdersRequest]) (*connect.Response[order.ListOrdersResponse], error) {
-
-	//TODO implement me
-	panic("implement me")
+	res, err := h.service.ListOrders(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(res), nil
 }
 
 func (h OrderServiceHandler) GetOrder(ctx context.Context, req *connect.Request[order.GetOrderRequest]) (*connect.Response[order.GetOrderResponse], error) {

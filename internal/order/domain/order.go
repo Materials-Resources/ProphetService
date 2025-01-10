@@ -21,15 +21,14 @@ type Order struct {
 	Contact          Contact
 	ContactId        string
 	ContactName      string
-	PurchaseOrder    *string
+	PurchaseOrder    string
 
-	Taker         *string
+	Taker         string
 	DateCreated   time.Time
-	DateRequested *time.Time
-	Items         []*OrderItem
+	DateRequested time.Time
 
 	ShippingAddress      Address
-	DeliveryInstructions *string
+	DeliveryInstructions string
 }
 
 type OrderStatus struct {
@@ -40,9 +39,7 @@ type OrderStatus struct {
 func ValidateOrder(v *validator.Validator, order *Order) {
 	//v.Check(order.CustomerId != "", "customer.id", "must be set")
 	v.Check(order.CustomerBranchId != "", "address_id", "must be set")
-	if order.PurchaseOrder != nil {
-		v.Check(len(*order.PurchaseOrder) <= 50, "purchase_order", "must be less than 50 characters")
-	}
+	v.Check(len(order.PurchaseOrder) <= 50, "purchase_order", "must be less than 50 characters")
 }
 
 type OrderInput struct {
