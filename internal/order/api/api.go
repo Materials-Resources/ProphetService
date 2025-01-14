@@ -27,8 +27,11 @@ func (h OrderServiceHandler) ListOrders(ctx context.Context, req *connect.Reques
 }
 
 func (h OrderServiceHandler) GetOrder(ctx context.Context, req *connect.Request[order.GetOrderRequest]) (*connect.Response[order.GetOrderResponse], error) {
-	//TODO implement me
-	panic("implement me")
+	res, err := h.service.GetOrder(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(res), nil
 }
 
 func (h OrderServiceHandler) CreateOrder(ctx context.Context, req *connect.Request[order.CreateOrderRequest]) (*connect.Response[order.CreateOrderResponse], error) {

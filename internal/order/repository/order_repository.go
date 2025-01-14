@@ -127,7 +127,7 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 	return nil
 }
 
-func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParams) ([]*domain.Order, error) {
+func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParams) ([]*domain.OrderSummary, error) {
 	var oeHdrRecs []*oeHdr
 
 	branchId, err := strconv.ParseFloat(params.BranchId, 64)
@@ -141,18 +141,24 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 		return nil, err
 	}
 
-	var orders []*domain.Order
+	var orders []*domain.OrderSummary
 
 	for _, oeHdrRec := range oeHdrRecs {
 
-		orders = append(orders, &domain.Order{
-			Id:                   oeHdrRec.OrderNo,
-			PurchaseOrder:        getOptionalValue(oeHdrRec.PoNo, ""),
-			Status:               determineOrderStatus(oeHdrRec),
-			Taker:                getOptionalValue(oeHdrRec.Taker, ""),
-			DateCreated:          oeHdrRec.DateCreated,
-			DeliveryInstructions: getOptionalValue(oeHdrRec.DeliveryInstructions, ""),
-		})
+		orderSummary := &domain.OrderSummary{
+			Id:            oeHdrRec.OrderNo,
+			PurchaseOrder: getOptionalValue(oeHdrRec.PoNo, ""),
+			Status:        determineOrderStatus(oeHdrRec),
+			DateCreated:   oeHdrRec.DateCreated,
+			DateRequested: getOptionalValue(oeHdrRec.RequestedDate, time.Now()),
+			ContactId:     getOptionalValue(oeHdrRec.ContactId, ""),
+		}
+
+		if oeHdrRec.AddressId != nil {
+			orderSummary.BranchId = strconv.FormatFloat(*oeHdrRec.AddressId, 'f', 0, 64)
+		}
+
+		orders = append(orders, orderSummary)
 
 	}
 
@@ -160,58 +166,54 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 }
 
 func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Order, error) {
-	var dbOrder oeHdr
+	var oeHdrRec oeHdr
 
-	err := r.db.NewSelect().Model(&dbOrder).Relation("OeLines", func(q *bun.SelectQuery) *bun.SelectQuery {
+	err := r.db.NewSelect().Model(&oeHdrRec).Relation("OeLines", func(q *bun.SelectQuery) *bun.SelectQuery {
 		return q.Relation("InvMast")
-	}).Relation("Customer").Relation("Contact").Where("order_no = ?", id).Scan(ctx)
+	}).Where("order_no = ?", id).Where("projected_order = ? and delete_flag = ?", "N", "N").Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return mapDbOrderToDomainOrder(&dbOrder), nil
-}
-
-func mapDbOrderToDomainOrder(dbOrder *oeHdr) *domain.Order {
-	order := &domain.Order{
-		Id:                   dbOrder.OrderNo,
-		PurchaseOrder:        *dbOrder.PoNo,
-		DeliveryInstructions: *dbOrder.DeliveryInstructions,
-		DateCreated:          dbOrder.DateCreated,
-		DateRequested:        *dbOrder.RequestedDate,
-		Taker:                *dbOrder.Taker,
-		Customer: domain.Customer{
-			Id:   strconv.FormatFloat(dbOrder.CustomerId, 'f', 0, 64),
-			Name: dbOrder.Customer.CustomerName,
-		},
+	order := domain.Order{
+		Id:                   oeHdrRec.OrderNo,
+		PurchaseOrder:        getOptionalValue(oeHdrRec.PoNo, ""),
+		Status:               determineOrderStatus(&oeHdrRec),
+		Taker:                getOptionalValue(oeHdrRec.Taker, ""),
+		DateCreated:          oeHdrRec.DateCreated,
+		DateRequested:        getOptionalValue(oeHdrRec.RequestedDate, time.Now()),
+		DeliveryInstructions: getOptionalValue(oeHdrRec.DeliveryInstructions, ""),
 	}
 
-	if dbOrder.Contact != nil {
-		order.Contact = domain.Contact{
-			Id:        dbOrder.Contact.Id,
-			FirstName: dbOrder.Contact.FirstName,
-			LastName:  dbOrder.Contact.LastName,
-			Title:     dbOrder.Contact.Title,
-		}
+	order.ShippingAddress = domain.Address{
+		Name:       getOptionalValue(oeHdrRec.Ship2Name, ""),
+		LineOne:    getOptionalValue(oeHdrRec.Ship2Add1, ""),
+		LineTwo:    getOptionalValue(oeHdrRec.Ship2Add2, ""),
+		City:       getOptionalValue(oeHdrRec.Ship2City, ""),
+		State:      getOptionalValue(oeHdrRec.Ship2State, ""),
+		PostalCode: getOptionalValue(oeHdrRec.Ship2Zip, ""),
+		Country:    getOptionalValue(oeHdrRec.Ship2Country, ""),
 	}
 
-	return order
-}
-
-func mapDbLineToDomainOrderItem(dbLine *oeLine) *domain.OrderItem {
-	item := &domain.OrderItem{
-		Id:                fmt.Sprintf("%0.f", dbLine.LineNo),
-		ProductUid:        strconv.Itoa(int(dbLine.InvMastUid)),
-		ProductSn:         dbLine.InvMast.ItemId,
-		ProductName:       dbLine.InvMast.ItemDesc,
-		CustomerProductSn: dbLine.CustomerPartNumber,
-		OrderQuantity:     *dbLine.QtyOrdered,
-		OrderQuantityUnit: *dbLine.UnitOfMeasure,
-		UnitPrice:         *dbLine.UnitPrice,
-		TotalPrice:        *dbLine.ExtendedPrice,
-		ShippedQuantity:   *dbLine.QtyInvoiced,
+	if oeHdrRec.AddressId != nil {
+		order.BranchId = strconv.FormatFloat(*oeHdrRec.AddressId, 'f', 0, 64)
 	}
-	return item
+
+	for _, oeLineRec := range oeHdrRec.OeLines {
+		order.Items = append(order.Items, &domain.OrderItem{
+			ProductId:         strconv.Itoa(int(oeLineRec.InvMastUid)),
+			ProductSn:         oeLineRec.InvMast.ItemId,
+			ProductName:       oeLineRec.InvMast.ItemDesc,
+			CustomerProductSn: oeLineRec.CustomerPartNumber,
+			OrderedQuantity:   getOptionalValue(oeLineRec.QtyOrdered, 0),
+			UnitType:          getOptionalValue(oeLineRec.UnitOfMeasure, ""),
+			UnitPrice:         getOptionalValue(oeLineRec.UnitPrice, 0),
+			TotalPrice:        getOptionalValue(oeLineRec.ExtendedPrice, 0),
+			ShippedQuantity:   getOptionalValue(oeLineRec.QtyInvoiced, 0),
+		})
+	}
+
+	return &order, nil
 }
 
 func (r *OrderRepository) getNextCounter(ctx context.Context, counterName string) (int32, error) {

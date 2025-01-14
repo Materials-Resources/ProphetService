@@ -74,13 +74,8 @@ func mapDbShipmentToDomainShipment(dbShipment *oePickTicket) *domain.Shipment {
 				}
 				return strconv.FormatFloat(*addressId, 'f', 0, 64)
 			}(dbShipment.OeHdr.AddressId),
-			Name:       dbShipment.OeHdr.Ship2Name,
-			LineOne:    dbShipment.OeHdr.Ship2Add1,
-			LineTwo:    dbShipment.OeHdr.Ship2Add2,
-			City:       dbShipment.OeHdr.Ship2City,
-			State:      dbShipment.OeHdr.Ship2State,
-			PostalCode: dbShipment.OeHdr.Ship2Zip,
-			Country:    dbShipment.OeHdr.Ship2Country,
+			Name:    getOptionalValue(dbShipment.OeHdr.Ship2Name, ""),
+			LineOne: getOptionalValue(dbShipment.OeHdr.Ship2Add1, ""),
 		}
 	}
 

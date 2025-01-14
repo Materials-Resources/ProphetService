@@ -25,14 +25,14 @@ const (
 )
 
 type Order struct {
-	Id               string
-	CustomerBranchId string
-	Customer         Customer
-	Contact          Contact
-	ContactId        string
-	ContactName      string
-	PurchaseOrder    string
-	Status           OrderStatus
+	Id            string
+	BranchId      string
+	Customer      Customer
+	Contact       Contact
+	ContactId     string
+	ContactName   string
+	PurchaseOrder string
+	Status        OrderStatus
 
 	Taker         string
 	DateCreated   time.Time
@@ -40,11 +40,23 @@ type Order struct {
 
 	ShippingAddress      Address
 	DeliveryInstructions string
+
+	Items []*OrderItem
+}
+
+type OrderSummary struct {
+	Id            string
+	ContactId     string
+	BranchId      string
+	PurchaseOrder string
+	Status        OrderStatus
+	DateCreated   time.Time
+	DateRequested time.Time
 }
 
 func ValidateOrder(v *validator.Validator, order *Order) {
 	//v.Check(order.CustomerId != "", "customer.id", "must be set")
-	v.Check(order.CustomerBranchId != "", "address_id", "must be set")
+	v.Check(order.BranchId != "", "branch_id", "must be set")
 	v.Check(len(order.PurchaseOrder) <= 50, "purchase_order", "must be less than 50 characters")
 }
 
@@ -61,19 +73,19 @@ type OrderItemInput struct {
 
 type OrderItem struct {
 	Id                string
-	ProductUid        string
+	ProductId         string
 	ProductSn         string
 	ProductName       string
 	CustomerProductSn string
-	OrderQuantity     float64
-	OrderQuantityUnit string
+	OrderedQuantity   float64
+	ShippedQuantity   float64
+	UnitType          string
 	UnitPrice         float64
 	TotalPrice        float64
-	ShippedQuantity   float64
 }
 
 func (oi *OrderItem) CalculateBackOrderedQuantity() float64 {
-	return oi.OrderQuantity - oi.ShippedQuantity
+	return oi.OrderedQuantity - oi.ShippedQuantity
 }
 
 type Contact struct {
