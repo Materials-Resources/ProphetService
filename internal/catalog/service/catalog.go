@@ -12,7 +12,6 @@ import (
 	catalogv1 "github.com/materials-resources/s-prophet/internal/grpc/catalog"
 	"github.com/materials-resources/s-prophet/internal/validator"
 	"go.opentelemetry.io/otel/trace"
-	"strconv"
 )
 
 var (
@@ -125,12 +124,8 @@ func (s Catalog) UpdateGroup(ctx context.Context, input *domain.ProductGroupInpu
 }
 
 func (s Catalog) GetProduct(ctx context.Context, req *catalogv1.GetProductRequest) (*catalogv1.GetProductResponse, error) {
-	uidInt32, err := strconv.ParseInt(req.GetId(), 10, 32)
-	if err != nil {
-		return nil, ErrorResourceNotFound
-	}
 
-	rec, err := s.repository.InvMast.Select(ctx, int32(uidInt32))
+	product, err := s.repository.Product.GetProduct(ctx, req.GetId())
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
@@ -141,10 +136,10 @@ func (s Catalog) GetProduct(ctx context.Context, req *catalogv1.GetProductReques
 
 	response := &catalogv1.GetProductResponse{
 		Product: &catalogv1.Product{
-			Id:          strconv.Itoa(int(rec.InvMastUid)),
-			Sn:          rec.ItemId,
-			Name:        rec.ItemDesc,
-			Description: *rec.ExtendedDesc,
+			Id:          product.Id,
+			Sn:          product.Sn,
+			Name:        product.Name,
+			Description: product.Description,
 		},
 	}
 	return response, nil
@@ -216,7 +211,7 @@ func (s Catalog) GetProductBySupplierPartNumber(
 	//	return domain.Product{}, err
 	//}
 	//return domain.Product{
-	//	Uid: strconv.Itoa(int(invMast.InvMastUid)), Sn: &invMast.ItemId, Name: &invMast.ItemDesc,
+	//	Id: strconv.Itoa(int(invMast.InvMastUid)), Sn: &invMast.ItemId, Name: &invMast.ItemDesc,
 	//}, nil
 	// TODO implement me
 	panic("implement me")

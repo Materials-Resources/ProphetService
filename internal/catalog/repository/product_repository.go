@@ -30,15 +30,15 @@ type ProductRepository struct {
 func (r *ProductRepository) GetProduct(ctx context.Context, id string) (*domain.Product, error) {
 	var record invLoc
 
-	err := r.db.NewSelect().Model(&record).Where("inv_mast_uid = ?", id).Scan(ctx)
+	err := r.db.NewSelect().Model(&record).Relation("InvMast").Where("inv_loc.inv_mast_uid = ?", id).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
 	product := domain.Product{
-		Uid:            strconv.Itoa(int(record.InvMastUid)),
+		Id:             strconv.Itoa(int(record.InvMastUid)),
 		Sn:             record.InvMast.ItemId,
 		Name:           record.InvMast.ItemDesc,
-		Description:    helpers.GetValueOrDefault(record.InvMast.ExtendedDesc, ""),
+		Description:    helpers.GetOptionalValue(record.InvMast.ExtendedDesc, ""),
 		ProductGroupSn: helpers.GetValueOrDefault(record.ProductGroupId, ""),
 	}
 	return &product, nil

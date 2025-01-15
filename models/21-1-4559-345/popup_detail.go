@@ -62,6 +62,6 @@ type PopupDetail struct {
 	OverrideSource                      *bool     `bun:"override_source,type:bit,default:((0))"`                         // flag to override sourcefor Dynachange
 	OverrideExpandablePopup             *bool     `bun:"override_expandable_popup,type:bit,default:((0))"`               // flag to override expandable popup for Dynachange
 	OverrideCompSecEnabled              *bool     `bun:"override_comp_sec_enabled,type:bit,default:((0))"`               // flag to override Company Securrity for Dynachange
-	PopupDetailUidParent                *int32    `bun:"popup_detail_uid_parent,type:int"`                               // Uid of the parent detail
+	PopupDetailUidParent                *int32    `bun:"popup_detail_uid_parent,type:int"`                               // Id of the parent detail
 	OverrideTitle                       *bool     `bun:"override_title,type:bit,default:((0))"`                          // Check if the title of the child popup should take precedence
 }

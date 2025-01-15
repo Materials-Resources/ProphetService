@@ -149,7 +149,7 @@ type OeLine struct {
 	UnitPickFee                 *float64   `bun:"unit_pick_fee,type:decimal(19,9)"`                          // Custom column for additional price needs to be added to unit_price
 	OeLineAltCode               *string    `bun:"oe_line_alt_code,type:varchar(40)"`                         // Custom column to store the alternate code the user used when order an item in Order Entry window.
 	RetailPrice                 *float64   `bun:"retail_price,type:decimal(19,9)"`                           // Custom (F45532): holds the retail item price
-	QuotePriceOeLineUid         *int32     `bun:"quote_price_oe_line_uid,type:int"`                          // Uid for quote line that price on this order was set from.
+	QuotePriceOeLineUid         *int32     `bun:"quote_price_oe_line_uid,type:int"`                          // Id for quote line that price on this order was set from.
 	CoreItemCost                *float64   `bun:"core_item_cost,type:decimal(19,9)"`                         // Custom column for core item supplier cost.
 	ItemCommitmentDetailUid     *int32     `bun:"item_commitment_detail_uid,type:int"`                       // Unique Identifier for a specific Item Commitment
 	SuppressCustomCost          *string    `bun:"suppress_custom_cost,type:char(1)"`                         // Indicates whether custom commission calculation rules would be used for an order line.

@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	prophet "github.com/materials-resources/s-prophet/models/21-1-4559-345"
@@ -42,6 +44,9 @@ type CreateQuoteParams struct {
 
 func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuoteParams) error {
 	branchId, err := strconv.ParseFloat(quote.BranchId, 64)
+	if err != nil {
+		return err
+	}
 
 	shipToRec, err := r.getShipTo(ctx, branchId)
 	if err != nil {
@@ -74,27 +79,57 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 
 	// Create new oeHdr record with eSTORE taker
 
-	carrierId, err := strconv.ParseFloat(*addressRec.CarrierId, 64)
-	oeHdrNew := prophet.OeHdr{
-		OeHdrUid:             oeHdrUid,
-		OrderNo:              strconv.Itoa(int(orderNo)),
-		CustomerId:           customerRec.CustomerId,
-		ContactId:            &quote.ContactId,
-		ProjectedOrder:       ptrTo("Y"),
-		PoNo:                 &quote.PurchaseOrder,
-		DeliveryInstructions: &quote.DeliveryInstructions,
-		PickTicketType:       customerRec.PickTicketType,
-		Terms:                &customerRec.TermsId,
-		AddressId:            &branchId,
-		Ship2Name:            &addressRec.Name,
-		Ship2Add1:            addressRec.MailAddress1,
-		Ship2Add2:            addressRec.MailAddress2,
-		Ship2Add3:            addressRec.MailAddress3,
-		Ship2City:            addressRec.MailCity,
-		Ship2State:           addressRec.MailState,
-		Ship2Country:         addressRec.MailCountry,
-		ShipToPhone:          contactRec.DirectPhone,
-		CarrierId:            &carrierId,
+	oeHdrNew := oeHdr{
+		OeHdr: prophet.OeHdr{
+			OeHdrUid:             oeHdrUid,
+			OrderNo:              strconv.Itoa(int(orderNo)),
+			CustomerId:           customerRec.CustomerId,
+			ContactId:            &quote.ContactId,
+			PoNo:                 &quote.PurchaseOrder,
+			DeliveryInstructions: &quote.DeliveryInstructions,
+			PickTicketType:       customerRec.PickTicketType,
+			PackingBasis:         addressRec.ShipToPackingBasis,
+			Terms:                &customerRec.TermsId,
+			Taker:                ptrTo("eSTORE"),
+			AddressId:            &branchId,
+			Ship2Name:            &addressRec.Name,
+			Ship2Add1:            addressRec.MailAddress1,
+			Ship2Add2:            addressRec.MailAddress2,
+			Ship2Add3:            addressRec.MailAddress3,
+			Ship2City:            addressRec.MailCity,
+			Ship2State:           addressRec.MailState,
+			Ship2Country:         addressRec.MailCountry,
+			ShipToPhone:          contactRec.DirectPhone,
+			CarrierId: convertOptionalValue(addressRec.CarrierId, func(v string) *float64 {
+				carrierId, err := strconv.ParseFloat(v, 64)
+				if err != nil {
+					return nil
+				}
+				return &carrierId
+			}, nil),
+			PromiseDate:      ptrTo(time.Now().AddDate(0, 0, 1)),
+			OrderDate:        ptrTo(time.Now()),
+			RequestedDate:    &quote.RequestDate,
+			LastMaintainedBy: "admin",
+			CompanyId:        ptrTo("MRS"),
+			LocationId:       ptrTo(float64(1001)),
+			SourceLocationId: ptrTo(float64(1001)),
+
+			OrderType:    ptrTo(int32(706)),
+			SourceCodeNo: 920,
+			CodFlag:      ptrTo("N"),
+
+			ProjectedOrder:        ptrTo("Y"),
+			Completed:             ptrTo("N"),
+			FobFlag:               ptrTo("N"),
+			RmaFlag:               ptrTo("N"),
+			ThirdPartyBillingFlag: ptrTo("S"),
+			Approved:              ptrTo("N"),
+			CancelFlag:            ptrTo("N"),
+			FrontCounter:          ptrTo("N"),
+			HandlingChargeReqFlag: ptrTo("N"),
+			ValidationStatus:      ptrTo("OK"),
+		},
 	}
 
 	if err := r.createOeHdr(ctx, &oeHdrNew); err != nil {
@@ -121,6 +156,52 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 	}
 
 	_, err = r.db.NewInsert().Model(&quoteHdrNew).Exec(ctx)
+
+	for _, item := range quote.Items {
+
+		productId, err := strconv.ParseFloat(item.ProductId, 64)
+		if err != nil {
+			return err
+		}
+		invMastRec, err := r.getProductDetails(ctx, int32(productId))
+		if err != nil {
+			return err
+		}
+
+		lineNo, err := r.getNextOeLineLineNo(ctx, oeHdrUid)
+		if err != nil {
+			return err
+		}
+
+		locRec := invMastRec.InvLocs[0]
+
+		oeLineUid, err := r.getNextCounter(ctx, "oe_line")
+
+		oeLineNew := oeLine{
+			OeLine: prophet.OeLine{
+				OeLineUid:            oeLineUid,
+				InvMastUid:           invMastRec.InvMastUid,
+				LineNo:               float64(lineNo),
+				LineSeqNo:            &lineNo,
+				OrderNo:              oeHdrNew.OrderNo,
+				OeHdrUid:             oeHdrUid,
+				CustomerPartNumber:   invMastRec.ItemDesc,
+				ExtendedDesc:         invMastRec.ExtendedDesc,
+				SupplierId:           locRec.PrimarySupplierId,
+				ProductGroupId:       locRec.ProductGroupId,
+				SalesDiscountGroupId: locRec.SalesDiscountGroup,
+				QtyOrdered:           ptrTo(float64(item.Quantity)),
+				CompanyNo:            "MRS",
+				SourceLocId:          ptrTo(float64(1001)),
+			},
+		}
+
+		_, err = r.db.NewInsert().Model(&oeLineNew).Exec(ctx)
+		if err != nil {
+			return err
+		}
+
+	}
 
 	// create new oeLine record for each item
 
@@ -152,6 +233,9 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 			DateCreated:   oeHdrRec.DateCreated,
 			DateRequested: getOptionalValue(oeHdrRec.RequestedDate, time.Now()),
 			ContactId:     getOptionalValue(oeHdrRec.ContactId, ""),
+			BranchId: convertOptionalValue(oeHdrRec.AddressId, func(v float64) string {
+				return strconv.FormatFloat(v, 'f', 0, 64)
+			}, ""),
 		}
 
 		if oeHdrRec.AddressId != nil {
@@ -180,12 +264,22 @@ func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Orde
 		PurchaseOrder:        getOptionalValue(oeHdrRec.PoNo, ""),
 		Status:               determineOrderStatus(&oeHdrRec),
 		Taker:                getOptionalValue(oeHdrRec.Taker, ""),
-		DateCreated:          oeHdrRec.DateCreated,
+		DateCreated:          parseToUTC(oeHdrRec.DateCreated),
 		DateRequested:        getOptionalValue(oeHdrRec.RequestedDate, time.Now()),
 		DeliveryInstructions: getOptionalValue(oeHdrRec.DeliveryInstructions, ""),
+		BranchId: convertOptionalValue(oeHdrRec.AddressId, func(v float64) string {
+			return strconv.FormatFloat(v, 'f', 0, 64)
+		}, ""),
+	}
+
+	if oeHdrRec.AddressId != nil {
+		order.BranchId = strconv.FormatFloat(*oeHdrRec.AddressId, 'f', 0, 64)
 	}
 
 	order.ShippingAddress = domain.Address{
+		Id: convertOptionalValue(oeHdrRec.AddressId, func(v float64) string {
+			return strconv.FormatFloat(v, 'f', 0, 64)
+		}, ""),
 		Name:       getOptionalValue(oeHdrRec.Ship2Name, ""),
 		LineOne:    getOptionalValue(oeHdrRec.Ship2Add1, ""),
 		LineTwo:    getOptionalValue(oeHdrRec.Ship2Add2, ""),
@@ -193,10 +287,6 @@ func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Orde
 		State:      getOptionalValue(oeHdrRec.Ship2State, ""),
 		PostalCode: getOptionalValue(oeHdrRec.Ship2Zip, ""),
 		Country:    getOptionalValue(oeHdrRec.Ship2Country, ""),
-	}
-
-	if oeHdrRec.AddressId != nil {
-		order.BranchId = strconv.FormatFloat(*oeHdrRec.AddressId, 'f', 0, 64)
 	}
 
 	for _, oeLineRec := range oeHdrRec.OeLines {
@@ -258,7 +348,7 @@ func (r *OrderRepository) getContact(ctx context.Context, id string) (*contacts,
 	return &contactRec, nil
 }
 
-func (r *OrderRepository) createOeHdr(ctx context.Context, oeHdr *prophet.OeHdr) error {
+func (r *OrderRepository) createOeHdr(ctx context.Context, oeHdr *oeHdr) error {
 	_, err := r.db.NewInsert().Model(oeHdr).Exec(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to create oeHdr: %w", err)
@@ -266,18 +356,34 @@ func (r *OrderRepository) createOeHdr(ctx context.Context, oeHdr *prophet.OeHdr)
 	return nil
 }
 func (r *OrderRepository) createOeHdrSalesRep(ctx context.Context, orderNo string, salesRepId string) error {
-	oeHdrSalesRep := prophet.OeHdrSalesrep{
-		OrderNumber:     orderNo,
-		SalesrepId:      salesRepId,
-		CommissionSplit: 100,
-		PrimarySalesrep: ptrTo("Y"),
+	oeHdrSalesRep := &oeHdrSalesrep{
+		OeHdrSalesrep: prophet.OeHdrSalesrep{
+			OrderNumber:      orderNo,
+			SalesrepId:       salesRepId,
+			LastMaintainedBy: "admin",
+			CommissionSplit:  100,
+			PrimarySalesrep:  ptrTo("Y"),
+		},
 	}
 
-	_, err := r.db.NewInsert().Model(&oeHdrSalesRep).Exec(ctx)
+	_, err := r.db.NewInsert().Model(oeHdrSalesRep).Exec(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to create oeHdrSalesRep: %w", err)
 	}
 	return nil
+}
+
+func (r *OrderRepository) getProductDetails(ctx context.Context, invMastUid int32) (*invMast, error) {
+	invMastRec := invMast{}
+
+	err := r.db.NewSelect().Model(&invMastRec).Relation("InvLocs", func(q *bun.SelectQuery) *bun.SelectQuery {
+		return q.Where("location_id = ? and company_id = ?", 1001, "MRS")
+	}).Where("inv_mast_uid = ?", invMastUid).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &invMastRec, nil
+
 }
 
 func (r *OrderRepository) getShipTo(ctx context.Context, id float64) (*prophet.ShipTo, error) {
@@ -287,6 +393,27 @@ func (r *OrderRepository) getShipTo(ctx context.Context, id float64) (*prophet.S
 		return nil, err
 	}
 	return &shipToRec, nil
+
+}
+
+func (r *OrderRepository) getNextOeLineLineNo(ctx context.Context, oeHdrUid int32) (int32, error) {
+	var lineNo *int32
+	q := `SELECT MAX(line_no) FROM oe_line WHERE oe_hdr_uid = ?`
+
+	err := r.db.QueryRowContext(ctx, q, oeHdrUid).Scan(&lineNo)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return 1, nil
+		default:
+			return 1, err
+		}
+	}
+	if lineNo == nil {
+		return 1, nil
+	}
+
+	return *lineNo + 1, nil
 
 }
 
@@ -300,6 +427,21 @@ func getOptionalValue[T comparable](ptr *T, defaultValue T) T {
 	}
 	return *ptr
 }
+
+// convertOptionalValue converts a pointer value to another type using a converter function or returns a default value if nil.
+func convertOptionalValue[T any, U any](value *T, converter func(T) U, defaultValue U) U {
+	if value == nil {
+		return defaultValue
+	}
+	return converter(*value)
+}
+
+func parseToUTC(dbTime time.Time) time.Time {
+	// 1. Convert to UTC:
+	utcTime := dbTime.UTC()
+	return utcTime
+}
+
 func determineOrderStatus(oeHdrRec *oeHdr) domain.OrderStatus {
 	if getOptionalValue(oeHdrRec.CancelFlag, "N") == "Y" {
 		return domain.OrderStatusCancelled

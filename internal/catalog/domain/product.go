@@ -5,13 +5,12 @@ import (
 )
 
 type Product struct {
-	Uid              string
+	Id               string
 	Sn               string
 	Name             string
 	Description      string
 	ProductGroupSn   string
 	ProductGroupName string
-	StockQuantity    float64
 }
 
 type ProductUpdate struct {

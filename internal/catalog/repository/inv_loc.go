@@ -32,12 +32,8 @@ type invLocDefaultValues struct {
 }
 
 func (m *invLoc) toProductDomain(d *domain.Product) {
-	if m.QtyOnHand != nil {
-		d.StockQuantity = *m.QtyOnHand
-
-	}
 	if m.InvMast != nil {
-		d.Uid = strconv.Itoa(int(m.InvMast.InvMastUid))
+		d.Id = strconv.Itoa(int(m.InvMast.InvMastUid))
 		d.Sn = m.InvMast.ItemId
 		d.Name = m.InvMast.ItemDesc
 		d.Description = helpers.GetValueOrDefault(m.InvMast.ExtendedDesc, "")

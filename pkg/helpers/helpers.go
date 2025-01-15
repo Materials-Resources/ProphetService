@@ -18,3 +18,10 @@ func StringToInt32(s string, strict bool) int32 {
 	}
 	return int32(val)
 }
+
+func GetOptionalValue[T comparable](ptr *T, defaultValue T) T {
+	if ptr == nil {
+		return defaultValue
+	}
+	return *ptr
+}

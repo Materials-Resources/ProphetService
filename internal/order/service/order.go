@@ -6,7 +6,6 @@ import (
 	"github.com/materials-resources/s-prophet/internal/order/domain"
 	"github.com/materials-resources/s-prophet/internal/order/repository"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 type OrderService interface {
@@ -30,7 +29,8 @@ func (s *Order) CreateQuote(ctx context.Context, req *orderv1.CreateQuoteRequest
 	createQuoteReq := repository.CreateQuoteParams{
 		PurchaseOrder:        req.GetPurchaseOrder(),
 		ContactId:            req.GetContactId(),
-		RequestDate:          time.Time{},
+		BranchId:             req.GetBranchId(),
+		RequestDate:          req.GetRequestedDate().AsTime(),
 		DeliveryInstructions: req.GetDeliveryInstructions(),
 	}
 
@@ -76,7 +76,7 @@ func (s *Order) GetOrder(ctx context.Context, req *orderv1.GetOrderRequest) (*or
 			BranchId:      order.BranchId,
 			ContactId:     order.ContactId,
 			ShippingAddress: &orderv1.Address{
-				Id:         "",
+				Id:         order.ShippingAddress.Id,
 				Name:       order.ShippingAddress.Name,
 				LineOne:    order.ShippingAddress.LineOne,
 				LineTwo:    order.ShippingAddress.LineTwo,

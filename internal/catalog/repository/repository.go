@@ -9,5 +9,8 @@ type Repository struct {
 }
 
 func NewRepository(db bun.IDB) *Repository {
-	return &Repository{ProductGroup: NewProductGroupRepository(db), InvMast: newInvMastRepository(db)}
+	return &Repository{
+		ProductGroup: NewProductGroupRepository(db), InvMast: newInvMastRepository(db),
+		Product: NewProductRepository(db, DefaultProductValues{}),
+	}
 }

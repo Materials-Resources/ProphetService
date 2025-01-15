@@ -71,7 +71,7 @@ type PopupField struct {
 	OverrideFieldWidth               *bool     `bun:"override_field_width,type:bit,default:((0))"`                  // flag to override field width for Dynachange
 	OverrideMask                     *bool     `bun:"override_mask,type:bit,default:((0))"`                         // flag to override mask for Dynachange
 	OverrideFieldName                *bool     `bun:"override_field_name,type:bit,default:((0))"`                   // flag to override field name for Dynachange
-	PopupFieldUidParent              *int32    `bun:"popup_field_uid_parent,type:int"`                              // Popup field Uid of the parent to manage the additive
-	PopupDetailUidParent             *int32    `bun:"popup_detail_uid_parent,type:int"`                             // Popup detail Uid of the parent to manage the additive
+	PopupFieldUidParent              *int32    `bun:"popup_field_uid_parent,type:int"`                              // Popup field Id of the parent to manage the additive
+	PopupDetailUidParent             *int32    `bun:"popup_detail_uid_parent,type:int"`                             // Popup detail Id of the parent to manage the additive
 	DeleteFlag                       bool      `bun:"delete_flag,type:bit,default:((0))"`                           // Flag that determinated if the current field is deleted
 }
