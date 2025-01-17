@@ -13,6 +13,7 @@ type OrderService interface {
 	GetOrder(ctx context.Context, req *orderv1.GetOrderRequest) (*orderv1.GetOrderResponse, error)
 	CreateOrder(ctx context.Context)
 	ListOrders(ctx context.Context, req *orderv1.ListOrdersRequest) (*orderv1.ListOrdersResponse, error)
+	ListQuotes(ctx context.Context, req *orderv1.ListQuotesRequest) (*orderv1.ListQuotesResponse, error)
 	CreateQuote(ctx context.Context, req *orderv1.CreateQuoteRequest) (*orderv1.CreateQuoteResponse, error)
 	ListShipmentsByOrder(ctx context.Context, orderId string) ([]*domain.Shipment, error)
 	GetShipment(ctx context.Context, id string) (*domain.Shipment, error)
@@ -22,6 +23,38 @@ var _ OrderService = &Order{}
 
 type Order struct {
 	repository *repository.Repository
+}
+
+func (s *Order) ListQuotes(ctx context.Context, req *orderv1.ListQuotesRequest) (*orderv1.ListQuotesResponse, error) {
+	params := repository.ListQuotesParams{
+		BranchId: req.GetBranchId(),
+		Page:     int(req.GetPage()),
+		PageSize: int(req.GetPageSize()),
+	}
+	quotes, err := s.repository.Order.ListQuotes(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &orderv1.ListQuotesResponse{}
+
+	for _, quote := range quotes {
+		response.Quotes = append(response.Quotes, &orderv1.QuoteSummary{
+			Id: quote.Id,
+			Contact: &orderv1.Contact{
+				Id: quote.ContactId,
+			},
+			Branch: &orderv1.Branch{
+				Id: quote.BranchId,
+			},
+			PurchaseOrder: quote.PurchaseOrder,
+			Status:        convertQuoteStatus(quote.Status),
+			DateCreated:   timestamppb.New(quote.DateCreated),
+			DateExpires:   timestamppb.New(quote.DateExpires),
+		})
+	}
+
+	return response, nil
 }
 
 func (s *Order) CreateQuote(ctx context.Context, req *orderv1.CreateQuoteRequest) (*orderv1.CreateQuoteResponse, error) {
@@ -37,12 +70,16 @@ func (s *Order) CreateQuote(ctx context.Context, req *orderv1.CreateQuoteRequest
 	for _, item := range req.GetItems() {
 		createQuoteReq.Items = append(createQuoteReq.Items, repository.CreateQuoteItemParams{
 			ProductId: item.GetProductId(),
-			//TODO update proto to int
-			Quantity: int(item.GetQuantity()),
+			Quantity:  item.GetQuantity(),
 		})
 	}
-	s.repository.Order.CreateQuote(ctx, &createQuoteReq)
-	return &orderv1.CreateQuoteResponse{}, nil
+	quoteId, err := s.repository.Order.CreateQuote(ctx, &createQuoteReq)
+	if err != nil {
+		return nil, err
+	}
+	return &orderv1.CreateQuoteResponse{
+		Id: *quoteId,
+	}, nil
 }
 
 func (s *Order) CreateOrder(ctx context.Context) {
@@ -153,14 +190,30 @@ func NewOrderService(repo *repository.Repository) *Order {
 func convertOrderStatus(status domain.OrderStatus) orderv1.OrderStatus {
 	switch status {
 	case domain.OrderStatusCompleted:
-		return orderv1.OrderStatus_STATUS_COMPLETED
+		return orderv1.OrderStatus_ORDER_STATUS_COMPLETED
 	case domain.OrderStatusPendingApproval:
-		return orderv1.OrderStatus_STATUS_PENDING_APPROVAL
+		return orderv1.OrderStatus_ORDER_STATUS_PENDING_APPROVAL
 	case domain.OrderStatusApproved:
-		return orderv1.OrderStatus_STATUS_APPROVED
+		return orderv1.OrderStatus_ORDER_STATUS_APPROVED
 	case domain.OrderStatusCancelled:
-		return orderv1.OrderStatus_STATUS_CANCELLED
+		return orderv1.OrderStatus_ORDER_STATUS_CANCELLED
 	default:
-		return orderv1.OrderStatus_STATUS_UNSPECIFIED
+		return orderv1.OrderStatus_ORDER_STATUS_UNSPECIFIED
+	}
+}
+
+func convertQuoteStatus(status domain.QuoteStatus) orderv1.QuoteStatus {
+	switch status {
+	case domain.QuoteStatusApproved:
+		return orderv1.QuoteStatus_QUOTE_STATUS_APPROVED
+	case domain.QuoteStatusCancelled:
+		return orderv1.QuoteStatus_QUOTE_STATUS_CANCELLED
+	case domain.QuoteStatusPendingApproval:
+		return orderv1.QuoteStatus_QUOTE_STATUS_PENDING_APPROVAL
+	case domain.QuoteStatusExpired:
+		return orderv1.QuoteStatus_QUOTE_STATUS_EXPIRED
+	default:
+		return orderv1.QuoteStatus_QUOTE_STATUS_UNSPECIFIED
+
 	}
 }

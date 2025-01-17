@@ -18,6 +18,14 @@ type OrderServiceHandler struct {
 	service service.OrderService
 }
 
+func (h OrderServiceHandler) ListQuotes(ctx context.Context, c *connect.Request[order.ListQuotesRequest]) (*connect.Response[order.ListQuotesResponse], error) {
+	res, err := h.service.ListQuotes(ctx, c.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(res), nil
+}
+
 func (h OrderServiceHandler) ListOrders(ctx context.Context, req *connect.Request[order.ListOrdersRequest]) (*connect.Response[order.ListOrdersResponse], error) {
 	res, err := h.service.ListOrders(ctx, req.Msg)
 	if err != nil {

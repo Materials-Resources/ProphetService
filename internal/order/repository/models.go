@@ -41,6 +41,7 @@ type oeHdr struct {
 	Customer      *customer `bun:"rel:has-one,join:customer_id=customer_id,join:company_id=company_id"`
 	Contact       *contacts `bun:"rel:has-one,join:contact_id=id"`
 	OeLines       []*oeLine `bun:"rel:has-many,join:oe_hdr_uid=oe_hdr_uid"`
+	QuoteHdr      *quoteHdr `bun:"rel:has-one,join:oe_hdr_uid=oe_hdr_uid"`
 }
 
 var _ bun.BeforeAppendModelHook = (*oeHdr)(nil)
