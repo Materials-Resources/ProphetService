@@ -1,13 +1,20 @@
 package repository
 
-import "github.com/uptrace/bun"
+import (
+	"errors"
+	"github.com/uptrace/bun"
+)
+
+var (
+	ErrRecordNotFound = errors.New("record not found")
+)
 
 type Repository struct {
-	Contacts *contactsRepository
+	Branch *BranchRepository
 }
 
-func NewRepository(db *bun.DB) *Repository {
+func NewRepository(db bun.IDB) *Repository {
 	return &Repository{
-		Contacts: newContactsRepository(db),
+		Branch: NewBranchRepository(db),
 	}
 }

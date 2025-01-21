@@ -6,17 +6,17 @@ import (
 	"github.com/materials-resources/s-prophet/internal/customer/api"
 	"github.com/materials-resources/s-prophet/internal/customer/repository"
 	"github.com/materials-resources/s-prophet/internal/customer/service"
-	svc "github.com/materials-resources/s-prophet/proto/customer/v1"
+	"github.com/materials-resources/s-prophet/internal/grpc/customer/customerconnect"
 )
 
 func init() {
 	app.OnStart(
 		"customer.start", func(ctx context.Context, a *app.App) error {
-			r := repository.NewRepository(a.GetDB())
-			svc.RegisterCustomerServiceServer(
-				a.GetGrpcServer(),
-				api.NewCustomerServer(service.NewCustomerService(r)),
-			)
+			svc := service.NewCustomerService(repository.NewRepository(a.GetDB()))
+
+			path, handler := customerconnect.NewCustomerServiceHandler(api.NewCustomerServiceHandler(svc))
+
+			a.RegisterService(path, handler, customerconnect.CustomerServiceName)
 			return nil
 		},
 	)

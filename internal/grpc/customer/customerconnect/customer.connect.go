@@ -36,17 +36,22 @@ const (
 	// CustomerServiceGetBranchesForContactProcedure is the fully-qualified name of the
 	// CustomerService's GetBranchesForContact RPC.
 	CustomerServiceGetBranchesForContactProcedure = "/customer.v1.CustomerService/GetBranchesForContact"
+	// CustomerServiceGetBranchProcedure is the fully-qualified name of the CustomerService's GetBranch
+	// RPC.
+	CustomerServiceGetBranchProcedure = "/customer.v1.CustomerService/GetBranch"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	customerServiceServiceDescriptor                     = customer.File_customer_proto.Services().ByName("CustomerService")
 	customerServiceGetBranchesForContactMethodDescriptor = customerServiceServiceDescriptor.Methods().ByName("GetBranchesForContact")
+	customerServiceGetBranchMethodDescriptor             = customerServiceServiceDescriptor.Methods().ByName("GetBranch")
 )
 
 // CustomerServiceClient is a client for the customer.v1.CustomerService service.
 type CustomerServiceClient interface {
 	GetBranchesForContact(context.Context, *connect.Request[customer.GetBranchesForContactRequest]) (*connect.Response[customer.GetBranchesForContactResponse], error)
+	GetBranch(context.Context, *connect.Request[customer.GetBranchRequest]) (*connect.Response[customer.GetBranchResponse], error)
 }
 
 // NewCustomerServiceClient constructs a client for the customer.v1.CustomerService service. By
@@ -65,12 +70,19 @@ func NewCustomerServiceClient(httpClient connect.HTTPClient, baseURL string, opt
 			connect.WithSchema(customerServiceGetBranchesForContactMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		getBranch: connect.NewClient[customer.GetBranchRequest, customer.GetBranchResponse](
+			httpClient,
+			baseURL+CustomerServiceGetBranchProcedure,
+			connect.WithSchema(customerServiceGetBranchMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // customerServiceClient implements CustomerServiceClient.
 type customerServiceClient struct {
 	getBranchesForContact *connect.Client[customer.GetBranchesForContactRequest, customer.GetBranchesForContactResponse]
+	getBranch             *connect.Client[customer.GetBranchRequest, customer.GetBranchResponse]
 }
 
 // GetBranchesForContact calls customer.v1.CustomerService.GetBranchesForContact.
@@ -78,9 +90,15 @@ func (c *customerServiceClient) GetBranchesForContact(ctx context.Context, req *
 	return c.getBranchesForContact.CallUnary(ctx, req)
 }
 
+// GetBranch calls customer.v1.CustomerService.GetBranch.
+func (c *customerServiceClient) GetBranch(ctx context.Context, req *connect.Request[customer.GetBranchRequest]) (*connect.Response[customer.GetBranchResponse], error) {
+	return c.getBranch.CallUnary(ctx, req)
+}
+
 // CustomerServiceHandler is an implementation of the customer.v1.CustomerService service.
 type CustomerServiceHandler interface {
 	GetBranchesForContact(context.Context, *connect.Request[customer.GetBranchesForContactRequest]) (*connect.Response[customer.GetBranchesForContactResponse], error)
+	GetBranch(context.Context, *connect.Request[customer.GetBranchRequest]) (*connect.Response[customer.GetBranchResponse], error)
 }
 
 // NewCustomerServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -95,10 +113,18 @@ func NewCustomerServiceHandler(svc CustomerServiceHandler, opts ...connect.Handl
 		connect.WithSchema(customerServiceGetBranchesForContactMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	customerServiceGetBranchHandler := connect.NewUnaryHandler(
+		CustomerServiceGetBranchProcedure,
+		svc.GetBranch,
+		connect.WithSchema(customerServiceGetBranchMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/customer.v1.CustomerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case CustomerServiceGetBranchesForContactProcedure:
 			customerServiceGetBranchesForContactHandler.ServeHTTP(w, r)
+		case CustomerServiceGetBranchProcedure:
+			customerServiceGetBranchHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -110,4 +136,8 @@ type UnimplementedCustomerServiceHandler struct{}
 
 func (UnimplementedCustomerServiceHandler) GetBranchesForContact(context.Context, *connect.Request[customer.GetBranchesForContactRequest]) (*connect.Response[customer.GetBranchesForContactResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("customer.v1.CustomerService.GetBranchesForContact is not implemented"))
+}
+
+func (UnimplementedCustomerServiceHandler) GetBranch(context.Context, *connect.Request[customer.GetBranchRequest]) (*connect.Response[customer.GetBranchResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("customer.v1.CustomerService.GetBranch is not implemented"))
 }

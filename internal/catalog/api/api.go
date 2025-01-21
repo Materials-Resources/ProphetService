@@ -6,7 +6,6 @@ import (
 	"github.com/materials-resources/s-prophet/internal/catalog/service"
 	catalogv1 "github.com/materials-resources/s-prophet/internal/grpc/catalog"
 	"github.com/materials-resources/s-prophet/internal/grpc/catalog/catalogconnect"
-	"go.opentelemetry.io/otel/trace"
 )
 
 func NewCatalogServiceHandler(svc service.CatalogService) *CatalogServiceHandler {
@@ -105,13 +104,3 @@ func (h CatalogServiceHandler) GetProductBySupplier(ctx context.Context, req *co
 }
 
 var _ catalogconnect.CatalogServiceHandler = (*CatalogServiceHandler)(nil)
-
-func NewCatalogApi(service service.CatalogService, tracer trace.Tracer,
-) CatalogApi {
-	return CatalogApi{service: service, tracer: tracer}
-}
-
-type CatalogApi struct {
-	service service.CatalogService
-	tracer  trace.Tracer
-}

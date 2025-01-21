@@ -5,6 +5,7 @@ import (
 	"github.com/materials-resources/s-prophet/config"
 	_ "github.com/materials-resources/s-prophet/internal/billing"
 	_ "github.com/materials-resources/s-prophet/internal/catalog"
+	_ "github.com/materials-resources/s-prophet/internal/customer"
 	_ "github.com/materials-resources/s-prophet/internal/order"
 	_ "github.com/microsoft/go-mssqldb"
 	"github.com/urfave/cli/v2"

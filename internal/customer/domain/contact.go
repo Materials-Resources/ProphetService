@@ -6,5 +6,4 @@ type Contact struct {
 	LastName  string
 	Phone     string
 	Email     string
-	Branches  []*CustomerBranch
 }

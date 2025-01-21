@@ -4,8 +4,8 @@ go 1.23.1
 
 require (
 	connectrpc.com/connect v1.18.1
-	connectrpc.com/grpcreflect v1.2.0
-	github.com/hamba/avro/v2 v2.24.1
+	connectrpc.com/grpcreflect v1.3.0
+	github.com/hamba/avro/v2 v2.27.0
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/knadh/koanf/providers/file v1.1.0
@@ -22,7 +22,6 @@ require (
 	github.com/uptrace/bun/extra/bundebug v1.2.7
 	github.com/uptrace/bun/extra/bunotel v1.2.8
 	github.com/urfave/cli/v2 v2.27.4
-	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.53.0
 	go.opentelemetry.io/otel v1.33.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.28.0
 	go.opentelemetry.io/otel/sdk v1.28.0
@@ -30,7 +29,6 @@ require (
 	go.opentelemetry.io/otel/trace v1.33.0
 	golang.org/x/net v0.28.0
 	golang.org/x/sync v0.8.0
-	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 )
 
@@ -48,7 +46,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
+	github.com/klauspost/compress v1.17.10 // indirect
 	github.com/knadh/koanf/maps v0.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
