@@ -7,12 +7,16 @@ plugins:
       - module=github.com/materials-resources/s-prophet/internal/grpc
       - Mcatalog.proto=github.com/materials-resources/s-prophet/internal/grpc/catalog
       - Morder.proto=github.com/materials-resources/s-prophet/internal/grpc/order
+      - Mbilling.proto=github.com/materials-resources/s-prophet/internal/grpc/billing
+      - Mcustomer.proto=github.com/materials-resources/s-prophet/internal/grpc/customer
   - remote: buf.build/protocolbuffers/go:v1.34.2
     out: internal/grpc
     opt:
       - module=github.com/materials-resources/s-prophet/internal/grpc
       - Mcatalog.proto=github.com/materials-resources/s-prophet/internal/grpc/catalog
       - Morder.proto=github.com/materials-resources/s-prophet/internal/grpc/order
+      - Mbilling.proto=github.com/materials-resources/s-prophet/internal/grpc/billing
+      - Mcustomer.proto=github.com/materials-resources/s-prophet/internal/grpc/customer
 
 
 inputs:
@@ -21,3 +25,5 @@ inputs:
     types:
       - "catalog.v1.CatalogService"
       - "order.v1.OrderService"
+      - "billing.v1.BillingService"
+      - "customer.v1.CustomerService"

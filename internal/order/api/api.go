@@ -48,8 +48,11 @@ func (h OrderServiceHandler) CreateOrder(ctx context.Context, req *connect.Reque
 }
 
 func (h OrderServiceHandler) GetQuote(ctx context.Context, req *connect.Request[order.GetQuoteRequest]) (*connect.Response[order.GetQuoteResponse], error) {
-	//TODO implement me
-	panic("implement me")
+	res, err := h.service.GetQuote(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(res), nil
 }
 
 func (h OrderServiceHandler) CreateQuote(ctx context.Context, req *connect.Request[order.CreateQuoteRequest]) (*connect.Response[order.CreateQuoteResponse], error) {

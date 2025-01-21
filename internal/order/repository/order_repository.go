@@ -51,11 +51,12 @@ type ListQuotesParams struct {
 	OnlyActiveOrders bool
 }
 
-func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParams) ([]*domain.QuoteSummary, error) {
+func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParams) ([]*domain.QuoteSummary,
+	int32, error) {
 	var oeHdrRecs []*oeHdr
 	branchId, err := strconv.ParseFloat(params.BranchId, 64)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	offset := (params.Page - 1) * params.PageSize
@@ -63,7 +64,7 @@ func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParam
 		"address_id = ? and projected_order = ? and delete_flag = ? and rma_flag <> ?", branchId, "Y", "N", "Y").Limit(params.PageSize).Offset(offset).Order("date_created DESC").Scan(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	var quotes []*domain.QuoteSummary
 
@@ -81,7 +82,63 @@ func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParam
 		})
 	}
 
-	return quotes, err
+	// Fetch the total count of records disregarding pagination
+	totalRecordCount, err := r.db.NewSelect().
+		Model(&oeHdrRecs).
+		Where("address_id = ? and projected_order = ? and delete_flag = ? and rma_flag <> ?", branchId, "Y", "N", "Y").
+		Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return quotes, int32(totalRecordCount), err
+}
+
+func (r *OrderRepository) GetQuote(ctx context.Context, id string) (*domain.Quote, error) {
+	var oeHdrRec oeHdr
+	err := r.db.NewSelect().Model(&oeHdrRec).Relation("QuoteHdr").Relation("OeLines", func(q *bun.SelectQuery) *bun.SelectQuery {
+		return q.Relation("InvMast")
+	}).Where(
+		"order_no = ?",
+		id).Where("projected_order = ? and delete_flag = ? and rma_flag <> ?", "Y", "N", "Y").Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	quote := domain.Quote{
+		Id: oeHdrRec.OrderNo,
+		Branch: &domain.Branch{
+			Id: convertOptionalValue(oeHdrRec.AddressId, func(v float64) string {
+				return strconv.FormatFloat(v, 'f', 0, 64)
+			}, ""),
+			Name: getOptionalValue(oeHdrRec.Ship2Name, ""),
+		},
+		Customer: domain.Customer{},
+		Contact: domain.Contact{
+			Id: getOptionalValue(oeHdrRec.ContactId, ""),
+		},
+		PurchaseOrder: getOptionalValue(oeHdrRec.PoNo, ""),
+		DateCreated:   oeHdrRec.DateCreated,
+		DateRequested: getOptionalValue(oeHdrRec.RequestedDate, time.Unix(0, 0)),
+		DateExpires:   time.Unix(0, 0),
+		Status:        determineQuoteStatus(&oeHdrRec),
+	}
+
+	for _, oeLineRec := range oeHdrRec.OeLines {
+		quote.Items = append(quote.Items, &domain.QuoteItem{
+			ProductId:         strconv.Itoa(int(oeLineRec.InvMastUid)),
+			ProductSn:         oeLineRec.InvMast.ItemId,
+			ProductName:       oeLineRec.InvMast.ItemDesc,
+			OrderedQuantity:   getOptionalValue(oeLineRec.QtyOrdered, 0),
+			CustomerProductSn: oeLineRec.CustomerPartNumber,
+			UnitType:          getOptionalValue(oeLineRec.UnitOfMeasure, ""),
+			UnitPrice:         getOptionalValue(oeLineRec.UnitPrice, 0),
+			TotalPrice:        getOptionalValue(oeLineRec.ExtendedPrice, 0),
+		})
+	}
+
+	return &quote, nil
+
 }
 func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuoteParams) (*string, error) {
 	branchId, err := strconv.ParseFloat(quote.BranchId, 64)
@@ -198,6 +255,7 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 
 	_, err = r.db.NewInsert().Model(&quoteHdrNew).Exec(ctx)
 
+	// create new oeLine record for each item
 	for _, item := range quote.Items {
 
 		productId, err := strconv.ParseFloat(item.ProductId, 64)
@@ -226,7 +284,7 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 				LineSeqNo:            &lineNo,
 				OrderNo:              oeHdrNew.OrderNo,
 				OeHdrUid:             oeHdrUid,
-				CustomerPartNumber:   invMastRec.ItemDesc,
+				CustomerPartNumber:   invMastRec.ItemId,
 				ExtendedDesc:         invMastRec.ExtendedDesc,
 				SupplierId:           locRec.PrimarySupplierId,
 				ProductGroupId:       locRec.ProductGroupId,
@@ -245,7 +303,6 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 				SourceLocId:          ptrTo(float64(1001)),
 			},
 		}
-
 		_, err = r.db.NewInsert().Model(&oeLineNew).Exec(ctx)
 		if err != nil {
 			return nil, err
@@ -253,17 +310,16 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 
 	}
 
-	// create new oeLine record for each item
-
 	return &oeHdrNew.OrderNo, nil
 }
 
-func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParams) ([]*domain.OrderSummary, error) {
+func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParams) ([]*domain.OrderSummary,
+	int32, error) {
 	var oeHdrRecs []*oeHdr
 
 	branchId, err := strconv.ParseFloat(params.BranchId, 64)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	offset := (params.Page - 1) * params.PageSize
@@ -273,7 +329,7 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 		"N", "Y").Limit(params.PageSize).Offset(offset).Order("date_created DESC").Scan(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var orders []*domain.OrderSummary
@@ -300,7 +356,13 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 
 	}
 
-	return orders, err
+	// Fetch the total count of records disregarding pagination
+	totalRecordCount, err := r.db.NewSelect().
+		Model(&oeHdrRecs).Where(
+		"address_id = ? and projected_order = ? and delete_flag = ? and rma_flag <> ?", branchId, "N",
+		"N", "Y").Count(ctx)
+
+	return orders, int32(totalRecordCount), err
 }
 
 func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Order, error) {
@@ -308,7 +370,7 @@ func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Orde
 
 	err := r.db.NewSelect().Model(&oeHdrRec).Relation("OeLines", func(q *bun.SelectQuery) *bun.SelectQuery {
 		return q.Relation("InvMast")
-	}).Where("order_no = ?", id).Where("projected_order = ? and delete_flag = ?", "N", "N").Scan(ctx)
+	}).Where("order_no = ?", id).Where("projected_order = ? and delete_flag = ? and rma_flag <> ?", "N", "N", "Y").Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

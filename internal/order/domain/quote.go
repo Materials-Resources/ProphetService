@@ -23,3 +23,29 @@ type QuoteSummary struct {
 
 	Status QuoteStatus
 }
+
+type Quote struct {
+	Id            string
+	Branch        *Branch
+	Customer      Customer
+	Contact       Contact
+	PurchaseOrder string
+	DateCreated   time.Time
+	DateRequested time.Time
+	DateExpires   time.Time
+
+	Status QuoteStatus
+	Items  []*QuoteItem
+}
+
+type QuoteItem struct {
+	Id                string
+	ProductId         string
+	ProductSn         string
+	ProductName       string
+	CustomerProductSn string
+	OrderedQuantity   float64
+	UnitType          string
+	UnitPrice         float64
+	TotalPrice        float64
+}

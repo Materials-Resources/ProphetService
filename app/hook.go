@@ -79,9 +79,10 @@ func (hs *appHooks) Run(ctx context.Context, a *App) error {
 	for _, h := range hs.hooks {
 		h := h
 		g.Go(func() error {
+			a.Logger.Info().Str("service", h.name).Msg("Registering service")
 			err := h.run(ctx, a)
 			if err != nil {
-				fmt.Printf("hook=%q failed: %s\n", h.name, err)
+				a.Logger.Error().Err(err).Str("service", h.name).Msg("Failed to register service")
 			}
 			return err
 		},

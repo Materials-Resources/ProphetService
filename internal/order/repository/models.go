@@ -42,6 +42,7 @@ type oeHdr struct {
 	Contact       *contacts `bun:"rel:has-one,join:contact_id=id"`
 	OeLines       []*oeLine `bun:"rel:has-many,join:oe_hdr_uid=oe_hdr_uid"`
 	QuoteHdr      *quoteHdr `bun:"rel:has-one,join:oe_hdr_uid=oe_hdr_uid"`
+	ShipTo        *shipTo   `bun:"rel:has-one,join:address_id=ship_to_id,company_id=company_id,customer_id=customer_id"`
 }
 
 var _ bun.BeforeAppendModelHook = (*oeHdr)(nil)
@@ -78,7 +79,7 @@ func (m *oeHdrSalesrep) BeforeAppendModel(ctx context.Context, query bun.Query) 
 
 type oeLine struct {
 	prophet.OeLine `bun:",extend"`
-	InvMast        *invMast `bun:"rel:has-one,join:inv_mast_uid=inv_mast_uid"`
+	InvMast        *invMast `bun:"rel:belongs-to,join:inv_mast_uid=inv_mast_uid"`
 }
 
 var _ bun.BeforeAppendModelHook = (*oeLine)(nil)
@@ -103,4 +104,8 @@ type oePickTicket struct {
 
 type quoteHdr struct {
 	prophet.QuoteHdr `bun:",extend"`
+}
+
+type shipTo struct {
+	prophet.ShipTo `bun:",extend"`
 }

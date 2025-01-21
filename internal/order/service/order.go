@@ -14,6 +14,7 @@ type OrderService interface {
 	CreateOrder(ctx context.Context)
 	ListOrders(ctx context.Context, req *orderv1.ListOrdersRequest) (*orderv1.ListOrdersResponse, error)
 	ListQuotes(ctx context.Context, req *orderv1.ListQuotesRequest) (*orderv1.ListQuotesResponse, error)
+	GetQuote(ctx context.Context, req *orderv1.GetQuoteRequest) (*orderv1.GetQuoteResponse, error)
 	CreateQuote(ctx context.Context, req *orderv1.CreateQuoteRequest) (*orderv1.CreateQuoteResponse, error)
 	ListShipmentsByOrder(ctx context.Context, orderId string) ([]*domain.Shipment, error)
 	GetShipment(ctx context.Context, id string) (*domain.Shipment, error)
@@ -31,12 +32,14 @@ func (s *Order) ListQuotes(ctx context.Context, req *orderv1.ListQuotesRequest) 
 		Page:     int(req.GetPage()),
 		PageSize: int(req.GetPageSize()),
 	}
-	quotes, err := s.repository.Order.ListQuotes(ctx, params)
+	quotes, totalRecords, err := s.repository.Order.ListQuotes(ctx, params)
 	if err != nil {
 		return nil, err
 	}
 
-	response := &orderv1.ListQuotesResponse{}
+	response := &orderv1.ListQuotesResponse{
+		TotalRecords: totalRecords,
+	}
 
 	for _, quote := range quotes {
 		response.Quotes = append(response.Quotes, &orderv1.QuoteSummary{
@@ -51,6 +54,44 @@ func (s *Order) ListQuotes(ctx context.Context, req *orderv1.ListQuotesRequest) 
 			Status:        convertQuoteStatus(quote.Status),
 			DateCreated:   timestamppb.New(quote.DateCreated),
 			DateExpires:   timestamppb.New(quote.DateExpires),
+		})
+	}
+
+	return response, nil
+}
+
+func (s *Order) GetQuote(ctx context.Context, req *orderv1.GetQuoteRequest) (*orderv1.GetQuoteResponse, error) {
+	quote, err := s.repository.Order.GetQuote(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+
+	response := &orderv1.GetQuoteResponse{
+		Quote: &orderv1.Quote{
+			Id: quote.Id,
+			Branch: &orderv1.Branch{
+				Id:   quote.Branch.Id,
+				Name: quote.Branch.Name,
+			},
+			PurchaseOrder: quote.PurchaseOrder,
+			DateCreated:   timestamppb.New(quote.DateCreated),
+			DateRequested: timestamppb.New(quote.DateRequested),
+			DateExpires:   timestamppb.New(quote.DateExpires),
+			Status:        convertQuoteStatus(quote.Status),
+		},
+	}
+
+	for _, item := range quote.Items {
+		response.Quote.Items = append(response.Quote.Items, &orderv1.Quote_Item{
+			Id:                item.Id,
+			ProductId:         item.ProductId,
+			ProductSn:         item.ProductSn,
+			ProductName:       item.ProductName,
+			CustomerProductSn: item.CustomerProductSn,
+			OrderedQuantity:   item.OrderedQuantity,
+			UnitType:          item.UnitType,
+			UnitPrice:         item.UnitPrice,
+			TotalPrice:        item.TotalPrice,
 		})
 	}
 
@@ -152,12 +193,14 @@ func (s *Order) ListOrders(ctx context.Context, req *orderv1.ListOrdersRequest) 
 		PageSize: int(req.GetPageSize()),
 	}
 
-	orders, err := s.repository.Order.ListOrders(ctx, params)
+	orders, totalRecords, err := s.repository.Order.ListOrders(ctx, params)
 	if err != nil {
 		return nil, err
 	}
 
-	response := &orderv1.ListOrdersResponse{}
+	response := &orderv1.ListOrdersResponse{
+		TotalRecords: totalRecords,
+	}
 
 	for _, order := range orders {
 

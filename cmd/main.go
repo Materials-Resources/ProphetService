@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/materials-resources/s-prophet/app"
 	"github.com/materials-resources/s-prophet/config"
+	_ "github.com/materials-resources/s-prophet/internal/billing"
 	_ "github.com/materials-resources/s-prophet/internal/catalog"
 	_ "github.com/materials-resources/s-prophet/internal/order"
 	_ "github.com/microsoft/go-mssqldb"
@@ -58,9 +59,9 @@ func main() {
 					}
 
 					err = a.Start()
-					//if err != nil {
-					//	a.Logger.Fatal().Err(err).Msg("failed to start app")
-					//}
+					if err != nil {
+						a.Logger.Fatal().Err(err).Msg("failed to start app")
+					}
 					//defer a.Stop()
 					return nil
 				},
