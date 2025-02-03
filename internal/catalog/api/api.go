@@ -54,8 +54,11 @@ func (h CatalogServiceHandler) ListGroups(ctx context.Context, req *connect.Requ
 }
 
 func (h CatalogServiceHandler) CreateGroup(ctx context.Context, req *connect.Request[catalogv1.CreateGroupRequest]) (*connect.Response[catalogv1.CreateGroupResponse], error) {
-	//TODO implement me
-	panic("implement me")
+	res, err := h.service.CreateGroup(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(res), nil
 }
 
 func (h CatalogServiceHandler) GetGroup(ctx context.Context, req *connect.Request[catalogv1.GetGroupRequest]) (*connect.Response[catalogv1.GetGroupResponse], error) {
@@ -64,8 +67,11 @@ func (h CatalogServiceHandler) GetGroup(ctx context.Context, req *connect.Reques
 }
 
 func (h CatalogServiceHandler) UpdateGroup(ctx context.Context, req *connect.Request[catalogv1.UpdateGroupRequest]) (*connect.Response[catalogv1.UpdateGroupResponse], error) {
-	//TODO implement me
-	panic("implement me")
+	res, err := h.service.UpdateGroup(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(res), nil
 }
 
 func (h CatalogServiceHandler) DeleteGroup(ctx context.Context, req *connect.Request[catalogv1.DeleteGroupRequest]) (*connect.Response[catalogv1.DeleteGroupResponse], error) {

@@ -198,7 +198,7 @@ spec:
             - containerPort: 8123
             - containerPort: 9000
         - name: collector
-          image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.106.1
+          image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.118.0
           ports:
             - containerPort: 4317
               hostPort: 4317

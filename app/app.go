@@ -4,15 +4,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/materials-resources/s-prophet/config"
+	"github.com/materials-resources/s-prophet/pkg/sr"
 	"github.com/rs/zerolog"
 	"net/http"
 	"os"
 	"sync"
 
 	"github.com/uptrace/bun"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/sdk/metric"
-	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 )
 
 type App struct {
@@ -21,11 +19,11 @@ type App struct {
 	mux              *http.ServeMux
 	reflectionRoutes []string
 
-	traceProvider *tracesdk.TracerProvider
-	mp            *metric.MeterProvider
-
 	bunOnce sync.Once
 	bun     *bun.DB
+
+	Otel          *Otel
+	SchemaFactory *sr.Factory
 
 	Logger *zerolog.Logger
 }
@@ -34,18 +32,22 @@ func NewApp(config *config.Config) (*App, error) {
 
 	mux := http.NewServeMux()
 
-	a := &App{
-		conf: config,
-		mux:  mux,
-	}
+	otelProvider, err := NewOtel(*config)
 
-	a.initLog()
-
-	err := a.newTraceProvider()
 	if err != nil {
 		return nil, err
 	}
-	otel.SetTracerProvider(a.traceProvider)
+
+	schemaFactory := sr.NewFactory(config.SchemaRegistry)
+
+	a := &App{
+		conf:          config,
+		mux:           mux,
+		Otel:          otelProvider,
+		SchemaFactory: schemaFactory,
+	}
+
+	a.initLog()
 
 	return a, nil
 }
@@ -94,10 +96,6 @@ func (a *App) GetDB() *bun.DB {
 		})
 
 	return a.bun
-}
-
-func (a *App) GetMP() *metric.MeterProvider {
-	return a.mp
 }
 
 func (a *App) initLog() {

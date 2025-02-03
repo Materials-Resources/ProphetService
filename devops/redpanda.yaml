@@ -1,74 +1,39 @@
-apiVersion: apps/v1
-kind: 'Deployment'
+apiVersion: v1
+kind: Pod
 metadata:
-  name: 's-prophet-redpanda'
-  namespace: 'default'
-  labels:
-    app: 's-prophet-redpanda'
+  name: prophet_redpanda
 spec:
-  selector:
-    matchLabels:
-      app: 's-prophet-redpanda'
-  template:
-    metadata:
-        labels:
-            app: 's-prophet-redpanda'
-    spec:
-      containers:
-        - name: 'broker'
-          image: 'docker.redpanda.com/redpandadata/redpanda:v24.2.1'
-          args:
-            - redpanda
-            - start
-            - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
-            - --advertise-kafka-addr internal://broker:9092,external://localhost:19092
-            - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
-            - --advertise-pandaproxy-addr internal://broker:8082,external://localhost:18082
-            - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
-            - --rpc-addr broker:33145
-            - --advertise-rpc-addr broker:33145
-            - --mode dev-container
-            - --smp 1
-            - --default-log-level=info
-          ports:
-            - containerPort: 18081
-              hostPort: 18081
-            - containerPort: 18082
-            - containerPort: 19092
-              hostPort: 19092
-            - containerPort: 9644
-              hostPort: 9644
-          volumeMounts:
-            - mountPath: /var/lib/redpanda/data
-              name: broker-volume
-        - name: 'console'
-          image: 'docker.redpanda.com/redpandadata/console:v2.6.1'
-          command:
-            - /bin/sh
-          args:
-          - -c
-          - 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml; /app/console'
-          env:
-            - name: CONFIG_FILEPATH
-              value: /tmp/config.yml
-            - name: CONSOLE_CONFIG_FILE
-              value: |
-                kafka:
-                  brokers: ["broker:9092"]
-                  schemaRegistry:
-                    enabled: true
-                    urls: ["http://broker:8081"]
-                redpanda:
-                  adminApi:
-                    enabled: true
-                    urls: ["http://broker:9644"]
-          ports:
-            - containerPort: 8080
-              hostPort: 8080
-      volumes:
-        - name: broker-volume
-          persistentVolumeClaim:
-            claimName: s-prophet-redpanda-broker
+  containers:
+    - name: 'broker'
+      image: 'docker.redpanda.com/redpandadata/redpanda:v24.3.4'
+      args:
+        - redpanda
+        - start
+        - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+        - --advertise-kafka-addr internal://broker:9092,external://localhost:19092
+        - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+        - --advertise-pandaproxy-addr internal://broker:8082,external://localhost:18082
+        - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+        - --rpc-addr broker:33145
+        - --advertise-rpc-addr broker:33145
+        - --mode dev-container
+        - --smp 1
+        - --default-log-level=info
+      ports:
+        - containerPort: 18081
+          hostPort: 18081
+        - containerPort: 18082
+        - containerPort: 19092
+          hostPort: 19092
+        - containerPort: 9644
+          hostPort: 9644
+      volumeMounts:
+        - mountPath: /var/lib/redpanda/data
+          name: broker-volume
+  volumes:
+    - name: broker-volume
+      persistentVolumeClaim:
+        claimName: prophet_redpanda
 
 
 

@@ -52,7 +52,7 @@ defaults:
 					Password: "password",
 					Name:     "prophet",
 				},
-				Kafka: KafkaConfig{
+				Kafka: Kafka{
 					Brokers:  []string{"kafka.corp.com:9092"},
 					Registry: []string{"schema-registry.corp.com:8081"},
 				},

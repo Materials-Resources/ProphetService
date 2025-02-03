@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: otel
+spec:
+  containers:
+    - name: jaeger
+      image: jaegertracing/jaeger:2.1.0
+      ports:
+        - containerPort: 4317
+          hostPort: 4317
+          name: otel-grpc
+        - containerPort: 16686
+          hostPort: 16686
+          name: ui
+
+

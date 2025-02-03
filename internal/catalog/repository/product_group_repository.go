@@ -61,7 +61,7 @@ func (r *ProductGroupRepository) ListProductGroups(ctx context.Context) ([]*doma
 	return domainProductGroups, nil
 }
 
-func (r *ProductGroupRepository) CreateProductGroup(ctx context.Context, input *domain.ProductGroupInput) error {
+func (r *ProductGroupRepository) CreateProductGroup(ctx context.Context, input *domain.ProductGroup) error {
 	pgData := productGroup{
 		ProductGroup: prophet.ProductGroup{
 			ProductGroupId:   input.Sn,
@@ -78,12 +78,12 @@ func (r *ProductGroupRepository) CreateProductGroup(ctx context.Context, input *
 	return err
 }
 
-func (r *ProductGroupRepository) UpdateProductGroup(ctx context.Context, input *domain.ProductGroupInput) error {
+func (r *ProductGroupRepository) UpdateProductGroup(ctx context.Context, group *domain.ProductGroup) error {
 	var productGroupRec productGroup
-	err := r.db.NewSelect().Model(&productGroupRec).Where("product_group_id = ?", input.Sn).Scan(ctx)
+	err := r.db.NewSelect().Model(&productGroupRec).Where("product_group_id = ?", group.Sn).Scan(ctx)
 
-	if input.Name != nil {
-		productGroupRec.ProductGroupDesc = *input.Name
+	if group.Name != nil {
+		productGroupRec.ProductGroupDesc = *group.Name
 	}
 	_, err = r.db.NewUpdate().Model(&productGroupRec).ExcludeColumn("product_group_uid").WherePK().Exec(ctx)
 	return err
@@ -92,6 +92,6 @@ func (r *ProductGroupRepository) UpdateProductGroup(ctx context.Context, input *
 func mapDbProductGroupToDomainProductGroup(productGroup *productGroup) *domain.ProductGroup {
 	return &domain.ProductGroup{
 		Sn:   productGroup.ProductGroupId,
-		Name: productGroup.ProductGroupDesc,
+		Name: &productGroup.ProductGroupDesc,
 	}
 }

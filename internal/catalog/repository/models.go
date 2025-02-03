@@ -108,11 +108,6 @@ type itemIdChangeHistory struct {
 type itemUom struct {
 	prophet.ItemUom `bun:",extend"`
 }
-
-type oeLine struct {
-	prophet.OeLine `bun:",extend"`
-}
-
 type productGroup struct {
 	prophet.ProductGroup `bun:",extend"`
 }

@@ -1,0 +1,16 @@
+{
+	"type": "record",
+	"name": "Product",
+	"namespace": "org.materialsresources.v1.catalog.avro",
+	"fields" : [
+		{"name": "id", "type": "string"},
+		{"name": "sn", "type": "string" },
+		{"name": "name", "type": ["null", {"type": "string"}],
+			"default": null
+		},
+		{"name": "description", "type": ["null", {"type": "string"}],
+			"default": null
+		},
+		{"name": "product_group_sn", "type": ["string", "null"]}
+	]
+}

@@ -38,7 +38,8 @@ type Config struct {
 	Database      DatabaseConfig      `koanf:"database"`
 	Observability ObservabilityConfig `koanf:"observability"`
 
-	Kafka KafkaConfig `koanf:"kafka"`
+	Kafka          Kafka          `koanf:"kafka"`
+	SchemaRegistry SchemaRegistry `koanf:"schema_registry"`
 
 	Defaults map[string]string `koanf:"defaults"`
 }
@@ -54,11 +55,6 @@ type DatabaseConfig struct {
 	User     string `koanf:"user"`
 	Password string `koanf:"password"`
 	Name     string `koanf:"name"`
-}
-
-type KafkaConfig struct {
-	Brokers  []string `koanf:"brokers"`
-	Registry []string `koanf:"registry"`
 }
 
 // NewConfig reads from a config file or environment variables starting with PROPHET_ and returns a Config struct

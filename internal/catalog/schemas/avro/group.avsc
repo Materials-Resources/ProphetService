@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "Group",
+  "namespace": "org.materialsresources.v1.catalog.avro",
+  "fields" : [
+    {"name": "sn", "type": "string"},
+    {"name": "name", "type": ["null", {"type": "string"}],
+      "default": null}
+  ]
+}

@@ -101,11 +101,10 @@ func (s *Order) GetQuote(ctx context.Context, req *orderv1.GetQuoteRequest) (*or
 func (s *Order) CreateQuote(ctx context.Context, req *orderv1.CreateQuoteRequest) (*orderv1.CreateQuoteResponse, error) {
 
 	createQuoteReq := repository.CreateQuoteParams{
-		PurchaseOrder:        req.GetPurchaseOrder(),
-		ContactId:            req.GetContactId(),
-		BranchId:             req.GetBranchId(),
-		RequestDate:          req.GetRequestedDate().AsTime(),
-		DeliveryInstructions: req.GetDeliveryInstructions(),
+		Notes:       req.GetNotes(),
+		ContactId:   req.GetContactId(),
+		BranchId:    req.GetBranchId(),
+		RequestDate: req.GetRequestedDate().AsTime(),
 	}
 
 	for _, item := range req.GetItems() {

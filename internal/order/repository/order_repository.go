@@ -34,12 +34,11 @@ type CreateQuoteItemParams struct {
 	Quantity  float64
 }
 type CreateQuoteParams struct {
-	PurchaseOrder        string
-	ContactId            string
-	BranchId             string
-	RequestDate          time.Time
-	DeliveryInstructions string
-	Items                []CreateQuoteItemParams
+	Notes       string
+	ContactId   string
+	BranchId    string
+	RequestDate time.Time
+	Items       []CreateQuoteItemParams
 }
 
 type ListQuotesParams struct {
@@ -53,7 +52,7 @@ type ListQuotesParams struct {
 
 func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParams) ([]*domain.QuoteSummary,
 	int32, error) {
-	var oeHdrRecs []*oeHdr
+	var oeHdrRecs []*OeHdr
 	branchId, err := strconv.ParseFloat(params.BranchId, 64)
 	if err != nil {
 		return nil, 0, err
@@ -77,7 +76,7 @@ func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParam
 			}, ""),
 			PurchaseOrder: getOptionalValue(oeHdrRec.PoNo, ""),
 			DateCreated:   oeHdrRec.DateCreated,
-			DateRequested: getOptionalValue(oeHdrRec.RequestedDate, time.Now()),
+			DateRequested: offSetToUtc(oeHdrRec.RequestedDate),
 			Status:        determineQuoteStatus(oeHdrRec),
 		})
 	}
@@ -95,7 +94,7 @@ func (r *OrderRepository) ListQuotes(ctx context.Context, params ListQuotesParam
 }
 
 func (r *OrderRepository) GetQuote(ctx context.Context, id string) (*domain.Quote, error) {
-	var oeHdrRec oeHdr
+	var oeHdrRec OeHdr
 	err := r.db.NewSelect().Model(&oeHdrRec).Relation("QuoteHdr").Relation("OeLines", func(q *bun.SelectQuery) *bun.SelectQuery {
 		return q.Relation("InvMast")
 	}).Where(
@@ -119,8 +118,8 @@ func (r *OrderRepository) GetQuote(ctx context.Context, id string) (*domain.Quot
 		},
 		PurchaseOrder: getOptionalValue(oeHdrRec.PoNo, ""),
 		DateCreated:   oeHdrRec.DateCreated,
-		DateRequested: getOptionalValue(oeHdrRec.RequestedDate, time.Unix(0, 0)),
-		DateExpires:   time.Unix(0, 0),
+		DateRequested: offSetToUtc(oeHdrRec.RequestedDate),
+		DateExpires:   offSetToUtc(oeHdrRec.QuoteHdr.ExpirationDate),
 		Status:        determineQuoteStatus(&oeHdrRec),
 	}
 
@@ -151,7 +150,7 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 		return nil, err
 	}
 
-	// TODO validate contact belongs to customer
+	// TODO validate contact belongs to Customer
 	addressRec, err := r.getAddress(ctx, shipToRec.ShipToId)
 	if err != nil {
 		return nil, err
@@ -175,29 +174,27 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 		return nil, fmt.Errorf("failed to get order_no: %w", err)
 	}
 
-	// Create new oeHdr record with eSTORE taker
+	// Create new OeHdr record with eSTORE taker
 
-	oeHdrNew := oeHdr{
+	oeHdrNew := OeHdr{
 		OeHdr: prophet.OeHdr{
-			OeHdrUid:             oeHdrUid,
-			OrderNo:              strconv.Itoa(int(orderNo)),
-			CustomerId:           customerRec.CustomerId,
-			ContactId:            &quote.ContactId,
-			PoNo:                 &quote.PurchaseOrder,
-			DeliveryInstructions: &quote.DeliveryInstructions,
-			PickTicketType:       customerRec.PickTicketType,
-			PackingBasis:         addressRec.ShipToPackingBasis,
-			Terms:                &customerRec.TermsId,
-			Taker:                ptrTo("eSTORE"),
-			AddressId:            &branchId,
-			Ship2Name:            &addressRec.Name,
-			Ship2Add1:            addressRec.MailAddress1,
-			Ship2Add2:            addressRec.MailAddress2,
-			Ship2Add3:            addressRec.MailAddress3,
-			Ship2City:            addressRec.MailCity,
-			Ship2State:           addressRec.MailState,
-			Ship2Country:         addressRec.MailCountry,
-			ShipToPhone:          contactRec.DirectPhone,
+			OeHdrUid:       oeHdrUid,
+			OrderNo:        strconv.Itoa(int(orderNo)),
+			CustomerId:     customerRec.CustomerId,
+			ContactId:      &quote.ContactId,
+			PickTicketType: customerRec.PickTicketType,
+			PackingBasis:   addressRec.ShipToPackingBasis,
+			Terms:          &customerRec.TermsId,
+			Taker:          ptrTo("eSTORE"),
+			AddressId:      &branchId,
+			Ship2Name:      &addressRec.Name,
+			Ship2Add1:      addressRec.MailAddress1,
+			Ship2Add2:      addressRec.MailAddress2,
+			Ship2Add3:      addressRec.MailAddress3,
+			Ship2City:      addressRec.MailCity,
+			Ship2State:     addressRec.MailState,
+			Ship2Country:   addressRec.MailCountry,
+			ShipToPhone:    contactRec.DirectPhone,
 			CarrierId: convertOptionalValue(addressRec.CarrierId, func(v string) *float64 {
 				carrierId, err := strconv.ParseFloat(v, 64)
 				if err != nil {
@@ -234,7 +231,25 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 		return nil, err
 	}
 
-	// create new oeHdrSalesRep record
+	if quote.Notes != "" {
+		//TODO: Create a new OeHdrNotepad record using the notes
+		noteId, err := r.getNextCounter(ctx, "")
+		if err != nil {
+			return nil, fmt.Errorf("failed to get oeHdrNotepad_uid: %w", err)
+		}
+
+		noteArea := &NoteArea{
+			NoteArea: prophet.NoteArea{
+				NoteId: float64(noteId),
+			},
+		}
+
+		_, err = r.db.NewInsert().Model(&noteArea).Exec(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create oeHdrNotepad record: %w", err)
+		}
+
+	}
 
 	if err := r.createOeHdrSalesRep(ctx, oeHdrNew.OrderNo, *customerRec.SalesrepId); err != nil {
 		return nil, err
@@ -251,11 +266,12 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 		LastMaintainedBy: "admin",
 		QuoteHdrUid:      quoteHdrUid,
 		OeHdrUid:         oeHdrUid,
+		ExpirationDate:   ptrTo(time.Now().AddDate(1, 0, 0)),
 	}
 
 	_, err = r.db.NewInsert().Model(&quoteHdrNew).Exec(ctx)
 
-	// create new oeLine record for each item
+	// create new OeLine record for each item
 	for _, item := range quote.Items {
 
 		productId, err := strconv.ParseFloat(item.ProductId, 64)
@@ -276,7 +292,7 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 
 		oeLineUid, err := r.getNextCounter(ctx, "oe_line")
 
-		oeLineNew := oeLine{
+		oeLineNew := OeLine{
 			OeLine: prophet.OeLine{
 				OeLineUid:            oeLineUid,
 				InvMastUid:           invMastRec.InvMastUid,
@@ -315,7 +331,7 @@ func (r *OrderRepository) CreateQuote(ctx context.Context, quote *CreateQuotePar
 
 func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParams) ([]*domain.OrderSummary,
 	int32, error) {
-	var oeHdrRecs []*oeHdr
+	var oeHdrRecs []*OeHdr
 
 	branchId, err := strconv.ParseFloat(params.BranchId, 64)
 	if err != nil {
@@ -366,7 +382,7 @@ func (r *OrderRepository) ListOrders(ctx context.Context, params ListOrdersParam
 }
 
 func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Order, error) {
-	var oeHdrRec oeHdr
+	var oeHdrRec OeHdr
 
 	err := r.db.NewSelect().Model(&oeHdrRec).Relation("OeLines", func(q *bun.SelectQuery) *bun.SelectQuery {
 		return q.Relation("InvMast")
@@ -380,8 +396,8 @@ func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*domain.Orde
 		PurchaseOrder:        getOptionalValue(oeHdrRec.PoNo, ""),
 		Status:               determineOrderStatus(&oeHdrRec),
 		Taker:                getOptionalValue(oeHdrRec.Taker, ""),
-		DateCreated:          parseToUTC(oeHdrRec.DateCreated),
-		DateRequested:        getOptionalValue(oeHdrRec.RequestedDate, time.Now()),
+		DateCreated:          offSetToUtc(&oeHdrRec.DateCreated),
+		DateRequested:        offSetToUtc(oeHdrRec.RequestedDate),
 		DeliveryInstructions: getOptionalValue(oeHdrRec.DeliveryInstructions, ""),
 		BranchId: convertOptionalValue(oeHdrRec.AddressId, func(v float64) string {
 			return strconv.FormatFloat(v, 'f', 0, 64)
@@ -431,8 +447,8 @@ func (r *OrderRepository) getNextCounter(ctx context.Context, counterName string
 	return uid, err
 }
 
-func (r *OrderRepository) getCustomer(ctx context.Context, customerId float64) (*customer, error) {
-	customerRec := customer{}
+func (r *OrderRepository) getCustomer(ctx context.Context, customerId float64) (*Customer, error) {
+	customerRec := Customer{}
 	err := r.db.NewSelect().Model(&customerRec).Where("customer_id = ? AND company_id = ?", customerId, "MRS").Scan(ctx)
 
 	if err != nil {
@@ -442,8 +458,8 @@ func (r *OrderRepository) getCustomer(ctx context.Context, customerId float64) (
 	return &customerRec, nil
 }
 
-func (r *OrderRepository) getAddress(ctx context.Context, branchId float64) (*address, error) {
-	addressRec := address{}
+func (r *OrderRepository) getAddress(ctx context.Context, branchId float64) (*Address, error) {
+	addressRec := Address{}
 	err := r.db.NewSelect().Model(&addressRec).Where("id = ?", branchId).Scan(ctx)
 
 	if err != nil {
@@ -453,8 +469,8 @@ func (r *OrderRepository) getAddress(ctx context.Context, branchId float64) (*ad
 	return &addressRec, nil
 }
 
-func (r *OrderRepository) getContact(ctx context.Context, id string) (*contacts, error) {
-	contactRec := contacts{}
+func (r *OrderRepository) getContact(ctx context.Context, id string) (*Contacts, error) {
+	contactRec := Contacts{}
 	err := r.db.NewSelect().Model(&contactRec).Where("id = ?", id).Scan(ctx)
 
 	if err != nil {
@@ -464,15 +480,15 @@ func (r *OrderRepository) getContact(ctx context.Context, id string) (*contacts,
 	return &contactRec, nil
 }
 
-func (r *OrderRepository) createOeHdr(ctx context.Context, oeHdr *oeHdr) error {
+func (r *OrderRepository) createOeHdr(ctx context.Context, oeHdr *OeHdr) error {
 	_, err := r.db.NewInsert().Model(oeHdr).Exec(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create oeHdr: %w", err)
+		return fmt.Errorf("failed to create OeHdr: %w", err)
 	}
 	return nil
 }
 func (r *OrderRepository) createOeHdrSalesRep(ctx context.Context, orderNo string, salesRepId string) error {
-	oeHdrSalesRep := &oeHdrSalesrep{
+	oeHdrSalesRep := &OeHdrSalesrep{
 		OeHdrSalesrep: prophet.OeHdrSalesrep{
 			OrderNumber:      orderNo,
 			SalesrepId:       salesRepId,
@@ -489,8 +505,8 @@ func (r *OrderRepository) createOeHdrSalesRep(ctx context.Context, orderNo strin
 	return nil
 }
 
-func (r *OrderRepository) getProductDetails(ctx context.Context, invMastUid int32) (*invMast, error) {
-	invMastRec := invMast{}
+func (r *OrderRepository) getProductDetails(ctx context.Context, invMastUid int32) (*InvMast, error) {
+	invMastRec := InvMast{}
 
 	err := r.db.NewSelect().Model(&invMastRec).Relation("InvLocs", func(q *bun.SelectQuery) *bun.SelectQuery {
 		return q.Where("location_id = ? and company_id = ?", 1001, "MRS")
@@ -552,13 +568,15 @@ func convertOptionalValue[T any, U any](value *T, converter func(T) U, defaultVa
 	return converter(*value)
 }
 
-func parseToUTC(dbTime time.Time) time.Time {
-	// 1. Convert to UTC:
-	utcTime := dbTime.UTC()
-	return utcTime
+func offSetToUtc(t *time.Time) time.Time {
+	if t == nil {
+		return time.Time{}
+	}
+	//TODO: load offset from database
+	return t.Add(5 * time.Hour)
 }
 
-func determineOrderStatus(oeHdrRec *oeHdr) domain.OrderStatus {
+func determineOrderStatus(oeHdrRec *OeHdr) domain.OrderStatus {
 	if getOptionalValue(oeHdrRec.CancelFlag, "N") == "Y" {
 		return domain.OrderStatusCancelled
 	} else if getOptionalValue(oeHdrRec.Completed, "N") == "Y" {
@@ -572,12 +590,13 @@ func determineOrderStatus(oeHdrRec *oeHdr) domain.OrderStatus {
 	}
 }
 
-func determineQuoteStatus(oeHdrRec *oeHdr) domain.QuoteStatus {
+func determineQuoteStatus(oeHdrRec *OeHdr) domain.QuoteStatus {
 	switch {
 	case getOptionalValue(oeHdrRec.CancelFlag, "N") == "Y":
 		return domain.QuoteStatusCancelled
 	case oeHdrRec.QuoteHdr != nil &&
-		time.Now().After(getOptionalValue(oeHdrRec.QuoteHdr.ExpirationDate, time.Now())):
+		time.Now().After(getOptionalValue(oeHdrRec.QuoteHdr.ExpirationDate,
+			time.Now())) || oeHdrRec.QuoteHdr.CompleteFlag == "Y":
 		return domain.QuoteStatusExpired
 	case getOptionalValue(oeHdrRec.Approved, "N") == "Y":
 		return domain.QuoteStatusApproved

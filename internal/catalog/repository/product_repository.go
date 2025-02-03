@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
-	"github.com/materials-resources/s-prophet/pkg/helpers"
 	"github.com/uptrace/bun"
 	"strconv"
 )
@@ -37,9 +36,9 @@ func (r *ProductRepository) GetProduct(ctx context.Context, id string) (*domain.
 	product := domain.Product{
 		Id:             strconv.Itoa(int(record.InvMastUid)),
 		Sn:             record.InvMast.ItemId,
-		Name:           record.InvMast.ItemDesc,
-		Description:    helpers.GetOptionalValue(record.InvMast.ExtendedDesc, ""),
-		ProductGroupSn: helpers.GetValueOrDefault(record.ProductGroupId, ""),
+		Name:           &record.InvMast.ItemDesc,
+		Description:    record.InvMast.ExtendedDesc,
+		ProductGroupSn: record.ProductGroupId,
 	}
 	return &product, nil
 }

@@ -45,7 +45,7 @@ func (h appHook) run(ctx context.Context, a *App) error {
 			return
 		}
 		if d := time.Since(start); d > time.Second {
-			fmt.Printf("hook=%q took %s\n", h.name, d)
+			a.Logger.Info().Str("hook", h.name).Dur("duration", d).Msg("hook completed")
 		}
 		close(done)
 	}()

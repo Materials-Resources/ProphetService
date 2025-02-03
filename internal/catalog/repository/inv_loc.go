@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/materials-resources/s-prophet/internal/catalog/domain"
-	"github.com/materials-resources/s-prophet/pkg/helpers"
 	"github.com/uptrace/bun"
 	"sort"
 	"strconv"
@@ -35,9 +34,9 @@ func (m *invLoc) toProductDomain(d *domain.Product) {
 	if m.InvMast != nil {
 		d.Id = strconv.Itoa(int(m.InvMast.InvMastUid))
 		d.Sn = m.InvMast.ItemId
-		d.Name = m.InvMast.ItemDesc
-		d.Description = helpers.GetValueOrDefault(m.InvMast.ExtendedDesc, "")
-		d.ProductGroupSn = helpers.GetValueOrDefault(m.ProductGroupId, "")
+		d.Name = &m.InvMast.ItemDesc
+		d.Description = m.InvMast.ExtendedDesc
+		d.ProductGroupSn = m.ProductGroupId
 	}
 
 	if m.ProductGroup != nil {

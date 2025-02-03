@@ -13,7 +13,7 @@ type ShipmentRepository struct {
 
 // GetShipment returns a Shipment with its details
 func (r *ShipmentRepository) GetShipment(ctx context.Context, id string) (*domain.Shipment, error) {
-	var pickTicket oePickTicket
+	var pickTicket OePickTicket
 	err := r.db.NewSelect().Model(&pickTicket).
 		Relation("CarrierAddress").
 		Relation("OeHdr").
@@ -28,7 +28,7 @@ func (r *ShipmentRepository) GetShipment(ctx context.Context, id string) (*domai
 }
 
 func (r *ShipmentRepository) ListShipmentsByOrder(ctx context.Context, orderId string) ([]*domain.Shipment, error) {
-	var pickTickets []*oePickTicket
+	var pickTickets []*OePickTicket
 	err := r.db.NewSelect().Model(&pickTickets).
 		Relation("CarrierAddress").
 		Relation("OeHdr").
@@ -48,7 +48,7 @@ func (r *ShipmentRepository) ListShipmentsByOrder(ctx context.Context, orderId s
 
 }
 
-func mapDbShipmentToDomainShipment(dbShipment *oePickTicket) *domain.Shipment {
+func mapDbShipmentToDomainShipment(dbShipment *OePickTicket) *domain.Shipment {
 
 	shipment := &domain.Shipment{
 		Id:                   strconv.FormatFloat(dbShipment.PickTicketNo, 'f', 0, 64),

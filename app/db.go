@@ -42,7 +42,7 @@ func (a *App) newBun() {
 
 	a.Logger.Info().Str("db", query.Get("database")).Str("host", u.Hostname()).Msg("connected to database")
 
-	registerBunOtelTracer(bunDb, a.GetTP())
+	registerBunOtelTracer(bunDb, a.Otel.GetTracerProvider())
 
 	if a.conf.Environment == config.EnvironmentDevelopment {
 		a.Logger.Info().Msg("registering bun debug hooks")

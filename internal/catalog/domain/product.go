@@ -5,11 +5,12 @@ import (
 )
 
 type Product struct {
-	Id               string
-	Sn               string
-	Name             string
-	Description      string
-	ProductGroupSn   string
+	Create           bool
+	Id               string  `avro:"id"`
+	Sn               string  `avro:"sn"`
+	Name             *string `avro:"name" validate:"required_if=Create true lte=40"`
+	Description      *string `avro:"description" validate:"required_if=Create true lte=255"`
+	ProductGroupSn   *string `avro:"product_group_sn"`
 	ProductGroupName string
 }
 
