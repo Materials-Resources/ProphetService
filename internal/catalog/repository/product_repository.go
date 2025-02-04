@@ -43,9 +43,9 @@ func (r *ProductRepository) GetProduct(ctx context.Context, id string) (*domain.
 	return &product, nil
 }
 
-func (r *ProductRepository) UpdateProduct(ctx context.Context, update *domain.ProductUpdate) error {
+func (r *ProductRepository) UpdateProduct(ctx context.Context, update *domain.Product) error {
 
-	invMastUid, err := strconv.Atoi(update.Uid)
+	invMastUid, err := strconv.Atoi(update.Id)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func (r *ProductRepository) UpdateProduct(ctx context.Context, update *domain.Pr
 
 }
 
-func (r *ProductRepository) UpdatePrimarySupplier(ctx context.Context, update *domain.ProductUpdate) error {
+func (r *ProductRepository) UpdatePrimarySupplier(ctx context.Context, update *domain.Product) error {
 	//err := r.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
 	//
 	//	inventorySupplier := &inventorySupplier{}

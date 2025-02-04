@@ -173,6 +173,7 @@ func (svc *Catalog) Initialize(ctx context.Context) error {
 	}
 
 	svc.consumerGroup.AddWorker(TopicUpdateGroup, svc.consumeUpdateGroup)
+	svc.consumerGroup.AddWorker(TopicCreateGroup, svc.consumeCreateGroup)
 
 	err = svc.consumerGroup.Consume("PROPHET_CATALOG_SERVICE", "PROPHET_CATALOG_SERVICE_1", *svc.kFactory)
 	if err != nil {
@@ -240,6 +241,15 @@ func (svc *Catalog) CreateGroup(ctx context.Context, req *catalogv1.CreateGroupR
 	return &catalogv1.CreateGroupResponse{}, nil
 }
 
+func (svc *Catalog) produceCreateGroup(ctx context.Context, productGroup domain.ProductGroup) error {
+	return nil
+}
+
+func (svc *Catalog) consumeCreateGroup(rec *kgo.Record) error {
+	//_, _ := svc.kFactory.GetKotelTracer().WithProcessSpan(rec)
+
+	return nil
+}
 func (svc *Catalog) ListGroups(ctx context.Context) ([]*domain.ProductGroup, error) {
 	return svc.repository.ProductGroup.ListProductGroups(ctx)
 }

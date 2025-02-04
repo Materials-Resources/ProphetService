@@ -6,14 +6,36 @@ import (
 	"errors"
 	"github.com/materials-resources/s-prophet/internal/customer/repository"
 	customerv1 "github.com/materials-resources/s-prophet/internal/grpc/customer"
+	"github.com/materials-resources/s-prophet/pkg/helpers"
 )
 
 type CustomerService interface {
 	GetBranchesForContact(ctx context.Context, req *customerv1.GetBranchesForContactRequest) (*customerv1.GetBranchesForContactResponse, error)
 	GetBranch(ctx context.Context, req *customerv1.GetBranchRequest) (*customerv1.GetBranchResponse, error)
+	GetRecentPurchasesByBranch(ctx context.Context, req *customerv1.GetRecentPurchasesByBranchRequest) (*customerv1.GetRecentPurchasesByBranchResponse, error)
 }
 type Customer struct {
 	repository *repository.Repository
+}
+
+func (c Customer) GetRecentPurchasesByBranch(ctx context.Context, req *customerv1.GetRecentPurchasesByBranchRequest) (*customerv1.GetRecentPurchasesByBranchResponse, error) {
+	purchases, err := c.repository.Invoice.GetRecentPurchasesByBranch(ctx, req.GetId(), req.GetLimit())
+	if err != nil {
+		return &customerv1.GetRecentPurchasesByBranchResponse{}, err
+	}
+	response := &customerv1.GetRecentPurchasesByBranchResponse{}
+
+	for _, purchase := range purchases {
+		response.Items = append(response.Items, &customerv1.GetRecentPurchasesByBranchResponse_Item{
+			ProductId:          purchase.ProductId,
+			ProductSn:          helpers.GetOptionalValue(purchase.ProductSn, ""),
+			ProductName:        helpers.GetOptionalValue(purchase.ProductName, ""),
+			ProductDescription: helpers.GetOptionalValue(purchase.ProductDescription, ""),
+			OrderedQuantity:    helpers.GetOptionalValue(purchase.QuantityPurchased, 0),
+			UnitType:           helpers.GetOptionalValue(purchase.UnitType, ""),
+		})
+	}
+	return response, nil
 }
 
 func (c Customer) GetBranch(ctx context.Context, req *customerv1.GetBranchRequest) (*customerv1.GetBranchResponse, error) {

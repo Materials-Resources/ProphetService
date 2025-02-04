@@ -10,11 +10,13 @@ var (
 )
 
 type Repository struct {
-	Branch *BranchRepository
+	Branch  *BranchRepository
+	Invoice *InvoiceRepository
 }
 
 func NewRepository(db bun.IDB) *Repository {
 	return &Repository{
-		Branch: NewBranchRepository(db),
+		Branch:  NewBranchRepository(db),
+		Invoice: NewInvoiceRepository(db),
 	}
 }
